@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-function IndexPopup() {
+function IndexSidepanel() {
   const [data, setData] = useState("")
 
   return (
@@ -11,7 +11,7 @@ function IndexPopup() {
       <h2>
         Welcome to your{" "}
         <a href="https://www.plasmo.com" target="_blank">
-          Plasmo
+          Plouloulou
         </a>{" "}
         Extension!
       </h2>
@@ -23,4 +23,4 @@ function IndexPopup() {
   )
 }
 
-export default IndexPopup
+export default IndexSidepanel
