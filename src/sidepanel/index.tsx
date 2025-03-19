@@ -2,6 +2,7 @@ import { useState } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Home from "~src/pages/Home"
 import Profile from "~src/pages/Profile"
+import Navbar from "~src/components/layout/Navbar"
 
 
 function IndexSidepanel() {
@@ -9,11 +10,12 @@ function IndexSidepanel() {
 
   return (
     <Router>
-      <Routes>
-      <Route path="*" element={<Home/>} />
-        <Route path="/" element={<Home/>} />
-        <Route path="/profile" element={<Profile/>} />
-      </Routes>
+      <Navbar />
+        <Routes>
+        <Route path="*" element={<Home/>} />
+          <Route path="/" element={<Home/>} />
+          <Route path="/profile" element={<Profile/>} />
+        </Routes>
     </Router>
   )
 }
