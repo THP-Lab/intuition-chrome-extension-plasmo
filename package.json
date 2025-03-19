@@ -12,12 +12,18 @@
   "dependencies": {
     "@0xintuition/1ui": "^0.3.6",
     "@0xintuition/graphql": "^0.6.0",
+    "@radix-ui/react-icons": "^1.3.2",
+    "@radix-ui/react-slot": "^1.1.2",
     "@tanstack/react-query": "^5.69.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "plasmo": "0.90.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-query": "^3.39.3",
-    "react-router-dom": "^7.3.0"
+    "react-router-dom": "^7.3.0",
+    "svgo": "^3.0.2",
+    "tailwind-merge": "^3.0.2"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "4.1.1",
@@ -25,7 +31,10 @@
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
     "prettier": "3.2.4",
+    "tailwindcss": "^3.4.1",
     "typescript": "5.3.3"
   },
   "manifest": {
