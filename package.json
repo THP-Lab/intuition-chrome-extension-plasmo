@@ -27,6 +27,16 @@
     "host_permissions": [
       "https://*/*"
     ],
-    "name" : "Intuition"
+    "name": "Intuition"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@swc/core",
+      "esbuild",
+      "lmdb",
+      "msgpackr-extract",
+      "sharp"
+    ]
   }
 }
