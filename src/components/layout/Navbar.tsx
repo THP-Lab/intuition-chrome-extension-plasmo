@@ -5,6 +5,8 @@ function Navbar() {
     <>
       <Link to="/" > Home </Link>
       <Link to="/profile" > Profil </Link>
+      <Link to="/feed" > Feed </Link>
+
     </>
   )
 }
