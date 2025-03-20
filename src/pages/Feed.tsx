@@ -1,14 +1,16 @@
-import { useGetTriplesQuery } from '@0xintuition/graphql'
-
+import { useQueryClient } from '@tanstack/react-query';
+import { useSearchAtomsByUriQuery } from '../queries';
 
 function Feed() {
-  const { data, isLoading } = useGetTriplesQuery( { limit: 100} )
-  
+
+  const client = useQueryClient(); // Sets the client for gql queries
+
+  const { data, isLoading } = useSearchAtomsByUriQuery("", "metamask.io")
   return (
     <p>
       Feed page
-      { isLoading ? "En train de charger" : JSON.stringify(data.triples) }
-    </p> 
+      {isLoading ? "En train de charger" : JSON.stringify(data)}
+    </p>
   )
 
 }

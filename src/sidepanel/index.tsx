@@ -11,17 +11,20 @@ import Profile from "~src/pages/Profile"
 import Navbar from "../components/layout/Navbar"
 import { ThemeProvider } from "../components/ThemeProvider"
 import Feed from "../pages/Feed"
+import { configureClient } from '@0xintuition/graphql'
+import { createServerClient } from '@0xintuition/graphql'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { GraphQLClient } from "graphql-request"
 
-const client = createServerClient({})
 
-configureClient({
-  apiUrl: "https://dev.base.intuition-api.com/v1/graphql"
+const API_URL = "https://dev.base.intuition-api.com/v1/graphql";
+configureClient({ // client for intuition premade requests
+  apiUrl: API_URL
 })
 
 const queryClient = new QueryClient()
 
 function IndexSidepanel() {
-  const [data, setData] = useState("")
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="intuition-theme">
