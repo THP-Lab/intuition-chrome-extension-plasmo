@@ -53,7 +53,10 @@
         ]
       }
     ],
-    "name": "Intuition"
+    "name": "Intuition",
+    "permissions": [
+      "activeTab"
+    ]
   },
   "pnpm": {
     "onlyBuiltDependencies": [
