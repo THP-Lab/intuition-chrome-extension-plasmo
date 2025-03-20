@@ -14,12 +14,9 @@
     "@0xintuition/graphql": "^0.6.0",
     "@radix-ui/react-slot": "^1.1.2",
     "@tanstack/react-query": "^5.69.0",
-
     "graphql-request": "^7.1.2",
-
     "class-variance-authority": "^0.7.1",
     "lucide-react": "^0.483.0",
-
     "plasmo": "0.90.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -64,5 +61,6 @@
       "msgpackr-extract",
       "sharp"
     ]
-  }
+  },
+  "packageManager": "pnpm@10.5.0+sha512.11106a5916c7406fe4b8cb8e3067974b8728f47308a4f5ac5e850304afa6f57e2847d7950dfe78877d8d36bfb401d381c4215db3a4c3547ffa63c14333a6fa51"
 }
