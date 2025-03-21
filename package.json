@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
-    "package": "plasmo package"
+    "package": "plasmo package",
+    "graphql:build": "cd src/graphql && tsup"
   },
   "dependencies": {
     "@0xintuition/1ui": "^0.3.6",
@@ -24,7 +25,9 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-query": "^3.39.3",
-    "react-router-dom": "^7.3.0"
+    "react-router-dom": "^7.3.0",
+    "@graphql-codegen/typescript-document-nodes": "^4.0.11",
+    "graphql": "^16.9.0"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "4.1.1",
@@ -37,7 +40,23 @@
     "prettier": "3.2.4",
     "svgo": "^3.0.2",
     "tailwindcss": "3.3.0",
-    "typescript": "5.3.3"
+    "@0no-co/graphqlsp": "^1.12.16",
+    "@graphql-codegen/cli": "^5.0.3",
+    "@graphql-codegen/client-preset": "^4.4.0",
+    "@graphql-codegen/introspection": "^4.0.3",
+    "@graphql-codegen/plugin-helpers": "^5.0.4",
+    "@graphql-codegen/schema-ast": "^4.1.0",
+    "@graphql-codegen/typescript": "^4.1.0",
+    "@graphql-codegen/typescript-operations": "^4.3.0",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.2",
+    "@graphql-codegen/typescript-react-query": "^6.1.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@parcel/watcher": "^2.4.1",
+    "concurrently": "^8.2.2",
+    "tsup": "^6.7.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vitest": "^1.3.1"
   },
   "manifest": {
     "host_permissions": [

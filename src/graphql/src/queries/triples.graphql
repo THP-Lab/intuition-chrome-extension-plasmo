@@ -1,0 +1,56 @@
+query GetTriplesWithPositionsTHP(
+  $limit: Int
+  $offset: Int
+  $orderBy: [triples_order_by!]
+  $where: triples_bool_exp
+  $address: String
+) {
+  total: triples_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    id
+    counter_vault_id
+    subject {
+      id
+      label
+      image
+    }
+    predicate {
+      id
+      label
+      image
+    }
+    object {
+      id
+      label
+      image
+    }
+    vault {
+      total_shares
+      position_count
+      positions(where: { account_id: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
+    }
+    counter_vault {
+      total_shares
+      position_count
+      positions(where: { account_id: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
+    }
+  }
+}

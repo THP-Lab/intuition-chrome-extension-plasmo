@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetTriplesQuery } from "../graphql/src";
+import { useGetTriplesWithPositionsTHP } from "../graphql/dist";
 import { useContext } from "react";
 
 function Profile() {
