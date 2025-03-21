@@ -26,6 +26,9 @@ importers:
       graphql-request:
         specifier: ^7.1.2
         version: 7.1.2(graphql@16.10.0)
+      graphql-request:
+        specifier: ^7.1.2
+        version: 7.1.2(graphql@16.10.0)
       lucide-react:
         specifier: ^0.483.0
         version: 0.483.0(react@18.2.0)
