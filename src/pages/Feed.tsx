@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import { useSearchAtomsByUriQuery } from "../queries"
 
 function Feed() {
-  const [currentUrl, setCurrentUrl] = useState<string | undefined>(undefined)
+  const [currentUrl, setCurrentUrl] = useState<string>("")
   useQueryClient() // Sets the client for gql queries
 
   const getCurrentUrl = async () => {

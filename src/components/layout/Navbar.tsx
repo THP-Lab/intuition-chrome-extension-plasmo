@@ -1,4 +1,3 @@
-import React from "react"
 import { Home, List, User } from "lucide-react"
 import { Link } from "react-router-dom"
 

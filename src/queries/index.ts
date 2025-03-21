@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 
 import graphqlClient from "~src/queryclient"
 
@@ -12,10 +12,8 @@ export const useSearchAtomsByUriQuery = (
   address: string,
   uri: string | undefined
 ) => {
-  if (uri) {
     return useQuery({
       queryKey: ["GetAtomsByUri", address, uri],
       queryFn: () => searchAtomsByUri(address, uri)
     })
-  }
 }

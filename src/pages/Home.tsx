@@ -1,4 +1,3 @@
-import React from "react"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 
