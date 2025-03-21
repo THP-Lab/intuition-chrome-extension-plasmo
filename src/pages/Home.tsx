@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useSearchAtomsByUriQuery } from "../queries"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
+import { AtomCard } from "../components/AtomCard"
 
 function Home() {
   const { theme } = useTheme()
@@ -31,7 +32,8 @@ function Home() {
     })
   }, [])
 
-  const { data, isLoading } = useSearchAtomsByUriQuery("", currentUrl)
+  const { data, isLoading, error } = useSearchAtomsByUriQuery("", currentUrl)
+  const atoms:any = data?.["atoms"] || [];
 
   return (
     <div className="space-y-6">
@@ -42,23 +44,22 @@ function Home() {
         </p>
       </div>
 
-      <div className="p-4 border rounded-lg bg-card">
-        <h2 className="text-xl font-semibold mb-4">Thème actuel: {theme}</h2>
 
-        <div className="flex flex-wrap gap-2">
-          <Button variant="default">Default</Button>
-          <Button variant="secondary">Secondary</Button>
-          <Button variant="outline">Outline</Button>
-          <Button variant="destructive">Destructive</Button>
-          <Button variant="ghost">Ghost</Button>
-          <Button variant="link">Link</Button>
-        </div>
+        <div className="p-4">
+        <h1 className="text-2xl font-bold mb-4">Home Page - Atoms</h1>
+
+        
+        {error && <p className="text-red-500">Erreur : {error.message}</p>}
+
+        {isLoading ? "Chargement..." : data["atoms"][0] ? 
+        ( atoms.map((atom: any) => (
+            <AtomCard key={atom.id} atom={atom} />
+          ))
+        ) : (
+          <p>Aucun atom trouvé pour cette URL.</p>
+        )}
+        
       </div>
-
-      <p>
-        Feed page <br/>
-        {isLoading ? "Chargement..." : data["atoms"][0] ? JSON.stringify(data["atoms"]) : "Pas d'atoms pour cette page"}
-      </p>
     </div>
   )
 }
