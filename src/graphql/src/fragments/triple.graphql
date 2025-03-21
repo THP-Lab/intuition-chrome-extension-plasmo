@@ -1,0 +1,95 @@
+fragment TripleMetadata on triples {
+  id
+  subject_id
+  predicate_id
+  object_id
+  subject {
+    data
+    id
+    image
+    label
+    emoji
+    type
+    ...AtomValue
+    creator {
+      ...AccountMetadata
+    }
+  }
+  predicate {
+    data
+    id
+    image
+    label
+    emoji
+    type
+    ...AtomValue
+    creator {
+      ...AccountMetadata
+    }
+  }
+  object {
+    data
+    id
+    image
+    label
+    emoji
+    type
+    ...AtomValue
+    creator {
+      ...AccountMetadata
+    }
+  }
+  vault {
+    total_shares
+    current_share_price
+    allPositions: positions_aggregate {
+      ...PositionAggregateFields
+    }
+    positions {
+      ...PositionFields
+    }
+  }
+  counter_vault {
+    total_shares
+    current_share_price
+    allPositions: positions_aggregate {
+      ...PositionAggregateFields
+    }
+    positions {
+      ...PositionFields
+    }
+  }
+}
+
+fragment TripleTxn on triples {
+  block_number
+  block_timestamp
+  transaction_hash
+  creator_id
+}
+
+fragment TripleVaultDetails on triples {
+  vault_id
+  counter_vault_id
+  vault {
+    positions {
+      ...PositionDetails
+    }
+  }
+  counter_vault {
+    positions {
+      ...PositionDetails
+    }
+  }
+}
+
+fragment TripleVaultCouterVaultDetailsWithPositions on triples {
+  vault_id
+  counter_vault_id
+  vault {
+    ...VaultDetailsWithFilteredPositions
+  }
+  counter_vault {
+    ...VaultDetailsWithFilteredPositions
+  }
+}
