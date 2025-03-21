@@ -3,10 +3,9 @@ import { Button } from "~/src/components/ui/button"
 
 function Home() {
   const { theme } = useTheme()
-
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
+     <div className="space-y-2">
         <h1 className="text-3xl font-bold">Bienvenue sur Intuition</h1>
         <p className="text-muted-foreground">
           Cette application vous permet de gérer vos insights et vos recherches.
