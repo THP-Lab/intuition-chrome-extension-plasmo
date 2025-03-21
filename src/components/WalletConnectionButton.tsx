@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-
+import React, { useEffect, useState } from "react"
+import {Button} from "~src/components/ui/button"
 import { connectWallet } from "../lib/metamask"
 
 const WalletConnectionButton = () => {
@@ -21,17 +21,25 @@ const WalletConnectionButton = () => {
     }
   }
 
+  const handleDisconnect = () => {
+    setAccount("");
+    localStorage.removeItem("metamask-account");
+  }
+
   const sliceAddress = (address: string) => {
     return `${address.slice(0, 4)}...${address.slice(-4)}`
   }
 
+
+
   return (
     <div>
       {!account ? (
-        <button onClick={handleConnect}>Connect to Metamask</button>
+        <Button variant="default" onClick={handleConnect}>Connect to Metamask</Button>
       ) : (
         <div>
           <p>Connected account : {sliceAddress(account)}</p>
+          <Button variant="destructive" onClick={handleDisconnect}>Disconnect</Button>
         </div>
       )}
     </div>

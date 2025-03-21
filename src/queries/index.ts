@@ -10,7 +10,7 @@ const searchAtomsByUri = async (address: string, uri: string) => {
 
 export const useSearchAtomsByUriQuery = (
   address: string,
-  uri: string | undefined
+  uri: string
 ) => {
     return useQuery({
       queryKey: ["GetAtomsByUri", address, uri],
