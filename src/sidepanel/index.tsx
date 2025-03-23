@@ -1,7 +1,5 @@
 import "../global.css"
 
-import { configureClient, createServerClient } from "@0xintuition/graphql"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useState } from "react"
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
 
@@ -16,6 +14,9 @@ import { createServerClient } from '@0xintuition/graphql'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GraphQLClient } from "graphql-request"
 
+import { ApolloProvider } from "@apollo/client"
+import { client as apolloClient } from "../lib/apollo" 
+
 
 const API_URL = "https://dev.base.intuition-api.com/v1/graphql";
 configureClient({ // client for intuition premade requests
@@ -28,6 +29,7 @@ function IndexSidepanel() {
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="intuition-theme">
+    <ApolloProvider client={apolloClient}> 
       <QueryClientProvider client={queryClient}>
         <Router>
           <Navbar />
@@ -41,8 +43,7 @@ function IndexSidepanel() {
           </div>
         </Router>
       </QueryClientProvider>
-    </ThemeProvider>
-  )
+    </ApolloProvider>
+  </ThemeProvider>
+)
 }
-
-export default IndexSidepanel

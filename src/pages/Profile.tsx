@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Button } from "@0xintuition/1ui"; 
+import { useQueryClient } from "@tanstack/react-query"
+import { useSearchAtomsByUriQuery } from "../queries"
 
 
 function Profile() {
