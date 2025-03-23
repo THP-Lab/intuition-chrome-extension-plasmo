@@ -11,9 +11,7 @@
   "compilerOptions": {
     "jsx": "react",
     "paths": {
-      "~*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     },
     "baseUrl": "."
   }
