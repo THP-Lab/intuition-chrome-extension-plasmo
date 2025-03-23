@@ -4,6 +4,7 @@ import { useSearchAtomsByUriQuery } from "../queries"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { AtomCard } from "../components/AtomCard"
+import TabSystem from '../components/TabSystem';
 
 function Home() {
   const { theme } = useTheme()
@@ -35,6 +36,32 @@ function Home() {
   const { data, isLoading, error } = useSearchAtomsByUriQuery("", currentUrl)
   const atoms:any = data?.["atoms"] || [];
 
+
+  const tabs = [
+    {
+      label: 'Atom',
+      content: 
+      <div>        
+        {isLoading ? "Chargement..." : data["atoms"][0] ? 
+        ( atoms.map((atom: any) => (
+            <AtomCard key={atom.id} atom={atom} />
+          ))
+        ) : (
+          <p>Aucun atom trouvé pour cette URL.</p>
+        )}
+      </div>
+    },
+    {
+      label: 'Onglet 2',
+      content: <div>Contenu de l'onglet 2</div>
+    },
+    {
+      label: 'Onglet 3',
+      content: <div>Contenu de l'onglet 3</div>
+    }
+  ];
+
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -47,18 +74,14 @@ function Home() {
 
         <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Home Page - Atoms</h1>
-
-        
         {error && <p className="text-red-500">Erreur : {error.message}</p>}
 
-        {isLoading ? "Chargement..." : data["atoms"][0] ? 
-        ( atoms.map((atom: any) => (
-            <AtomCard key={atom.id} atom={atom} />
-          ))
-        ) : (
-          <p>Aucun atom trouvé pour cette URL.</p>
-        )}
+
+        <TabSystem tabs={tabs} />
+
+
         
+
       </div>
     </div>
   )
