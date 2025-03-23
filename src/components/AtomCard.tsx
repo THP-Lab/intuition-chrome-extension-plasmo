@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom"
+import { UserRound } from 'lucide-react';
+
 
 interface Atom {
   id: string;
@@ -15,9 +17,15 @@ interface Atom {
       description?: string;
       url?: string;
     };
-    // D'autres propriétés peuvent être présentes
+    
   };
-  
+  vault: {
+      total_shares?: string;
+      current_share_price?: string;
+      position_count?: string;
+      positions?: string;
+  }
+
 }
 
 interface AtomCardProps {
@@ -26,7 +34,7 @@ interface AtomCardProps {
 
 export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
   return (
-    <div className="border rounded p-4 shadow-sm my-2">
+    <div className="border rounded p-4 my-2">
       <div className="flex items-center mb-2">
         {atom.image && (
           <img
@@ -38,6 +46,10 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
         <div>
           <h2 className="text-xl font-bold">{atom.label}</h2>
         </div>
+        <div className="ml-auto">
+        <p className="text-sm"><UserRound /> {atom.vault.position_count}</p>
+
+        </div>
       </div>
 
 
@@ -47,6 +59,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
             <h3 className="text-lg font-semibold">
               {atom.value.thing.name}
             </h3>
+              
           )}
           {atom.value.thing.description && (
             <p className="text-sm text-gray-600">
@@ -65,6 +78,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
           )}
         </div>
       )}
+
     </div>
   );
 };
