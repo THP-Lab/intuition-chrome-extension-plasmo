@@ -8,14 +8,21 @@ query GetClaimsByAddress($address: String) {
         label
       }
       triple {
+        id
         subject {
           label
+          image
+          type
         }
         predicate {
           label
+          image
+          type
         }
         object {
           label
+          image
+          type
         }
       }
       id
