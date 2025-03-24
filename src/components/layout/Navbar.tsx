@@ -1,8 +1,11 @@
-import { List, User } from "lucide-react"
-import React from "react"
+import { List } from "lucide-react"
+import * as React from "react"
 import { Link, useLocation } from "react-router-dom"
 
+import IntuitionFeed from "~/src/components/icons/IntuitionFeed"
 import IntuitionIcon from "~/src/components/icons/IntuitionIcon"
+import IntuitionProfil from "~/src/components/icons/IntuitionProfil"
+import IntuitionThemeAvatar from "~/src/components/icons/IntuitionThemeAvatar"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { useSvgSprites } from "~/src/lib/sprite-loader"
@@ -44,10 +47,14 @@ function Navbar() {
           variant={isActive("/profile") ? "default" : "ghost"}
           size="sm"
           asChild
-          className="flex min-w-[4rem] flex-col items-center gap-1 p-2">
-          <Link to="/profile">
-            <User className="h-6 w-6" />
-            <span className="text-[0.65rem] font-medium">Profil</span>
+          className={cn(
+            "flex min-w-[4rem] flex-col items-center gap-1 p-2",
+            isActive("/profile") && "animate-fade-bg"
+          )}>
+          <Link to="/profile" className="flex flex-col items-center">
+            <div className="text-foreground">
+              <IntuitionProfil size={32} className="mb-1" />
+            </div>
           </Link>
         </Button>
 
@@ -55,10 +62,15 @@ function Navbar() {
           variant={isActive("/feed") ? "default" : "ghost"}
           size="sm"
           asChild
-          className="flex min-w-[4rem] flex-col items-center gap-1 p-2">
-          <Link to="/feed">
-            <List className="h-6 w-6" />
-            <span className="text-[0.65rem] font-medium">Feed</span>
+          className={cn(
+            "flex min-w-[4rem] flex-col items-center gap-1 p-2",
+            isActive("/feed") &&
+              "animate-fade-bg bg-primary text-primary-foreground hover:bg-primary/90"
+          )}>
+          <Link to="/feed" className="flex flex-col items-center">
+            <div className="text-foreground">
+              <IntuitionFeed size={32} className="mb-1" />
+            </div>
           </Link>
         </Button>
 
@@ -67,14 +79,9 @@ function Navbar() {
           size="sm"
           onClick={toggleTheme}
           className="flex min-w-[4rem] flex-col items-center gap-1 p-2">
-          <svg className="h-6 w-6">
-            <use
-              href={
-                theme === "light" ? "#trust-circle" : "#trust-circle-filled"
-              }
-            />
-          </svg>
-          <span className="text-[0.65rem] font-medium">Thème</span>
+          <div className="text-foreground">
+            <IntuitionThemeAvatar size={32} className="mb-1" />
+          </div>
         </Button>
       </div>
     </nav>
