@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  :host {
     --background: 60 40% 96%;
     --foreground: 0 0% 0%;
     --muted: 210 40% 96.1%;
@@ -26,7 +27,8 @@
     --radius: 0.5rem;
   }
 
-  .dark {
+  :root.dark,
+  :host(.dark) {
     --background: 224 71% 4%;
     --foreground: 213 31% 91%;
     --muted: 223 47% 11%;
@@ -54,15 +56,24 @@
   * {
     @apply border-[hsl(var(--border))];
   }
+
+  :root,
+  :host,
+  html,
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply min-h-screen bg-background text-foreground;
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
-    background-color: #000000;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+  }
+
+  * {
+    transition:
+      background-color 0.1s ease,
+      color 0.1s ease,
+      border-color 0.1s ease;
   }
 }
 

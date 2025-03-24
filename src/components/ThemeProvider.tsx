@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import React, { createContext, useContext, useEffect, useState } from "react"
 
 type Theme = "light" | "dark"
 
@@ -14,7 +14,7 @@ type ThemeProviderState = {
 }
 
 const initialState: ThemeProviderState = {
-  theme: "light",
+  theme: "dark",
   setTheme: () => null
 }
 
@@ -22,11 +22,12 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({
   children,
-  defaultTheme = "light",
+  defaultTheme = "dark",
   storageKey = "intuition-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme)
+  const [mounted, setMounted] = useState(false)
 
   // Charger le thème depuis chrome.storage.local au chargement du composant
   useEffect(() => {
@@ -36,29 +37,62 @@ export function ThemeProvider({
         if (typeof chrome !== "undefined" && chrome.storage) {
           const result = await chrome.storage.local.get(storageKey)
           const savedTheme = result[storageKey] as Theme
-          if (savedTheme) {
+          if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
             setTheme(savedTheme)
+          } else {
+            // Si pas de thème sauvegardé ou invalide, utiliser le thème système
+            const systemTheme = window.matchMedia(
+              "(prefers-color-scheme: dark)"
+            ).matches
+              ? "dark"
+              : "light"
+            setTheme(systemTheme)
           }
         } else {
           // Fallback pour le développement local
           const savedTheme = localStorage.getItem(storageKey) as Theme
-          if (savedTheme) {
+          if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
             setTheme(savedTheme)
+          } else {
+            // Si pas de thème sauvegardé ou invalide, utiliser le thème système
+            const systemTheme = window.matchMedia(
+              "(prefers-color-scheme: dark)"
+            ).matches
+              ? "dark"
+              : "light"
+            setTheme(systemTheme)
           }
         }
       } catch (error) {
         console.error("Erreur lors du chargement du thème:", error)
+        // En cas d'erreur, utiliser le thème par défaut
+        setTheme(defaultTheme)
+      } finally {
+        setMounted(true)
       }
     }
 
     loadTheme()
-  }, [storageKey])
+
+    // Écouter les changements de thème système
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
+    const handleChange = (e: MediaQueryListEvent) => {
+      const newTheme = e.matches ? "dark" : "light"
+      setTheme(newTheme)
+    }
+    mediaQuery.addEventListener("change", handleChange)
+
+    return () => mediaQuery.removeEventListener("change", handleChange)
+  }, [storageKey, defaultTheme])
 
   // Appliquer le thème et le sauvegarder lorsqu'il change
   useEffect(() => {
+    if (!mounted) return
+
     const root = window.document.documentElement
     root.classList.remove("light", "dark")
     root.classList.add(theme)
+    root.style.colorScheme = theme
 
     try {
       // Sauvegarder dans chrome.storage si disponible
@@ -71,7 +105,12 @@ export function ThemeProvider({
     } catch (error) {
       console.error("Erreur lors de la sauvegarde du thème:", error)
     }
-  }, [theme, storageKey])
+  }, [theme, storageKey, mounted])
+
+  // Éviter le flash de contenu non thémé
+  if (!mounted) {
+    return null
+  }
 
   const value = {
     theme,

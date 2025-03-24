@@ -11,21 +11,18 @@ import { Button } from "~/src/components/ui/button"
 import { useSvgSprites } from "~/src/lib/sprite-loader"
 import { cn } from "~src/lib/utils"
 
-
 function Navbar() {
   const { theme, setTheme } = useTheme()
   const location = useLocation()
   useSvgSprites()
 
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light"
-    setTheme(newTheme)
+    setTheme(theme === "dark" ? "light" : "dark")
   }
 
   const isActive = (path: string) => location.pathname === path
 
   return (
-
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/80 backdrop-blur-lg">
       <div className="flex items-center justify-around p-2">
         <Button
@@ -78,12 +75,14 @@ function Navbar() {
           variant="ghost"
           size="sm"
           onClick={toggleTheme}
-          className="flex min-w-[4rem] flex-col items-center gap-1 p-2">
+          className={cn(
+            "flex min-w-[4rem] flex-col items-center gap-1 p-2",
+            theme === "dark" ? "text-primary" : "text-foreground"
+          )}>
           <div className="text-foreground">
             <IntuitionThemeAvatar size={32} className="mb-1" />
           </div>
         </Button>
-
       </div>
     </nav>
   )
