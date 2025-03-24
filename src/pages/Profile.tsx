@@ -1,7 +1,8 @@
 
 import React, { useEffect, useState } from "react"
 import WalletConnectionButton from "~src/components/WalletConnectionButton"
-import YourClaimsTab from "~src/components/profile/YourClaimsTab"
+import ProfileTabs from "~src/components/profile/ProfileTabs"
+import { Outlet } from "react-router-dom"
 
 function Profile() {
   const [address, setAddress] = useState(localStorage.getItem("metamask-account"))
@@ -22,7 +23,8 @@ function Profile() {
   return (
     <div>
       <WalletConnectionButton onClick={handleClick} />
-      <YourClaimsTab account={ address } />
+      <ProfileTabs />
+      <Outlet />
     </div>
   )
 }
