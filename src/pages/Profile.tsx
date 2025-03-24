@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useGetClaimsByAddressQuery } from "~src/graphql/src";
 import { Claim } from "@0xintuition/1ui";
-import { useContext } from "react";
+import WalletConnectionButton from "~src/components/WalletConnectionButton";
 
 function Profile() {
+  const [address, setAdress] = useState(localStorage.getItem("metamask-account")) ;
+
+  if(!address) {
+    return(
+      <div>
+        Please link your metamask account then re-open this page
+        <WalletConnectionButton />
+      </div>
+    )
+  }
+
+
   const { data, isLoading } = useGetClaimsByAddressQuery({
-    address: "0x25d5c9dbc1e12163b973261a08739927e4f72ba8",
-
+    address: address,
   });
-
 
   if (isLoading) return <div>Loading...</div>;
 
