@@ -1,12 +1,30 @@
 import { Claim } from "@0xintuition/1ui"
-import React, { useContext } from "react"
 
+import React, { useEffect, useState } from "react"
+
+import WalletConnectionButton from "~src/components/WalletConnectionButton"
 import { useGetClaimsByAddressQuery } from "~src/graphql/src"
 
 function Profile() {
+  const [address, setAddress] = useState(
+    localStorage.getItem("metamask-account")
+  )
+
+  const handleClick = () => {
+    setAddress(localStorage.getItem("metamask-account"))
+  }
+
   const { data, isLoading } = useGetClaimsByAddressQuery({
-    address: "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
+    address: address
   })
+  if (!address) {
+    return (
+      <div>
+        Please link your metamask account then re-open this page
+        <WalletConnectionButton onClick={handleClick} />
+      </div>
+    )
+  }
 
   if (isLoading) return <div>Loading...</div>
 
@@ -16,6 +34,9 @@ function Profile() {
     <>
       <div>
         <h2>Your Claims ( {data.claims_aggregate.aggregate.count} )</h2>
+
+        <WalletConnectionButton onClick={handleClick} />
+
         {!isLoading &&
           data.claims_aggregate.nodes.map(
             ({ triple, shares, counter_shares }) => (

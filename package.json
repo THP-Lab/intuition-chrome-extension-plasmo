@@ -74,7 +74,8 @@
     ],
     "name": "Intuition",
     "permissions": [
-      "activeTab"
+      "activeTab",
+      "sidePanel"
     ]
   },
   "pnpm": {

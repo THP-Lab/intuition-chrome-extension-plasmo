@@ -9,9 +9,7 @@ import IntuitionThemeAvatar from "~/src/components/icons/IntuitionThemeAvatar"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { useSvgSprites } from "~/src/lib/sprite-loader"
-import { cn } from "~/src/lib/utils"
 
-import WalletConnectionButton from "../WalletConnectionButton"
 
 function Navbar() {
   const { theme, setTheme } = useTheme()
@@ -26,6 +24,7 @@ function Navbar() {
   const isActive = (path: string) => location.pathname === path
 
   return (
+
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/80 backdrop-blur-lg">
       <div className="flex items-center justify-around p-2">
         <Button
@@ -83,6 +82,7 @@ function Navbar() {
             <IntuitionThemeAvatar size={32} className="mb-1" />
           </div>
         </Button>
+
       </div>
     </nav>
   )

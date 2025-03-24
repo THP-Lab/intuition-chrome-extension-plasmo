@@ -42,7 +42,7 @@ function Home() {
       label: 'Atom',
       content: 
       <div>        
-        {isLoading ? "Chargement..." : data["atoms"][0] ? 
+        {isLoading ? "Chargement..." : (typeof data !== "undefined" && data["atoms"].length !== 0)? 
         ( atoms.map((atom: any) => (
             <AtomCard key={atom.id} atom={atom} />
           ))
@@ -74,7 +74,7 @@ function Home() {
 
         <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Home Page - Atoms</h1>
-        {error && <p className="text-red-500">Erreur : {error.message}</p>}
+        {error && <p className="text-red-500">Une erreur est survenue lors de la requête pour cette page.</p>}
 
 
         <TabSystem tabs={tabs} />

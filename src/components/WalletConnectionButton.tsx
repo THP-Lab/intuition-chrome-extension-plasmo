@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import {Button} from "~src/components/ui/button"
 import { connectWallet } from "../lib/metamask"
 
-const WalletConnectionButton = () => {
+const WalletConnectionButton = ({onClick}) => {
   const [account, setAccount] = useState<string>("")
 
   useEffect(() => {
@@ -19,11 +19,13 @@ const WalletConnectionButton = () => {
     } catch (error) {
       console.error("Failed to connect to wallet: ", error)
     }
+    onClick()
   }
 
   const handleDisconnect = () => {
     setAccount("");
     localStorage.removeItem("metamask-account");
+    onClick()
   }
 
   const sliceAddress = (address: string) => {
