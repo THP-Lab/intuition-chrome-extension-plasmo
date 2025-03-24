@@ -10662,6 +10662,18 @@ export type VaultFieldsForTripleFragment = {
   }>
 }
 
+export type PinPersonMutationVariables = Exact<{
+  name: Scalars["String"]["input"]
+  description?: InputMaybe<Scalars["String"]["input"]>
+  image?: InputMaybe<Scalars["String"]["input"]>
+  url?: InputMaybe<Scalars["String"]["input"]>
+}>
+
+export type PinPersonMutation = {
+  __typename?: "mutation_root"
+  pinPerson?: { __typename?: "PinOutput"; uri?: string | null } | null
+}
+
 export type PinThingMutationVariables = Exact<{
   name: Scalars["String"]["input"]
   description?: InputMaybe<Scalars["String"]["input"]>
@@ -13300,6 +13312,52 @@ export const VaultFieldsForTripleFragmentDoc = `
   ...VaultFilteredPositions
 }
     `
+export const PinPersonDocument = `
+    mutation pinPerson($name: String!, $description: String, $image: String, $url: String) {
+  pinPerson(
+    person: {description: $description, image: $image, name: $name, url: $url}
+  ) {
+    uri
+  }
+}
+    `
+
+export const usePinPersonMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    PinPersonMutation,
+    TError,
+    PinPersonMutationVariables,
+    TContext
+  >
+) => {
+  return useMutation<
+    PinPersonMutation,
+    TError,
+    PinPersonMutationVariables,
+    TContext
+  >({
+    mutationKey: ["pinPerson"],
+    mutationFn: (variables?: PinPersonMutationVariables) =>
+      fetcher<PinPersonMutation, PinPersonMutationVariables>(
+        PinPersonDocument,
+        variables
+      )(),
+    ...options
+  })
+}
+
+usePinPersonMutation.getKey = () => ["pinPerson"]
+
+usePinPersonMutation.fetcher = (
+  variables: PinPersonMutationVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<PinPersonMutation, PinPersonMutationVariables>(
+    PinPersonDocument,
+    variables,
+    options
+  )
+
 export const PinThingDocument = `
     mutation pinThing($name: String!, $description: String, $image: String, $url: String) {
   pinThing(
@@ -20377,6 +20435,105 @@ export const VaultFieldsForTriple = {
                   kind: "FragmentSpread",
                   name: { kind: "Name", value: "PositionFields" }
                 }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const PinPerson = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "pinPerson" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "name" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "description" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "image" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "url" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "pinPerson" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "person" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "description" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "description" }
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "image" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "image" }
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "name" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "name" }
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "url" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "url" }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "uri" } }
               ]
             }
           }

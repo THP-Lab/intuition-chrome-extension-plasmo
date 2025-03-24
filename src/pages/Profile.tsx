@@ -5,11 +5,12 @@ import React, { useEffect, useState } from "react"
 import WalletConnectionButton from "~src/components/WalletConnectionButton"
 import { useGetClaimsByAddressQuery } from "~src/graphql/src"
 
+
 function Profile() {
   const [address, setAddress] = useState(
     localStorage.getItem("metamask-account")
   )
-
+  console.log("Adresse récupérée au chargement :", addrese
   const handleClick = () => {
     setAddress(localStorage.getItem("metamask-account"))
   }
