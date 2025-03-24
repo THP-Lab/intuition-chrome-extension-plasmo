@@ -19,6 +19,11 @@ import YourClaimsTab from "~src/components/profile/YourClaimsTab"
 import IdentityTab from "~src/components/profile/IdentityTab"
 import FollowersTab from "~src/components/profile/FollowersTab"
 import FollowingTab from "~src/components/profile/FollowingTab"
+import Feed from "../pages/Feed"
+import CreateAtom from "../pages/CreateAtom"
+
+import { GraphQLClient } from "graphql-request"
+
 
 const API_URL = "https://dev.base.intuition-api.com/v1/graphql"
 configureClient({
@@ -50,6 +55,16 @@ function IndexSidepanel() {
               </div>
             </main>
             <Navbar />
+          <Navbar />
+          <div className="container mx-auto p-4">
+            <Routes>
+              <Route path="*" element={<Home />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/feed" element={<Feed />} />
+
+              <Route path="/atomform" element={<CreateAtom />} />
+            </Routes>
           </div>
         </Router>
       </QueryClientProvider>
