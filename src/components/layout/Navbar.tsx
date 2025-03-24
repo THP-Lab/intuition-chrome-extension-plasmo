@@ -9,6 +9,7 @@ import IntuitionThemeAvatar from "~/src/components/icons/IntuitionThemeAvatar"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { useSvgSprites } from "~/src/lib/sprite-loader"
+import { cn } from "~src/lib/utils"
 
 
 function Navbar() {
