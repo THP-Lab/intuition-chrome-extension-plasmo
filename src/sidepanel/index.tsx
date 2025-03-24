@@ -11,9 +11,7 @@ import Profile from "~src/pages/Profile"
 import Navbar from "../components/layout/Navbar"
 import { ThemeProvider } from "../components/ThemeProvider"
 import Feed from "../pages/Feed"
-import { configureClient } from '@0xintuition/graphql'
-import { createServerClient } from '@0xintuition/graphql'
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { GraphQLClient } from "graphql-request"
 
 
