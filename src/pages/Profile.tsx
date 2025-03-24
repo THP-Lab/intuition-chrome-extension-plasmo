@@ -1,4 +1,5 @@
 import { Claim } from "@0xintuition/1ui"
+
 import React, { useEffect, useState } from "react"
 
 import WalletConnectionButton from "~src/components/WalletConnectionButton"
@@ -24,6 +25,7 @@ function Profile() {
       </div>
     )
   }
+
   if (isLoading) return <div>Loading...</div>
 
   console.log(data.claims_aggregate.nodes)
@@ -32,7 +34,9 @@ function Profile() {
     <>
       <div>
         <h2>Your Claims ( {data.claims_aggregate.aggregate.count} )</h2>
+
         <WalletConnectionButton onClick={handleClick} />
+
         {!isLoading &&
           data.claims_aggregate.nodes.map(
             ({ triple, shares, counter_shares }) => (
