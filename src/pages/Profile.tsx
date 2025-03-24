@@ -5,12 +5,11 @@ import React, { useEffect, useState } from "react"
 import WalletConnectionButton from "~src/components/WalletConnectionButton"
 import { useGetClaimsByAddressQuery } from "~src/graphql/src"
 
-
 function Profile() {
   const [address, setAddress] = useState(
     localStorage.getItem("metamask-account")
   )
-  console.log("Adresse récupérée au chargement :", addrese
+
   const handleClick = () => {
     setAddress(localStorage.getItem("metamask-account"))
   }
@@ -34,9 +33,14 @@ function Profile() {
   return (
     <>
       <div>
+      <h1>My Profile</h1>
+
         <h2>Your Claims ( {data.claims_aggregate.aggregate.count} )</h2>
 
         <WalletConnectionButton onClick={handleClick} />
+
+        <h2>Register a new Person</h2>
+        <SignUpForm />
 
         {!isLoading &&
           data.claims_aggregate.nodes.map(
