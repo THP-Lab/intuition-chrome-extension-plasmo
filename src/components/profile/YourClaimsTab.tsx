@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { useGetClaimsByAddressQuery } from "~src/graphql/src";
 import { Claim } from "@0xintuition/1ui";
+import { useStorage } from "@plasmohq/storage/hook";
 
 const YourClaimsTab = () => {
-  const [account, setAccount] = useState<string | null>(null)
+  const [account] = useStorage<string>("metamask-account")
 
-  // Read from localStorage on component mount
-  useEffect(() => {
-    const stored = localStorage.getItem("metamask-account")
-    if (stored) {
-      setAccount(stored)
-    }
-  }, [])
-  
   // Call hook even if account is null
   const { data, isLoading, isError, error } = useGetClaimsByAddressQuery(
     { address: account ?? "" }, // Provide empty string if null

@@ -1,6 +1,14 @@
+import React from "react"
+import { useStorage } from "@plasmohq/storage/hook"
+
 const IdentityTab = () => {
-  return(
-    <h2>This is Identity Tab</h2>
+  const [address] = useStorage<string>("metamask-account")  
+ return (
+    <div>
+      <h2>Identity Tab</h2>
+      <p>Wallet address : {address || "Not connected"}</p>
+    </div>
+
   )
 };
 

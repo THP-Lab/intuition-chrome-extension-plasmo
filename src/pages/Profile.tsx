@@ -3,26 +3,23 @@ import React, { useEffect, useState } from "react"
 import WalletConnectionButton from "~src/components/WalletConnectionButton"
 import ProfileTabs from "~src/components/profile/ProfileTabs"
 import { Outlet } from "react-router-dom"
+import { useStorage } from "@plasmohq/storage/hook";
 
 function Profile() {
-  const [address, setAddress] = useState(localStorage.getItem("metamask-account"))
-
-  const handleClick = () => {
-    setAddress(localStorage.getItem("metamask-account"))
-  }
+  const [address] = useStorage<string>("metamask-account")
 
   if (!address) {
     return (
       <div>
         Please link your metamask account then re-open this page
-        <WalletConnectionButton onClick={handleClick} />
+        <WalletConnectionButton />
       </div>
     )
   }
 
   return (
     <div>
-      <WalletConnectionButton onClick={handleClick} />
+      <WalletConnectionButton />
       <ProfileTabs />
       <Outlet />
     </div>

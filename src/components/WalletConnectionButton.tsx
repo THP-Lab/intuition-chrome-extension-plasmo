@@ -1,38 +1,27 @@
-import React, { useEffect, useState } from "react"
-import {Button} from "~src/components/ui/button"
+import React, from "react"
+import { Button } from "~src/components/ui/button"
 import { connectWallet } from "../lib/metamask"
+import { useStorage } from "@plasmohq/storage/hook"
 
-const WalletConnectionButton = ({onClick}) => {
-  const [account, setAccount] = useState<string>("")
-
-  useEffect(() => {
-    const storedAccount = localStorage.getItem("metamask-account")
-    console.log("Stored Account: ", storedAccount)
-    storedAccount ? setAccount(storedAccount) : setAccount("")
-  }, [])
+const WalletConnectionButton = () => {
+  const [account, setAccount] = useStorage<string>("metamask-account")
 
   const handleConnect = async () => {
     try {
       const accountAddress = await connectWallet()
       setAccount(accountAddress)
-      localStorage.setItem("metamask-account", accountAddress)
     } catch (error) {
       console.error("Failed to connect to wallet: ", error)
     }
-    onClick()
   }
 
   const handleDisconnect = () => {
     setAccount("");
-    localStorage.removeItem("metamask-account");
-    onClick()
   }
 
   const sliceAddress = (address: string) => {
     return `${address.slice(0, 4)}...${address.slice(-4)}`
   }
-
-
 
   return (
     <div>
