@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { usePinThingMutation } from '@0xintuition/graphql';
+import { parseEther } from 'viem';
+import { Multivault } from '@0xintuition/protocol'
+import { getClients } from '../lib/viemClient';
+
 
 const CreateAtomForm: React.FC = () => {
+  const { mutateAsync: pinThing } = usePinThingMutation();
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState('');
   const [url, setUrl] = useState('');
 
+
   const [progressMessage, setProgressMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { mutateAsync: pinThing } = usePinThingMutation();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -19,18 +25,37 @@ const CreateAtomForm: React.FC = () => {
     setProgressMessage('Pinning Atom metadata...');
     setErrorMessage(null);
 
+
     try {
+      const { walletClient, publicClient } = await getClients();
+
+      const multivault = new Multivault({ walletClient, publicClient });
+
       const result = await pinThing({
         name,
         description,
         image,
         url,
       });
-
+      
       if (!result.pinThing?.uri) {
         throw new Error('Failed to pin atom metadata.');
       }
       setProgressMessage(`Atom pinned! URI: ${result.pinThing.uri}`);
+
+      const ipfsUri = result.pinThing.uri;
+
+      const atomCost = await multivault.getAtomCost();
+      const deposit = parseEther('0.000025');
+
+
+      const { vaultId, hash } = await multivault.createAtom({
+        uri: ipfsUri,
+        initialDeposit: deposit,
+        wait: true,
+      });
+      setProgressMessage(`✅ Atom créé ! Vault ID: ${vaultId} | Tx: ${hash}`);
+
     } catch (error: any) {
       console.error(error);
       setErrorMessage(error.message || 'An error occurred.');
