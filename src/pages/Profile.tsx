@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react"
+import WalletConnectionButton from "~src/components/WalletConnectionButton"
+import ProfileTabs from "~src/components/profile/ProfileTabs"
 import { Outlet } from "react-router-dom"
 import { useStorage } from "@plasmohq/storage/hook";
 
 function Profile() {
-  const [address, setAddress] = useState(
-    localStorage.getItem("metamask-account")
-  )
-
-  const handleClick = () => {
-    setAddress(localStorage.getItem("metamask-account"))
-  }
+  const [address] = useStorage<string>("metamask-account")
 
   if (!address) {
     return (
@@ -22,11 +18,11 @@ function Profile() {
 
   return (
     <div className="bg-background">
-      <WalletConnectionButton onClick={handleClick} />
+      <WalletConnectionButton/>
       <ProfileTabs />
       <Outlet />
     </div>
   )
 }
 
-export default Profile
+export default Profile;

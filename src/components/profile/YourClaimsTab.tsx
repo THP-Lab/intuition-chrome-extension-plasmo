@@ -1,6 +1,7 @@
 import { Claim } from "@0xintuition/1ui"
 import React, { useEffect, useState } from "react"
 import { useGetClaimsByAddressQuery } from "~src/graphql/src";
+import { useStorage } from "@plasmohq/storage/hook";
 
 const YourClaimsTab = () => {
   const [account] = useStorage<string>("metamask-account")
