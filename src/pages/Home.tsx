@@ -5,7 +5,7 @@ import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { AtomCard } from "../components/AtomCard"
 import { Link } from "react-router-dom"
-
+import TabSystem from '../components/TabSystem';
 
 function Home() {
   const { theme } = useTheme()
@@ -80,13 +80,9 @@ function Home() {
         <h1 className="text-2xl font-bold mb-4">Home Page - Atoms</h1>
         {error && <p className="text-red-500">Une erreur est survenue lors de la requête pour cette page.</p>}
 
-        {isLoading ? "Chargement..." : data["atoms"][0] ? 
-        ( atoms.map((atom: any) => (
-            <AtomCard key={atom.id} atom={atom} />
-          ))
-        ) : (
-          <p>Aucun atom trouvé pour cette URL.</p>
-        )}
+        <TabSystem tabs={tabs} />
+
+
         
       </div>
     </div>
