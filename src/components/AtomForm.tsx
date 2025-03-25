@@ -29,7 +29,7 @@ const CreateAtomForm: React.FC = () => {
     try {
       const { walletClient, publicClient } = await getClients();
 
-      const multivault = new Multivault({ walletClient, publicClient });
+      const multivault = new Multivault({ walletClient, publicClient }) as string;
 
       const result = await pinThing({
         name,
