@@ -4,6 +4,8 @@ import { useSearchAtomsByUriQuery } from "../queries"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { AtomCard } from "../components/AtomCard"
+import { Link } from "react-router-dom"
+
 
 function Home() {
   const { theme } = useTheme()
@@ -68,6 +70,9 @@ function Home() {
         <p className="text-muted-foreground">
           Cette application vous permet de gérer vos insights et vos recherches.
         </p>
+        <Link to="/createAtom" className="flex flex-col items-center">
+              Create atom
+          </Link>
       </div>
 
 

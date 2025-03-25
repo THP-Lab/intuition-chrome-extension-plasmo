@@ -29,7 +29,7 @@ const CreateAtomForm: React.FC = () => {
     try {
       const { walletClient, publicClient } = await getClients();
 
-      const multivault = new Multivault({ walletClient, publicClient }) as string;
+      const multivault = new Multivault({ walletClient, publicClient });
 
       const result = await pinThing({
         name,
@@ -54,7 +54,7 @@ const CreateAtomForm: React.FC = () => {
         initialDeposit: deposit,
         wait: true,
       });
-      setProgressMessage(`✅ Atom créé ! Vault ID: ${vaultId} | Tx: ${hash}`);
+      setProgressMessage(` Atom créé ! Vault ID: ${vaultId} | Tx: ${hash}`);
 
     } catch (error: any) {
       console.error(error);

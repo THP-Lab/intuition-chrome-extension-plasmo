@@ -4,7 +4,6 @@ import "../styles/global.css"
 
 import { configureClient } from "@0xintuition/graphql"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { GraphQLClient } from "graphql-request"
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
 
 import Feed from "~src/pages/Feed"
@@ -19,7 +18,6 @@ import YourClaimsTab from "~src/components/profile/YourClaimsTab"
 import IdentityTab from "~src/components/profile/IdentityTab"
 import FollowersTab from "~src/components/profile/FollowersTab"
 import FollowingTab from "~src/components/profile/FollowingTab"
-import Feed from "../pages/Feed"
 import CreateAtom from "../pages/CreateAtom"
 
 import { GraphQLClient } from "graphql-request"
@@ -51,20 +49,12 @@ function IndexSidepanel() {
                     <Route path="following" element={<FollowingTab />} />
                   </Route>
                   <Route path="/feed" element={<Feed />} />
+                  <Route path="/createAtom" element={<CreateAtom />} />
+
                 </Routes>
               </div>
             </main>
             <Navbar />
-          <Navbar />
-          <div className="container mx-auto p-4">
-            <Routes>
-              <Route path="*" element={<Home />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/feed" element={<Feed />} />
-
-              <Route path="/atomform" element={<CreateAtom />} />
-            </Routes>
           </div>
         </Router>
       </QueryClientProvider>
