@@ -10,7 +10,8 @@ const SignUpForm = () => {
     url: ""
   })
 
-  const [pinPerson, { data, loading, error }] = usePinPersonMutation()
+  const { mutate: pinPerson, data, loading, error } = usePinPersonMutation()
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target

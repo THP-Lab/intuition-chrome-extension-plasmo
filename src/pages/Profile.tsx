@@ -1,4 +1,6 @@
 import { Claim } from "@0xintuition/1ui"
+import SignUpForm from "../components/SignUpForm"
+
 
 import React, { useEffect, useState } from "react"
 
