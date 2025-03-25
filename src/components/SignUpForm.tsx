@@ -1,10 +1,21 @@
-import React, { useState } from "react"
-import { usePinPersonMutation } from "~src/graphql/src" // GraphQL mutation hook
-import { Button } from "~src/components/ui/button"       // Custom UI button component
+import React, { useState, useEffect } from "react"
+import { usePinPersonMutation } from "~src/graphql/src"
+import { Button } from "~src/components/ui/button"
 
-// A simple signup form component used to "pin" a person (e.g. register them on the platform)
-const SignUpForm = () => {
-  // Local form state to handle input values
+// Props for the reusable form component
+type Props = {
+  defaultValues?: {
+    name: string
+    description?: string
+    image?: string
+    url?: string
+  }
+  onSuccess?: () => void // Optional callback after successful submit
+}
+
+// Reusable form to create or update a person
+const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
+  // Local state to hold form inputs
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -12,21 +23,41 @@ const SignUpForm = () => {
     url: ""
   })
 
-  // GraphQL mutation hook to pin a person
+  // When defaultValues are provided, fill the form with them
+  useEffect(() => {
+    if (defaultValues) {
+      setForm({
+        name: defaultValues.name || "",
+        description: defaultValues.description || "",
+        image: defaultValues.image || "",
+        url: defaultValues.url || ""
+      })
+    }
+  }, [defaultValues])
+
+  // GraphQL mutation to pin (register) the person
   const { mutate: pinPerson, data, loading, error } = usePinPersonMutation()
 
-  // Handles input changes (text inputs or textareas)
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  // Handle input changes and update local state
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  // Submits the form
+  // When the user submits the form
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault() // Prevents page reload on form submit
+    e.preventDefault() // Prevent the page from reloading
+
+    // Make sure "name" is not empty (it's required)
+    if (!form.name.trim()) {
+      alert("Name is required!")
+      return
+    }
 
     try {
-      // Calls the mutation with form values
+      // Run the mutation with the form values
       await pinPerson({
         variables: {
           name: form.name,
@@ -36,20 +67,25 @@ const SignUpForm = () => {
         }
       })
 
-      // Show success feedback
+      // Show success message
       alert("Person pinned successfully!")
 
-      // Reset form to empty values
-      setForm({ name: "", description: "", image: "", url: "" })
+      // Reset form if we're in "create" mode (not editing)
+      if (!defaultValues) {
+        setForm({ name: "", description: "", image: "", url: "" })
+      }
+
+      // If parent component gave us a callback, call it
+      onSuccess?.()
     } catch (err) {
-      // If the mutation fails, log the error
+      // Show error in the console if something goes wrong
       console.error("Error pinning person:", err)
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Name input */}
+      {/* Name input field */}
       <div>
         <label>Name:</label>
         <input
@@ -61,7 +97,7 @@ const SignUpForm = () => {
         />
       </div>
 
-      {/* Description input */}
+      {/* Description input field */}
       <div>
         <label>Description:</label>
         <textarea
@@ -72,7 +108,7 @@ const SignUpForm = () => {
         />
       </div>
 
-      {/* Image URL input */}
+      {/* Image URL input field */}
       <div>
         <label>Image URL:</label>
         <input
@@ -83,7 +119,7 @@ const SignUpForm = () => {
         />
       </div>
 
-      {/* Profile URL input */}
+      {/* Profile URL input field */}
       <div>
         <label>Profile URL:</label>
         <input
@@ -96,12 +132,14 @@ const SignUpForm = () => {
 
       {/* Submit button */}
       <Button type="submit" disabled={loading}>
-        {loading ? "Submitting..." : "Register"}
+        {loading ? "Submitting..." : defaultValues ? "Update" : "Register"}
       </Button>
 
       {/* Feedback messages */}
-      {data?.pinPerson?.uri && <p>Registered at URI: {data.pinPerson.uri}</p>}
-      {error && <p className="text-red-500">Error: {error.message}</p>}
+      {data?.pinPerson?.uri && (
+        <p>✅ Registered at URI: {data.pinPerson.uri}</p>
+      )}
+      {error && <p className="text-red-500">❌ Error: {error.message}</p>}
     </form>
   )
 }

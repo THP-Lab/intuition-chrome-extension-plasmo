@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 
-// UI component to display claims
+import { useGetAccountByIdQuery, useGetClaimsByAddressQuery } from "~src/graphql/src"
+
 import { Claim } from "@0xintuition/1ui"
-
-// Form to register a new person
+import WalletConnectionButton from "~src/components/WalletConnectionButton"
 import SignUpForm from "../components/SignUpForm"
 
-// Button to connect a Metamask wallet
-import WalletConnectionButton from "~src/components/WalletConnectionButton"
-
-// GraphQL query to get all claims associated with an address
-import { useGetClaimsByAddressQuery } from "~src/graphql/src"
-
 function Profile() {
-  // Store the currently connected wallet address (from localStorage)
-  const [address, setAddress] = useState(
+  const [address, setAddress] = useState<string | null>(
     localStorage.getItem("metamask-account")
   )
 
-  // Called when the user clicks "Connect Wallet"
+  const [editMode, setEditMode] = useState(false)
+
   const handleClick = () => {
-    // Refresh the address from localStorage after wallet connection
-    setAddress(localStorage.getItem("metamask-account"))
+    const addr = localStorage.getItem("metamask-account")
+    setAddress(addr)
   }
 
-  // Run a GraphQL query to get claims for the given address
-  const { data, isLoading } = useGetClaimsByAddressQuery({
-    address: address
+  // 🧠 Get account info (profile)
+  const { data: accountData, isLoading: accountLoading } = useGetAccountByIdQuery({
+    id: address || ""
   })
 
-  // If no address is connected, ask the user to connect their wallet
+  // 🧠 Get claims for this address
+  const { data: claimsData, isLoading: claimsLoading } = useGetClaimsByAddressQuery({
+    address: address || ""
+  })
+
+  const account = accountData?.account
+
   if (!address) {
     return (
       <div>
@@ -39,72 +39,91 @@ function Profile() {
     )
   }
 
-  // If the query is still loading, show a loading state
-  if (isLoading) return <div>Loading...</div>
-
-  // Optional: log the claims to the console for debugging
-  console.log(data.claims_aggregate.nodes)
+  if (accountLoading || claimsLoading) return <div>Loading...</div>
 
   return (
-    <>
-      <div>
-        <h1>My Profile</h1>
+    <div className="p-4 space-y-6">
+      <h1 className="text-2xl font-bold">My Profile</h1>
+      <WalletConnectionButton onClick={handleClick} />
 
-        {/* Show how many claims this user has */}
-        <h2>Your Claims ( {data.claims_aggregate.aggregate.count} )</h2>
+      <section className="border rounded-lg p-4 bg-gray-100">
+        <h2 className="text-xl font-semibold mb-2">Account Info</h2>
 
-        {/* Wallet button to refresh account address manually */}
-        <WalletConnectionButton onClick={handleClick} />
-
-        {/* Form to register a new person into the system */}
-        <h2>Register a new Person</h2>
-        <SignUpForm />
-
-        {/* Display all claims from the query */}
-        {!isLoading &&
-          data.claims_aggregate.nodes.map(
-            ({ triple, shares, counter_shares }) => (
-              <div
-                key={triple.id}
-                style={{
-                  padding: "10px",
-                  backgroundColor: "black",
-                  color: "white"
-                }}
-              >
-                <Claim
-                  orientation="horizontal"
-                  subject={{
-                    // Choose the correct visual style for the subject
-                    variant:
-                      triple.subject.type === "Account" ? "user" : "non-user",
-                    label: triple.subject?.label || "N/A",
-                    imgSrc:
-                      triple.subject?.image ||
-                      "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
-                  }}
-                  predicate={{
-                    variant:
-                      triple.predicate.type === "Account" ? "user" : "non-user",
-                    label: triple.predicate?.label || "N/A",
-                    imgSrc:
-                      triple.predicate?.image ||
-                      "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
-                  }}
-                  object={{
-                    variant:
-                      triple.object.type === "Account" ? "user" : "non-user",
-                    label: triple.object?.label || "N/A",
-                    imgSrc:
-                      triple.object?.image ||
-                      "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
-                  }}
-                />
+        {!account || editMode ? (
+          <SignUpForm
+            defaultValues={
+              account
+                ? {
+                    name: account.label,
+                    image: account.image || "",
+                    description: "",
+                    url: ""
+                  }
+                : undefined
+            }
+            onSuccess={() => setEditMode(false)}
+          />
+        ) : (
+          <div className="space-y-2">
+            <p><strong>Label:</strong> {account.label}</p>
+            {account.image && (
+              <div>
+                <strong>Image:</strong>
+                <img src={account.image} alt="profile" className="w-24 h-24 rounded" />
               </div>
-            )
-          )}
-      </div>
-    </>
+            )}
+            <button
+              className="mt-2 px-4 py-1 bg-blue-600 text-white rounded"
+              onClick={() => setEditMode(true)}
+            >
+              Edit Profile
+            </button>
+          </div>
+        )}
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold">
+          Your Claims ({claimsData?.claims_aggregate.aggregate.count || 0})
+        </h2>
+
+        {claimsData?.claims_aggregate.nodes.map(({ triple }) => (
+          <div
+            key={triple.id}
+            style={{
+              padding: "10px",
+              backgroundColor: "black",
+              color: "white"
+            }}
+          >
+            <Claim
+              orientation="horizontal"
+              subject={{
+                variant: triple.subject.type === "Account" ? "user" : "non-user",
+                label: triple.subject?.label || "N/A",
+                imgSrc:
+                  triple.subject?.image ||
+                  "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
+              }}
+              predicate={{
+                variant: triple.predicate.type === "Account" ? "user" : "non-user",
+                label: triple.predicate?.label || "N/A",
+                imgSrc:
+                  triple.predicate?.image ||
+                  "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
+              }}
+              object={{
+                variant: triple.object.type === "Account" ? "user" : "non-user",
+                label: triple.object?.label || "N/A",
+                imgSrc:
+                  triple.object?.image ||
+                  "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
+              }}
+            />
+          </div>
+        ))}
+      </section>
+    </div>
   )
 }
 

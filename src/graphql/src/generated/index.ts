@@ -10729,6 +10729,20 @@ export type GetClaimsByAddressQuery = {
   }
 }
 
+export type GetAccountByIdQueryVariables = Exact<{
+  id: Scalars["String"]["input"]
+}>
+
+export type GetAccountByIdQuery = {
+  __typename?: "query_root"
+  account?: {
+    __typename?: "accounts"
+    id: string
+    label: string
+    image?: string | null
+  } | null
+}
+
 export type GetListsQueryVariables = Exact<{
   where?: InputMaybe<Predicate_Objects_Bool_Exp>
 }>
@@ -13528,6 +13542,91 @@ useGetClaimsByAddressQuery.fetcher = (
 ) =>
   fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
     GetClaimsByAddressDocument,
+    variables,
+    options
+  )
+
+export const GetAccountByIdDocument = `
+    query GetAccountById($id: String!) {
+  account(id: $id) {
+    id
+    label
+    image
+  }
+}
+    `
+
+export const useGetAccountByIdQuery = <
+  TData = GetAccountByIdQuery,
+  TError = unknown
+>(
+  variables: GetAccountByIdQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetAccountByIdQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<GetAccountByIdQuery, TError, TData>["queryKey"]
+  }
+) => {
+  return useQuery<GetAccountByIdQuery, TError, TData>({
+    queryKey: ["GetAccountById", variables],
+    queryFn: fetcher<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
+      GetAccountByIdDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetAccountByIdQuery.document = GetAccountByIdDocument
+
+useGetAccountByIdQuery.getKey = (variables: GetAccountByIdQueryVariables) => [
+  "GetAccountById",
+  variables
+]
+
+export const useInfiniteGetAccountByIdQuery = <
+  TData = InfiniteData<GetAccountByIdQuery>,
+  TError = unknown
+>(
+  variables: GetAccountByIdQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetAccountByIdQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetAccountByIdQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetAccountByIdQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ["GetAccountById.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
+            GetAccountByIdDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetAccountByIdQuery.getKey = (
+  variables: GetAccountByIdQueryVariables
+) => ["GetAccountById.infinite", variables]
+
+useGetAccountByIdQuery.fetcher = (
+  variables: GetAccountByIdQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
+    GetAccountByIdDocument,
     variables,
     options
   )
@@ -20820,6 +20919,50 @@ export const GetClaimsByAddress = {
                     ]
                   }
                 }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetAccountById = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetAccountById" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "account" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } }
               ]
             }
           }
