@@ -14,6 +14,12 @@ import Profile from "~src/pages/Profile"
 import Navbar from "../components/layout/Navbar"
 import { ThemeProvider } from "../components/ThemeProvider"
 
+import RelatedClaimsTab from "~src/components/profile/RelatedClaims"
+import YourClaimsTab from "~src/components/profile/YourClaimsTab"
+import IdentityTab from "~src/components/profile/IdentityTab"
+import FollowersTab from "~src/components/profile/FollowersTab"
+import FollowingTab from "~src/components/profile/FollowingTab"
+
 const API_URL = "https://dev.base.intuition-api.com/v1/graphql"
 configureClient({
   apiUrl: API_URL
@@ -32,7 +38,13 @@ function IndexSidepanel() {
                 <Routes>
                   <Route path="*" element={<Home />} />
                   <Route path="/" element={<Home />} />
-                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/profile" element={<Profile />}>
+                    <Route path="claims" element={<YourClaimsTab />} />
+                    <Route path="related-claims" element={<RelatedClaimsTab />} />
+                    <Route path="identity" element={<IdentityTab />} />
+                    <Route path="followers" element={<FollowersTab />} />
+                    <Route path="following" element={<FollowingTab />} />
+                  </Route>
                   <Route path="/feed" element={<Feed />} />
                 </Routes>
               </div>
