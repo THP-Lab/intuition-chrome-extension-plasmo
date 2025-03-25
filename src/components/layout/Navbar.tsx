@@ -3,8 +3,10 @@ import * as React from "react"
 import { Link, useLocation } from "react-router-dom"
 
 import IntuitionFeed from "~/src/components/icons/IntuitionFeed"
+import IntuitionHistory from "~/src/components/icons/IntuitionHistory"
 import IntuitionIcon from "~/src/components/icons/IntuitionIcon"
 import IntuitionProfil from "~/src/components/icons/IntuitionProfil"
+import IntuitionSearchIcon from "~/src/components/icons/IntuitionSearchIcon"
 import IntuitionThemeAvatar from "~/src/components/icons/IntuitionThemeAvatar"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
@@ -34,6 +36,21 @@ function Navbar() {
           <Link to="/" className="flex flex-col items-center">
             <div className="text-foreground">
               <IntuitionIcon size={32} className="mb-1" />
+            </div>
+          </Link>
+        </Button>
+
+        <Button
+          variant={isActive("/search") ? "default" : "ghost"}
+          size="sm"
+          asChild
+          className={cn(
+            "flex min-w-[4rem] flex-col items-center gap-1 p-2",
+            isActive("/search") && "animate-fade-bg"
+          )}>
+          <Link to="/search" className="flex flex-col items-center">
+            <div className="text-foreground">
+              <IntuitionSearchIcon size={32} className="mb-1" />
             </div>
           </Link>
         </Button>
@@ -70,16 +87,18 @@ function Navbar() {
         </Button>
 
         <Button
-          variant="ghost"
+          variant={isActive("/recent-activity") ? "default" : "ghost"}
           size="sm"
-          onClick={toggleTheme}
+          asChild
           className={cn(
             "flex min-w-[4rem] flex-col items-center gap-1 p-2",
-            theme === "dark" ? "text-primary" : "text-foreground"
+            isActive("/recent-activity") && "animate-fade-bg"
           )}>
-          <div className="text-foreground">
-            <IntuitionThemeAvatar size={32} className="mb-1" />
-          </div>
+          <Link to="/recent-activity" className="flex flex-col items-center">
+            <div className="text-foreground">
+              <IntuitionHistory size={32} className="mb-1" />
+            </div>
+          </Link>
         </Button>
       </div>
     </nav>
