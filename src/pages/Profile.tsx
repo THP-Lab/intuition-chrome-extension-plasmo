@@ -18,12 +18,12 @@ function Profile() {
     setAddress(addr)
   }
 
-  // 🧠 Get account info (profile)
+  //  Get account info (profile)
   const { data: accountData, isLoading: accountLoading } = useGetAccountByIdQuery({
     id: address || ""
   })
 
-  // 🧠 Get claims for this address
+  //  Get claims for this address
   const { data: claimsData, isLoading: claimsLoading } = useGetClaimsByAddressQuery({
     address: address || ""
   })
