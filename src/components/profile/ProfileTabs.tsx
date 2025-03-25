@@ -1,7 +1,14 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import React, { useEffect } from "react";
 
 const ProfileTabs = () => {
-  const location = useLocation()
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/profile/claims");
+  }, []) 
+
   return (
     <div className="flex space-x-4 border-b">
       <Link to="/profile/claims" className={location.pathname.startsWith("/profile/claims") ? "font-bold border-b-2" : ""} >Your Claims</Link>
