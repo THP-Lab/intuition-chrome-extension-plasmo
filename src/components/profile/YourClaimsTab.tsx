@@ -1,18 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react"
 import { useGetClaimsByAddressQuery } from "~src/graphql/src";
 import { Claim } from "@0xintuition/1ui";
 
-interface YourClaimsTabProps {
-  account: string
-}
+const YourClaimsTab = () => {
+  const [account, setAccount] = useState<string | null>(null)
 
-const YourClaimsTab: React.FC<YourClaimsTabProps> = ({ account }) => {
+  // Read from localStorage on component mount
+  useEffect(() => {
+    const stored = localStorage.getItem("metamask-account")
+    if (stored) {
+      setAccount(stored)
+    }
+  }, [])
   
-  //Fetch claims created by the connected user using the account address
-  const { data, isLoading } = useGetClaimsByAddressQuery({address: account
-  })
+  // Call hook even if account is null
+  const { data, isLoading, isError, error } = useGetClaimsByAddressQuery(
+    { address: account ?? "" }, // Provide empty string if null
+    { enabled: !!account }      // Only run the query if account is set
+  )
 
+  if (!account) return <div>No connected wallet</div>
   if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>Error: {(error as any)?.message}</div>
+  if (!data?.claims_aggregate?.nodes?.length) return <div>No claims found</div>
 
   return (
     <>
