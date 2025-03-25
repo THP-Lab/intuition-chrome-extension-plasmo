@@ -65,8 +65,7 @@
     "web_accessible_resources": [
       {
         "resources": [
-          "node_modules/@0xintuition/1ui/dist/*",
-          "node_modules/@0xintuition/1ui/dist/assets/*"
+          "./src/Icon.sprites-2W56CM52.svg"
         ],
         "matches": [
           "<all_urls>"

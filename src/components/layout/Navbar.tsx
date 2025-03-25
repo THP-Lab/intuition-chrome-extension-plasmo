@@ -10,13 +10,11 @@ import IntuitionSearchIcon from "~/src/components/icons/IntuitionSearchIcon"
 import IntuitionThemeAvatar from "~/src/components/icons/IntuitionThemeAvatar"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
-import { useSvgSprites } from "~/src/lib/sprite-loader"
 import { cn } from "~src/lib/utils"
 
 function Navbar() {
   const { theme, setTheme } = useTheme()
   const location = useLocation()
-  useSvgSprites()
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark")
