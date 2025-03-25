@@ -9,8 +9,11 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
 import Feed from "~src/pages/Feed"
 import Home from "~src/pages/Home"
 import Profile from "~src/pages/Profile"
+import RecentActivity from "~src/pages/RecentActivity"
+import Search from "~src/pages/Search"
 
 import Navbar from "../components/layout/Navbar"
+import NavbarUp from "../components/layout/NavbarUp"
 import { ThemeProvider } from "../components/ThemeProvider"
 
 import RelatedClaimsTab from "~src/components/profile/RelatedClaims"
@@ -36,7 +39,8 @@ function IndexSidepanel() {
       <QueryClientProvider client={queryClient}>
         <Router>
           <div className="flex min-h-screen flex-col bg-background text-foreground">
-            <main className="flex-1 overflow-auto pb-24">
+            <NavbarUp />
+            <main className="flex-1 overflow-auto pb-24 pt-14">
               <div className="container mx-auto space-y-8 p-4">
                 <Routes>
                   <Route path="*" element={<Home />} />
@@ -49,7 +53,12 @@ function IndexSidepanel() {
                     <Route path="following" element={<FollowingTab />} />
                   </Route>
                   <Route path="/feed" element={<Feed />} />
+
                   <Route path="/createAtom" element={<CreateAtom />} />
+
+
+                  <Route path="/recent-activity" element={<RecentActivity />} />
+                  <Route path="/search" element={<Search />} />
 
                 </Routes>
               </div>
