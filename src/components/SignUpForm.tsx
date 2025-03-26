@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { usePinPersonMutation } from "~src/graphql/src"
 import { Button } from "~src/components/ui/button"
+import { useStorage } from "@plasmohq/storage/hook";
 
 // Props for the reusable form component
 type Props = {
@@ -9,6 +10,8 @@ type Props = {
     description?: string
     image?: string
     url?: string
+    email?: string
+    identifier: string
   }
   onSuccess?: () => void // Optional callback after successful submit
 }
@@ -16,11 +19,16 @@ type Props = {
 // Reusable form to create or update a person
 const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
   // Local state to hold form inputs
+ 
+ const [address] = useStorage<string>("metamask-account")
+
   const [form, setForm] = useState({
     name: "",
     description: "",
     image: "",
-    url: ""
+    url: "",
+    email: "",
+    identifier: ""
   })
 
   // When defaultValues are provided, fill the form with them
@@ -30,13 +38,15 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
         name: defaultValues.name || "",
         description: defaultValues.description || "",
         image: defaultValues.image || "",
-        url: defaultValues.url || ""
+        url: defaultValues.url || "",
+        email: defaultValues.email || "",
+        identifier: address || ""
       })
     }
   }, [defaultValues])
 
   // GraphQL mutation to pin (register) the person
-  const { mutate: pinPerson, data, loading, error } = usePinPersonMutation()
+  const { mutate: pinPerson, data, isPending, error } = usePinPersonMutation()
 
   // Handle input changes and update local state
   const handleChange = (
@@ -59,12 +69,13 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
     try {
       // Run the mutation with the form values
       await pinPerson({
-        variables: {
+    
           name: form.name,
           description: form.description || null,
           image: form.image || null,
-          url: form.url || null
-        }
+          url: form.url || null,
+          email: form.email || null
+        
       })
 
       // Show success message
@@ -72,7 +83,7 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
 
       // Reset form if we're in "create" mode (not editing)
       if (!defaultValues) {
-        setForm({ name: "", description: "", image: "", url: "" })
+        setForm({ name: "", description: "", image: "", url: "", email: "",  identifier: "" })
       }
 
       // If parent component gave us a callback, call it
@@ -84,8 +95,9 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
   }
 
   return (
+    
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Name input field */}
+     
       <div>
         <label>Name:</label>
         <input
@@ -97,7 +109,7 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
         />
       </div>
 
-      {/* Description input field */}
+      
       <div>
         <label>Description:</label>
         <textarea
@@ -108,7 +120,7 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
         />
       </div>
 
-      {/* Image URL input field */}
+    
       <div>
         <label>Image URL:</label>
         <input
@@ -119,7 +131,7 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
         />
       </div>
 
-      {/* Profile URL input field */}
+      
       <div>
         <label>Profile URL:</label>
         <input
@@ -130,16 +142,16 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
         />
       </div>
 
-      {/* Submit button */}
-      <Button type="submit" disabled={loading}>
-        {loading ? "Submitting..." : defaultValues ? "Update" : "Register"}
+     
+      <Button type="submit" disabled={isPending}>
+        {isPending ? "Submitting..." : "Register"}
       </Button>
 
-      {/* Feedback messages */}
+
       {data?.pinPerson?.uri && (
-        <p>✅ Registered at URI: {data.pinPerson.uri}</p>
-      )}
-      {error && <p className="text-red-500">❌ Error: {error.message}</p>}
+        <p>Registered at URI: {data.pinPerson.uri}</p>
+      )},
+      {error ? <p className="text-red-500"> Error</p> : ""}
     </form>
   )
 }

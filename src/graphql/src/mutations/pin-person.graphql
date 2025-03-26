@@ -3,10 +3,13 @@ mutation pinPerson(
   $description: String
   $image: String
   $url: String
+  $email: String
+  $identifier : String
 ) {
   pinPerson(
-    person: { description: $description, image: $image, name: $name, url: $url }
+    person: { name: $name, description: $description, image: $image,  url: $url, email: $email,  identifier: $identifier}
   ) {
     uri
   }
 }
+

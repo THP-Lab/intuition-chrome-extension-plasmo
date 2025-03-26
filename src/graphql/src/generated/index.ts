@@ -10667,6 +10667,8 @@ export type PinPersonMutationVariables = Exact<{
   description?: InputMaybe<Scalars["String"]["input"]>
   image?: InputMaybe<Scalars["String"]["input"]>
   url?: InputMaybe<Scalars["String"]["input"]>
+  email?: InputMaybe<Scalars["String"]["input"]>
+  identifier?: InputMaybe<Scalars["String"]["input"]>
 }>
 
 export type PinPersonMutation = {
@@ -13327,9 +13329,9 @@ export const VaultFieldsForTripleFragmentDoc = `
 }
     `
 export const PinPersonDocument = `
-    mutation pinPerson($name: String!, $description: String, $image: String, $url: String) {
+    mutation pinPerson($name: String!, $description: String, $image: String, $url: String, $email: String, $identifier: String) {
   pinPerson(
-    person: {description: $description, image: $image, name: $name, url: $url}
+    person: {name: $name, description: $description, image: $image, url: $url, email: $email, identifier: $identifier}
   ) {
     uri
   }
@@ -20578,6 +20580,22 @@ export const PinPerson = {
           kind: "VariableDefinition",
           variable: { kind: "Variable", name: { kind: "Name", value: "url" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "email" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "identifier" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
         }
       ],
       selectionSet: {
@@ -20593,6 +20611,14 @@ export const PinPerson = {
                 value: {
                   kind: "ObjectValue",
                   fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "name" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "name" }
+                      }
+                    },
                     {
                       kind: "ObjectField",
                       name: { kind: "Name", value: "description" },
@@ -20611,18 +20637,26 @@ export const PinPerson = {
                     },
                     {
                       kind: "ObjectField",
-                      name: { kind: "Name", value: "name" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "name" }
-                      }
-                    },
-                    {
-                      kind: "ObjectField",
                       name: { kind: "Name", value: "url" },
                       value: {
                         kind: "Variable",
                         name: { kind: "Name", value: "url" }
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "email" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "email" }
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "identifier" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "identifier" }
                       }
                     }
                   ]
