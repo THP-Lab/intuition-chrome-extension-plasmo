@@ -41,15 +41,7 @@ function NavbarUp() {
           </Button>
         </div>
 
-        {/* Icône de recherche centrale */}
-        <div className="flex-1 flex justify-center items-center">
-          <IntuitionSearchIcon
-            position={{ x: "-60px", y: "0px" }}
-            onSearch={handleSearch}
-            size={50}
-            className="hover:opacity-80 transition-opacity"
-          />
-        </div>
+        <div className="flex-1" />
 
         {/* Bouton thème à droite */}
         <Button
