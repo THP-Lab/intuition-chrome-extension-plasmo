@@ -56,7 +56,9 @@ function Profile() {
                     name: account.label,
                     image: account.image || "",
                     description: "",
-                    url: ""
+                    url: "",
+                    email: "",
+                    identifier: ""
                   }
                 : undefined
             }
