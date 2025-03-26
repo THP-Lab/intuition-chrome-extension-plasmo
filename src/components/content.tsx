@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { configureClient } from "~src/graphql/src"
 import { ThemeProvider } from "./ThemeProvider";
@@ -24,8 +24,12 @@ configureClient({
 
 const queryClient = new QueryClient();
 
+type ContentProps = {
+  children?: ReactNode
+}
 
-const Content = ({children}) => {
+
+const Content = ({children}: ContentProps) => {
   return(
    <ThemeProvider defaultTheme="dark" storageKey="intuition-theme">
     <QueryClientProvider client={queryClient}>
@@ -33,8 +37,8 @@ const Content = ({children}) => {
         <div className="flex min-h-screen flex-col bg-background text-foreground">
         <NavbarUp />
             <main className="flex-1 overflow-auto pb-24 pt-14">
+              {children}
               <div className="container mx-auto space-y-8 p-4">
-                {children}
                 <Routes>
                   <Route path="*" element={<Home />} />
                   <Route path="/" element={<Home />} />
