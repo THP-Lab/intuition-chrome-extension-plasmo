@@ -21,6 +21,7 @@ import YourClaimsTab from "~src/components/profile/YourClaimsTab"
 import IdentityTab from "~src/components/profile/IdentityTab"
 import FollowersTab from "~src/components/profile/FollowersTab"
 import FollowingTab from "~src/components/profile/FollowingTab"
+import MyPositionsTab from "~src/components/profile/MyPositionsTab"
 import CreateAtom from "../pages/CreateAtom"
 
 import { GraphQLClient } from "graphql-request"
@@ -48,6 +49,7 @@ function IndexSidepanel() {
                   <Route path="/profile" element={<Profile />}>
                     <Route path="claims" element={<YourClaimsTab />} />
                     <Route path="related-claims" element={<RelatedClaimsTab />} />
+                    <Route path="my-positions" element={<MyPositionsTab />} />
                     <Route path="identity" element={<IdentityTab />} />
                     <Route path="followers" element={<FollowersTab />} />
                     <Route path="following" element={<FollowingTab />} />
