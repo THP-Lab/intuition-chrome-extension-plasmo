@@ -22,7 +22,7 @@ function IndexPopup() {
           </button>
         </Content>
       </div>
-    </ThemeProvider>
+      </ThemeProvider>
   )
 }
 
