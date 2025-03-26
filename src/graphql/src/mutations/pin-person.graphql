@@ -1,0 +1,15 @@
+mutation pinPerson(
+  $name: String!
+  $description: String
+  $image: String
+  $url: String
+  $email: String
+  $identifier : String
+) {
+  pinPerson(
+    person: { name: $name, description: $description, image: $image,  url: $url, email: $email,  identifier: $identifier}
+  ) {
+    uri
+  }
+}
+

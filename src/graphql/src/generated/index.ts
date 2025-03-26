@@ -10662,6 +10662,20 @@ export type VaultFieldsForTripleFragment = {
   }>
 }
 
+export type PinPersonMutationVariables = Exact<{
+  name: Scalars["String"]["input"]
+  description?: InputMaybe<Scalars["String"]["input"]>
+  image?: InputMaybe<Scalars["String"]["input"]>
+  url?: InputMaybe<Scalars["String"]["input"]>
+  email?: InputMaybe<Scalars["String"]["input"]>
+  identifier?: InputMaybe<Scalars["String"]["input"]>
+}>
+
+export type PinPersonMutation = {
+  __typename?: "mutation_root"
+  pinPerson?: { __typename?: "PinOutput"; uri?: string | null } | null
+}
+
 export type PinThingMutationVariables = Exact<{
   name: Scalars["String"]["input"]
   description?: InputMaybe<Scalars["String"]["input"]>
@@ -10715,6 +10729,20 @@ export type GetClaimsByAddressQuery = {
       }
     }>
   }
+}
+
+export type GetAccountByIdQueryVariables = Exact<{
+  id: Scalars["String"]["input"]
+}>
+
+export type GetAccountByIdQuery = {
+  __typename?: "query_root"
+  account?: {
+    __typename?: "accounts"
+    id: string
+    label: string
+    image?: string | null
+  } | null
 }
 
 export type GetListsQueryVariables = Exact<{
@@ -13300,6 +13328,52 @@ export const VaultFieldsForTripleFragmentDoc = `
   ...VaultFilteredPositions
 }
     `
+export const PinPersonDocument = `
+    mutation pinPerson($name: String!, $description: String, $image: String, $url: String, $email: String, $identifier: String) {
+  pinPerson(
+    person: {name: $name, description: $description, image: $image, url: $url, email: $email, identifier: $identifier}
+  ) {
+    uri
+  }
+}
+    `
+
+export const usePinPersonMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    PinPersonMutation,
+    TError,
+    PinPersonMutationVariables,
+    TContext
+  >
+) => {
+  return useMutation<
+    PinPersonMutation,
+    TError,
+    PinPersonMutationVariables,
+    TContext
+  >({
+    mutationKey: ["pinPerson"],
+    mutationFn: (variables?: PinPersonMutationVariables) =>
+      fetcher<PinPersonMutation, PinPersonMutationVariables>(
+        PinPersonDocument,
+        variables
+      )(),
+    ...options
+  })
+}
+
+usePinPersonMutation.getKey = () => ["pinPerson"]
+
+usePinPersonMutation.fetcher = (
+  variables: PinPersonMutationVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<PinPersonMutation, PinPersonMutationVariables>(
+    PinPersonDocument,
+    variables,
+    options
+  )
+
 export const PinThingDocument = `
     mutation pinThing($name: String!, $description: String, $image: String, $url: String) {
   pinThing(
@@ -13470,6 +13544,91 @@ useGetClaimsByAddressQuery.fetcher = (
 ) =>
   fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
     GetClaimsByAddressDocument,
+    variables,
+    options
+  )
+
+export const GetAccountByIdDocument = `
+    query GetAccountById($id: String!) {
+  account(id: $id) {
+    id
+    label
+    image
+  }
+}
+    `
+
+export const useGetAccountByIdQuery = <
+  TData = GetAccountByIdQuery,
+  TError = unknown
+>(
+  variables: GetAccountByIdQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetAccountByIdQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<GetAccountByIdQuery, TError, TData>["queryKey"]
+  }
+) => {
+  return useQuery<GetAccountByIdQuery, TError, TData>({
+    queryKey: ["GetAccountById", variables],
+    queryFn: fetcher<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
+      GetAccountByIdDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetAccountByIdQuery.document = GetAccountByIdDocument
+
+useGetAccountByIdQuery.getKey = (variables: GetAccountByIdQueryVariables) => [
+  "GetAccountById",
+  variables
+]
+
+export const useInfiniteGetAccountByIdQuery = <
+  TData = InfiniteData<GetAccountByIdQuery>,
+  TError = unknown
+>(
+  variables: GetAccountByIdQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetAccountByIdQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetAccountByIdQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetAccountByIdQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ["GetAccountById.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
+            GetAccountByIdDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetAccountByIdQuery.getKey = (
+  variables: GetAccountByIdQueryVariables
+) => ["GetAccountById.infinite", variables]
+
+useGetAccountByIdQuery.fetcher = (
+  variables: GetAccountByIdQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
+    GetAccountByIdDocument,
     variables,
     options
   )
@@ -20385,6 +20544,137 @@ export const VaultFieldsForTriple = {
     }
   ]
 } as unknown as DocumentNode
+export const PinPerson = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "pinPerson" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "name" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "description" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "image" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "url" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "email" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "identifier" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "pinPerson" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "person" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "name" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "name" }
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "description" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "description" }
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "image" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "image" }
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "url" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "url" }
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "email" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "email" }
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "identifier" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "identifier" }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "uri" } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
 export const PinThing = {
   kind: "Document",
   definitions: [
@@ -20663,6 +20953,50 @@ export const GetClaimsByAddress = {
                     ]
                   }
                 }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetAccountById = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetAccountById" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "account" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } }
               ]
             }
           }
