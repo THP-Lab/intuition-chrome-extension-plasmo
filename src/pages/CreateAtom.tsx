@@ -2,7 +2,7 @@ import React from 'react';
 
 import AtomForm from "../components/AtomForm"
 
-function addForm () {
+function CreateAtom () {
 
   return (
     <>
@@ -11,4 +11,4 @@ function addForm () {
   )
 }
 
-export default addForm
+export default CreateAtom
