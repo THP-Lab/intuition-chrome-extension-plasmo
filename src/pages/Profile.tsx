@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react"
 import WalletConnectionButton from "~src/components/WalletConnectionButton"
 import ProfileTabs from "~src/components/profile/ProfileTabs"
@@ -10,7 +9,7 @@ function Profile() {
 
   if (!address) {
     return (
-      <div>
+      <div className="bg-background">
         Please link your metamask account then re-open this page
         <WalletConnectionButton />
       </div>
@@ -18,8 +17,8 @@ function Profile() {
   }
 
   return (
-    <div>
-      <WalletConnectionButton />
+    <div className="bg-background">
+      <WalletConnectionButton/>
       <ProfileTabs />
       <Outlet />
     </div>
