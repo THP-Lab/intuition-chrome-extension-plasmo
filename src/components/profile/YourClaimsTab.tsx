@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useStorage } from "@plasmohq/storage/hook";
 
@@ -12,3 +13,4 @@ const YourClaimsTab = () => {
 };
 
 export default YourClaimsTab;
+
