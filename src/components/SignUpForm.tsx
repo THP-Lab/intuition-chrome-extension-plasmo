@@ -5,6 +5,9 @@ import { useStorage } from "@plasmohq/storage/hook";
 import { parseEther } from 'viem';
 import { Multivault } from '@0xintuition/protocol'
 import { getClients } from '../lib/viemClient';
+import { MULTIVAULT_CONTRACT_ADDRESS } from "../lib/config"
+
+
 
 // Props for the reusable form component
 type Props = {
@@ -80,6 +83,12 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
       setErrorMessage(null) 
 
       const { walletClient, publicClient } = await getClients()      
+
+      //teeeeest
+      console.log("Using chain:", walletClient.chain.name)
+      console.log("Multivault contract address:", MULTIVAULT_CONTRACT_ADDRESS)
+
+      
       const multivault = new Multivault({ walletClient, publicClient }) 
 
 
@@ -90,8 +99,8 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
           description: form.description || null,
           image: form.image || null,
           url: form.url || null,
-          email: form.email || null
-        
+          email: form.email || null,
+          identifier: address || null,
       })
 
       const uri = result?.pinPerson?.uri

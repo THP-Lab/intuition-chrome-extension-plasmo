@@ -66,6 +66,7 @@ function Profile() {
         ) : (
           <div className="space-y-2">
             <p><strong>Label:</strong> {account.label}</p>
+            <p><strong>Name:</strong> {account.label}</p>
             {account.image && (
               <div>
                 <strong>Image:</strong>
@@ -73,7 +74,7 @@ function Profile() {
               </div>
             )}
             <button
-              className="mt-2 px-4 py-1 bg-blue-600 text-white rounded"
+              className="mt-2 px-4 py-1 bg-blue-600 text-black rounded"
               onClick={() => setEditMode(true)}
             >
               Edit Profile
