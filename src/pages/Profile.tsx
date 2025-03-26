@@ -2,7 +2,6 @@ import React, { useState } from "react"
 
 import { useGetAccountByIdQuery, useGetClaimsByAddressQuery } from "~src/graphql/src"
 
-import { Claim } from "@0xintuition/1ui"
 import WalletConnectionButton from "~src/components/WalletConnectionButton"
 import ProfileTabs from "~src/components/profile/ProfileTabs"
 import { Outlet } from "react-router-dom"

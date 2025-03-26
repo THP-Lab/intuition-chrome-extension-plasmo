@@ -59,15 +59,7 @@
 
   :root,
   :host,
-  html,
-  body {
-    @apply min-h-screen bg-background text-foreground;
-    font-feature-settings:
-      "rlig" 1,
-      "calt" 1;
-    margin: 0;
-    padding: 0;
-  }
+  html
 
   * {
     transition:
