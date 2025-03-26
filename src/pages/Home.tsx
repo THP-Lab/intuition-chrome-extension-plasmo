@@ -4,6 +4,7 @@ import { useSearchAtomsByUriQuery } from "../queries"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { AtomCard } from "../components/AtomCard"
+import { Link } from "react-router-dom"
 import TabSystem from '../components/TabSystem';
 
 function Home() {
@@ -69,6 +70,9 @@ function Home() {
         <p className="text-muted-foreground">
           Cette application vous permet de gérer vos insights et vos recherches.
         </p>
+        <Link to="/createAtom" className="flex flex-col items-center">
+              Create atom
+          </Link>
       </div>
 
 
@@ -76,12 +80,10 @@ function Home() {
         <h1 className="text-2xl font-bold mb-4">Home Page - Atoms</h1>
         {error && <p className="text-red-500">Une erreur est survenue lors de la requête pour cette page.</p>}
 
-
         <TabSystem tabs={tabs} />
 
 
         
-
       </div>
     </div>
   )

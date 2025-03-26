@@ -4,26 +4,25 @@ import { useGetAccountByIdQuery, useGetClaimsByAddressQuery } from "~src/graphql
 
 import { Claim } from "@0xintuition/1ui"
 import WalletConnectionButton from "~src/components/WalletConnectionButton"
+import ProfileTabs from "~src/components/profile/ProfileTabs"
+import { Outlet } from "react-router-dom"
+import { useStorage } from "@plasmohq/storage/hook";
 import SignUpForm from "../components/SignUpForm"
 
 function Profile() {
-  const [address, setAddress] = useState<string | null>(
-    localStorage.getItem("metamask-account")
-  )
+  const [address] = useStorage<string>("metamask-account")
+
 
   const [editMode, setEditMode] = useState(false)
 
-  const handleClick = () => {
-    const addr = localStorage.getItem("metamask-account")
-    setAddress(addr)
-  }
+  
 
-  // 🧠 Get account info (profile)
+  //  Get account info (profile)
   const { data: accountData, isLoading: accountLoading } = useGetAccountByIdQuery({
     id: address || ""
   })
 
-  // 🧠 Get claims for this address
+  //  Get claims for this address
   const { data: claimsData, isLoading: claimsLoading } = useGetClaimsByAddressQuery({
     address: address || ""
   })
@@ -34,17 +33,17 @@ function Profile() {
     return (
       <div>
         <p>Please link your Metamask account, then re-open this page.</p>
-        <WalletConnectionButton onClick={handleClick} />
+        <WalletConnectionButton />
       </div>
     )
   }
 
-  if (accountLoading || claimsLoading) return <div>Loading...</div>
+
 
   return (
     <div className="p-4 space-y-6">
       <h1 className="text-2xl font-bold">My Profile</h1>
-      <WalletConnectionButton onClick={handleClick} />
+      <WalletConnectionButton  />
 
       <section className="border rounded-lg p-4 bg-gray-100">
         <h2 className="text-xl font-semibold mb-2">Account Info</h2>
@@ -82,49 +81,13 @@ function Profile() {
         )}
       </section>
 
-      <section>
-        <h2 className="text-xl font-semibold">
-          Your Claims ({claimsData?.claims_aggregate.aggregate.count || 0})
-        </h2>
-
-        {claimsData?.claims_aggregate.nodes.map(({ triple }) => (
-          <div
-            key={triple.id}
-            style={{
-              padding: "10px",
-              backgroundColor: "black",
-              color: "white"
-            }}
-          >
-            <Claim
-              orientation="horizontal"
-              subject={{
-                variant: triple.subject.type === "Account" ? "user" : "non-user",
-                label: triple.subject?.label || "N/A",
-                imgSrc:
-                  triple.subject?.image ||
-                  "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
-              }}
-              predicate={{
-                variant: triple.predicate.type === "Account" ? "user" : "non-user",
-                label: triple.predicate?.label || "N/A",
-                imgSrc:
-                  triple.predicate?.image ||
-                  "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
-              }}
-              object={{
-                variant: triple.object.type === "Account" ? "user" : "non-user",
-                label: triple.object?.label || "N/A",
-                imgSrc:
-                  triple.object?.image ||
-                  "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
-              }}
-            />
-          </div>
-        ))}
-      </section>
+     
+  
+      <WalletConnectionButton />
+      <ProfileTabs />
+      <Outlet />
     </div>
   )
 }
 
-export default Profile
+export default Profile;
