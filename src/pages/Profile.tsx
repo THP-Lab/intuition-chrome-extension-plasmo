@@ -4,9 +4,14 @@ import { useGetAccountByIdQuery, useGetClaimsByAddressQuery } from "~src/graphql
 
 import { Claim } from "@0xintuition/1ui"
 import WalletConnectionButton from "~src/components/WalletConnectionButton"
+import ProfileTabs from "~src/components/profile/ProfileTabs"
+import { Outlet } from "react-router-dom"
+import { useStorage } from "@plasmohq/storage/hook";
 import SignUpForm from "../components/SignUpForm"
 
 function Profile() {
+  const [address] = useStorage<string>("metamask-account")
+
   const [address, setAddress] = useState<string | null>(
     localStorage.getItem("metamask-account")
   )
@@ -38,8 +43,6 @@ function Profile() {
       </div>
     )
   }
-
-  if (accountLoading || claimsLoading) return <div>Loading...</div>
 
   return (
     <div className="p-4 space-y-6">
@@ -127,4 +130,4 @@ function Profile() {
   )
 }
 
-export default Profile
+export default Profile;
