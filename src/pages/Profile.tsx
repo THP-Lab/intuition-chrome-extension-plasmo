@@ -52,7 +52,7 @@ function Profile() {
             defaultValues={
               account
                 ? {
-                    name: account.label,
+                    name: account.name,
                     image: account.image || "",
                     description: "",
                     url: "",
@@ -66,7 +66,7 @@ function Profile() {
         ) : (
           <div className="space-y-2">
             <p><strong>Label:</strong> {account.label}</p>
-            <p><strong>Name:</strong> {account.label}</p>
+            <p><strong>Name:</strong> {account.name}</p>
             {account.image && (
               <div>
                 <strong>Image:</strong>
