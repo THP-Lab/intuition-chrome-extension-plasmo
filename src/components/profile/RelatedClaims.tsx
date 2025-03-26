@@ -23,7 +23,7 @@ const RelatedClaims = () => {
     <div>
       <h2>Related Claims ( {data.claims_aggregate.aggregate.count} )</h2>
       {!isLoading && data.claims_aggregate.nodes.map(({ triple, shares, counter_shares }) => (
-        <div key={triple.id} style={{ padding: "10px", backgroundColor: 'black', color: 'white' }}>
+        <div key={triple.id} style={{ padding: "5px" }}>
           <Claim
             orientation="horizontal"
             subject={{
