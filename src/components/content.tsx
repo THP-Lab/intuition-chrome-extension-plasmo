@@ -17,6 +17,7 @@ import FollowingTab from "./profile/FollowingTab"
 import IdentityTab from "./profile/IdentityTab"
 import RelatedClaimsTab from "./profile/RelatedClaims"
 import YourClaimsTab from "./profile/YourClaimsTab"
+import "../styles/global.css"
 import { ThemeProvider } from "./ThemeProvider"
 
 const API_URL = "https://dev.base.intuition-api.com/v1/graphql"

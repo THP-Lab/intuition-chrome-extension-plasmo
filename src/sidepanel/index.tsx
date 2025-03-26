@@ -1,5 +1,4 @@
 import React from "react"
-
 import Content from "~src/components/content"
 import { ThemeProvider } from "~src/components/ThemeProvider"
 function IndexSidepanel() {

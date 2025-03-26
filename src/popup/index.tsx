@@ -2,7 +2,6 @@ import React from "react"
 
 import { ThemeProvider } from "../components/ThemeProvider"
 
-import "../styles/global.css"
 
 import Content from "~src/components/content"
 
