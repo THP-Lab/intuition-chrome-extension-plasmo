@@ -9,6 +9,7 @@ import { Outlet } from "react-router-dom"
 import { useStorage } from "@plasmohq/storage/hook";
 import SignUpForm from "../components/SignUpForm"
 import { cn } from "~src/lib/utils"
+import { Button } from "./components/ui/button"
 
 function Profile() {
   const [address] = useStorage<string>("metamask-account")
