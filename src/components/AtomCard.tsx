@@ -22,6 +22,10 @@ interface Atom {
   vault: {
       total_shares?: string;
       current_share_price?: string;
+      myPostion?: Array<{
+        shares: string;
+        account_id: string;
+    }>
       position_count?: string;
       positions?: string;
   }
@@ -46,9 +50,8 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
         <div>
           <h2 className="text-xl font-bold">{atom.label}</h2>
         </div>
-        <div className="ml-auto">
+        <div className="ml-auto" title={`${atom.vault.position_count} users staked on this atom`}>
         <p className="text-sm"><UserRound /> {atom.vault.position_count}</p>
-
         </div>
       </div>
 

@@ -6,10 +6,12 @@ import { Button } from "~/src/components/ui/button"
 import { AtomCard } from "../components/AtomCard"
 import { Link } from "react-router-dom"
 import TabSystem from '../components/TabSystem';
+import { useStorage } from "@plasmohq/storage/dist/hook"
 
 function Home() {
   const { theme } = useTheme()
   const [currentUrl, setCurrentUrl] = useState<string>("")
+  const [walletAddress] = useStorage<string>("metamask-account")
   useQueryClient() // Sets the client for gql queries
 
   const getCurrentUrl = async () => {
@@ -24,6 +26,7 @@ function Home() {
     getCurrentUrl().then((url) => setCurrentUrl(url))
   }
   useEffect(() => {
+    console.log("current wallet address:", walletAddress);
     refreshUrl()
     chrome.tabs.onUpdated.addListener(() => {
       refreshUrl()
@@ -34,9 +37,9 @@ function Home() {
     })
   }, [])
 
-  const { data, isLoading, error } = useSearchAtomsByUriQuery("", currentUrl)
+  const { data, isLoading, error } = useSearchAtomsByUriQuery(walletAddress?.toLowerCase(), currentUrl)
   const atoms:any = data?.["atoms"] || [];
-
+  console.log(data);
 
   const tabs = [
     {
