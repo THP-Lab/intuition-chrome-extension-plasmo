@@ -52,15 +52,6 @@
   }
 }
 
-@layer utilities {
-  .bg-background {
-    background-color: hsl(var(--background));
-  }
-  .text-foreground {
-    color: hsl(var(--foreground));
-  }
-}
-
 @layer base {
   * {
     @apply border-[hsl(var(--border))];

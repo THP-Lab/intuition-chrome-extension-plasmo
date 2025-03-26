@@ -70,9 +70,6 @@ function Home() {
         <p className="text-muted-foreground">
           Cette application vous permet de gérer vos insights et vos recherches.
         </p>
-        <Link to="/createAtom" className="flex flex-col items-center">
-              Create atom
-          </Link>
       </div>
 
 
