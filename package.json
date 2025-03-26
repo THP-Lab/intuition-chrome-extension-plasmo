@@ -28,8 +28,9 @@
     "react-dom": "18.2.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^7.3.0",
-    "viem": "^2.23.15",
-    "tailwind-merge": "^3.0.2"
+    "tailwind-merge": "^3.0.2",
+    "use-debounce": "^10.0.4",
+    "viem": "^2.23.15"
   },
   "devDependencies": {
     "@0no-co/graphqlsp": "^1.12.16",

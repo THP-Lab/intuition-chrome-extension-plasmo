@@ -1,61 +1,99 @@
 import React, { useState } from 'react'
-import { useCreateTriple } from '../hooks/useCreateTriple'
+import AtomAutocompleteInput from './AtomAutocompleteInput'
+import { Multivault } from '@0xintuition/protocol'
+import { getClients } from '../lib/viemClient'
+
+interface Atom {
+  id: string;
+  label: string;
+}
 
 const CreateTripleForm: React.FC = () => {
-  const [subjectId, setSubjectId] = useState('')
-  const [predicateId, setPredicateId] = useState('')
-  const [objectId, setObjectId] = useState('')
-  const [status, setStatus] = useState<string | null>(null)
+  const [subject, setSubject] = useState<Atom | null>(null)
+  const [predicate, setPredicate] = useState<Atom | null>(null)
+  const [object, setObject] = useState<Atom | null>(null)
 
-  const { createTriple, isLoading, error, txHash } = useCreateTriple()
+  const [progressMessage, setProgressMessage] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setStatus('Création du triple...')
+    setIsSubmitting(true)
+    setProgressMessage('Creating triple...')
+    setErrorMessage(null)
 
     try {
-      const { vaultId, hash } = await createTriple(
-        BigInt(subjectId),
-        BigInt(predicateId),
-        BigInt(objectId)
-      )
+      if (!subject || !predicate || !object) {
+        throw new Error('All three atoms must be selected.')
+      }
 
-      setStatus(`Triple créé ! Vault ID: ${vaultId} | Tx: ${hash}`)
-    } catch (err) {
-      setStatus('Erreur lors de la création du triple.')
+      const { walletClient, publicClient } = await getClients()
+      const multivault = new Multivault({ walletClient, publicClient })
+
+      const tripleCost = await multivault.getTripleCost()
+
+      const existing = await multivault.getTripleIdFromAtoms(
+        BigInt(subject.id),
+        BigInt(predicate.id),
+        BigInt(object.id)
+      )
+      if (existing) {
+        throw new Error("Triple already exists with vault ID " + existing.toString());
+      }
+
+
+      const { vaultId, hash } = await multivault.createTriple({
+        subjectId: BigInt(subject.id),
+        predicateId: BigInt(predicate.id),
+        objectId: BigInt(object.id),
+        initialDeposit: 0n,
+        wait: true,
+      })
+
+      setProgressMessage(`Triple created with vault ID ${vaultId.toString()} (tx: ${hash})`)
+    } catch (err: any) {
+      console.error(err)
+      setErrorMessage(err.message || 'An error occurred.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-white p-4 rounded shadow">
-      <input
-        placeholder="Subject ID"
-        value={subjectId}
-        onChange={(e) => setSubjectId(e.target.value)}
-        className="w-full border p-2 rounded"
+    <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-gray-100 rounded">
+      <AtomAutocompleteInput
+        label="Subject"
+        onSelect={(atom) => {
+          console.log("Subject sélectionné :", atom.id);
+          setSubject(atom)
+        }}
       />
-      <input
-        placeholder="Predicate ID"
-        value={predicateId}
-        onChange={(e) => setPredicateId(e.target.value)}
-        className="w-full border p-2 rounded"
+      <AtomAutocompleteInput
+        label="Prédicat"
+        onSelect={(atom) => {
+          console.log("Prédicat sélectionné :", atom.id);
+          setPredicate(atom);
+        }}
       />
-      <input
-        placeholder="Object ID"
-        value={objectId}
-        onChange={(e) => setObjectId(e.target.value)}
-        className="w-full border p-2 rounded"
+      <AtomAutocompleteInput
+        label="Objet"
+        onSelect={(atom) => {
+          console.log("Objet sélectionné :", atom.id);
+          setObject(atom);
+        }}
       />
+
       <button
         type="submit"
-        disabled={isLoading}
-        className="bg-indigo-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        disabled={isSubmitting}
+        className="px-4 py-2 bg-purple-600 text-white rounded"
       >
-        {isLoading ? 'Création en cours...' : 'Créer le triple'}
+        {isSubmitting ? 'Creating...' : 'Create Triple'}
       </button>
 
-      {status && <p className="text-sm mt-2">{status}</p>}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {progressMessage && <p className="text-green-600 text-sm">{progressMessage}</p>}
+      {errorMessage && <p className="text-red-600 text-sm">{errorMessage}</p>}
     </form>
   )
 }

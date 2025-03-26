@@ -20,7 +20,7 @@ export const useCreateTriple = () => {
       const multivault = new Multivault({ walletClient, publicClient })
 
       const tripleCost = await multivault.getTripleCost()
-      const deposit = parseEther('0.00001') // facultatif
+      const deposit = parseEther('0.00001') 
 
       const { vaultId, hash, events } = await multivault.createTriple({
         subjectId,
