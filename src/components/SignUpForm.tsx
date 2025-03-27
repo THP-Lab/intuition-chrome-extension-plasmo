@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react"
 import { usePinPersonMutation } from "~src/graphql/src"
 import { Button } from "~src/components/ui/button"
 import { useStorage } from "@plasmohq/storage/hook";
+import { parseEther } from 'viem';
+import { Multivault } from '@0xintuition/protocol'
+import { getClients } from '../lib/viemClient';
+import { MULTIVAULT_CONTRACT_ADDRESS } from "../lib/config"
+
+
 
 // Props for the reusable form component
 type Props = {
@@ -20,7 +26,9 @@ type Props = {
 const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
   // Local state to hold form inputs
  
- const [address] = useStorage<string>("metamask-account")
+  const [address] = useStorage<string>("metamask-account")
+  const [progressMessage, setProgressMessage] = useState<string | null>(null) 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null) 
 
   const [form, setForm] = useState({
     name: "",
@@ -40,13 +48,16 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
         image: defaultValues.image || "",
         url: defaultValues.url || "",
         email: defaultValues.email || "",
-        identifier: address || ""
+        identifier: defaultValues.identifier || address || "" 
       })
+    }else if (address) {
+      setForm((prev) => ({ ...prev, identifier: address })) 
     }
-  }, [defaultValues])
+
+  }, [defaultValues, address])
 
   // GraphQL mutation to pin (register) the person
-  const { mutate: pinPerson, data, isPending, error } = usePinPersonMutation()
+  const { mutateAsync: pinPerson } = usePinPersonMutation()
 
   // Handle input changes and update local state
   const handleChange = (
@@ -67,30 +78,60 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
     }
 
     try {
+
+      setProgressMessage("Pinning metadata...") 
+      setErrorMessage(null) 
+
+      const { walletClient, publicClient } = await getClients()      
+
+      //teeeeest
+      console.log("Using chain:", walletClient.chain.name)
+      console.log("Multivault contract address:", MULTIVAULT_CONTRACT_ADDRESS)
+
+      
+      const multivault = new Multivault({ walletClient, publicClient }) 
+
+
       // Run the mutation with the form values
-      await pinPerson({
+      const result = await pinPerson({
     
           name: form.name,
           description: form.description || null,
           image: form.image || null,
           url: form.url || null,
-          email: form.email || null
-        
+          email: form.email || null,
+          identifier: address || null,
       })
 
-      // Show success message
-      alert("Person pinned successfully!")
+      const uri = result?.pinPerson?.uri
+      if (!uri) throw new Error("Failed to pin person metadata.")
+
+        
+      setProgressMessage(`Metadata pinned! URI: ${uri}`) 
+
+      const deposit = parseEther("0.000025")
+
+      const { vaultId, hash } = await multivault.createAtom({ 
+        uri,
+        initialDeposit: deposit,
+        wait: true
+      })
+
+      setProgressMessage(`Success! Vault ID: ${vaultId}, Tx: ${hash}`) 
+
+    
 
       // Reset form if we're in "create" mode (not editing)
       if (!defaultValues) {
-        setForm({ name: "", description: "", image: "", url: "", email: "",  identifier: "" })
+        setForm({ name: "", description: "", image: "", url: "", email: "",  identifier: address || "" })
       }
 
       // If parent component gave us a callback, call it
       onSuccess?.()
-    } catch (err) {
+    } catch (err: any) {
       // Show error in the console if something goes wrong
-      console.error("Error pinning person:", err)
+      console.error("Error:", err)
+      setErrorMessage(err.message || "An error occurred.") 
     }
   }
 
@@ -143,6 +184,7 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
       </div>
 
      
+
       <Button 
         type="submit" 
         disabled={isPending}
@@ -159,10 +201,9 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
       </Button>
 
 
-      {data?.pinPerson?.uri && (
-        <p>Registered at URI: {data.pinPerson.uri}</p>
-      )},
-      {error ? <p className="text-red-500"> Error</p> : ""}
+
+      {progressMessage && <p className="text-green-600">{progressMessage}</p>}
+      {errorMessage && <p className="text-red-600">{errorMessage}</p>}
     </form>
   )
 }

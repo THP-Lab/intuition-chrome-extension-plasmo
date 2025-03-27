@@ -2,7 +2,6 @@ import React, { useState } from "react"
 
 import { useGetAccountByIdQuery, useGetClaimsByAddressQuery } from "~src/graphql/src"
 
-import { Claim } from "@0xintuition/1ui"
 import WalletConnectionButton from "~src/components/WalletConnectionButton"
 import ProfileTabs from "~src/components/profile/ProfileTabs"
 import { Outlet } from "react-router-dom"
@@ -59,7 +58,7 @@ function Profile() {
             defaultValues={
               account
                 ? {
-                    name: account.label,
+                    name: account.name,
                     image: account.image || "",
                     description: "",
                     url: "",
@@ -71,11 +70,14 @@ function Profile() {
             onSuccess={() => setEditMode(false)}
           />
         ) : (
+
           <div className="space-y-4">
             <p className="flex items-center gap-2">
               <span className="font-medium">Label:</span> 
               <span className="text-muted-foreground">{account.label}</span>
+              <span className="text-muted-foreground">{account.name}</span>
             </p>
+
             {account.image && (
               <div className="space-y-2">
                 <span className="font-medium">Image:</span>
@@ -87,9 +89,11 @@ function Profile() {
               </div>
             )}
             <button
+
               className={cn(
                 "w-full px-4 py-2 bg-background text-foreground hover:bg-accent hover:text-accent-foreground rounded"
               )}
+
               onClick={() => setEditMode(true)}
             >
               Edit Profile
