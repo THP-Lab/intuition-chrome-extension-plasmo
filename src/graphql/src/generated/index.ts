@@ -10751,24 +10751,149 @@ export type GetClaimsByAddressQuery = {
   }
 }
 
-export type GetFollowersTriplesQueryVariables = Exact<{
-  accountId: Scalars["String"]["input"]
+export type GetClaimsByUriQueryVariables = Exact<{
+  uri?: InputMaybe<Scalars["String"]["input"]>
 }>
 
-export type GetFollowersTriplesQuery = {
+export type GetClaimsByUriQuery = {
   __typename?: "query_root"
-  triples: Array<{
-    __typename?: "triples"
-    id: any
-    subject: {
-      __typename?: "atoms"
-      id: any
-      label?: string | null
-      type: any
-      image?: string | null
-      accounts: Array<{ __typename?: "accounts"; id: string }>
+  atoms: Array<{
+    __typename?: "atoms"
+    as_object_claims_aggregate: {
+      __typename?: "claims_aggregate"
+      aggregate?: {
+        __typename?: "claims_aggregate_fields"
+        count: number
+      } | null
+      nodes: Array<{
+        __typename?: "claims"
+        id: string
+        shares: any
+        counter_shares: any
+        predicate: {
+          __typename?: "atoms"
+          label?: string | null
+          image?: string | null
+          type: any
+        }
+        subject: {
+          __typename?: "atoms"
+          image?: string | null
+          label?: string | null
+          type: any
+        }
+        object: {
+          __typename?: "atoms"
+          label?: string | null
+          image?: string | null
+          type: any
+        }
+        vault: {
+          __typename?: "vaults"
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
+        }
+        counter_vault: {
+          __typename?: "vaults"
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
+        }
+      }>
+    }
+    as_subject_claims_aggregate: {
+      __typename?: "claims_aggregate"
+      aggregate?: {
+        __typename?: "claims_aggregate_fields"
+        count: number
+      } | null
+      nodes: Array<{
+        __typename?: "claims"
+        id: string
+        shares: any
+        counter_shares: any
+        predicate: {
+          __typename?: "atoms"
+          label?: string | null
+          image?: string | null
+          type: any
+        }
+        object: {
+          __typename?: "atoms"
+          label?: string | null
+          image?: string | null
+          type: any
+        }
+        subject: {
+          __typename?: "atoms"
+          label?: string | null
+          image?: string | null
+          type: any
+        }
+        vault: {
+          __typename?: "vaults"
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
+        }
+        counter_vault: {
+          __typename?: "vaults"
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
+        }
+      }>
     }
   }>
+}
+
+export type GetClaimsByAtomQueryVariables = Exact<{
+  id?: InputMaybe<Scalars["numeric"]["input"]>
+}>
+
+export type GetClaimsByAtomQuery = {
+  __typename?: "query_root"
+  claims_aggregate: {
+    __typename?: "claims_aggregate"
+    aggregate?: { __typename?: "claims_aggregate_fields"; count: number } | null
+    nodes: Array<{
+      __typename?: "claims"
+      account?: { __typename?: "accounts"; label: string } | null
+      triple: {
+        __typename?: "triples"
+        id: any
+        subject: {
+          __typename?: "atoms"
+          label?: string | null
+          image?: string | null
+          type: any
+        }
+        predicate: {
+          __typename?: "atoms"
+          label?: string | null
+          image?: string | null
+          type: any
+        }
+      }
+    }>
+  }
 }
 
 export type GetAccountByIdQueryVariables = Exact<{
@@ -13674,84 +13799,150 @@ useGetClaimsByAddressQuery.fetcher = (
     options
   )
 
-export const GetFollowersTriplesDocument = `
-    query GetFollowersTriples($accountId: String!) {
-  triples(
-    where: {predicate: {label: {_eq: "follow"}}, object: {accounts: {id: {_eq: $accountId}}}, subject: {type: {_eq: "Account"}}}
+export const GetClaimsByUriDocument = `
+    query GetClaimsByUri($uri: String) {
+  atoms(
+    where: {_or: [{data: {_eq: $uri}}, {value: {thing: {url: {_eq: $uri}}}}, {value: {person: {url: {_eq: $uri}}}}, {value: {organization: {url: {_eq: $uri}}}}, {value: {book: {url: {_eq: $uri}}}}]}
   ) {
-    id
-    subject {
-      id
-      label
-      type
-      image
-      accounts {
+    as_object_claims_aggregate {
+      aggregate {
+        count
+      }
+      nodes {
         id
+        predicate {
+          label
+          image
+          type
+        }
+        subject {
+          image
+          label
+          type
+        }
+        object {
+          label
+          image
+          type
+        }
+        vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        shares
+        counter_shares
+      }
+    }
+    as_subject_claims_aggregate {
+      aggregate {
+        count
+      }
+      nodes {
+        id
+        predicate {
+          label
+          image
+          type
+        }
+        object {
+          label
+          image
+          type
+        }
+        subject {
+          label
+          image
+          type
+        }
+        vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        shares
+        counter_shares
       }
     }
   }
 }
     `
 
-export const useGetFollowersTriplesQuery = <
-  TData = GetFollowersTriplesQuery,
+export const useGetClaimsByUriQuery = <
+  TData = GetClaimsByUriQuery,
   TError = unknown
 >(
-  variables: GetFollowersTriplesQueryVariables,
+  variables?: GetClaimsByUriQueryVariables,
   options?: Omit<
-    UseQueryOptions<GetFollowersTriplesQuery, TError, TData>,
+    UseQueryOptions<GetClaimsByUriQuery, TError, TData>,
     "queryKey"
   > & {
-    queryKey?: UseQueryOptions<
-      GetFollowersTriplesQuery,
-      TError,
-      TData
-    >["queryKey"]
+    queryKey?: UseQueryOptions<GetClaimsByUriQuery, TError, TData>["queryKey"]
   }
 ) => {
-  return useQuery<GetFollowersTriplesQuery, TError, TData>({
-    queryKey: ["GetFollowersTriples", variables],
-    queryFn: fetcher<
-      GetFollowersTriplesQuery,
-      GetFollowersTriplesQueryVariables
-    >(GetFollowersTriplesDocument, variables),
+  return useQuery<GetClaimsByUriQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ["GetClaimsByUri"]
+        : ["GetClaimsByUri", variables],
+    queryFn: fetcher<GetClaimsByUriQuery, GetClaimsByUriQueryVariables>(
+      GetClaimsByUriDocument,
+      variables
+    ),
     ...options
   })
 }
 
-useGetFollowersTriplesQuery.document = GetFollowersTriplesDocument
+useGetClaimsByUriQuery.document = GetClaimsByUriDocument
 
-useGetFollowersTriplesQuery.getKey = (
-  variables: GetFollowersTriplesQueryVariables
-) => ["GetFollowersTriples", variables]
+useGetClaimsByUriQuery.getKey = (variables?: GetClaimsByUriQueryVariables) =>
+  variables === undefined ? ["GetClaimsByUri"] : ["GetClaimsByUri", variables]
 
-export const useInfiniteGetFollowersTriplesQuery = <
-  TData = InfiniteData<GetFollowersTriplesQuery>,
+export const useInfiniteGetClaimsByUriQuery = <
+  TData = InfiniteData<GetClaimsByUriQuery>,
   TError = unknown
 >(
-  variables: GetFollowersTriplesQueryVariables,
+  variables: GetClaimsByUriQueryVariables,
   options: Omit<
-    UseInfiniteQueryOptions<GetFollowersTriplesQuery, TError, TData>,
+    UseInfiniteQueryOptions<GetClaimsByUriQuery, TError, TData>,
     "queryKey"
   > & {
     queryKey?: UseInfiniteQueryOptions<
-      GetFollowersTriplesQuery,
+      GetClaimsByUriQuery,
       TError,
       TData
     >["queryKey"]
   }
 ) => {
-  return useInfiniteQuery<GetFollowersTriplesQuery, TError, TData>(
+  return useInfiniteQuery<GetClaimsByUriQuery, TError, TData>(
     (() => {
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
-        queryKey: optionsQueryKey ?? [
-          "GetFollowersTriples.infinite",
-          variables
-        ],
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ["GetClaimsByUri.infinite"]
+            : ["GetClaimsByUri.infinite", variables],
         queryFn: (metaData) =>
-          fetcher<GetFollowersTriplesQuery, GetFollowersTriplesQueryVariables>(
-            GetFollowersTriplesDocument,
+          fetcher<GetClaimsByUriQuery, GetClaimsByUriQueryVariables>(
+            GetClaimsByUriDocument,
             { ...variables, ...(metaData.pageParam ?? {}) }
           )(),
         ...restOptions
@@ -13760,16 +13951,131 @@ export const useInfiniteGetFollowersTriplesQuery = <
   )
 }
 
-useInfiniteGetFollowersTriplesQuery.getKey = (
-  variables: GetFollowersTriplesQueryVariables
-) => ["GetFollowersTriples.infinite", variables]
+useInfiniteGetClaimsByUriQuery.getKey = (
+  variables?: GetClaimsByUriQueryVariables
+) =>
+  variables === undefined
+    ? ["GetClaimsByUri.infinite"]
+    : ["GetClaimsByUri.infinite", variables]
 
-useGetFollowersTriplesQuery.fetcher = (
-  variables: GetFollowersTriplesQueryVariables,
+useGetClaimsByUriQuery.fetcher = (
+  variables?: GetClaimsByUriQueryVariables,
   options?: RequestInit["headers"]
 ) =>
-  fetcher<GetFollowersTriplesQuery, GetFollowersTriplesQueryVariables>(
-    GetFollowersTriplesDocument,
+  fetcher<GetClaimsByUriQuery, GetClaimsByUriQueryVariables>(
+    GetClaimsByUriDocument,
+    variables,
+    options
+  )
+
+export const GetClaimsByAtomDocument = `
+    query GetClaimsByAtom($id: numeric) {
+  claims_aggregate(
+    where: {_or: [{object_id: {_eq: $id}}, {subject_id: {_eq: $id}}]}
+  ) {
+    aggregate {
+      count
+    }
+    nodes {
+      account {
+        label
+      }
+      triple {
+        id
+        subject {
+          label
+          image
+          type
+        }
+        predicate {
+          label
+          image
+          type
+        }
+      }
+    }
+  }
+}
+    `
+
+export const useGetClaimsByAtomQuery = <
+  TData = GetClaimsByAtomQuery,
+  TError = unknown
+>(
+  variables?: GetClaimsByAtomQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetClaimsByAtomQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<GetClaimsByAtomQuery, TError, TData>["queryKey"]
+  }
+) => {
+  return useQuery<GetClaimsByAtomQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ["GetClaimsByAtom"]
+        : ["GetClaimsByAtom", variables],
+    queryFn: fetcher<GetClaimsByAtomQuery, GetClaimsByAtomQueryVariables>(
+      GetClaimsByAtomDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetClaimsByAtomQuery.document = GetClaimsByAtomDocument
+
+useGetClaimsByAtomQuery.getKey = (variables?: GetClaimsByAtomQueryVariables) =>
+  variables === undefined ? ["GetClaimsByAtom"] : ["GetClaimsByAtom", variables]
+
+export const useInfiniteGetClaimsByAtomQuery = <
+  TData = InfiniteData<GetClaimsByAtomQuery>,
+  TError = unknown
+>(
+  variables: GetClaimsByAtomQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetClaimsByAtomQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetClaimsByAtomQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetClaimsByAtomQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ["GetClaimsByAtom.infinite"]
+            : ["GetClaimsByAtom.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetClaimsByAtomQuery, GetClaimsByAtomQueryVariables>(
+            GetClaimsByAtomDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetClaimsByAtomQuery.getKey = (
+  variables?: GetClaimsByAtomQueryVariables
+) =>
+  variables === undefined
+    ? ["GetClaimsByAtom.infinite"]
+    : ["GetClaimsByAtom.infinite", variables]
+
+useGetClaimsByAtomQuery.fetcher = (
+  variables?: GetClaimsByAtomQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetClaimsByAtomQuery, GetClaimsByAtomQueryVariables>(
+    GetClaimsByAtomDocument,
     variables,
     options
   )
@@ -21496,24 +21802,18 @@ export const GetClaimsByAddress = {
     }
   ]
 } as unknown as DocumentNode
-export const GetFollowersTriples = {
+export const GetClaimsByUri = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "GetFollowersTriples" },
+      name: { kind: "Name", value: "GetClaimsByUri" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "accountId" }
-          },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
-          }
+          variable: { kind: "Variable", name: { kind: "Name", value: "uri" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
         }
       ],
       selectionSet: {
@@ -21521,7 +21821,7 @@ export const GetFollowersTriples = {
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "triples" },
+            name: { kind: "Name", value: "atoms" },
             arguments: [
               {
                 kind: "Argument",
@@ -21531,92 +21831,230 @@ export const GetFollowersTriples = {
                   fields: [
                     {
                       kind: "ObjectField",
-                      name: { kind: "Name", value: "predicate" },
+                      name: { kind: "Name", value: "_or" },
                       value: {
-                        kind: "ObjectValue",
-                        fields: [
+                        kind: "ListValue",
+                        values: [
                           {
-                            kind: "ObjectField",
-                            name: { kind: "Name", value: "label" },
-                            value: {
-                              kind: "ObjectValue",
-                              fields: [
-                                {
-                                  kind: "ObjectField",
-                                  name: { kind: "Name", value: "_eq" },
-                                  value: {
-                                    kind: "StringValue",
-                                    value: "follow",
-                                    block: false
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "object" },
-                      value: {
-                        kind: "ObjectValue",
-                        fields: [
-                          {
-                            kind: "ObjectField",
-                            name: { kind: "Name", value: "accounts" },
-                            value: {
-                              kind: "ObjectValue",
-                              fields: [
-                                {
-                                  kind: "ObjectField",
-                                  name: { kind: "Name", value: "id" },
-                                  value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                      {
-                                        kind: "ObjectField",
-                                        name: { kind: "Name", value: "_eq" },
-                                        value: {
-                                          kind: "Variable",
-                                          name: {
-                                            kind: "Name",
-                                            value: "accountId"
-                                          }
-                                        }
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "data" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "_eq" },
+                                      value: {
+                                        kind: "Variable",
+                                        name: { kind: "Name", value: "uri" }
                                       }
-                                    ]
-                                  }
+                                    }
+                                  ]
                                 }
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "subject" },
-                      value: {
-                        kind: "ObjectValue",
-                        fields: [
+                              }
+                            ]
+                          },
                           {
-                            kind: "ObjectField",
-                            name: { kind: "Name", value: "type" },
-                            value: {
-                              kind: "ObjectValue",
-                              fields: [
-                                {
-                                  kind: "ObjectField",
-                                  name: { kind: "Name", value: "_eq" },
-                                  value: {
-                                    kind: "StringValue",
-                                    value: "Account",
-                                    block: false
-                                  }
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "value" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "thing" },
+                                      value: {
+                                        kind: "ObjectValue",
+                                        fields: [
+                                          {
+                                            kind: "ObjectField",
+                                            name: {
+                                              kind: "Name",
+                                              value: "url"
+                                            },
+                                            value: {
+                                              kind: "ObjectValue",
+                                              fields: [
+                                                {
+                                                  kind: "ObjectField",
+                                                  name: {
+                                                    kind: "Name",
+                                                    value: "_eq"
+                                                  },
+                                                  value: {
+                                                    kind: "Variable",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "uri"
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
                                 }
-                              ]
-                            }
+                              }
+                            ]
+                          },
+                          {
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "value" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "person" },
+                                      value: {
+                                        kind: "ObjectValue",
+                                        fields: [
+                                          {
+                                            kind: "ObjectField",
+                                            name: {
+                                              kind: "Name",
+                                              value: "url"
+                                            },
+                                            value: {
+                                              kind: "ObjectValue",
+                                              fields: [
+                                                {
+                                                  kind: "ObjectField",
+                                                  name: {
+                                                    kind: "Name",
+                                                    value: "_eq"
+                                                  },
+                                                  value: {
+                                                    kind: "Variable",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "uri"
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "value" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: {
+                                        kind: "Name",
+                                        value: "organization"
+                                      },
+                                      value: {
+                                        kind: "ObjectValue",
+                                        fields: [
+                                          {
+                                            kind: "ObjectField",
+                                            name: {
+                                              kind: "Name",
+                                              value: "url"
+                                            },
+                                            value: {
+                                              kind: "ObjectValue",
+                                              fields: [
+                                                {
+                                                  kind: "ObjectField",
+                                                  name: {
+                                                    kind: "Name",
+                                                    value: "_eq"
+                                                  },
+                                                  value: {
+                                                    kind: "Variable",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "uri"
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "value" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "book" },
+                                      value: {
+                                        kind: "ObjectValue",
+                                        fields: [
+                                          {
+                                            kind: "ObjectField",
+                                            name: {
+                                              kind: "Name",
+                                              value: "url"
+                                            },
+                                            value: {
+                                              kind: "ObjectValue",
+                                              fields: [
+                                                {
+                                                  kind: "ObjectField",
+                                                  name: {
+                                                    kind: "Name",
+                                                    value: "_eq"
+                                                  },
+                                                  value: {
+                                                    kind: "Variable",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "uri"
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           }
                         ]
                       }
@@ -21628,26 +22066,553 @@ export const GetFollowersTriples = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "subject" },
+                  name: { kind: "Name", value: "as_object_claims_aggregate" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "label" } },
-                      { kind: "Field", name: { kind: "Name", value: "type" } },
-                      { kind: "Field", name: { kind: "Name", value: "image" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "accounts" },
+                        name: { kind: "Name", value: "aggregate" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "count" }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "nodes" },
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "id" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "predicate" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "subject" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "object" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "counter_vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "counter_shares" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "as_subject_claims_aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "aggregate" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "count" }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "nodes" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "predicate" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "object" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "subject" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "counter_vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "counter_shares" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetClaimsByAtom = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetClaimsByAtom" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "numeric" } }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "claims_aggregate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "_or" },
+                      value: {
+                        kind: "ListValue",
+                        values: [
+                          {
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "object_id" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "_eq" },
+                                      value: {
+                                        kind: "Variable",
+                                        name: { kind: "Name", value: "id" }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "subject_id" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "_eq" },
+                                      value: {
+                                        kind: "Variable",
+                                        name: { kind: "Name", value: "id" }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "count" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "nodes" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "account" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "triple" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "subject" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "predicate" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
                             }
                           ]
                         }
