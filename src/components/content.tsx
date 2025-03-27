@@ -17,7 +17,7 @@ import FollowingTab from "./profile/FollowingTab"
 import IdentityTab from "./profile/IdentityTab"
 import RelatedClaimsTab from "./profile/RelatedClaims"
 import YourClaimsTab from "./profile/YourClaimsTab"
-import MyPositionsTab from "./Profile/MyPositionsTab"
+import MyPositionsTab from "./profile/MyPositionsTab"
 import "../styles/global.css"
 import { ThemeProvider } from "./ThemeProvider"
 
