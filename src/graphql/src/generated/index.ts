@@ -10785,6 +10785,24 @@ export type GetAccountByIdQuery = {
   } | null
 }
 
+export type GetPersonsByIdentifierQueryVariables = Exact<{
+  identifier: Scalars["String"]["input"]
+}>
+
+export type GetPersonsByIdentifierQuery = {
+  __typename?: "query_root"
+  persons: Array<{
+    __typename?: "persons"
+    id: any
+    name?: string | null
+    image?: string | null
+    description?: string | null
+    email?: string | null
+    url?: string | null
+    identifier?: string | null
+  }>
+}
+
 export type GetListsQueryVariables = Exact<{
   where?: InputMaybe<Predicate_Objects_Bool_Exp>
 }>
@@ -13837,6 +13855,104 @@ useGetAccountByIdQuery.fetcher = (
 ) =>
   fetcher<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
     GetAccountByIdDocument,
+    variables,
+    options
+  )
+
+export const GetPersonsByIdentifierDocument = `
+    query GetPersonsByIdentifier($identifier: String!) {
+  persons(where: {identifier: {_eq: $identifier}}) {
+    id
+    name
+    image
+    description
+    email
+    url
+    identifier
+  }
+}
+    `
+
+export const useGetPersonsByIdentifierQuery = <
+  TData = GetPersonsByIdentifierQuery,
+  TError = unknown
+>(
+  variables: GetPersonsByIdentifierQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetPersonsByIdentifierQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<
+      GetPersonsByIdentifierQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useQuery<GetPersonsByIdentifierQuery, TError, TData>({
+    queryKey: ["GetPersonsByIdentifier", variables],
+    queryFn: fetcher<
+      GetPersonsByIdentifierQuery,
+      GetPersonsByIdentifierQueryVariables
+    >(GetPersonsByIdentifierDocument, variables),
+    ...options
+  })
+}
+
+useGetPersonsByIdentifierQuery.document = GetPersonsByIdentifierDocument
+
+useGetPersonsByIdentifierQuery.getKey = (
+  variables: GetPersonsByIdentifierQueryVariables
+) => ["GetPersonsByIdentifier", variables]
+
+export const useInfiniteGetPersonsByIdentifierQuery = <
+  TData = InfiniteData<GetPersonsByIdentifierQuery>,
+  TError = unknown
+>(
+  variables: GetPersonsByIdentifierQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetPersonsByIdentifierQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetPersonsByIdentifierQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetPersonsByIdentifierQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? [
+          "GetPersonsByIdentifier.infinite",
+          variables
+        ],
+        queryFn: (metaData) =>
+          fetcher<
+            GetPersonsByIdentifierQuery,
+            GetPersonsByIdentifierQueryVariables
+          >(GetPersonsByIdentifierDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {})
+          })(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetPersonsByIdentifierQuery.getKey = (
+  variables: GetPersonsByIdentifierQueryVariables
+) => ["GetPersonsByIdentifier.infinite", variables]
+
+useGetPersonsByIdentifierQuery.fetcher = (
+  variables: GetPersonsByIdentifierQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetPersonsByIdentifierQuery, GetPersonsByIdentifierQueryVariables>(
+    GetPersonsByIdentifierDocument,
     variables,
     options
   )
@@ -21583,6 +21699,78 @@ export const GetAccountById = {
                 { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "image" } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetPersonsByIdentifier = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetPersonsByIdentifier" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "identifier" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "persons" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "identifier" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_eq" },
+                            value: {
+                              kind: "Variable",
+                              name: { kind: "Name", value: "identifier" }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "url" } },
+                { kind: "Field", name: { kind: "Name", value: "identifier" } }
               ]
             }
           }
