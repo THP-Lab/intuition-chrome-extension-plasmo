@@ -8,6 +8,8 @@ import ProfileTabs from "~src/components/profile/ProfileTabs"
 import { Outlet } from "react-router-dom"
 import { useStorage } from "@plasmohq/storage/hook";
 import SignUpForm from "../components/SignUpForm"
+import { cn } from "~src/lib/utils"
+import { Button } from "~src/components/ui/button"
 
 function Profile() {
   const [address] = useStorage<string>("metamask-account")
@@ -31,8 +33,8 @@ function Profile() {
 
   if (!address) {
     return (
-      <div>
-        <p>Please link your Metamask account, then re-open this page.</p>
+      <div className="flex flex-col items-center space-y-4 p-4">
+        <p className="text-foreground">Please link your Metamask account, then re-open this page.</p>
         <WalletConnectionButton />
       </div>
     )
@@ -42,11 +44,15 @@ function Profile() {
 
   return (
     <div className="p-4 space-y-6">
-      <h1 className="text-2xl font-bold">My Profile</h1>
+      <h1 className="text-2xl font-bold text-foreground">My Profile</h1>
       <WalletConnectionButton  />
 
-      <section className="border rounded-lg p-4 bg-gray-100">
-        <h2 className="text-xl font-semibold mb-2">Account Info</h2>
+      <section className={cn(
+        "border rounded-lg p-4",
+        "bg-background text-foreground",
+        "shadow-sm hover:shadow-md transition-shadow"
+      )}>
+        <h2 className="text-xl font-semibold mb-4">Account Info</h2>
 
         {!account || editMode ? (
           <SignUpForm
@@ -65,16 +71,25 @@ function Profile() {
             onSuccess={() => setEditMode(false)}
           />
         ) : (
-          <div className="space-y-2">
-            <p><strong>Label:</strong> {account.label}</p>
+          <div className="space-y-4">
+            <p className="flex items-center gap-2">
+              <span className="font-medium">Label:</span> 
+              <span className="text-muted-foreground">{account.label}</span>
+            </p>
             {account.image && (
-              <div>
-                <strong>Image:</strong>
-                <img src={account.image} alt="profile" className="w-24 h-24 rounded" />
+              <div className="space-y-2">
+                <span className="font-medium">Image:</span>
+                <img 
+                  src={account.image} 
+                  alt="profile" 
+                  className="w-24 h-24 rounded-md object-cover border border-border" 
+                />
               </div>
             )}
             <button
-              className="mt-2 px-4 py-1 bg-blue-600 text-white rounded"
+              className={cn(
+                "w-full px-4 py-2 bg-background text-foreground hover:bg-accent hover:text-accent-foreground rounded"
+              )}
               onClick={() => setEditMode(true)}
             >
               Edit Profile
@@ -83,9 +98,6 @@ function Profile() {
         )}
       </section>
 
-     
-  
-      <WalletConnectionButton />
       <ProfileTabs />
       <Outlet />
     </div>
