@@ -6,7 +6,8 @@ import ClaimRowLite from "../ui/ClaimRowLite"
 
 
 const YourClaimsTab = () => {
-  const [account] = useStorage<string>("metamask-account")
+  // const [account] = useStorage<string>("metamask-account")  
+  const account = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
 
   const { data, isLoading, isError, error } = useGetTriplesByCreatorQuery(
     { address: account ?? "" },
