@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
-import { useSearchAtomsByUriQuery } from "../queries"
 import { useTheme } from "~/src/components/ThemeProvider"
-import { Button } from "~/src/components/ui/button"
 import { AtomCard } from "../components/AtomCard"
-import { Link } from "react-router-dom"
 import TabSystem from '../components/TabSystem';
 import { useStorage } from "@plasmohq/storage/dist/hook"
-import { GetClaimsByAtomQuery, useGetClaimsByAtomQuery } from "~src/graphql/src"
-import type { Atoms } from "~node_modules/@0xintuition/graphql/dist"
+import { GetClaimsByAtomQuery, useGetClaimsByAtomQuery, useGetClaimsByUriQuery } from "~src/graphql/src"
+import type { Atoms, Claims } from "~node_modules/@0xintuition/graphql/dist"
 
 function Home() {
   const { theme } = useTheme()
   const [currentUrl, setCurrentUrl] = useState<string>("")
   const [walletAddress] = useStorage<string>("metamask-account")
-  const [claims, setClaims] = useState<Array<GetClaimsByAtomQuery | undefined>>([])
   useQueryClient() // Sets the client for gql queries
 
   const getCurrentUrl = async () => {
@@ -26,7 +22,7 @@ function Home() {
     return tab.url
   }
   const refreshUrl = () => {
-    getCurrentUrl().then((url) => setCurrentUrl(url))
+    getCurrentUrl().then((url) => setCurrentUrl(url || ""))
   }
   useEffect(() => {
     console.log("current wallet address:", walletAddress);
@@ -40,23 +36,11 @@ function Home() {
     })
   }, [])
 
-  const { data, isLoading, error } = useSearchAtomsByUriQuery(walletAddress?.toLowerCase(), currentUrl)
-  const atoms:Array<Atoms> = data?.["atoms"] || [];
-  
+  const { data, isLoading, error } = useGetClaimsByUriQuery({uri: currentUrl})
+  const atoms = data?.atoms
 
-  useEffect(() => {
-    if(!isLoading && atoms.length > 0) {
-      const fetchClaims = async () => {
-        const result = await Promise.all(
-          atoms.map(async (atom) => {
-            const response = useGetClaimsByAtomQuery(atom.id);
-            return response.data;
-          })
-        )
-      }
-  }, [isLoading, atoms])
-
-  console.log(claims)
+  const claims = atoms?.flatMap(atom => [...atom.as_object_claims_aggregate.nodes, ...atom.as_subject_claims_aggregate.nodes]) || []
+  console.log(claims);
 
   const tabs = [
     {
@@ -64,8 +48,8 @@ function Home() {
       content: 
       <div>        
         {isLoading ? "Chargement..." : (typeof data !== "undefined" && data["atoms"].length !== 0)? 
-        ( atoms.map((atom: any) => (
-            <AtomCard key={atom.id} atom={atom} />
+        ( claims.map((claim) => (
+            <div>{claim.id} {claim.object.label} {claim.predicate.label} {claim.subject.label}</div>
           ))
         ) : (
           <p>Aucun atom trouvé pour cette URL.</p>
