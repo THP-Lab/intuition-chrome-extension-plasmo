@@ -57,7 +57,7 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
   }, [defaultValues, address])
 
   // GraphQL mutation to pin (register) the person
-  const { mutateAsync: pinPerson } = usePinPersonMutation()
+  const { mutateAsync: pinPerson, isPending } = usePinPersonMutation()
 
   // Handle input changes and update local state
   const handleChange = (
