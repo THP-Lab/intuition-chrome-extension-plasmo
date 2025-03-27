@@ -19,8 +19,21 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
   const [selectedAtom, setSelectedAtom] = useState<Atom | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   const [debouncedSearch] = useDebounce(search, 300);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const { data, isLoading } = useGetAtomsQuery(
     {
@@ -65,7 +78,7 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={wrapperRef}>
       <label className="block text-sm font-medium mb-1">{label}</label>
       <input
         ref={inputRef}
