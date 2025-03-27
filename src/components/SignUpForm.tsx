@@ -103,6 +103,7 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
           identifier: address || null,
       })
 
+      
       const uri = result?.pinPerson?.uri
       if (!uri) throw new Error("Failed to pin person metadata.")
 

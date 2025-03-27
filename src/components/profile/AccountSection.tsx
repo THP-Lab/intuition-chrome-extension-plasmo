@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useGetAccountByIdQuery } from "~src/graphql/src"
+import { useGetAccountByIdQuery, useGetPersonsByIdentifierQuery } from "~src/graphql/src"
 import { useStorage } from "@plasmohq/storage/hook"
 import SignUpForm from "../SignUpForm"
 import { cn } from "~src/lib/utils"
@@ -11,6 +11,12 @@ const AccountSection = () => {
     id: address || ""
   })
   const account = accountData?.account
+
+  const { data: personData } = useGetPersonsByIdentifierQuery(
+    { identifier: address || "" },
+    { enabled: !!address }
+  )
+  const person = personData?.persons?.[0]
 
   return (
     <section className={cn(
@@ -54,6 +60,22 @@ const AccountSection = () => {
               />
             </div>
           )}
+          {person && (
+            <div className="space-y-2 pt-2 border-t border-border">
+              <p className="font-medium">Atom Profile (person)</p>
+              <p><strong>Name:</strong> {person.name}</p>
+              {person.description && <p><strong>Description:</strong> {person.description}</p>}
+              {person.email && <p><strong>Email:</strong> {person.email}</p>}
+              {person.url && <p><strong>URL:</strong> {person.url}</p>}
+              {person.image && (
+                <img
+                  src={person.image}
+                  alt="Profile"
+                  className="w-24 h-24 rounded-md object-cover border border-border"
+                />
+              )}
+            </div>
+          )}
 
           <button
             className={cn(
@@ -68,5 +90,4 @@ const AccountSection = () => {
     </section>
   )
 }
-
 export default AccountSection
