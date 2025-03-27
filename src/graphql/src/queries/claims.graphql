@@ -48,3 +48,123 @@ query GetClaimsByAddress($address: String) {
   }
 }
 
+query GetClaimsByUri($uri: String) {
+  atoms(
+    where: {
+      _or: [
+        { data: { _eq: $uri } }
+        { value: { thing: { url: { _eq: $uri } } } }
+        { value: { person: { url: { _eq: $uri } } } }
+        { value: { organization: { url: { _eq: $uri } } } }
+        { value: { book: { url: { _eq: $uri } } } }
+      ]
+    }
+  ) {
+    as_object_claims_aggregate {
+      aggregate {
+        count
+      }
+      nodes {
+        id
+        predicate {
+          label
+          image
+          type
+        }
+        subject {
+          image
+          label
+          type
+        }
+        object {
+          label
+          image
+          type
+        }
+        vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        shares
+        counter_shares
+      }
+    }
+    as_subject_claims_aggregate {
+      aggregate {
+        count
+      }
+      nodes {
+        id
+        predicate {
+          label
+          image
+          type
+        }
+        object {
+          label
+          image
+          type
+        }
+        subject {
+          label
+          image
+          type
+        }
+        vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        shares
+        counter_shares
+      }
+    }
+  }
+}
+
+query GetClaimsByAtom($id: numeric) {
+  claims_aggregate(
+    where: { _or: [{ object_id: { _eq: $id } }, { subject_id: { _eq: $id } }] }
+  ) {
+    aggregate {
+      count
+    }
+    nodes {
+      account {
+        label
+      }
+      triple {
+        id
+        subject {
+          label
+          image
+          type
+        }
+        predicate {
+          label
+          image
+          type
+        }
+      }
+    }
+  }
+}
