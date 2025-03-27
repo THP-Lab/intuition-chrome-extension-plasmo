@@ -10,6 +10,11 @@ type Props = {
 }
 
 const AccountSection = ({ account, person, editMode, setEditMode }: Props) => {
+
+  //teeeeeeeeeeeeeeeeeeeeest :
+  console.log("Person used in form:", person)
+
+
   return (
     <section className={cn(
       "border rounded-lg p-4",
@@ -21,14 +26,14 @@ const AccountSection = ({ account, person, editMode, setEditMode }: Props) => {
       {!account || editMode ? (
         <SignUpForm
           defaultValues={
-            account
+            person
               ? {
-                  name: account.name,
-                  image: account.image || "",
-                  description: "",
-                  url: "",
-                  email: "",
-                  identifier: ""
+                name: person.name || "",
+                image: person.image || "",
+                description: person.description || "",
+                url: person.url || "",
+                email: person.email || "",
+                identifier: person.identifier || ""
                 }
               : undefined
           }

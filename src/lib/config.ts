@@ -1,3 +1,6 @@
+export const GRAPHQL_ENDPOINT = "https://prod.base.intuition-api.com/v1/graphql"
+
+
 
 import { base, baseSepolia } from 'viem/chains'
 

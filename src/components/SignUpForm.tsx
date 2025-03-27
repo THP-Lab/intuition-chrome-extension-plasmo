@@ -7,6 +7,11 @@ import { Multivault } from '@0xintuition/protocol'
 import { getClients } from '../lib/viemClient';
 import { MULTIVAULT_CONTRACT_ADDRESS } from "../lib/config"
 import { useQueryClient } from "@tanstack/react-query"
+import { useGetPersonsByIdentifierQuery } from "~src/graphql/src"
+import { createIdentity } from "../lib/server/createIdentityHandler"
+import { ApiError, IdentitiesService } from '@0xintuition/api'
+
+
 
 
 
@@ -91,23 +96,29 @@ const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
 
       const { walletClient, publicClient } = await getClients()      
 
-
+      await createIdentity({
+        wallet: address,
+        display_name: form.name,
+        identity_id: form.identifier,
+        description: form.description || "",
+      })
+      
       
       const multivault = new Multivault({ walletClient, publicClient }) 
 
 
       // Run the mutation with the form values
       const result = await pinPerson({
-    
-          name: form.name,
-          description: form.description || null,
-          image: form.image || null,
-          url: form.url || null,
-          email: form.email || null,
-          identifier: address || null,
+        name: form.name,
+        description: form.description || null,
+        image: form.image || null,
+        url: form.url || null,
+        email: form.email || null,
+        identifier: form.identifier || address || null
       })
 
-      
+      console.log("📌 pinPerson result", result)
+
       const uri = result?.pinPerson?.uri
       if (!uri) throw new Error("Failed to pin person metadata.")
 
@@ -122,9 +133,14 @@ const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
         wait: true
       })
 
+
+
+
       setProgressMessage(`Success! Vault ID: ${vaultId}, Tx: ${hash}`) 
 
-      await queryClient.invalidateQueries({ queryKey: ["GetPersonsByIdentifier"] })
+      await queryClient.invalidateQueries({
+        queryKey: ["GetPersonsByIdentifier", { identifier: form.identifier }]
+      })
 
       // Reset form if we're in "create" mode (not editing)
       if (!defaultValues) {

@@ -21,6 +21,12 @@ function Profile() {
     { identifier: address || "" },
     { enabled: !!address }
   )
+
+  //teeeeeeeeeeest :
+  console.log("Person Data from query:", personData)
+
+  
+
   const person = personData?.persons?.[0]
 
   const { data: accountData } = useGetAccountByIdQuery({ id: address || "" })
