@@ -10768,6 +10768,8 @@ export type GetClaimsByUriQuery = {
       nodes: Array<{
         __typename?: "claims"
         id: string
+        shares: any
+        counter_shares: any
         predicate: {
           __typename?: "atoms"
           label?: string | null
@@ -10785,6 +10787,26 @@ export type GetClaimsByUriQuery = {
           label?: string | null
           image?: string | null
           type: any
+        }
+        vault: {
+          __typename?: "vaults"
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
+        }
+        counter_vault: {
+          __typename?: "vaults"
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
         }
       }>
     }
@@ -10797,6 +10819,8 @@ export type GetClaimsByUriQuery = {
       nodes: Array<{
         __typename?: "claims"
         id: string
+        shares: any
+        counter_shares: any
         predicate: {
           __typename?: "atoms"
           label?: string | null
@@ -10814,6 +10838,26 @@ export type GetClaimsByUriQuery = {
           label?: string | null
           image?: string | null
           type: any
+        }
+        vault: {
+          __typename?: "vaults"
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
+        }
+        counter_vault: {
+          __typename?: "vaults"
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
         }
       }>
     }
@@ -13781,6 +13825,22 @@ export const GetClaimsByUriDocument = `
           image
           type
         }
+        vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        shares
+        counter_shares
       }
     }
     as_subject_claims_aggregate {
@@ -13804,6 +13864,22 @@ export const GetClaimsByUriDocument = `
           image
           type
         }
+        vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        shares
+        counter_shares
       }
     }
   }
@@ -22081,6 +22157,94 @@ export const GetClaimsByUri = {
                                   }
                                 ]
                               }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "counter_vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "counter_shares" }
                             }
                           ]
                         }
@@ -22179,6 +22343,94 @@ export const GetClaimsByUri = {
                                   }
                                 ]
                               }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "counter_vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "counter_shares" }
                             }
                           ]
                         }

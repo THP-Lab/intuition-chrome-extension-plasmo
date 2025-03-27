@@ -81,6 +81,22 @@ query GetClaimsByUri($uri: String) {
           image
           type
         }
+        vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        shares
+        counter_shares
       }
     }
     as_subject_claims_aggregate {
@@ -104,6 +120,22 @@ query GetClaimsByUri($uri: String) {
           image
           type
         }
+        vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        shares
+        counter_shares
       }
     }
   }

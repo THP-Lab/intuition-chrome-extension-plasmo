@@ -6,6 +6,7 @@ import TabSystem from '../components/TabSystem';
 import { useStorage } from "@plasmohq/storage/dist/hook"
 import { GetClaimsByAtomQuery, useGetClaimsByAtomQuery, useGetClaimsByUriQuery } from "~src/graphql/src"
 import type { Atoms, Claims } from "~node_modules/@0xintuition/graphql/dist"
+import ClaimRowLite from "~src/components/ui/ClaimRowLite";
 
 function Home() {
   const { theme } = useTheme()
@@ -48,9 +49,22 @@ function Home() {
       content: 
       <div>        
         {isLoading ? "Chargement..." : (typeof data !== "undefined" && data["atoms"].length !== 0)? 
-        ( claims.map((claim) => (
-            <div>{claim.id} {claim.object.label} {claim.predicate.label} {claim.subject.label}</div>
-          ))
+        ( claims.map((claim, index) => (
+        <ClaimRowLite
+              key={claim.id}
+              subjectLabel={claim.subject.label ?? "No subject"}
+              subjectImage={claim.subject?.image ?? undefined}
+              predicateLabel={claim.predicate?.label ?? "No predicate"}
+              predicateImage={claim.predicate?.image ?? undefined}
+              objectLabel={claim.object?.label ?? "No object"}
+              objectImage={claim.object?.image ?? undefined}
+              numPositionsFor={claim.vault.positions_aggregate.aggregate?.count ?? 0}
+              numPositionsAgainst={claim.counter_vault.positions_aggregate.aggregate?.count ?? 0}
+              userStake={Number(claim.shares ?? 0)}
+              userCounterStake={Number(claim.counter_shares ?? 0)}
+              isFirst={index === 0}
+              isLast={index === claims.length - 1}
+            />          ))
         ) : (
           <p>Aucun atom trouvé pour cette URL.</p>
         )}
