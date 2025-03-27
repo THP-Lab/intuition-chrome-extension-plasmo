@@ -1,3 +1,42 @@
+query GetTriplesByCreator($address: String) {
+  triples(where: { creator_id: { _eq: $address } }) {
+    id
+    creator_id
+    subject {
+      id
+      label
+      image
+      type
+    }
+    predicate {
+      id
+      label
+      image
+      type
+    }
+    object {
+      id
+      label
+      image
+      type
+    }
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+    counter_vault {
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+}
+
 query GetTriplesWithPositionsTHP(
   $limit: Int
   $offset: Int

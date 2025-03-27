@@ -184,7 +184,22 @@ const SignUpForm = ({ defaultValues, onSuccess }: Props) => {
       </div>
 
      
-      <Button type="submit">Register</Button>
+
+      <Button 
+        type="submit" 
+        disabled={isPending}
+        variant="successOutline"
+        className="w-full" // Pour avoir un bouton qui prend toute la largeur
+      >
+        {isPending ? (
+          <span className="flex items-center gap-2">
+            Submitting...
+          </span>
+        ) : (
+          "Register"
+        )}
+      </Button>
+
 
 
       {progressMessage && <p className="text-green-600">{progressMessage}</p>}
