@@ -21,7 +21,7 @@ import MyPositionsTab from "./profile/MyPositionsTab"
 import "../styles/global.css"
 import { ThemeProvider } from "./ThemeProvider"
 
-const API_URL = "https://dev.base.intuition-api.com/v1/graphql"
+const API_URL = "https://prod.base.intuition-api.com/v1/graphql"
 configureClient({
   apiUrl: API_URL
 })
