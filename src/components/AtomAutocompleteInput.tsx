@@ -7,6 +7,7 @@ interface Atom {
   id: string;
   label?: string | null;
   emoji?: string | null;
+  vault_id: string;  
 }
 
 // Props attendues par le composant
@@ -42,7 +43,12 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
     }
   );
 
-  const atoms: Atom[] = data?.atoms || [];
+  const atoms: Atom[] = data?.atoms.map(atom => ({
+    id: atom.id,
+    label: atom.label,
+    emoji: atom.emoji,
+    vault_id: atom.vault_id,
+  })) || []
 
   const handleSelect = (atom: Atom) => {
     console.log('Atom sélectionné :', atom); 

@@ -4,8 +4,8 @@ import { Multivault } from '@0xintuition/protocol'
 import { getClients } from '../lib/viemClient'
 
 interface Atom {
-  id: string;
-  label: string;
+  id: string
+  label: string
 }
 
 const CreateTripleForm: React.FC = () => {
@@ -17,11 +17,27 @@ const CreateTripleForm: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const checkVaultExists = async (
+    multivault: Multivault,
+    vaultId: bigint,
+    label: string
+  ): Promise<boolean> => {
+    try {
+      await multivault.getVaultState(vaultId)
+      console.log(` Vault "${label}" (${vaultId}) exists.`)
+      return true
+    } catch (err) {
+      console.warn(` Vault "${label}" (${vaultId}) does NOT exist.`)
+      return false
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    setProgressMessage('Creating triple...')
+    setProgressMessage('Checking inputs...')
     setErrorMessage(null)
+
 
     try {
       if (!subject || !predicate || !object) {
@@ -31,30 +47,70 @@ const CreateTripleForm: React.FC = () => {
       const { walletClient, publicClient } = await getClients()
       const multivault = new Multivault({ walletClient, publicClient })
 
-      const tripleCost = await multivault.getTripleCost()
+      const balance = await publicClient.getBalance({
+        address: walletClient.account.address,
+      })
+      console.log('User balance:', balance.toString())
 
-      const existing = await multivault.getTripleIdFromAtoms(
-        BigInt(subject.id),
-        BigInt(predicate.id),
-        BigInt(object.id)
-      )
-      if (existing) {
-        throw new Error("Triple already exists with vault ID " + existing.toString());
+      const tripleCost = await multivault.getTripleCost()
+      console.log('Triple cost:', tripleCost.toString())
+
+      if (balance < tripleCost) {
+        throw new Error(
+          `Insufficient funds: you need at least ${tripleCost} wei`,
+        )
       }
 
+      const subjectId = BigInt(subject.vault_id)
+      const predicateId = BigInt(predicate.vault_id)
+      const objectId = BigInt(object.vault_id)
+
+
+      const [subjectExists, predicateExists, objectExists] = await Promise.all([
+        checkVaultExists(multivault, subjectId, subject.label),
+        checkVaultExists(multivault, predicateId, predicate.label),
+        checkVaultExists(multivault, objectId, object.label),
+      ])
+      
+      if (!subjectExists || !predicateExists || !objectExists) {
+        throw new Error('One or more of the selected atoms do not exist on-chain.')
+      }
+
+      
+      const existing = await multivault.getTripleIdFromAtoms(
+        subjectId,
+        predicateId,
+        objectId,
+      )
+
+      if (existing) {
+        throw new Error(
+          `Triple already exists with vault ID ${existing.toString()}`,
+        )
+      }
+
+      setProgressMessage('Creating triple...')
 
       const { vaultId, hash } = await multivault.createTriple({
-        subjectId: BigInt(subject.id),
-        predicateId: BigInt(predicate.id),
-        objectId: BigInt(object.id),
-        initialDeposit: 0n,
+        subjectId,
+        predicateId,
+        objectId,
+        initialDeposit: tripleCost,
         wait: true,
       })
 
-      setProgressMessage(`Triple created with vault ID ${vaultId.toString()} (tx: ${hash})`)
+      setProgressMessage(
+        `Triple created with vault ID ${vaultId.toString()} (tx: ${hash})`,
+      )
     } catch (err: any) {
-      console.error(err)
-      setErrorMessage(err.message || 'An error occurred.')
+      console.error('Error:', err)
+      if (err?.walk) {
+        const revert = err.walk((e: any) => e.name === 'ContractFunctionRevertedError')
+        if (revert) {
+          console.error('Smart contract reverted with error:', revert)
+        }
+      }
+      setErrorMessage(err.message || 'An unknown error occurred.')
     } finally {
       setIsSubmitting(false)
     }
@@ -64,24 +120,15 @@ const CreateTripleForm: React.FC = () => {
     <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-gray-100 rounded">
       <AtomAutocompleteInput
         label="Subject"
-        onSelect={(atom) => {
-          console.log("Subject sélectionné :", atom.id);
-          setSubject(atom)
-        }}
+        onSelect={(atom) => setSubject(atom)}
       />
       <AtomAutocompleteInput
-        label="Prédicat"
-        onSelect={(atom) => {
-          console.log("Prédicat sélectionné :", atom.id);
-          setPredicate(atom);
-        }}
+        label="Predicate"
+        onSelect={(atom) => setPredicate(atom)}
       />
       <AtomAutocompleteInput
-        label="Objet"
-        onSelect={(atom) => {
-          console.log("Objet sélectionné :", atom.id);
-          setObject(atom);
-        }}
+        label="Object"
+        onSelect={(atom) => setObject(atom)}
       />
 
       <button
@@ -92,8 +139,12 @@ const CreateTripleForm: React.FC = () => {
         {isSubmitting ? 'Creating...' : 'Create Triple'}
       </button>
 
-      {progressMessage && <p className="text-green-600 text-sm">{progressMessage}</p>}
-      {errorMessage && <p className="text-red-600 text-sm">{errorMessage}</p>}
+      {progressMessage && (
+        <p className="text-green-600 text-sm">{progressMessage}</p>
+      )}
+      {errorMessage && (
+        <p className="text-red-600 text-sm">{errorMessage}</p>
+      )}
     </form>
   )
 }
