@@ -1,6 +1,6 @@
 import React from "react"
 import { useStorage } from "@plasmohq/storage/hook"
-import { ClaimRow } from "@0xintuition/1ui"
+import ClaimRowLite from "../ui/ClaimRowLite"
 import { useGetClaimsByAddressQuery } from "~src/graphql/src"
 
 const MyPositionsTab = () => {
@@ -25,36 +25,43 @@ const MyPositionsTab = () => {
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Your Positions</h2>
       {filteredClaims.map((claim, i) => {
+
+        console.log("CLAIM DEBUG", {
+          shares: claim.shares,
+          counter_shares: claim.counter_shares,
+          userStake: Number(claim.shares ?? 0),
+          userCounterStake: Number(claim.counter_shares ?? 0)
+        })
+
         const triple = claim.triple
+
         const vault = triple?.vault
-        const counter = triple?.counter_vault
+        const counterVault = triple?.counter_vault
 
-        const totalTVL =
-          Number(vault?.total_shares ?? 0) +
-          Number(counter?.total_shares ?? 0)
+        const numVotesFor = vault?.positions_aggregate?.aggregate?.count ?? 0
+        const numVotesAgainst = counterVault?.positions_aggregate?.aggregate?.count ?? 0
 
-        return (
-          <ClaimRow
-            key={claim.id}
-            userPosition={claim.shares ?? "0"}
-            positionDirection={"FOR"} // ou "AGAINST" si tu veux l’inférer via counter_shares
-            numPositionsFor={
-              vault?.position_aggregate?.aggregate?.count ?? 0
-            }
-            numPositionsAgainst={
-              counter?.position_aggregate?.aggregate?.count ?? 0
-            }
-            totalTVL={totalTVL}
-            tvlFor={vault?.total_shares ?? 0}
-            tvlAgainst={counter?.total_shares ?? 0}
-            isFirst={i === 0}
-            isLast={i === filteredClaims.length - 1}
-          >
-            {triple?.subject?.label ?? "No subject"} -{" "}
-            {triple?.predicate?.label ?? "No predicate"} -{" "}
-            {triple?.object?.label ?? "No object"}
-          </ClaimRow>
-        )
+        const userPosition = Number(claim.shares) > 0 ? "FOR" : "AGAINST"
+
+        
+        
+          return (
+            <ClaimRowLite
+              key={claim.id}
+              subjectLabel={triple?.subject?.label ?? "No subject"}
+              subjectImage={triple?.subject?.image ?? undefined}
+              predicateLabel={triple?.predicate?.label ?? "No predicate"}
+              predicateImage={triple?.predicate?.image ?? undefined}
+              objectLabel={triple?.object?.label ?? "No object"}
+              objectImage={triple?.object?.image ?? undefined}
+              numPositionsFor={numVotesFor}
+              numPositionsAgainst={numVotesAgainst}
+              userStake={Number(claim.shares ?? 0)}
+              userCounterStake={Number(claim.counter_shares ?? 0)}
+              isFirst={i === 0}
+              isLast={i === filteredClaims.length - 1}
+            />
+          )
       })}
     </div>
   )
