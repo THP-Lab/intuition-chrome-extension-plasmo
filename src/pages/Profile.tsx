@@ -13,6 +13,7 @@ import AccountSection from "~src/components/profile/AccountSection"
 import AtomProfileSection from "~src/components/profile/AtomProfileSection"
 
 function Profile() {
+  const [position, setPosition] = useState({ x: -0, y: -3 });
   const [address] = useStorage<string>("metamask-account")
   const [editMode, setEditMode] = useState(false)
 
@@ -39,7 +40,9 @@ function Profile() {
   return (
     <div className="p-4 space-y-6">
       <h1 className="text-2xl font-bold text-foreground">My Profile</h1>
+
       <WalletConnectionButton />
+
 
       <AccountSection account={account} person={person} editMode={editMode} setEditMode={setEditMode} />
 
