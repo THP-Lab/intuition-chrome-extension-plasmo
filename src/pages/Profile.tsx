@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-import { useGetAccountByIdQuery, useGetClaimsByAddressQuery } from "~src/graphql/src"
+import { useGetAccountByIdQuery, useGetClaimsByAddressQuery, useGetPersonsByIdentifierQuery } from "~src/graphql/src"
 
 import WalletConnectionButton from "~src/components/WalletConnectionButton"
 import ProfileTabs from "~src/components/profile/ProfileTabs"

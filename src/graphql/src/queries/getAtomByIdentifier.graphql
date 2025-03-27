@@ -1,11 +1,11 @@
-query GetPersonById($id: numeric!) {
-  person(id: $id) {
+query GetPersonsByIdentifier($identifier: String!) {
+  persons(where: { identifier: { _eq: $identifier } }) {
     id
     name
-    identifier
     image
-    url
-    email
     description
+    email
+    url
+    identifier
   }
 }
