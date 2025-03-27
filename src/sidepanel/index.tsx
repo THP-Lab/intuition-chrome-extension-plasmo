@@ -21,7 +21,7 @@ import YourClaimsTab from "~src/components/profile/YourClaimsTab"
 import IdentityTab from "~src/components/profile/IdentityTab"
 import FollowersTab from "~src/components/profile/FollowersTab"
 import FollowingTab from "~src/components/profile/FollowingTab"
-import CreateAtom from "../pages/CreateAtom"
+import PageForm from "../pages/PageForm"
 
 import { GraphQLClient } from "graphql-request"
 
@@ -54,7 +54,7 @@ function IndexSidepanel() {
                   </Route>
                   <Route path="/feed" element={<Feed />} />
 
-                  <Route path="/createAtom" element={<CreateAtom />} />
+                  <Route path="/page-form" element={<PageForm />} />
 
 
                   <Route path="/recent-activity" element={<RecentActivity />} />

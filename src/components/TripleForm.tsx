@@ -50,10 +50,8 @@ const CreateTripleForm: React.FC = () => {
       const balance = await publicClient.getBalance({
         address: walletClient.account.address,
       })
-      console.log('User balance:', balance.toString())
 
       const tripleCost = await multivault.getTripleCost()
-      console.log('Triple cost:', tripleCost.toString())
 
       if (balance < tripleCost) {
         throw new Error(

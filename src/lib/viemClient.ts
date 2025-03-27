@@ -1,6 +1,6 @@
 import createMetaMaskProvider from 'metamask-extension-provider';
 import { createWalletClient, custom, createPublicClient, http } from 'viem';
-import { baseSepolia, mainnet } from 'viem/chains';
+import { baseSepolia, base } from 'viem/chains';
 
 export const getClients = async () => {
   const provider = await createMetaMaskProvider();
@@ -13,12 +13,12 @@ export const getClients = async () => {
 
   const walletClient = createWalletClient({
     account: address,
-    chain: baseSepolia, 
+    chain: base, 
     transport: custom(provider),
   });
 
   const publicClient = createPublicClient({
-    chain: baseSepolia,
+    chain: base,
     transport: http(), 
   });
 

@@ -1,14 +1,14 @@
 import React from 'react';
 
 import AtomForm from "../components/AtomForm"
-import ClaimForm from "../components/ClaimForm"
+import TripleForm from "../components/TripleForm"
 
 function addForm () {
 
   return (
     <>
     <AtomForm />
-    <ClaimForm />
+    <TripleForm />
     </>
   )
 }

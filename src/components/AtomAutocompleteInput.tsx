@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useGetAtomsQuery } from '@0xintuition/graphql';
 
-// Type de base pour un Atom minimal
 interface Atom {
   id: string;
   label?: string | null;
@@ -10,7 +9,6 @@ interface Atom {
   vault_id: string;  
 }
 
-// Props attendues par le composant
 interface AtomAutocompleteInputProps {
   label: string;
   onSelect: (atom: Atom) => void; 
