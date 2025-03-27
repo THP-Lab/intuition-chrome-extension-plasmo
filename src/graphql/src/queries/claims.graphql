@@ -48,3 +48,34 @@ query GetClaimsByAddress($address: String) {
   }
 }
 
+query GetClaimsByAtom($id: numeric) {
+  claims_aggregate(where:{ _or: [
+      { object_id: { _eq: $id }}
+      {subject_id: {_eq: $id}}
+    ]
+  }
+   ) {
+    aggregate {
+      count
+    }
+    nodes {
+      account {
+        label
+      }
+      triple {
+        id
+        subject {
+          label
+          image
+          type
+        }
+        predicate {
+          label
+          image
+          type
+        }
+      }
+    }
+  }
+}
+

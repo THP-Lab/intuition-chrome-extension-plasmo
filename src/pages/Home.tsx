@@ -7,11 +7,14 @@ import { AtomCard } from "../components/AtomCard"
 import { Link } from "react-router-dom"
 import TabSystem from '../components/TabSystem';
 import { useStorage } from "@plasmohq/storage/dist/hook"
+import { GetClaimsByAtomQuery, useGetClaimsByAtomQuery } from "~src/graphql/src"
+import type { Atoms } from "~node_modules/@0xintuition/graphql/dist"
 
 function Home() {
   const { theme } = useTheme()
   const [currentUrl, setCurrentUrl] = useState<string>("")
   const [walletAddress] = useStorage<string>("metamask-account")
+  const [claims, setClaims] = useState<Array<GetClaimsByAtomQuery | undefined>>([])
   useQueryClient() // Sets the client for gql queries
 
   const getCurrentUrl = async () => {
@@ -38,8 +41,22 @@ function Home() {
   }, [])
 
   const { data, isLoading, error } = useSearchAtomsByUriQuery(walletAddress?.toLowerCase(), currentUrl)
-  const atoms:any = data?.["atoms"] || [];
-  console.log(data);
+  const atoms:Array<Atoms> = data?.["atoms"] || [];
+  
+
+  useEffect(() => {
+    if(!isLoading && atoms.length > 0) {
+      const fetchClaims = async () => {
+        const result = await Promise.all(
+          atoms.map(async (atom) => {
+            const response = useGetClaimsByAtomQuery(atom.id);
+            return response.data;
+          })
+        )
+      }
+  }, [isLoading, atoms])
+
+  console.log(claims)
 
   const tabs = [
     {
