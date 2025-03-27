@@ -1,0 +1,11 @@
+query GetPersonById($id: numeric!) {
+  person(id: $id) {
+    id
+    name
+    identifier
+    image
+    url
+    email
+    description
+  }
+}

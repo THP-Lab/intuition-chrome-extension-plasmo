@@ -10765,6 +10765,24 @@ export type GetAccountByIdQuery = {
   } | null
 }
 
+export type GetPersonByIdQueryVariables = Exact<{
+  id: Scalars["numeric"]["input"]
+}>
+
+export type GetPersonByIdQuery = {
+  __typename?: "query_root"
+  person?: {
+    __typename?: "persons"
+    id: any
+    name?: string | null
+    identifier?: string | null
+    image?: string | null
+    url?: string | null
+    email?: string | null
+    description?: string | null
+  } | null
+}
+
 export type GetListsQueryVariables = Exact<{
   where?: InputMaybe<Predicate_Objects_Bool_Exp>
 }>
@@ -13717,6 +13735,95 @@ useGetAccountByIdQuery.fetcher = (
 ) =>
   fetcher<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
     GetAccountByIdDocument,
+    variables,
+    options
+  )
+
+export const GetPersonByIdDocument = `
+    query GetPersonById($id: numeric!) {
+  person(id: $id) {
+    id
+    name
+    identifier
+    image
+    url
+    email
+    description
+  }
+}
+    `
+
+export const useGetPersonByIdQuery = <
+  TData = GetPersonByIdQuery,
+  TError = unknown
+>(
+  variables: GetPersonByIdQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetPersonByIdQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<GetPersonByIdQuery, TError, TData>["queryKey"]
+  }
+) => {
+  return useQuery<GetPersonByIdQuery, TError, TData>({
+    queryKey: ["GetPersonById", variables],
+    queryFn: fetcher<GetPersonByIdQuery, GetPersonByIdQueryVariables>(
+      GetPersonByIdDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetPersonByIdQuery.document = GetPersonByIdDocument
+
+useGetPersonByIdQuery.getKey = (variables: GetPersonByIdQueryVariables) => [
+  "GetPersonById",
+  variables
+]
+
+export const useInfiniteGetPersonByIdQuery = <
+  TData = InfiniteData<GetPersonByIdQuery>,
+  TError = unknown
+>(
+  variables: GetPersonByIdQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetPersonByIdQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetPersonByIdQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetPersonByIdQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ["GetPersonById.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetPersonByIdQuery, GetPersonByIdQueryVariables>(
+            GetPersonByIdDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetPersonByIdQuery.getKey = (
+  variables: GetPersonByIdQueryVariables
+) => ["GetPersonById.infinite", variables]
+
+useGetPersonByIdQuery.fetcher = (
+  variables: GetPersonByIdQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetPersonByIdQuery, GetPersonByIdQueryVariables>(
+    GetPersonByIdDocument,
     variables,
     options
   )
@@ -21296,6 +21403,57 @@ export const GetAccountById = {
                 { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "image" } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetPersonById = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetPersonById" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "numeric" }
+            }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "person" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "identifier" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } },
+                { kind: "Field", name: { kind: "Name", value: "url" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } }
               ]
             }
           }
