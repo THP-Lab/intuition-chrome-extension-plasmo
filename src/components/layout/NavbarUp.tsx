@@ -1,9 +1,10 @@
 import * as React from "react"
+import { Link } from "react-router-dom"
 
-import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
 import IntuitionThemeAvatar from "~/src/components/icons/IntuitionThemeAvatar"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
+import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
 import { cn } from "~src/lib/utils"
 
 function NavbarUp() {
@@ -26,8 +27,11 @@ function NavbarUp() {
           <Button
             variant="ghost"
             size="sm"
+            asChild
             className="flex items-center gap-2 p-2">
-            <span>Plus</span>
+            <Link to="/createAtom">
+              <span>Plus</span>
+            </Link>
           </Button>
           <Button
             variant="ghost"
@@ -37,15 +41,7 @@ function NavbarUp() {
           </Button>
         </div>
 
-        {/* Icône de recherche centrale */}
-        <div className="flex-1 flex justify-center items-center">
-          <IntuitionSearchIcon
-            position={{ x: "-60px", y: "0px" }}
-            onSearch={handleSearch}
-            size={50}
-            className="hover:opacity-80 transition-opacity"
-          />
-        </div>
+        <div className="flex-1" />
 
         {/* Bouton thème à droite */}
         <Button

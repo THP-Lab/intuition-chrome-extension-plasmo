@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
-import { useSearchAtomsByUriQuery } from "../queries"
 import { useTheme } from "~/src/components/ThemeProvider"
-import { Button } from "~/src/components/ui/button"
 import { AtomCard } from "../components/AtomCard"
-import { Link } from "react-router-dom"
 import TabSystem from '../components/TabSystem';
+import { useStorage } from "@plasmohq/storage/dist/hook"
+import { GetClaimsByAtomQuery, useGetClaimsByAtomQuery, useGetClaimsByUriQuery } from "~src/graphql/src"
+import type { Atoms, Claims } from "~node_modules/@0xintuition/graphql/dist"
+import ClaimRowLite from "~src/components/ui/ClaimRowLite";
 
 function Home() {
   const { theme } = useTheme()
   const [currentUrl, setCurrentUrl] = useState<string>("")
+  const [walletAddress] = useStorage<string>("metamask-account")
   useQueryClient() // Sets the client for gql queries
 
   const getCurrentUrl = async () => {
@@ -21,9 +23,10 @@ function Home() {
     return tab.url
   }
   const refreshUrl = () => {
-    getCurrentUrl().then((url) => setCurrentUrl(url))
+    getCurrentUrl().then((url) => setCurrentUrl(url || ""))
   }
   useEffect(() => {
+    console.log("current wallet address:", walletAddress);
     refreshUrl()
     chrome.tabs.onUpdated.addListener(() => {
       refreshUrl()
@@ -34,9 +37,11 @@ function Home() {
     })
   }, [])
 
-  const { data, isLoading, error } = useSearchAtomsByUriQuery("", currentUrl)
-  const atoms:any = data?.["atoms"] || [];
+  const { data, isLoading, error } = useGetClaimsByUriQuery({uri: currentUrl})
+  const atoms = data?.atoms
 
+  const claims = atoms?.flatMap(atom => [...atom.as_object_claims_aggregate.nodes, ...atom.as_subject_claims_aggregate.nodes]) || []
+  console.log(claims);
 
   const tabs = [
     {
@@ -44,9 +49,22 @@ function Home() {
       content: 
       <div>        
         {isLoading ? "Chargement..." : (typeof data !== "undefined" && data["atoms"].length !== 0)? 
-        ( atoms.map((atom: any) => (
-            <AtomCard key={atom.id} atom={atom} />
-          ))
+        ( claims.map((claim, index) => (
+        <ClaimRowLite
+              key={claim.id}
+              subjectLabel={claim.subject.label ?? "No subject"}
+              subjectImage={claim.subject?.image ?? undefined}
+              predicateLabel={claim.predicate?.label ?? "No predicate"}
+              predicateImage={claim.predicate?.image ?? undefined}
+              objectLabel={claim.object?.label ?? "No object"}
+              objectImage={claim.object?.image ?? undefined}
+              numPositionsFor={claim.vault.positions_aggregate.aggregate?.count ?? 0}
+              numPositionsAgainst={claim.counter_vault.positions_aggregate.aggregate?.count ?? 0}
+              userStake={Number(claim.shares ?? 0)}
+              userCounterStake={Number(claim.counter_shares ?? 0)}
+              isFirst={index === 0}
+              isLast={index === claims.length - 1}
+            />          ))
         ) : (
           <p>Aucun atom trouvé pour cette URL.</p>
         )}
@@ -70,9 +88,6 @@ function Home() {
         <p className="text-muted-foreground">
           Cette application vous permet de gérer vos insights et vos recherches.
         </p>
-        <Link to="/page-form" className="flex flex-col items-center">
-              Create atom
-          </Link>
       </div>
 
 

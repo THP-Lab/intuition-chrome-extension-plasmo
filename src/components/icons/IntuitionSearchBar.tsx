@@ -20,14 +20,17 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
   position = { x: "150px", y: "0px" } // Valeurs par défaut
 }) => {
   const [isInputVisible, setIsInputVisible] = useState(true)
+  const [isAppeared, setIsAppeared] = useState(false)
   const { theme } = useTheme()
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const wrapper = document.querySelector(".input-wrapper")
-      wrapper?.classList.add("appear")
-    }, 1000)
-    return () => clearTimeout(timer)
+    const wrapper = document.querySelector(".input-wrapper:not(.appear)")
+    if (wrapper) {
+      setTimeout(() => {
+        wrapper.classList.add("appear")
+        setIsAppeared(true)
+      }, 1000)
+    }
   }, [])
 
   const handleIconClick = () => {
@@ -94,11 +97,13 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
         <div
           className="absolute left-0"
           style={{
-            top: size - 38,
+            top: size - 45,
             width: size * 3.5,
-            left: size - 23
+            left: size - 30
           }}>
-          <div className="input-wrapper">
+          <div className={cn("input-wrapper", {
+            "appear": isAppeared
+          })}>
             <input
               className="input-bar"
               type="text"
@@ -117,12 +122,12 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
               style={{
                 color: theme === "dark" ? "white" : "black",
                 width: "100%",
-                fontSize: "1rem",
+                fontSize: "1.2rem",
                 background: "transparent",
                 border: "none",
                 outline: "none",
-                padding: "4px 0",
-                paddingLeft: "20px",
+                padding: "5px 0",
+                paddingLeft: "30px",
                 fontWeight: 400
               }}
             />
@@ -210,7 +215,7 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
           position: absolute;
           bottom: 0;
           left: 0;
-          height: 1px;
+          height: 2px;
           width: 0;
           opacity: 0;
           background: ${theme === "dark" ? "white" : "black"};

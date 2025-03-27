@@ -26,11 +26,11 @@ const WalletConnectionButton = () => {
   return (
     <div>
       {!account ? (
-        <Button variant="default" onClick={handleConnect}>Connect to Metamask</Button>
+        <Button variant="successOutline" onClick={handleConnect}>Connect to Metamask</Button>
       ) : (
         <div>
           <p>Connected account : {sliceAddress(account)}</p>
-          <Button variant="destructive" onClick={handleDisconnect}>Disconnect</Button>
+          <Button variant="destructiveOutline" onClick={handleDisconnect}>Disconnect</Button>
         </div>
       )}
     </div>

@@ -3,7 +3,7 @@ import React from 'react';
 import AtomForm from "../components/AtomForm"
 import TripleForm from "../components/TripleForm"
 
-function addForm () {
+function CreateAtom () {
 
   return (
     <>
@@ -13,4 +13,4 @@ function addForm () {
   )
 }
 
-export default addForm
+export default CreateAtom

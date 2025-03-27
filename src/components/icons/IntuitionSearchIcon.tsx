@@ -58,7 +58,7 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
           y1="78.3"
           x2="98"
           y2="98"
-          strokeWidth="3"
+          strokeWidth="6"
           stroke={isDark ? "white" : "black"}
         />
       </svg>

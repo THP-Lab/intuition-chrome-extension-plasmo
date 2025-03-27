@@ -1,52 +1,49 @@
-import React, { useEffect, useState } from "react"
-import { useGetClaimsByAddressQuery } from "~src/graphql/src";
-import { Claim } from "@0xintuition/1ui";
+
+import React from "react";
 import { useStorage } from "@plasmohq/storage/hook";
+import { useGetTriplesByCreatorQuery } from "~src/graphql/src"
+import ClaimRowLite from "../ui/ClaimRowLite"
+
 
 const YourClaimsTab = () => {
-  const [account] = useStorage<string>("metamask-account")
+  // const [account] = useStorage<string>("metamask-account")  
+  const account = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
 
-  // Call hook even if account is null
-  const { data, isLoading, isError, error } = useGetClaimsByAddressQuery(
-    { address: account ?? "" }, // Provide empty string if null
-    { enabled: !!account }      // Only run the query if account is set
+  const { data, isLoading, isError, error } = useGetTriplesByCreatorQuery(
+    { address: account ?? "" },
+    { enabled: !!account }
   )
 
   if (!account) return <div>No connected wallet</div>
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <div>Loading your claims...</div>
   if (isError) return <div>Error: {(error as any)?.message}</div>
-  if (!data?.claims_aggregate?.nodes?.length) return <div>No claims found</div>
+  if (!data?.triples?.length) return <div>No claims created yet.</div>
 
   return (
-    <>
-
     <div>
-      <h2>Your Claims ( {data.claims_aggregate.aggregate.count} )</h2>
-      {!isLoading && data.claims_aggregate.nodes.map(({ triple, shares, counter_shares }) => (
-        <div key={triple.id} style={{ padding: "10px", backgroundColor: 'black', color: 'white' }}>
-          <Claim
-            orientation="horizontal"
-            subject={{
-              variant: triple.subject.type === "Account" ? "user" : "non-user",
-              label: triple.subject?.label || "N/A",
-              imgSrc: triple.subject?.image || "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
-            }}
-            predicate={{
-              variant: triple.predicate.type === "Account" ? "user" : "non-user",
-              label: triple.predicate?.label || "N/A",
-              imgSrc: triple.predicate?.image || "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
-            }}
-            object={{
-              variant: triple.object.type === "Account" ? "user" : "non-user",
-              label: triple.object?.label || "N/A",
-              imgSrc: triple.object?.image || "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png",
-            }}
-          />
-        </div>
-      ))}
-    </div>
-  </>
-  );
-};
+      <h2 className="text-xl font-semibold mb-4">Your Claims</h2>
+      {data.triples.map((triple, i) => {
+        const numPositionsFor =
+          triple.vault?.positions_aggregate?.aggregate?.count ?? 0
+        const numPositionsAgainst =
+          triple.counter_vault?.positions_aggregate?.aggregate?.count ?? 0
 
-export default YourClaimsTab;
+        return (
+          <ClaimRowLite
+          key={triple.id}
+          subjectLabel={triple.subject?.label}
+          predicateLabel={triple.predicate?.label}
+          objectLabel={triple.object?.label}
+          numPositionsFor={numPositionsFor}
+          numPositionsAgainst={numPositionsAgainst}
+          isFirst={i === 0}
+          isLast={i === data.triples.length - 1}
+        />        
+        )
+      })}
+    </div>
+  )
+}
+
+  export default YourClaimsTab;
+
