@@ -33,7 +33,7 @@ const AccountSection = ({ account, person, editMode, setEditMode }: Props) => {
               : undefined
           }
           onSuccess={() => setEditMode(false)}
-          
+          onCancel={() => setEditMode(false)}
         />
       ) : (
         <div className="space-y-4">
