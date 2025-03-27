@@ -10726,6 +10726,26 @@ export type GetClaimsByAddressQuery = {
           image?: string | null
           type: any
         }
+        vault?: {
+          __typename?: "vaults"
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
+        } | null
+        counter_vault?: {
+          __typename?: "vaults"
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
+        } | null
       }
     }>
   }
@@ -13500,6 +13520,20 @@ export const GetClaimsByAddressDocument = `
           label
           image
           type
+        }
+        vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
         }
       }
       id
@@ -21111,6 +21145,86 @@ export const GetClaimsByAddress = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "counter_vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
                                   }
                                 ]
                               }

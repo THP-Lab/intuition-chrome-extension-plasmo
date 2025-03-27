@@ -17,6 +17,7 @@ import FollowingTab from "./profile/FollowingTab"
 import IdentityTab from "./profile/IdentityTab"
 import RelatedClaimsTab from "./profile/RelatedClaims"
 import YourClaimsTab from "./profile/YourClaimsTab"
+import MyPositionsTab from "./Profile/MyPositionsTab"
 import "../styles/global.css"
 import { ThemeProvider } from "./ThemeProvider"
 
@@ -48,6 +49,7 @@ const Content = ({ children }: ContentProps) => {
                       path="related-claims"
                       element={<RelatedClaimsTab />}
                     />
+                    <Route path="my-positions" element={<MyPositionsTab/>} />
                     <Route path="identity" element={<IdentityTab />} />
                     <Route path="followers" element={<FollowersTab />} />
                     <Route path="following" element={<FollowingTab />} />

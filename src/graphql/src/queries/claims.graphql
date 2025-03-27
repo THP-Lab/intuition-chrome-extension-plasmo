@@ -24,6 +24,20 @@ query GetClaimsByAddress($address: String) {
           image
           type
         }
+        vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
       }
       id
       vault_id
@@ -33,3 +47,4 @@ query GetClaimsByAddress($address: String) {
     }
   }
 }
+
