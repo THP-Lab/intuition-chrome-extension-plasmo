@@ -1,0 +1,11 @@
+query GetPersonsByIdentifier($identifier: String!) {
+  persons(where: { identifier: { _eq: $identifier } }) {
+    id
+    name
+    image
+    description
+    email
+    url
+    identifier
+  }
+}
