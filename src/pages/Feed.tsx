@@ -23,25 +23,25 @@ function Feed() {
         const positions = following.positions_aggregate.nodes
         return (
           <>
-         <p>{following.label} staked:</p>
-          {positions.map((position) => (
+         <img src={following.image ?? default_img} className="w-8 h-8 rounded-full mt-1"/><p>{following.label} staked:</p> 
+          {positions.map((position, index) => (
           <>
             <p>{position.shares} ETH</p>
             <p>On :</p>
             <ClaimRowLite
-              key={position.vault.triple.object.id} 
-              subjectLabel={claim.subject.label ?? "No subject"}
-              subjectImage={claim.subject?.image ?? undefined}
-              predicateLabel={claim.predicate?.label ?? "No predicate"}
-              predicateImage={claim.predicate?.image ?? undefined}
-              objectLabel={claim.object?.label ?? "No object"}
-              objectImage={claim.object?.image ?? undefined}
-              numPositionsFor={claim.vault.positions_aggregate.aggregate?.count ?? 0}
-              numPositionsAgainst={claim.counter_vault.positions_aggregate.aggregate?.count ?? 0}
-              userStake={Number(claim.shares ?? 0)}
-              userCounterStake={Number(claim.counter_shares ?? 0)}
+              key={position.vault.triple?.id} 
+              subjectLabel={position.vault.triple?.subject.label ?? "No subject"}
+              subjectImage={position.vault.triple?.subject?.image ?? undefined}
+              predicateLabel={position.vault.triple?.predicate?.label ?? "No predicate"}
+              predicateImage={position.vault.triple?.predicate?.image ?? undefined}
+              objectLabel={position.vault.triple?.object?.label ?? "No object"}
+              objectImage={position.vault.triple?.object?.image ?? undefined}
+              numPositionsFor={position.vault.triple?.vault?.positions_aggregate.aggregate?.count ?? 0}
+              numPositionsAgainst={position.vault.triple?.counter_vault?.positions_aggregate.aggregate?.count ?? 0}
+              userStake={Number(0)}
+              userCounterStake={Number(0)}
               isFirst={index === 0}
-              isLast={index === claims.length - 1}
+              isLast={index === positions.length - 1}
             />
           </>
           ))}

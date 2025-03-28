@@ -10944,6 +10944,10 @@ export type GetFollowingsFromAddressQuery = {
     type: any
     positions_aggregate: {
       __typename?: "positions_aggregate"
+      aggregate?: {
+        __typename?: "positions_aggregate_fields"
+        count: number
+      } | null
       nodes: Array<{
         __typename?: "positions"
         shares: any
@@ -10971,6 +10975,26 @@ export type GetFollowingsFromAddressQuery = {
               image?: string | null
               label?: string | null
             }
+            counter_vault?: {
+              __typename?: "vaults"
+              positions_aggregate: {
+                __typename?: "positions_aggregate"
+                aggregate?: {
+                  __typename?: "positions_aggregate_fields"
+                  count: number
+                } | null
+              }
+            } | null
+            vault?: {
+              __typename?: "vaults"
+              positions_aggregate: {
+                __typename?: "positions_aggregate"
+                aggregate?: {
+                  __typename?: "positions_aggregate_fields"
+                  count: number
+                } | null
+              }
+            } | null
           } | null
         }
       }>
@@ -14304,6 +14328,9 @@ export const GetFollowingsFromAddressDocument = `
     label
     type
     positions_aggregate(limit: 10) {
+      aggregate {
+        count
+      }
       nodes {
         shares
         vault {
@@ -14324,6 +14351,20 @@ export const GetFollowingsFromAddressDocument = `
               type
               image
               label
+            }
+            counter_vault {
+              positions_aggregate {
+                aggregate {
+                  count
+                }
+              }
+            }
+            vault {
+              positions_aggregate {
+                aggregate {
+                  count
+                }
+              }
             }
           }
         }
@@ -23351,6 +23392,19 @@ export const GetFollowingsFromAddress = {
                     selections: [
                       {
                         kind: "Field",
+                        name: { kind: "Name", value: "aggregate" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "count" }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        kind: "Field",
                         name: { kind: "Name", value: "nodes" },
                         selectionSet: {
                           kind: "SelectionSet",
@@ -23473,6 +23527,92 @@ export const GetFollowingsFromAddress = {
                                                 name: {
                                                   kind: "Name",
                                                   value: "label"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "counter_vault"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "positions_aggregate"
+                                                },
+                                                selectionSet: {
+                                                  kind: "SelectionSet",
+                                                  selections: [
+                                                    {
+                                                      kind: "Field",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "aggregate"
+                                                      },
+                                                      selectionSet: {
+                                                        kind: "SelectionSet",
+                                                        selections: [
+                                                          {
+                                                            kind: "Field",
+                                                            name: {
+                                                              kind: "Name",
+                                                              value: "count"
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "vault"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "positions_aggregate"
+                                                },
+                                                selectionSet: {
+                                                  kind: "SelectionSet",
+                                                  selections: [
+                                                    {
+                                                      kind: "Field",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "aggregate"
+                                                      },
+                                                      selectionSet: {
+                                                        kind: "SelectionSet",
+                                                        selections: [
+                                                          {
+                                                            kind: "Field",
+                                                            name: {
+                                                              kind: "Name",
+                                                              value: "count"
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
                                                 }
                                               }
                                             ]

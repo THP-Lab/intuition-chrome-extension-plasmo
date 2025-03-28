@@ -4,7 +4,10 @@ query getFollowingsFromAddress($address: String!) {
     image
     label
     type
-    positions_aggregate(limit: 10) {
+    positions_aggregate( limit: 10) {
+      aggregate {
+        count
+      }
       nodes {
         shares
         vault {
@@ -26,7 +29,21 @@ query getFollowingsFromAddress($address: String!) {
               image
               label
             }
-          }
+            counter_vault {
+              positions_aggregate {
+                aggregate {
+                  count
+                }
+              }
+            }
+            vault {
+              positions_aggregate {
+                aggregate {
+                  count
+                }
+              }
+            }
+          } 
         }
       }
     }
