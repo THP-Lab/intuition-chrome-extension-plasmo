@@ -1,9 +1,9 @@
 import React from 'react';
 
-import AtomForm from "../components/PageForm"
+import AtomForm from "../components/AtomForm"
 import TripleForm from "../components/TripleForm"
 
-function CreateAtom () {
+function PageForm () {
 
   return (
     <>
@@ -13,4 +13,4 @@ function CreateAtom () {
   )
 }
 
-export default CreateAtom
+export default PageForm

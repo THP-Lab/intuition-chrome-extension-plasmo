@@ -5,7 +5,7 @@ import { parseEther } from "viem"
 
 import { getClients } from "../lib/viemClient"
 
-const CreateAtomForm: React.FC = () => {
+const AtomForm: React.FC = () => {
   const { mutateAsync: pinThing } = usePinThingMutation()
 
   const [name, setName] = useState("")
@@ -125,4 +125,4 @@ const CreateAtomForm: React.FC = () => {
   )
 }
 
-export default CreateAtomForm
+export default AtomForm

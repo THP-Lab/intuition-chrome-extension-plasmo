@@ -8,7 +8,7 @@ interface Atom {
   label: string
 }
 
-const CreateTripleForm: React.FC = () => {
+const TripleForm: React.FC = () => {
   const [subject, setSubject] = useState<Atom | null>(null)
   const [predicate, setPredicate] = useState<Atom | null>(null)
   const [object, setObject] = useState<Atom | null>(null)
@@ -147,4 +147,4 @@ const CreateTripleForm: React.FC = () => {
   )
 }
 
-export default CreateTripleForm
+export default TripleForm
