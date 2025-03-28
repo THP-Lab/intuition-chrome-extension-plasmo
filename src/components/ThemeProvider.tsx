@@ -29,7 +29,6 @@ export function ThemeProvider({
   const [theme, setTheme] = useState<Theme>(defaultTheme)
   const [mounted, setMounted] = useState(false)
 
-  // Charger le thème depuis chrome.storage.local au chargement du composant
   useEffect(() => {
     const loadTheme = async () => {
       try {
@@ -40,7 +39,6 @@ export function ThemeProvider({
           if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
             setTheme(savedTheme)
           } else {
-            // Si pas de thème sauvegardé ou invalide, utiliser le thème système
             const systemTheme = window.matchMedia(
               "(prefers-color-scheme: dark)"
             ).matches
@@ -49,12 +47,10 @@ export function ThemeProvider({
             setTheme(systemTheme)
           }
         } else {
-          // Fallback pour le développement local
           const savedTheme = localStorage.getItem(storageKey) as Theme
           if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
             setTheme(savedTheme)
           } else {
-            // Si pas de thème sauvegardé ou invalide, utiliser le thème système
             const systemTheme = window.matchMedia(
               "(prefers-color-scheme: dark)"
             ).matches
@@ -65,7 +61,6 @@ export function ThemeProvider({
         }
       } catch (error) {
         console.error("Erreur lors du chargement du thème:", error)
-        // En cas d'erreur, utiliser le thème par défaut
         setTheme(defaultTheme)
       } finally {
         setMounted(true)
@@ -74,7 +69,6 @@ export function ThemeProvider({
 
     loadTheme()
 
-    // Écouter les changements de thème système
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
     const handleChange = (e: MediaQueryListEvent) => {
       const newTheme = e.matches ? "dark" : "light"
@@ -85,7 +79,6 @@ export function ThemeProvider({
     return () => mediaQuery.removeEventListener("change", handleChange)
   }, [storageKey, defaultTheme])
 
-  // Appliquer le thème et le sauvegarder lorsqu'il change
   useEffect(() => {
     if (!mounted) return
 
@@ -95,11 +88,9 @@ export function ThemeProvider({
     root.style.colorScheme = theme
 
     try {
-      // Sauvegarder dans chrome.storage si disponible
       if (typeof chrome !== "undefined" && chrome.storage) {
         chrome.storage.local.set({ [storageKey]: theme })
       } else {
-        // Fallback pour le développement local
         localStorage.setItem(storageKey, theme)
       }
     } catch (error) {
@@ -107,7 +98,6 @@ export function ThemeProvider({
     }
   }, [theme, storageKey, mounted])
 
-  // Éviter le flash de contenu non thémé
   if (!mounted) {
     return null
   }

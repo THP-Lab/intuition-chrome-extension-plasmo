@@ -34,7 +34,7 @@ function Navbar() {
             isActive("/") && "animate-fade-bg"
           )}>
           <Link to="/" className="flex flex-col items-center">
-            <div className="text-foreground">
+            <div className="text-foreground" title="Home">
               <IntuitionIcon size={32} className="mb-1" />
             </div>
           </Link>
@@ -49,7 +49,7 @@ function Navbar() {
             isActive("/search") && "animate-fade-bg"
           )}>
           <Link to="/search" className="flex flex-col items-center">
-            <div className="text-foreground">
+            <div className="text-foreground" title="Search">
               <IntuitionSearchIcon size={32} className="mb-1" />
             </div>
           </Link>
@@ -64,7 +64,7 @@ function Navbar() {
             isActive("/profile") && "animate-fade-bg"
           )}>
           <Link to="/profile" className="flex flex-col items-center">
-            <div className="text-foreground">
+            <div className="text-foreground" title="Profile">
               <IntuitionProfil size={32} className="mb-1" />
             </div>
           </Link>
@@ -80,7 +80,7 @@ function Navbar() {
               "animate-fade-bg bg-primary text-primary-foreground hover:bg-primary/90"
           )}>
           <Link to="/feed" className="flex flex-col items-center">
-            <div className="text-foreground">
+            <div className="text-foreground" title="Feed">
               <IntuitionFeed size={32} className="mb-1" />
             </div>
           </Link>
@@ -95,7 +95,7 @@ function Navbar() {
             isActive("/recent-activity") && "animate-fade-bg"
           )}>
           <Link to="/recent-activity" className="flex flex-col items-center">
-            <div className="text-foreground">
+            <div className="text-foreground" title="Recent Activity">
               <IntuitionHistory size={32} className="mb-1" />
             </div>
           </Link>

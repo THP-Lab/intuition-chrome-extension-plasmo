@@ -23,7 +23,6 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
         viewBox="0 0 100 100"
         xmlns="http://www.w3.org/2000/svg"
         style={{ width: "100%", height: "100%" }}>
-        {/* Cercle extérieur animé */}
         <circle
           className="outer-circle"
           cx="50"
@@ -33,7 +32,6 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
           fill="none"
           stroke={isDark ? "white" : "black"}
         />
-        {/* Cercle intermédiaire animé */}
         <circle
           className="middle-circle"
           cx="50"
@@ -43,7 +41,6 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
           fill="none"
           stroke={isDark ? "white" : "black"}
         />
-        {/* Cercle intérieur plein */}
         <circle
           className="inner-circle"
           cx="50"
@@ -51,7 +48,6 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
           r="32"
           fill={isDark ? "black" : "white"}
         />
-        {/* Handle de la loupe */}
         <line
           className="handle"
           x1="78.3"

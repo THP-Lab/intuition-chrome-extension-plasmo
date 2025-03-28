@@ -8,8 +8,8 @@ interface IntuitionSearchIconProps {
   className?: string
   size?: number
   position?: {
-    x?: number | string // Position horizontale
-    y?: number | string // Position verticale
+    x?: number | string
+    y?: number | string
   }
 }
 
@@ -17,7 +17,7 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
   onSearch,
   className,
   size = 50,
-  position = { x: "150px", y: "0px" } // Valeurs par défaut
+  position = { x: "150px", y: "0px" }
 }) => {
   const [isInputVisible, setIsInputVisible] = useState(true)
   const [isAppeared, setIsAppeared] = useState(false)
@@ -93,7 +93,6 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
           </svg>
         </div>
 
-        {/* Input container séparé du SVG */}
         <div
           className="absolute left-0"
           style={{
