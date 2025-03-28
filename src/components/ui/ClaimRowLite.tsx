@@ -69,13 +69,18 @@ export const ClaimRowLite = ({
         <span className="text-against">↓ {numPositionsAgainst}</span>
       </div>
 
-      <VoteButtons
-        vaultId={BigInt(vaultId)}
-        counterVaultId={BigInt(counterVaultId)}
-      />
-    
-
-    </div> 
+      {/* User position */}
+      <div
+        className={cn(
+          'border text-xs rounded-md px-2 py-1 cursor-default transition-colors duration-300',
+          isFor
+            ? 'border-for text-for hover:bg-for hover:text-white'
+            : 'border-against text-against hover:bg-against hover:text-white'
+        )}
+      >
+        ↑↓ {isFor ? 'FOR' : 'AGAINST'}
+      </div>
+    </div>
   )
 }
 
