@@ -19,7 +19,7 @@ export function useCreatePosition() {
           address: walletClient.account.address
         })
 
-        if (balance < amount) {
+        if (balance < amount) { 
           throw new Error("Insufficient balance to create a position")
         }
 
