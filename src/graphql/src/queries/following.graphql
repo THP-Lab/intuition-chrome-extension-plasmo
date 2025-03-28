@@ -1,8 +1,34 @@
 query getFollowingsFromAddress($address: String!) {
-  following(args: {address: $address}) {
+  following(args: { address: $address }) {
     id
     image
     label
     type
+    positions_aggregate(limit: 10) {
+      nodes {
+        shares
+        vault {
+          id
+          triple {
+            id
+            object {
+              type
+              image
+              label
+            }
+            predicate {
+              type
+              image
+              label
+            }
+            subject {
+              type
+              image
+              label
+            }
+          }
+        }
+      }
+    }
   }
 }

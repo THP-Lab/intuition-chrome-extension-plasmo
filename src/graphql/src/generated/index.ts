@@ -10942,6 +10942,39 @@ export type GetFollowingsFromAddressQuery = {
     image?: string | null
     label: string
     type: any
+    positions_aggregate: {
+      __typename?: "positions_aggregate"
+      nodes: Array<{
+        __typename?: "positions"
+        shares: any
+        vault: {
+          __typename?: "vaults"
+          id: any
+          triple?: {
+            __typename?: "triples"
+            id: any
+            object: {
+              __typename?: "atoms"
+              type: any
+              image?: string | null
+              label?: string | null
+            }
+            predicate: {
+              __typename?: "atoms"
+              type: any
+              image?: string | null
+              label?: string | null
+            }
+            subject: {
+              __typename?: "atoms"
+              type: any
+              image?: string | null
+              label?: string | null
+            }
+          } | null
+        }
+      }>
+    }
   }>
 }
 
@@ -14270,6 +14303,32 @@ export const GetFollowingsFromAddressDocument = `
     image
     label
     type
+    positions_aggregate(limit: 10) {
+      nodes {
+        shares
+        vault {
+          id
+          triple {
+            id
+            object {
+              type
+              image
+              label
+            }
+            predicate {
+              type
+              image
+              label
+            }
+            subject {
+              type
+              image
+              label
+            }
+          }
+        }
+      }
+    }
   }
 }
     `
@@ -23276,7 +23335,161 @@ export const GetFollowingsFromAddress = {
                 { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "image" } },
                 { kind: "Field", name: { kind: "Name", value: "label" } },
-                { kind: "Field", name: { kind: "Name", value: "type" } }
+                { kind: "Field", name: { kind: "Name", value: "type" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "positions_aggregate" },
+                  arguments: [
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "limit" },
+                      value: { kind: "IntValue", value: "10" }
+                    }
+                  ],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "nodes" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "triple" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "id" }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "object"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "type"
+                                                }
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "image"
+                                                }
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "label"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "predicate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "type"
+                                                }
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "image"
+                                                }
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "label"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "subject"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "type"
+                                                }
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "image"
+                                                }
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "label"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
               ]
             }
           }
