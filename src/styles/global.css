@@ -52,6 +52,74 @@
   }
 }
 
+@keyframes light-sweep-alternate {
+  0% {
+    background-position: -95% 0;     /* Réduit de -100% à -95% */
+    text-shadow: -100px 5px 5px rgba(0, 0, 0, 0.3);  /* Réduit de -30px à -25px */
+  }
+  40% {
+    background-position: 195% 0;     /* Réduit de 200% à 195% */
+    text-shadow: 100px 5px 5px rgba(0, 0, 0, 0.3);   /* Réduit de 30px à 25px */
+  }
+  45% {
+    background-position: 195% 0;     /* Réduit de 200% à 195% */
+    text-shadow: 100px 5px 5px rgba(0, 0, 0, 0.3);   /* Réduit de 30px à 25px */
+  }
+  85% {
+    background-position: -95% 0;     /* Réduit de -100% à -95% */
+    text-shadow: -100px 5px 5px rgba(0, 0, 0, 0.3);  /* Réduit de -30px à -25px */
+  }
+  90% {
+    background-position: -95% 0;     /* Réduit de -100% à -95% */
+    text-shadow: -100px 5px 5px rgba(0, 0, 0, 0.3);  /* Réduit de -30px à -25px */
+  }
+  100% {
+    background-position: -95% 0;     /* Réduit de -100% à -95% */
+    text-shadow: -100px 5px 5px rgba(0, 0, 0, 0.3);  /* Réduit de -30px à -25px */
+  }
+}
+
+@layer components {
+  /* Classe de base pour tous les modes */
+  .light-sweep-heading {
+    @apply text-center text-5xl md:text-6xl lg:text-7xl font-extrabold;
+    position: relative;
+    color: transparent;
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: light-sweep-alternate 9s ease-in-out infinite;  /* Augmenté de 8s à 8.5s */
+  }
+  
+  /* Sélecteur pour le mode clair (sélecteur plus spécifique) */
+html:not(.dark) .light-sweep-heading {
+  background-image: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.9) 35%,
+    rgba(255, 138, 0, 1) 45%,
+    rgba(229, 46, 113, 1) 50%,
+    rgba(33, 147, 176, 1) 55%,
+    rgba(0, 0, 0, 0.9) 65%,
+    rgba(0, 0, 0, 0.9) 100%
+  ) ;
+}
+
+/* Sélecteur pour le mode sombre (sélecteur plus spécifique) */
+html.dark .light-sweep-heading {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.9) 35%,
+    rgba(0, 245, 160, 1) 45%,
+    rgba(0, 217, 245, 1) 50%,
+    rgba(161, 0, 242, 1) 55%,
+    rgba(255, 255, 255, 0.9) 65%,
+    rgba(255, 255, 255, 0.9) 100%
+  ) ;
+}
+}
+
 @layer base {
   * {
     @apply border-[hsl(var(--border))];
@@ -59,9 +127,7 @@
 
   :root,
   :host,
-  html
-
-  * {
+  html * {
     transition:
       background-color 0.1s ease,
       color 0.1s ease,

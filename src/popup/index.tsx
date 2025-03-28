@@ -1,7 +1,7 @@
 import React from "react"
 
 import { ThemeProvider } from "../components/ThemeProvider"
-
+import IntuitionPortalPanel from "~src/components/icons/intuition_portal_panel"
 
 import Content from "~src/components/content"
 
@@ -10,18 +10,27 @@ function IndexPopup() {
     chrome.runtime.sendMessage({ type: "open_sidepanel" })
   }
 
+  const portalX = 500  // position horizontale en pixels
+  const portalY = 60
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="intuition-theme">
-      <div className="min-w-[600px] min-h-[600px] p-4 bg-background text-foreground">
-        <Content>
-          <button
+      <div className="min-w-[600px] min-h-[600px] p-4 bg-background text-foreground relative">
+        {/* Positionnement avec coordonnées exactes */}
+        <div style={{ position: 'absolute', left: `${portalX}px`, top: `${portalY}px` }}>
+          <IntuitionPortalPanel 
             onClick={handleSidePanel}
-            className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
-            Open in sidePanel
-          </button>
+            size={55}
+            runnerSize={30}
+            showRunner={true}
+          />
+        </div>
+        
+        <Content>
+          {/* Votre contenu principal ici */}
         </Content>
       </div>
-      </ThemeProvider>
+    </ThemeProvider>
   )
 }
 

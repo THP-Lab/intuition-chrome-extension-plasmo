@@ -32,11 +32,11 @@ export const ClaimRowLite = ({
 
   return (
     <div
-      className={cn(
-        'flex justify-between items-center p-4 bg-muted border border-border/10 gap-3',
-        isFirst && 'rounded-t-xl',
-        isLast && 'rounded-b-xl'
-      )}
+    className={cn(
+      'flex justify-between items-center p-4 border border-border/10 gap-3 bg-[oklch(0.129_0.042_264.695)]',
+      isFirst && 'rounded-t-xl',
+      isLast && 'rounded-b-xl'
+    )}
     >
       {/* Triple */}
       <div className="flex gap-2 items-center flex-wrap flex-1 min-w-0">
