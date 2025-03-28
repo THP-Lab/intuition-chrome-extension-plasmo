@@ -14,7 +14,7 @@ export class Interceptors {
     }
 }
 export const OpenAPI = {
-    BASE: '',
+    BASE: "",
     CREDENTIALS: 'include',
     ENCODE_PATH: undefined,
     HEADERS: undefined,

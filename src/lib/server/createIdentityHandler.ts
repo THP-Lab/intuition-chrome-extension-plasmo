@@ -1,5 +1,5 @@
 
-import { ApiError, IdentitiesService } from '../../api/src/api-client'
+import { ApiError, IdentitiesService } from '../../../api/src/api-client'
 import { MULTIVAULT_CONTRACT_ADDRESS } from '../config'
 
 export const createIdentity = async ({

@@ -5,7 +5,7 @@
   "compilerOptions": {
     "jsx": "react",
     "paths": {
-      "~*": ["./*"]
+      "~*": ["./*"],
     },
     "baseUrl": ".",
     "esModuleInterop": true,

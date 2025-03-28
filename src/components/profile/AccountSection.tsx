@@ -11,7 +11,7 @@ type Props = {
 
 const AccountSection = ({ account, person, editMode, setEditMode }: Props) => {
 
-  //teeeeeeeeeeeeeeeeeeeeest :
+
   console.log("Person used in form:", person)
 
 
