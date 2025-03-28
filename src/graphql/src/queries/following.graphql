@@ -1,0 +1,8 @@
+query getFollowingsFromAddress($address: String!) {
+  following(args: {address: $address}) {
+    id
+    image
+    label
+    type
+  }
+}

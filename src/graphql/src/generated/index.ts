@@ -10930,6 +10930,21 @@ export type GetFollowersTriplesQuery = {
   }>
 }
 
+export type GetFollowingsFromAddressQueryVariables = Exact<{
+  address: Scalars["String"]["input"]
+}>
+
+export type GetFollowingsFromAddressQuery = {
+  __typename?: "query_root"
+  following: Array<{
+    __typename?: "accounts"
+    id: string
+    image?: string | null
+    label: string
+    type: any
+  }>
+}
+
 export type GetFollowingsTriplesQueryVariables = Exact<{
   accountId: Scalars["String"]["input"]
 }>
@@ -14247,6 +14262,100 @@ useGetFollowersTriplesQuery.fetcher = (
     variables,
     options
   )
+
+export const GetFollowingsFromAddressDocument = `
+    query getFollowingsFromAddress($address: String!) {
+  following(args: {address: $address}) {
+    id
+    image
+    label
+    type
+  }
+}
+    `
+
+export const useGetFollowingsFromAddressQuery = <
+  TData = GetFollowingsFromAddressQuery,
+  TError = unknown
+>(
+  variables: GetFollowingsFromAddressQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetFollowingsFromAddressQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<
+      GetFollowingsFromAddressQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useQuery<GetFollowingsFromAddressQuery, TError, TData>({
+    queryKey: ["getFollowingsFromAddress", variables],
+    queryFn: fetcher<
+      GetFollowingsFromAddressQuery,
+      GetFollowingsFromAddressQueryVariables
+    >(GetFollowingsFromAddressDocument, variables),
+    ...options
+  })
+}
+
+useGetFollowingsFromAddressQuery.document = GetFollowingsFromAddressDocument
+
+useGetFollowingsFromAddressQuery.getKey = (
+  variables: GetFollowingsFromAddressQueryVariables
+) => ["getFollowingsFromAddress", variables]
+
+export const useInfiniteGetFollowingsFromAddressQuery = <
+  TData = InfiniteData<GetFollowingsFromAddressQuery>,
+  TError = unknown
+>(
+  variables: GetFollowingsFromAddressQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetFollowingsFromAddressQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetFollowingsFromAddressQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetFollowingsFromAddressQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? [
+          "getFollowingsFromAddress.infinite",
+          variables
+        ],
+        queryFn: (metaData) =>
+          fetcher<
+            GetFollowingsFromAddressQuery,
+            GetFollowingsFromAddressQueryVariables
+          >(GetFollowingsFromAddressDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {})
+          })(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetFollowingsFromAddressQuery.getKey = (
+  variables: GetFollowingsFromAddressQueryVariables
+) => ["getFollowingsFromAddress.infinite", variables]
+
+useGetFollowingsFromAddressQuery.fetcher = (
+  variables: GetFollowingsFromAddressQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<
+    GetFollowingsFromAddressQuery,
+    GetFollowingsFromAddressQueryVariables
+  >(GetFollowingsFromAddressDocument, variables, options)
 
 export const GetFollowingsTriplesDocument = `
     query GetFollowingsTriples($accountId: String!) {
@@ -23108,6 +23217,66 @@ export const GetFollowersTriples = {
                     ]
                   }
                 }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetFollowingsFromAddress = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "getFollowingsFromAddress" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "following" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "args" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "address" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "address" }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } },
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "type" } }
               ]
             }
           }
