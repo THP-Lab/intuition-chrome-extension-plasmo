@@ -10768,6 +10768,7 @@ export type GetClaimsByUriQuery = {
       nodes: Array<{
         __typename?: "claims"
         id: string
+        triple_id: any
         shares: any
         counter_shares: any
         predicate: {
@@ -10819,6 +10820,7 @@ export type GetClaimsByUriQuery = {
       nodes: Array<{
         __typename?: "claims"
         id: string
+        triple_id: any
         shares: any
         counter_shares: any
         predicate: {
@@ -10894,6 +10896,26 @@ export type GetClaimsByAtomQuery = {
       }
     }>
   }
+}
+
+export type GetFollowersTriplesQueryVariables = Exact<{
+  accountId: Scalars["String"]["input"]
+}>
+
+export type GetFollowersTriplesQuery = {
+  __typename?: "query_root"
+  triples: Array<{
+    __typename?: "triples"
+    id: any
+    subject: {
+      __typename?: "atoms"
+      id: any
+      label?: string | null
+      type: any
+      image?: string | null
+      accounts: Array<{ __typename?: "accounts"; id: string }>
+    }
+  }>
 }
 
 export type GetAccountByIdQueryVariables = Exact<{
@@ -13839,6 +13861,7 @@ export const GetClaimsByUriDocument = `
             }
           }
         }
+        triple_id
         shares
         counter_shares
       }
@@ -13878,6 +13901,7 @@ export const GetClaimsByUriDocument = `
             }
           }
         }
+        triple_id
         shares
         counter_shares
       }
@@ -14076,6 +14100,106 @@ useGetClaimsByAtomQuery.fetcher = (
 ) =>
   fetcher<GetClaimsByAtomQuery, GetClaimsByAtomQueryVariables>(
     GetClaimsByAtomDocument,
+    variables,
+    options
+  )
+
+export const GetFollowersTriplesDocument = `
+    query GetFollowersTriples($accountId: String!) {
+  triples(
+    where: {predicate: {label: {_eq: "follow"}}, object: {accounts: {id: {_eq: $accountId}}}, subject: {type: {_eq: "Account"}}}
+  ) {
+    id
+    subject {
+      id
+      label
+      type
+      image
+      accounts {
+        id
+      }
+    }
+  }
+}
+    `
+
+export const useGetFollowersTriplesQuery = <
+  TData = GetFollowersTriplesQuery,
+  TError = unknown
+>(
+  variables: GetFollowersTriplesQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetFollowersTriplesQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<
+      GetFollowersTriplesQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useQuery<GetFollowersTriplesQuery, TError, TData>({
+    queryKey: ["GetFollowersTriples", variables],
+    queryFn: fetcher<
+      GetFollowersTriplesQuery,
+      GetFollowersTriplesQueryVariables
+    >(GetFollowersTriplesDocument, variables),
+    ...options
+  })
+}
+
+useGetFollowersTriplesQuery.document = GetFollowersTriplesDocument
+
+useGetFollowersTriplesQuery.getKey = (
+  variables: GetFollowersTriplesQueryVariables
+) => ["GetFollowersTriples", variables]
+
+export const useInfiniteGetFollowersTriplesQuery = <
+  TData = InfiniteData<GetFollowersTriplesQuery>,
+  TError = unknown
+>(
+  variables: GetFollowersTriplesQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetFollowersTriplesQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetFollowersTriplesQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetFollowersTriplesQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? [
+          "GetFollowersTriples.infinite",
+          variables
+        ],
+        queryFn: (metaData) =>
+          fetcher<GetFollowersTriplesQuery, GetFollowersTriplesQueryVariables>(
+            GetFollowersTriplesDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetFollowersTriplesQuery.getKey = (
+  variables: GetFollowersTriplesQueryVariables
+) => ["GetFollowersTriples.infinite", variables]
+
+useGetFollowersTriplesQuery.fetcher = (
+  variables: GetFollowersTriplesQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetFollowersTriplesQuery, GetFollowersTriplesQueryVariables>(
+    GetFollowersTriplesDocument,
     variables,
     options
   )
@@ -22240,6 +22364,10 @@ export const GetClaimsByUri = {
                             },
                             {
                               kind: "Field",
+                              name: { kind: "Name", value: "triple_id" }
+                            },
+                            {
+                              kind: "Field",
                               name: { kind: "Name", value: "shares" }
                             },
                             {
@@ -22423,6 +22551,10 @@ export const GetClaimsByUri = {
                                   }
                                 ]
                               }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "triple_id" }
                             },
                             {
                               kind: "Field",
@@ -22613,6 +22745,173 @@ export const GetClaimsByAtom = {
                                   }
                                 ]
                               }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetFollowersTriples = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetFollowersTriples" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "accountId" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "triples" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "predicate" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "label" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "_eq" },
+                                  value: {
+                                    kind: "StringValue",
+                                    value: "follow",
+                                    block: false
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "object" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "accounts" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "id" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: { kind: "Name", value: "_eq" },
+                                        value: {
+                                          kind: "Variable",
+                                          name: {
+                                            kind: "Name",
+                                            value: "accountId"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "subject" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "type" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "_eq" },
+                                  value: {
+                                    kind: "StringValue",
+                                    value: "Account",
+                                    block: false
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "subject" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "accounts" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" }
                             }
                           ]
                         }
