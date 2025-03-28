@@ -48,12 +48,10 @@ const IntuitionThemeAvatar: React.FC<IntuitionThemeAvatarProps> = ({
         style={{ strokeLinecap: "round" }}
       />
 
-      {/* Cercle divisé verticalement en deux parties */}
       <path
         d="M50 20 A30 30 0 0 1 80 50 A30 30 0 0 1 50 80 A30 30 0 0 1 20 50 A30 30 0 0 1 50 20"
         fill="none"
       />
-      {/* Partie gauche */}
       <path
         d="M50 20 A30 30 0 0 0 20 50 L50 50 L50 20"
         fill={isDark ? "white" : "black"}
@@ -62,7 +60,6 @@ const IntuitionThemeAvatar: React.FC<IntuitionThemeAvatarProps> = ({
         d="M20 50 A30 30 0 0 0 50 80 L50 50 L20 50"
         fill={isDark ? "white" : "black"}
       />
-      {/* Partie droite */}
       <path
         d="M50 20 A30 30 0 0 1 80 50 L50 50 L50 20"
         fill={isDark ? "black" : "white"}

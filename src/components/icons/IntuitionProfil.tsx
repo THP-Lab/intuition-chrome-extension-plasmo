@@ -56,7 +56,6 @@ const IntuitionProfil = ({
         `}
       </style>
 
-      {/* Cercle extérieur animé */}
       <circle
         className="outer-circle"
         cx="50"
@@ -71,7 +70,6 @@ const IntuitionProfil = ({
         }}
       />
 
-      {/* Cercle intermédiaire */}
       <circle
         className="middle-circle"
         cx="50"
@@ -83,7 +81,6 @@ const IntuitionProfil = ({
         style={{ strokeLinecap: "round" }}
       />
 
-      {/* Cercle intérieur */}
       <circle
         className="inner-circle"
         cx="50"
@@ -92,7 +89,6 @@ const IntuitionProfil = ({
         fill={isDark ? "black" : "white"}
       />
 
-      {/* Groupe de l'icône de profil */}
       <g transform="translate(20, 20) scale(1.50)">
         <defs>
           <mask
@@ -105,9 +101,9 @@ const IntuitionProfil = ({
             <circle cx="20" cy="38" r="16.5" fill="white" stroke="white" />
           </mask>
         </defs>
-        {/* Cercle noir (fond de l'icône de profil) */}
+
         <circle cx="20" cy="20" r="20" fill={isDark ? "white" : "black"} />
-        {/* Partie blanche découpée par le masque */}
+
         <g mask="url(#mask0)">
           <circle
             cx="20"
@@ -117,7 +113,7 @@ const IntuitionProfil = ({
             stroke={isDark ? "black" : "white"}
           />
         </g>
-        {/* Petit cercle gris en haut */}
+
         <circle cx="20" cy="10" r="5" fill={isDark ? "black" : "#D9D9D9"} />
       </g>
     </svg>
