@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { useTheme } from "~/src/components/ThemeProvider"
-import { AtomCard } from "../components/AtomCard"
 import TabSystem from '../components/TabSystem';
 import { useStorage } from "@plasmohq/storage/dist/hook"
-import { GetClaimsByAtomQuery, useGetClaimsByAtomQuery, useGetClaimsByUriQuery } from "~src/graphql/src"
-import type { Atoms, Claims } from "~node_modules/@0xintuition/graphql/dist"
+import {  useGetClaimsByUriQuery } from "~src/graphql/src"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
 
 function Home() {
@@ -40,7 +38,14 @@ function Home() {
   const { data, isLoading, error } = useGetClaimsByUriQuery({uri: currentUrl})
   const atoms = data?.atoms
 
-  const claims = atoms?.flatMap(atom => [...atom.as_object_claims_aggregate.nodes, ...atom.as_subject_claims_aggregate.nodes]) || []
+  const claims = Array.from(
+    new Map(
+      atoms?.flatMap(atom => [...atom.as_object_claims_aggregate.nodes, ...atom.as_subject_claims_aggregate.nodes])
+        .map(claim => [claim.triple_id, claim])
+
+    ).values()
+  )
+ 
   console.log(claims);
 
   const tabs = [
@@ -50,6 +55,8 @@ function Home() {
       <div>        
         {isLoading ? "Chargement..." : (typeof data !== "undefined" && data["atoms"].length !== 0)? 
         ( claims.map((claim, index) => (
+        <>
+        
         <ClaimRowLite
               key={claim.id} 
               subjectLabel={claim.subject.label ?? "No subject"}
@@ -64,7 +71,9 @@ function Home() {
               userCounterStake={Number(claim.counter_shares ?? 0)}
               isFirst={index === 0}
               isLast={index === claims.length - 1}
-            />          ))
+            />
+          </>
+            ))
         ) : (
           <p>Aucun atom trouvé pour cette URL.</p>
         )}

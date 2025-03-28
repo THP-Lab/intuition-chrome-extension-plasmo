@@ -95,6 +95,7 @@ query GetClaimsByUri($uri: String) {
             }
           }
         }
+        triple_id
         shares
         counter_shares
       }
@@ -134,6 +135,7 @@ query GetClaimsByUri($uri: String) {
             }
           }
         }
+        triple_id
         shares
         counter_shares
       }
