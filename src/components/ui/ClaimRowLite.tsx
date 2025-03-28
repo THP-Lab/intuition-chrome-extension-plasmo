@@ -1,4 +1,5 @@
-import React from "react"
+import React from 'react'
+import { cn } from '~src/lib/utils'
 
 export const ClaimRowLite = ({
   subjectLabel,
@@ -12,7 +13,7 @@ export const ClaimRowLite = ({
   userStake,
   userCounterStake,
   isFirst = true,
-  isLast = true
+  isLast = true,
 }: {
   subjectLabel: string
   subjectImage?: string
@@ -27,137 +28,58 @@ export const ClaimRowLite = ({
   isFirst?: boolean
   isLast?: boolean
 }) => {
-  const containerStyle: React.CSSProperties = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "10px",
-    backgroundColor: "#f4f7fb",
-    border: "1px solid rgba(100, 100, 100, 0.1)",
-    borderRadius: "12px",
-    gap: "12px"
-  }
-
-  const tripleStyle: React.CSSProperties = {
-    display: "flex",
-    gap: "8px",
-    alignItems: "center",
-    flexWrap: "wrap",
-    flex: 1,
-    minWidth: 0
-  }
-
-  const atomStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: "4px",
-    border: "1px solid black",
-    borderRadius: "9999px",
-    padding: "3px 8px",
-    fontSize: "13px"
-  }
-
-  const rightColStyle: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    gap: "4px",
-    minWidth: "70px"
-  }
-  
-  const votesStyle: React.CSSProperties = {
-    display: "flex",
-    gap: "6px",
-    fontSize: "13px",
-    marginRight: "16px"
-  }
-
-  const positionTagStyle = (isFor: boolean): React.CSSProperties => ({
-    border: `1px solid ${isFor ? "#e67e22" : "#3498db"}`,
-    color: isFor ? "#e67e22" : "#3498db",
-    fontSize: "11px",
-    borderRadius: "6px",
-    padding: "2px 6px",
-    transition: "all 0.3s ease",
-    textAlign: "center",
-    cursor: "default"
-  })
+  const isFor = userStake > 0
 
   return (
-    <>
-      <div style={containerStyle}>
-        {/* Triple (sujet-predicate-objet) */}
-        <div style={tripleStyle}>
-          {/* Subject */}
-          <div style={atomStyle}>
-            {subjectImage && (
-              <img
-                src={subjectImage}
-                alt="subject"
-                style={{ width: "20px", height: "20px", borderRadius: "50%" }}
-              />
-            )}
-            <span>{subjectLabel}</span>
-          </div>
-
-          {/* Predicate */}
-          <div style={atomStyle}>
-            {predicateImage && (
-              <img
-                src={predicateImage}
-                alt="predicate"
-                style={{ width: "20px", height: "20px", borderRadius: "50%" }}
-              />
-            )}
-            <span>{predicateLabel}</span>
-          </div>
-
-          {/* Object */}
-          <div style={atomStyle}>
-            {objectImage && (
-              <img
-                src={objectImage}
-                alt="object"
-                style={{ width: "20px", height: "20px", borderRadius: "50%" }}
-              />
-            )}
-            <span>{objectLabel}</span>
-          </div>
-        </div>
-
-        {/* Votes */}
-        <div style={votesStyle}>
-          <span style={{ color: "blue" }}>↑ {numPositionsFor}</span>
-          <span style={{ color: "orange" }}>↓ {numPositionsAgainst}</span>
-        </div>
-
-          {/* User position tag */}
-          <div
-            style={{
-              border: `1px solid ${userStake > 0 ? "#e67e22" : "#3498db"}`,
-              color: userStake > 0 ? "#e67e22" : "#3498db",
-              borderRadius: "8px",
-              padding: "4px 8px",
-              fontSize: "12px",
-              cursor: "default",
-              transition: "all 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = userStake > 0 ? "#e67e22" : "#3498db"
-              e.currentTarget.style.color ="white"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "Transparent"
-              e.currentTarget.style.color = userStake > 0 ? "#e67e22" : "#3498db"
-            }}
-           >
-             ↑↓{userStake > 0 ? "FOR" : "AGAINST"}
-            </div>   
+    <div
+      className={cn(
+        'flex justify-between items-center p-4 bg-muted border border-border/10 gap-3',
+        isFirst && 'rounded-t-xl',
+        isLast && 'rounded-b-xl'
+      )}
+    >
+      {/* Triple */}
+      <div className="flex gap-2 items-center flex-wrap flex-1 min-w-0">
+        {[{ label: subjectLabel, img: subjectImage },
+          { label: predicateLabel, img: predicateImage },
+          { label: objectLabel, img: objectImage }]
+          .map(({ label, img }, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-1 border border-border rounded-full px-2 py-1 text-sm text-foreground"
+            >
+              {img && (
+                <img
+                  src={img}
+                  alt={label}
+                  className="w-5 h-5 rounded-full"
+                />
+              )}
+              <span className="truncate">{label}</span>
+            </div>
+          ))}
       </div>
-      
 
-    </>
+      {/* Votes */}
+      <div className="flex gap-2 text-sm mr-4">
+        <span className="text-for">↑ {numPositionsFor}</span>
+        <span className="text-against">↓ {numPositionsAgainst}</span>
+      </div>
+
+      {/* User position */}
+      <div
+        className={cn(
+          'border text-xs rounded-md px-2 py-1 cursor-default transition-colors duration-300',
+          isFor
+            ? 'border-for text-for hover:bg-for hover:text-white'
+            : 'border-against text-against hover:bg-against hover:text-white'
+        )}
+      >
+        ↑↓ {isFor ? 'FOR' : 'AGAINST'}
+      </div>
+    </div>
   )
 }
 
 export default ClaimRowLite
+
