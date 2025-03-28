@@ -10759,6 +10759,9 @@ export type GetClaimsByUriQuery = {
   __typename?: "query_root"
   atoms: Array<{
     __typename?: "atoms"
+    id: any
+    label?: string | null
+    image?: string | null
     as_object_claims_aggregate: {
       __typename?: "claims_aggregate"
       aggregate?: {
@@ -10863,6 +10866,15 @@ export type GetClaimsByUriQuery = {
         }
       }>
     }
+    vault?: { __typename?: "vaults"; position_count: number } | null
+    value?: {
+      __typename?: "atom_values"
+      thing?: {
+        __typename?: "things"
+        description?: string | null
+        url?: string | null
+      } | null
+    } | null
   }>
 }
 
@@ -13904,6 +13916,18 @@ export const GetClaimsByUriDocument = `
         triple_id
         shares
         counter_shares
+      }
+    }
+    id
+    label
+    image
+    vault {
+      position_count
+    }
+    value {
+      thing {
+        description
+        url
       }
     }
   }
@@ -22563,6 +22587,48 @@ export const GetClaimsByUri = {
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "counter_shares" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "vault" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "position_count" }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "value" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "thing" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "url" }
                             }
                           ]
                         }

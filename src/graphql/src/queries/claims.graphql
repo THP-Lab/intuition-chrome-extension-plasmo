@@ -140,6 +140,18 @@ query GetClaimsByUri($uri: String) {
         counter_shares
       }
     }
+    id
+    label
+    image
+    vault {
+      position_count
+    }
+    value {
+      thing {
+        description
+        url
+      }
+    }
   }
 }
 
