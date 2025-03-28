@@ -10918,6 +10918,26 @@ export type GetFollowersTriplesQuery = {
   }>
 }
 
+export type GetFollowingsTriplesQueryVariables = Exact<{
+  accountId: Scalars["String"]["input"]
+}>
+
+export type GetFollowingsTriplesQuery = {
+  __typename?: "query_root"
+  triples: Array<{
+    __typename?: "triples"
+    id: any
+    object: {
+      __typename?: "atoms"
+      id: any
+      label?: string | null
+      type: any
+      image?: string | null
+      accounts: Array<{ __typename?: "accounts"; id: string }>
+    }
+  }>
+}
+
 export type GetAccountByIdQueryVariables = Exact<{
   id: Scalars["String"]["input"]
 }>
@@ -14200,6 +14220,109 @@ useGetFollowersTriplesQuery.fetcher = (
 ) =>
   fetcher<GetFollowersTriplesQuery, GetFollowersTriplesQueryVariables>(
     GetFollowersTriplesDocument,
+    variables,
+    options
+  )
+
+export const GetFollowingsTriplesDocument = `
+    query GetFollowingsTriples($accountId: String!) {
+  triples(
+    where: {predicate: {label: {_eq: "follow"}}, subject: {accounts: {id: {_eq: $accountId}}, type: {_eq: "Account"}}}
+  ) {
+    id
+    object {
+      id
+      label
+      type
+      image
+      accounts {
+        id
+      }
+    }
+  }
+}
+    `
+
+export const useGetFollowingsTriplesQuery = <
+  TData = GetFollowingsTriplesQuery,
+  TError = unknown
+>(
+  variables: GetFollowingsTriplesQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetFollowingsTriplesQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<
+      GetFollowingsTriplesQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useQuery<GetFollowingsTriplesQuery, TError, TData>({
+    queryKey: ["GetFollowingsTriples", variables],
+    queryFn: fetcher<
+      GetFollowingsTriplesQuery,
+      GetFollowingsTriplesQueryVariables
+    >(GetFollowingsTriplesDocument, variables),
+    ...options
+  })
+}
+
+useGetFollowingsTriplesQuery.document = GetFollowingsTriplesDocument
+
+useGetFollowingsTriplesQuery.getKey = (
+  variables: GetFollowingsTriplesQueryVariables
+) => ["GetFollowingsTriples", variables]
+
+export const useInfiniteGetFollowingsTriplesQuery = <
+  TData = InfiniteData<GetFollowingsTriplesQuery>,
+  TError = unknown
+>(
+  variables: GetFollowingsTriplesQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetFollowingsTriplesQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetFollowingsTriplesQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetFollowingsTriplesQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? [
+          "GetFollowingsTriples.infinite",
+          variables
+        ],
+        queryFn: (metaData) =>
+          fetcher<
+            GetFollowingsTriplesQuery,
+            GetFollowingsTriplesQueryVariables
+          >(GetFollowingsTriplesDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {})
+          })(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetFollowingsTriplesQuery.getKey = (
+  variables: GetFollowingsTriplesQueryVariables
+) => ["GetFollowingsTriples.infinite", variables]
+
+useGetFollowingsTriplesQuery.fetcher = (
+  variables: GetFollowingsTriplesQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetFollowingsTriplesQuery, GetFollowingsTriplesQueryVariables>(
+    GetFollowingsTriplesDocument,
     variables,
     options
   )
@@ -22896,6 +23019,164 @@ export const GetFollowersTriples = {
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "subject" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "accounts" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetFollowingsTriples = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetFollowingsTriples" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "accountId" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "triples" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "predicate" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "label" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "_eq" },
+                                  value: {
+                                    kind: "StringValue",
+                                    value: "follow",
+                                    block: false
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "subject" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "accounts" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "id" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: { kind: "Name", value: "_eq" },
+                                        value: {
+                                          kind: "Variable",
+                                          name: {
+                                            kind: "Name",
+                                            value: "accountId"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "type" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "_eq" },
+                                  value: {
+                                    kind: "StringValue",
+                                    value: "Account",
+                                    block: false
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "object" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
