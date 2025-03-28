@@ -115,7 +115,7 @@ const TripleForm: React.FC = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-gray-100 rounded">
+    <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-background rounded">
       <AtomAutocompleteInput
         label="Subject"
         onSelect={(atom) => setSubject(atom)}
@@ -132,7 +132,7 @@ const TripleForm: React.FC = () => {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="px-4 py-2 bg-purple-600 text-white rounded"
+        className="w-full px-4 py-2 bg-background text-foreground hover:bg-accent hover:text-accent-foreground rounded"
       >
         {isSubmitting ? 'Creating...' : 'Create Triple'}
       </button>
