@@ -29,7 +29,7 @@ function NavbarUp() {
             size="sm"
             asChild
             className="flex items-center gap-2 p-2">
-            <Link to="/createAtom">
+            <Link to="/page-form">
               <span>Plus</span>
             </Link>
           </Button>

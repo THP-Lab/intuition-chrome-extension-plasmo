@@ -3,7 +3,7 @@ import React, { type ReactNode } from "react"
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
 
 import { configureClient } from "~src/graphql/src"
-import CreateAtom from "~src/pages/CreateAtom"
+import PageForm from "~src/pages/PageForm"
 import Feed from "~src/pages/Feed"
 import Home from "~src/pages/Home"
 import Profile from "~src/pages/Profile"
@@ -56,7 +56,7 @@ const Content = ({ children }: ContentProps) => {
                   </Route>
                   <Route path="/feed" element={<Feed />} />
 
-                  <Route path="/createAtom" element={<CreateAtom />} />
+                  <Route path="/page-form" element={<PageForm />} />
 
                   <Route path="/recent-activity" element={<RecentActivity />} />
                   <Route path="/search" element={<Search />} />

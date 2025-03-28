@@ -51,7 +51,7 @@ function Home() {
         {isLoading ? "Chargement..." : (typeof data !== "undefined" && data["atoms"].length !== 0)? 
         ( claims.map((claim, index) => (
         <ClaimRowLite
-              key={claim.id}
+              key={claim.id} 
               subjectLabel={claim.subject.label ?? "No subject"}
               subjectImage={claim.subject?.image ?? undefined}
               predicateLabel={claim.predicate?.label ?? "No predicate"}
