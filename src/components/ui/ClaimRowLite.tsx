@@ -1,6 +1,6 @@
 import React from "react"
 import { cn } from "~src/lib/utils"
-import { ClaimVoteButtons } from "../ClaimVoteButtons"
+import VoteButtons from "~src/components/ui/VoteButtons"
 
 export const ClaimRowLite = ({
   subjectLabel,
@@ -69,11 +69,13 @@ export const ClaimRowLite = ({
         <span className="text-against">↓ {numPositionsAgainst}</span>
       </div>
 
-      <ClaimVoteButtons
+      <VoteButtons
         vaultId={BigInt(vaultId)}
         counterVaultId={BigInt(counterVaultId)}
       />
-    </div>
+    
+
+    </div> 
   )
 }
 
