@@ -1,5 +1,6 @@
-import React from 'react'
-import { cn } from '~src/lib/utils'
+import React from "react"
+import { cn } from "~src/lib/utils"
+import { ClaimVoteButtons } from "../ClaimVoteButtons"
 
 export const ClaimRowLite = ({
   subjectLabel,
@@ -14,6 +15,8 @@ export const ClaimRowLite = ({
   userCounterStake,
   isFirst = true,
   isLast = true,
+  vaultId,
+  counterVaultId
 }: {
   subjectLabel: string
   subjectImage?: string
@@ -27,25 +30,26 @@ export const ClaimRowLite = ({
   userCounterStake: number
   isFirst?: boolean
   isLast?: boolean
+  vaultId: string
+  counterVaultId: string
 }) => {
   const isFor = userStake > 0
 
   return (
     <div
       className={cn(
-        'flex justify-between items-center p-4 bg-muted border border-border/10 gap-3',
-        isFirst && 'rounded-t-xl',
-        isLast && 'rounded-b-xl'
+        "flex justify-between items-center p-4 bg-muted border border-border/10 gap-3",
+        isFirst && "rounded-t-xl",
+        isLast && "rounded-b-xl"
       )}
     >
-      {/* Triple */}
       <div className="flex gap-2 items-center flex-wrap flex-1 min-w-0">
         {[{ label: subjectLabel, img: subjectImage },
           { label: predicateLabel, img: predicateImage },
           { label: objectLabel, img: objectImage }]
           .map(({ label, img }, index) => (
             <div
-              key={index}
+              key={`${label}-${index}`}
               className="flex items-center gap-1 border border-border rounded-full px-2 py-1 text-sm text-foreground"
             >
               {img && (
@@ -60,26 +64,17 @@ export const ClaimRowLite = ({
           ))}
       </div>
 
-      {/* Votes */}
       <div className="flex gap-2 text-sm mr-4">
         <span className="text-for">↑ {numPositionsFor}</span>
         <span className="text-against">↓ {numPositionsAgainst}</span>
       </div>
 
-      {/* User position */}
-      <div
-        className={cn(
-          'border text-xs rounded-md px-2 py-1 cursor-default transition-colors duration-300',
-          isFor
-            ? 'border-for text-for hover:bg-for hover:text-white'
-            : 'border-against text-against hover:bg-against hover:text-white'
-        )}
-      >
-        ↑↓ {isFor ? 'FOR' : 'AGAINST'}
-      </div>
+      <ClaimVoteButtons
+        vaultId={BigInt(vaultId)}
+        counterVaultId={BigInt(counterVaultId)}
+      />
     </div>
   )
 }
 
 export default ClaimRowLite
-

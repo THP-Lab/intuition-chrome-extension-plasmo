@@ -55,7 +55,7 @@ function Home() {
       <div>        
         {isLoading ? "Chargement..." : (typeof data !== "undefined" && data["atoms"].length !== 0)? 
         ( claims.map((claim, index) => (
-        <>
+        
         
         <ClaimRowLite
               key={claim.id} 
@@ -71,8 +71,10 @@ function Home() {
               userCounterStake={Number(claim.counter_shares ?? 0)}
               isFirst={index === 0}
               isLast={index === claims.length - 1}
+              vaultId={claim.vault_id}
+              counterVaultId={claim.counter_vault_id}
             />
-          </>
+          
             ))
         ) : (
           <p>Aucun atom trouvé pour cette URL.</p>
