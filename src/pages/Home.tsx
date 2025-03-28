@@ -5,6 +5,7 @@ import TabSystem from '../components/TabSystem';
 import { useStorage } from "@plasmohq/storage/dist/hook"
 import {  useGetClaimsByUriQuery } from "~src/graphql/src"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
+import AtomCard from "~src/components/AtomCard";
 
 function Home() {
   const { theme } = useTheme()
@@ -36,7 +37,7 @@ function Home() {
   }, [])
 
   const { data, isLoading, error } = useGetClaimsByUriQuery({uri: currentUrl})
-  const atoms = data?.atoms
+  const atoms = data?.atoms ?? []
 
   const claims = Array.from(
     new Map(
@@ -50,10 +51,10 @@ function Home() {
 
   const tabs = [
     {
-      label: 'Atom',
+      label: 'Claims',
       content: 
       <div>        
-        {isLoading ? "Chargement..." : (typeof data !== "undefined" && data["atoms"].length !== 0)? 
+        {isLoading ? "Chargement..." : (typeof data !== "undefined" && claims.length !== 0)? 
         ( claims.map((claim, index) => (
         <>
         
@@ -75,13 +76,28 @@ function Home() {
           </>
             ))
         ) : (
-          <p>Aucun atom trouvé pour cette URL.</p>
+          <p>Aucun claim trouvé pour cette URL.</p>
         )}
       </div>
     },
     {
-      label: 'Onglet 2',
-      content: <div>Contenu de l'onglet 2</div>
+      label: 'Atoms',
+      content: 
+      <div>
+        {isLoading ? "Chargement...": (typeof data !== "undefined" &&  atoms.length != 0)?
+          (atoms.map((atom) => {
+            return (
+              <AtomCard atom={atom} />
+            );
+          })):
+          (
+          <p>Aucun atom trouvé pour cet URL</p>
+          )
+
+        }
+        
+      </div>
+      
     },
     {
       label: 'Onglet 3',
