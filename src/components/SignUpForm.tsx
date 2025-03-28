@@ -142,12 +142,11 @@ const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
 
   return (
     <div className="relative">
-      {/* Bouton de fermeture */}
       {onCancel && (
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-0 right-0 m-2 p-2"
+          className="absolute right-[-7px] top-[-55px]"
           onClick={onCancel}
         >
           <svg 
