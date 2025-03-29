@@ -20,11 +20,11 @@ function Feed() {
     <div>
       <h1> Feed page </h1>
       {followings.map((following) => {
-        const positions = following.positions_aggregate.nodes
+        const positions = following.positions_aggregate.nodes.filter((position) => position.vault.triple !== null)
         return (
           <>
-         <img src={following.image ?? default_img} className="w-8 h-8 rounded-full mt-1"/><p>{following.label} staked:</p> 
-          {positions.map((position, index) => (
+         <img src={following.image ?? default_img} className="w-8 h-8 rounded-full mt-1"/><p>{following.label}</p> 
+          {positions.length === 0 ? <p>No recent activity</p> : positions.map((position, index) => (
           <>
             <p>{position.shares} ETH</p>
             <p>On :</p>
