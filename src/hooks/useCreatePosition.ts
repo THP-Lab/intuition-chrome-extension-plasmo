@@ -12,6 +12,25 @@ export function useCreatePosition() {
       amount?: bigint
     }) => {
       try {
+
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x14a34", // 84532 en hex
+              chainName: "Base Sepolia",
+              nativeCurrency: {
+                name: "ETH",
+                symbol: "ETH",
+                decimals: 18,
+              },
+              rpcUrls: ["https://sepolia.base.org"],
+              blockExplorerUrls: ["https://sepolia.basescan.org"],
+            },
+          ],
+        })
+
+        
         const { walletClient, publicClient } = await getClients()
         const multivault = new Multivault({ walletClient, publicClient })
 

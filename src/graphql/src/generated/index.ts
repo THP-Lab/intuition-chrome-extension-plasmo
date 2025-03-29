@@ -13992,6 +13992,7 @@ export const GetClaimsByUriDocument = `
           type
         }
         vault {
+          id
           positions_aggregate {
             aggregate {
               count
@@ -13999,6 +14000,7 @@ export const GetClaimsByUriDocument = `
           }
         }
         counter_vault {
+          id
           positions_aggregate {
             aggregate {
               count

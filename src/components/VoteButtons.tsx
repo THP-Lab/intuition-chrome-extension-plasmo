@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { useCreatePosition } from "~src/hooks/useCreatePosition"
 
 export function VoteButtons({
@@ -33,14 +33,14 @@ export function VoteButtons({
         disabled={isVoting}
         className="text-for border border-for rounded-md px-2 py-1 hover:bg-for hover:text-white"
       >
-        Voter pour
+        Pour
       </button>
       <button
         onClick={() => handleVote(false)}
         disabled={isVoting}
         className="text-against border border-against rounded-md px-2 py-1 hover:bg-against hover:text-white"
       >
-        Voter contre
+        Contre
       </button>
       {error && <p className="text-red-500 text-sm">{error}</p>}
     </div>

@@ -1,6 +1,6 @@
 import React from "react"
 import { cn } from "~src/lib/utils"
-import VoteButtons from "~src/components/ui/VoteButtons"
+import VoteButtons from "~src/components/VoteButtons"
 
 export const ClaimRowLite = ({
   subjectLabel,
@@ -15,8 +15,6 @@ export const ClaimRowLite = ({
   userCounterStake,
   isFirst = true,
   isLast = true,
-  vaultId,
-  counterVaultId
   vaultId,
   counterVaultId
 }: {
@@ -34,11 +32,9 @@ export const ClaimRowLite = ({
   isLast?: boolean
   vaultId: string
   counterVaultId: string
-  vaultId: string
-  counterVaultId: string
 }) => {
   const isFor = userStake > 0
-
+  console.log("📦 Vault ID:", vaultId, "| Counter Vault ID:", counterVaultId)
   return (
     <div
     className={cn(
@@ -53,7 +49,6 @@ export const ClaimRowLite = ({
           { label: objectLabel, img: objectImage }]
           .map(({ label, img }, index) => (
             <div
-              key={`${label}-${index}`}
               key={`${label}-${index}`}
               className="flex items-center gap-1 border border-border rounded-full px-2 py-1 text-sm text-foreground"
             >
@@ -74,18 +69,16 @@ export const ClaimRowLite = ({
         <span className="text-against">↓ {numPositionsAgainst}</span>
       </div>
 
-      {/* User position */}
-      <div
-        className={cn(
-          'border text-xs rounded-md px-2 py-1 cursor-default transition-colors duration-300',
-          isFor
-            ? 'border-for text-for hover:bg-for hover:text-white'
-            : 'border-against text-against hover:bg-against hover:text-white'
-        )}
-      >
-        ↑↓ {isFor ? 'FOR' : 'AGAINST'}
-      </div>
-    </div>
+      {vaultId && counterVaultId ? (
+        <VoteButtons
+          vaultId={BigInt(vaultId)}
+          counterVaultId={BigInt(counterVaultId)}
+        />
+      ) : (
+        <div className="text-xs text-gray-500">Vault ID manquant</div>
+      )}
+    
+    </div> 
   )
 }
 

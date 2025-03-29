@@ -72,8 +72,8 @@ function Home() {
               userCounterStake={Number(claim.counter_shares ?? 0)}
               isFirst={index === 0}
               isLast={index === claims.length - 1}
-              vaultId={claim.vault_id}
-              counterVaultId={claim.counter_vault_id}
+              vaultId={claim.vault?.id}
+              counterVaultId={claim.counter_vault?.id}
             />
           
             ))
