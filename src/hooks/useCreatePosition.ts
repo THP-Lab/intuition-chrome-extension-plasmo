@@ -19,7 +19,11 @@ export function useCreatePosition() {
           address: walletClient.account.address
         })
 
+<<<<<<< HEAD
         if (balance < amount) { 
+=======
+        if (balance < amount) {
+>>>>>>> 5e66094 (add voting system)
           throw new Error("Insufficient balance to create a position")
         }
 

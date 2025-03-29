@@ -17,6 +17,8 @@ export const ClaimRowLite = ({
   isLast = true,
   vaultId,
   counterVaultId
+  vaultId,
+  counterVaultId
 }: {
   subjectLabel: string
   subjectImage?: string
@@ -30,6 +32,8 @@ export const ClaimRowLite = ({
   userCounterStake: number
   isFirst?: boolean
   isLast?: boolean
+  vaultId: string
+  counterVaultId: string
   vaultId: string
   counterVaultId: string
 }) => {
@@ -49,6 +53,7 @@ export const ClaimRowLite = ({
           { label: objectLabel, img: objectImage }]
           .map(({ label, img }, index) => (
             <div
+              key={`${label}-${index}`}
               key={`${label}-${index}`}
               className="flex items-center gap-1 border border-border rounded-full px-2 py-1 text-sm text-foreground"
             >
