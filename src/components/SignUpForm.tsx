@@ -219,7 +219,7 @@ const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
         type="submit" 
         disabled={isPending}
         variant="successOutline"
-        className="w-full" // Pour avoir un bouton qui prend toute la largeur
+        className="w-full" 
       >
         {isPending ? (
           <span className="flex items-center gap-2">
