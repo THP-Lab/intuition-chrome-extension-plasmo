@@ -1,6 +1,6 @@
 import React from "react"
 
-// Définition des styles pour l'animation
+
 const portalStyles = `
   .outer-circle {
     transform-origin: 50% 50%;
@@ -184,11 +184,11 @@ const IntuitionPortalPanel: React.FC<IntuitionPortalProps> = ({
           viewBox="0 0 100 100" 
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Cercle extérieur animé */}
+          
           <circle className="outer-circle" cx="50" cy="50" r="40" strokeWidth="2.8" fill="none" />
-          {/* Cercle intermédiaire animé */}
+          
           <circle className="middle-circle" cx="50" cy="50" r="36" strokeWidth="2.8" fill="none" />
-          {/* Cercle intérieur plein */}
+      
           <circle className="inner-circle" cx="50" cy="50" r="32" />
         </svg>
         

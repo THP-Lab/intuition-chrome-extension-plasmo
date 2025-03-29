@@ -10,13 +10,13 @@ function IndexPopup() {
     chrome.runtime.sendMessage({ type: "open_sidepanel" })
   }
 
-  const portalX = 500  // position horizontale en pixels
+  const portalX = 500 
   const portalY = 60
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="intuition-theme">
       <div className="min-w-[600px] min-h-[600px] p-4 bg-background text-foreground relative">
-        {/* Positionnement avec coordonnées exactes */}
+      
         <div style={{ position: 'absolute', left: `${portalX}px`, top: `${portalY}px` }}>
           <IntuitionPortalPanel 
             onClick={handleSidePanel}
@@ -27,7 +27,7 @@ function IndexPopup() {
         </div>
         
         <Content>
-          {/* Votre contenu principal ici */}
+          
         </Content>
       </div>
     </ThemeProvider>
