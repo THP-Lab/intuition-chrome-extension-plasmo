@@ -11,7 +11,7 @@ function Home() {
   const { theme } = useTheme()
   const [currentUrl, setCurrentUrl] = useState<string>("")
   const [walletAddress] = useStorage<string>("metamask-account")
-  useQueryClient() // Sets the client for gql queries
+  useQueryClient() 
 
   const getCurrentUrl = async () => {
     const [tab] = await chrome.tabs.query({
@@ -78,7 +78,7 @@ function Home() {
           
             ))
         ) : (
-          <p>Aucun claim trouvé pour cette URL.</p>
+          <p>No claims found for this URL.</p>
         )}
       </div>
     },
@@ -93,7 +93,7 @@ function Home() {
             );
           })):
           (
-          <p>Aucun atom trouvé pour cet URL</p>
+          <p>No atoms found for this URL.</p>
           )
 
         }
@@ -107,16 +107,15 @@ function Home() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-      <h1 className="light-sweep-heading">Bienvenue sur Intuition</h1>
+      <h1 className="light-sweep-heading">Welcome to Intuition</h1>
         <p className="text-muted-foreground">
-          Cette application vous permet de gérer vos insights et vos recherches.
+        "Intuition lets you explore, vote, and debate verifiable facts — all directly from your browser."
         </p>
       </div>
 
 
         <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Home Page - Atoms</h1>
-        {error && <p className="text-red-500">Une erreur est survenue lors de la requête pour cette page.</p>}
+        {error && <p className="text-red-500">An error occurred while requesting this page.</p>}
 
         <TabSystem tabs={tabs} />
 

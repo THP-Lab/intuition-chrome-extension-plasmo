@@ -74,7 +74,7 @@ export const ClaimRowLite = ({
           counterVaultId={BigInt(counterVaultId)}
         />
       ) : (
-        <div className="text-xs text-gray-500">Vault ID manquant</div>
+        <div className="text-xs text-gray-500">Missing ID</div>
       )}
     
     </div> 
