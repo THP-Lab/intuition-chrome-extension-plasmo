@@ -10688,6 +10688,18 @@ export type PinThingMutation = {
   pinThing?: { __typename?: "PinOutput"; uri?: string | null } | null
 }
 
+export type GetRecentAtomsQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetRecentAtomsQuery = {
+  __typename?: "query_root"
+  atoms: Array<{
+    __typename?: "atoms"
+    id: any
+    label?: string | null
+    block_timestamp: any
+  }>
+}
+
 export type GetClaimsByAddressQueryVariables = Exact<{
   address?: InputMaybe<Scalars["String"]["input"]>
 }>
@@ -13783,6 +13795,98 @@ usePinThingMutation.fetcher = (
     options
   )
 
+export const GetRecentAtomsDocument = `
+    query GetRecentAtoms {
+  atoms(order_by: {block_timestamp: desc}, limit: 10) {
+    id
+    label
+    block_timestamp
+  }
+}
+    `
+
+export const useGetRecentAtomsQuery = <
+  TData = GetRecentAtomsQuery,
+  TError = unknown
+>(
+  variables?: GetRecentAtomsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetRecentAtomsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<GetRecentAtomsQuery, TError, TData>["queryKey"]
+  }
+) => {
+  return useQuery<GetRecentAtomsQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ["GetRecentAtoms"]
+        : ["GetRecentAtoms", variables],
+    queryFn: fetcher<GetRecentAtomsQuery, GetRecentAtomsQueryVariables>(
+      GetRecentAtomsDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetRecentAtomsQuery.document = GetRecentAtomsDocument
+
+useGetRecentAtomsQuery.getKey = (variables?: GetRecentAtomsQueryVariables) =>
+  variables === undefined ? ["GetRecentAtoms"] : ["GetRecentAtoms", variables]
+
+export const useInfiniteGetRecentAtomsQuery = <
+  TData = InfiniteData<GetRecentAtomsQuery>,
+  TError = unknown
+>(
+  variables: GetRecentAtomsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetRecentAtomsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetRecentAtomsQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetRecentAtomsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ["GetRecentAtoms.infinite"]
+            : ["GetRecentAtoms.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetRecentAtomsQuery, GetRecentAtomsQueryVariables>(
+            GetRecentAtomsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetRecentAtomsQuery.getKey = (
+  variables?: GetRecentAtomsQueryVariables
+) =>
+  variables === undefined
+    ? ["GetRecentAtoms.infinite"]
+    : ["GetRecentAtoms.infinite", variables]
+
+useGetRecentAtomsQuery.fetcher = (
+  variables?: GetRecentAtomsQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetRecentAtomsQuery, GetRecentAtomsQueryVariables>(
+    GetRecentAtomsDocument,
+    variables,
+    options
+  )
+
 export const GetClaimsByAddressDocument = `
     query GetClaimsByAddress($address: String) {
   claims_aggregate(where: {account_id: {_eq: $address}}) {
@@ -13811,7 +13915,6 @@ export const GetClaimsByAddressDocument = `
           type
         }
         vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -13819,7 +13922,6 @@ export const GetClaimsByAddressDocument = `
           }
         }
         counter_vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -13994,7 +14096,6 @@ export const GetClaimsByUriDocument = `
           type
         }
         vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -14002,7 +14103,6 @@ export const GetClaimsByUriDocument = `
           }
         }
         counter_vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -16200,7 +16300,6 @@ export const GetTriplesByCreatorDocument = `
       type
     }
     vault {
-      id
       positions_aggregate {
         aggregate {
           count
@@ -16208,7 +16307,6 @@ export const GetTriplesByCreatorDocument = `
       }
     }
     counter_vault {
-      id
       positions_aggregate {
         aggregate {
           count
@@ -22013,6 +22111,57 @@ export const PinThing = {
               kind: "SelectionSet",
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "uri" } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetRecentAtoms = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetRecentAtoms" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "atoms" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "order_by" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "block_timestamp" },
+                      value: { kind: "EnumValue", value: "desc" }
+                    }
+                  ]
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "limit" },
+                value: { kind: "IntValue", value: "10" }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "block_timestamp" }
+                }
               ]
             }
           }

@@ -1,0 +1,7 @@
+query GetRecentAtoms {
+  atoms(order_by: { block_timestamp: desc }, limit: 10) {
+    id
+    label
+    block_timestamp
+  }
+}
