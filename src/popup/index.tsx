@@ -21,8 +21,6 @@ function IndexPopup() {
           <IntuitionPortalPanel 
             onClick={handleSidePanel}
             size={55}
-            runnerSize={30}
-            showRunner={true}
           />
         </div>
         
