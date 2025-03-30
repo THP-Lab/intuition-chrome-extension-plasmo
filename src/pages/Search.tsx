@@ -6,9 +6,9 @@ const Search: React.FC = () => {
   const [isSidePanel, setIsSidePanel] = useState(false)
 
   useEffect(() => {
-    // Détecte si nous sommes dans le side panel en vérifiant la largeur
+    //verify if side panel 
     const checkWidth = () => {
-      // Le side panel est généralement plus large que le popup
+      
       setIsSidePanel(window.innerWidth > 600)
     }
 

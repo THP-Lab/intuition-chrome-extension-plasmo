@@ -32,7 +32,7 @@ export function ThemeProvider({
   useEffect(() => {
     const loadTheme = async () => {
       try {
-        // Vérifier si nous sommes dans une extension Chrome
+        // Vérify if we are in a chrome extension
         if (typeof chrome !== "undefined" && chrome.storage) {
           const result = await chrome.storage.local.get(storageKey)
           const savedTheme = result[storageKey] as Theme
