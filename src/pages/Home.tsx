@@ -101,10 +101,6 @@ function Home() {
       </div>
       
     },
-    {
-      label: 'Onglet 3',
-      content: <div>Contenu de l'onglet 3</div>
-    }
   ];
 
 

@@ -6,58 +6,46 @@ export function useCreatePosition() {
   const createPosition = useCallback(
     async ({
       vaultId,
-      amount = 1_000_000_000_000n // Valeur par défaut, à ajuster si nécessaire
+      amount = 30_000_000_000_000n // ajusté pour éviter MinimumDeposit
     }: {
       vaultId: bigint
       amount?: bigint
     }) => {
       try {
-
-        await window.ethereum.request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-              chainId: "0x14a34", // 84532 en hex
-              chainName: "Base Sepolia",
-              nativeCurrency: {
-                name: "ETH",
-                symbol: "ETH",
-                decimals: 18,
-              },
-              rpcUrls: ["https://sepolia.base.org"],
-              blockExplorerUrls: ["https://sepolia.basescan.org"],
-            },
-          ],
-        })
-
-        
+        console.log("Starting createPosition")
         const { walletClient, publicClient } = await getClients()
-        const multivault = new Multivault({ walletClient, publicClient })
+        console.log("Clients fetched")
 
-        const balance = await publicClient.getBalance({
-          address: walletClient.account.address
-        })
+        const address = walletClient.account.address
+        console.log("Wallet address:", address)
 
-        if (balance < amount) { 
-          throw new Error("Insufficient balance to create a position")
+        const balance = await publicClient.getBalance({ address })
+        console.log("Wallet balance:", balance.toString())
+        console.log("Required amount:", amount.toString())
+
+        if (balance < amount) {
+          console.warn("Insufficient balance")
+          throw new Error("Insufficient balance")
         }
 
-        // Simulate the deposit to catch potential errors early
-        await multivault.contract.simulate.depositAtom([
-          walletClient.account.address,
-          vaultId
-        ], {
-          value: amount,
-          account: walletClient.account.address
-        })
+        const multivault = new Multivault({ walletClient, publicClient })
+        
+        console.log("Simulating deposit...")
+        await multivault.contract.simulate.depositTriple(
+          [address, vaultId],
+          {
+            value: amount,
+            account: address
+          }
+        )
 
-        const txHash = await multivault.contract.write.depositAtom([
-          walletClient.account.address,
-          vaultId
-        ], {
-          value: amount
-        })
+        console.log("Sending transaction...")
+        const txHash = await multivault.contract.write.depositTriple(
+          [address, vaultId],
+          { value: amount }
+        )
 
+        console.log("Transaction hash:", txHash)
         return txHash
       } catch (err: any) {
         console.error("Error creating position:", err)

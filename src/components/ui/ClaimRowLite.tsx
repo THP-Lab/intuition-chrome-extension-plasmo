@@ -34,7 +34,6 @@ export const ClaimRowLite = ({
   counterVaultId: string
 }) => {
   const isFor = userStake > 0
-  console.log("📦 Vault ID:", vaultId, "| Counter Vault ID:", counterVaultId)
   return (
     <div
     className={cn(
