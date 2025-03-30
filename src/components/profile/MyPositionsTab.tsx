@@ -60,6 +60,8 @@ const MyPositionsTab = () => {
               userCounterStake={Number(claim.counter_shares ?? 0)}
               isFirst={i === 0}
               isLast={i === filteredClaims.length - 1}
+              vaultId={triple.vault?.id}
+              counterVaultId={triple.counter_vault?.id}
             />
           )
       })}
