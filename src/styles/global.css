@@ -25,6 +25,8 @@
     --destructive-foreground: 210 40% 98%;
     --ring: 215 20.2% 65.1%;
     --radius: 0.5rem;
+    --container-background: 0.92 0.004 286.32;
+    --triple-background: 0.99 0.004 286.32;
   }
 
   :root.dark,
@@ -49,6 +51,8 @@
     --destructive-foreground: 210 40% 98%;
     --ring: 216 34% 17%;
     --radius: 0.5rem;
+    --container-background: 0.302 0.056 229.695;
+    --triple-background: 0.375 0.059 229.695;
   }
 }
 

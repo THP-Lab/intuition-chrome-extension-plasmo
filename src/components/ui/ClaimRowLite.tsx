@@ -36,11 +36,11 @@ export const ClaimRowLite = ({
   const isFor = userStake > 0
   return (
     <div
-    className={cn(
-      'flex justify-between items-center p-4 border border-border/10 gap-3 bg-[oklch(0.129_0.042_264.695)]',
-      isFirst && 'rounded-t-xl',
-      isLast && 'rounded-b-xl'
-    )}
+      className={cn(
+          'flex justify-between items-center p-4 border border-border/10 gap-3 bg-[oklch(var(--container-background))]',
+          isFirst && 'rounded-t-xl',
+          isLast && 'rounded-b-xl'
+        )}
     >
       <div className="flex gap-2 items-center flex-wrap flex-1 min-w-0">
         {[{ label: subjectLabel, img: subjectImage },
@@ -48,8 +48,8 @@ export const ClaimRowLite = ({
           { label: objectLabel, img: objectImage }]
           .map(({ label, img }, index) => (
             <div
-              key={`${label}-${index}`}
-              className="flex items-center gap-1 border border-border rounded-full px-2 py-1 text-sm text-foreground"
+            key={`${label}-${index}`}
+              className="flex items-center gap-1 border border-border rounded-full px-2 py-1 text-sm text-foreground bg-[oklch(var(--triple-background))]"
             >
               {img && (
                 <img
