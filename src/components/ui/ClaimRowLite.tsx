@@ -1,5 +1,6 @@
-import React from 'react'
-import { cn } from '~src/lib/utils'
+import React from "react"
+import { cn } from "~src/lib/utils"
+import VoteButtons from "~src/components/VoteButtons"
 
 export const ClaimRowLite = ({
   subjectLabel,
@@ -14,6 +15,8 @@ export const ClaimRowLite = ({
   userCounterStake,
   isFirst = true,
   isLast = true,
+  vaultId,
+  counterVaultId
 }: {
   subjectLabel: string
   subjectImage?: string
@@ -27,9 +30,10 @@ export const ClaimRowLite = ({
   userCounterStake: number
   isFirst?: boolean
   isLast?: boolean
+  vaultId: string
+  counterVaultId: string
 }) => {
   const isFor = userStake > 0
-
   return (
     <div
     className={cn(
@@ -38,14 +42,13 @@ export const ClaimRowLite = ({
       isLast && 'rounded-b-xl'
     )}
     >
-      {/* Triple */}
       <div className="flex gap-2 items-center flex-wrap flex-1 min-w-0">
         {[{ label: subjectLabel, img: subjectImage },
           { label: predicateLabel, img: predicateImage },
           { label: objectLabel, img: objectImage }]
           .map(({ label, img }, index) => (
             <div
-              key={index}
+              key={`${label}-${index}`}
               className="flex items-center gap-1 border border-border rounded-full px-2 py-1 text-sm text-foreground"
             >
               {img && (
@@ -60,26 +63,22 @@ export const ClaimRowLite = ({
           ))}
       </div>
 
-      {/* Votes */}
       <div className="flex gap-2 text-sm mr-4">
         <span className="text-for">↑ {numPositionsFor}</span>
         <span className="text-against">↓ {numPositionsAgainst}</span>
       </div>
 
-      {/* User position */}
-      <div
-        className={cn(
-          'border text-xs rounded-md px-2 py-1 cursor-default transition-colors duration-300',
-          isFor
-            ? 'border-for text-for hover:bg-for hover:text-white'
-            : 'border-against text-against hover:bg-against hover:text-white'
-        )}
-      >
-        ↑↓ {isFor ? 'FOR' : 'AGAINST'}
-      </div>
-    </div>
+      {vaultId && counterVaultId ? (
+        <VoteButtons
+          vaultId={BigInt(vaultId)}
+          counterVaultId={BigInt(counterVaultId)}
+        />
+      ) : (
+        <div className="text-xs text-gray-500">Missing ID</div>
+      )}
+    
+    </div> 
   )
 }
 
 export default ClaimRowLite
-

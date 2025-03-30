@@ -38,6 +38,8 @@ const YourClaimsTab = () => {
           numPositionsAgainst={numPositionsAgainst}
           isFirst={i === 0}
           isLast={i === data.triples.length - 1}
+          vaultId={triple.vault?.id}
+          counterVaultId={triple.counter_vault?.id}
         />        
         )
       })}
