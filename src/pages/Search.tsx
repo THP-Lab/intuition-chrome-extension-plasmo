@@ -24,19 +24,19 @@ const Search: React.FC = () => {
   const tabs = [
     {
       label: 'All',
-      content: <div>Contenu de All</div>
+      content: <div>Coming soon...</div>
     },
     {
       label: 'Tag',
-      content: <div>Contenu des Tags</div>
+      content: <div>Coming soon...</div>
     },
     {
       label: 'Organization',
-      content: <div>Contenu des Organizations</div>
+      content: <div>Coming soon...</div>
     },
     {
       label: 'User',
-      content: <div>Contenu des Users</div>
+      content: <div>Coming soon...</div>
     }
   ]
 
