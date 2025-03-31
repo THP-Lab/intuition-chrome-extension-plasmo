@@ -7,7 +7,6 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
   windowId = activeInfo.windowId;
 });
 
-// to receive messages from popup script
 chrome.runtime.onMessage.addListener((message, sender) => {
   (async () => {
     if (message.type === 'open_sidepanel') {

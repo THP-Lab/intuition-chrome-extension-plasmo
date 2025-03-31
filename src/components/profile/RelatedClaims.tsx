@@ -6,10 +6,9 @@ import { useStorage } from "@plasmohq/storage/hook";
 const RelatedClaims = () => {
   const [account] = useStorage<string>("metamask-account")
 
-  // Call hook even if account is null
   const { data, isLoading, isError, error } = useGetClaimsByAddressQuery(
-    { address: account ?? "" }, // Provide empty string if null
-    { enabled: !!account }      // Only run the query if account is set
+    { address: account ?? "" }, 
+    { enabled: !!account }      
   )
 
   if (!account) return <div>No connected wallet</div>
