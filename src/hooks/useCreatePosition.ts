@@ -6,7 +6,7 @@ export function useCreatePosition() {
   const createPosition = useCallback(
     async ({
       vaultId,
-      amount = 30_000_000_000_000n // ajusté pour éviter MinimumDeposit
+      amount = 30_000_000_000_000n 
     }: {
       vaultId: bigint
       amount?: bigint

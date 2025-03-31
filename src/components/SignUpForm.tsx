@@ -9,8 +9,6 @@ import { MULTIVAULT_CONTRACT_ADDRESS } from "../lib/config"
 import { useQueryClient } from "@tanstack/react-query"
 
 
-
-// Props for the reusable form component
 type Props = {
   defaultValues?: {
     name: string
@@ -20,14 +18,12 @@ type Props = {
     email?: string
     identifier: string
   }
-  onSuccess?: () => void // Optional callback after successful submit
+  onSuccess?: () => void
   onCancel?: () => void 
 }
 
-// Reusable form to create or update a person
 const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
-  // Local state to hold form inputs
- 
+
   const [address] = useStorage<string>("metamask-account")
   const [progressMessage, setProgressMessage] = useState<string | null>(null) 
   const [errorMessage, setErrorMessage] = useState<string | null>(null) 
@@ -41,7 +37,6 @@ const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
     identifier: ""
   })
 
-  // When defaultValues are provided, fill the form with them
   useEffect(() => {
     if (defaultValues) {
       setForm({
@@ -58,10 +53,9 @@ const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
 
   }, [defaultValues, address])
 
-  // GraphQL mutation to pin (register) the person
   const { mutateAsync: pinPerson, isPending } = usePinPersonMutation()
 
-  // Handle input changes and update local state
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -73,12 +67,10 @@ const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
   const queryClient = useQueryClient()
 
 
-
-  // When the user submits the form
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault() // Prevent the page from reloading
+    e.preventDefault()
 
-    // Make sure "name" is not empty (it's required)
+    
     if (!form.name.trim()) {
       alert("Name is required!")
       return
@@ -91,12 +83,10 @@ const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
 
       const { walletClient, publicClient } = await getClients()      
 
-
       
       const multivault = new Multivault({ walletClient, publicClient }) 
 
-
-      // Run the mutation with the form values
+      
       const result = await pinPerson({
     
           name: form.name,
@@ -126,15 +116,12 @@ const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
 
       await queryClient.invalidateQueries({ queryKey: ["GetPersonsByIdentifier"] })
 
-      // Reset form if we're in "create" mode (not editing)
       if (!defaultValues) {
         setForm({ name: "", description: "", image: "", url: "", email: "",  identifier: address || "" })
       }
 
-      // If parent component gave us a callback, call it
       onSuccess?.()
     } catch (err: any) {
-      // Show error in the console if something goes wrong
       console.error("Error:", err)
       setErrorMessage(err.message || "An error occurred.") 
     }

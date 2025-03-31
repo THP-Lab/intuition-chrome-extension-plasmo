@@ -1,11 +1,7 @@
 import createMetaMaskProvider from "metamask-extension-provider";
 
 export const getMetaProvider = async () => {
-  /*
-  if(typeof window !== 'undefined' && window.ethereum) {
-    return window.ethereum
-  }
-  */
+
 
   const provider = createMetaMaskProvider()
   return provider

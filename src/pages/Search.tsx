@@ -6,7 +6,6 @@ const Search: React.FC = () => {
   const [isSidePanel, setIsSidePanel] = useState(false)
 
   useEffect(() => {
-    //verify if side panel 
     const checkWidth = () => {
       
       setIsSidePanel(window.innerWidth > 600)
