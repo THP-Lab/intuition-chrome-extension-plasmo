@@ -60,18 +60,16 @@ const Search: React.FC = () => {
       if (error) return <p className="text-red-500">Error loading results.</p>
       if (!triples.length) return <p>No results found.</p>
     
-      const filteredTriples = triples.filter((triple) => {
-        if (activeTab === "Tag") {
-          return triple.predicate?.label?.toLowerCase().includes("tag")
-        }
-        if (activeTab === "Organization") {
-          return triple.predicate?.label?.toLowerCase().includes("organization")
-        }
-        if (activeTab === "User") {
-          return triple.predicate?.label?.toLowerCase().includes("follow")
-        }
-        return true // "All"
-      })
+      const filterFunctions: Record<string, (triple: Triple) => boolean> = {
+        All: () => true,
+        Tag: (triple) => triple.predicate?.label?.toLowerCase().includes("tag"),
+        Organization: (triple) =>
+          triple.predicate?.label?.toLowerCase().includes("organization"),
+        User: (triple) => triple.predicate?.label?.toLowerCase().includes("follow")
+      }
+      
+      const filteredTriples = triples.filter(filterFunctions[activeTab] || filterFunctions.All)
+      
     
       console.log("🎯 Filtered triples:", filteredTriples)
     
