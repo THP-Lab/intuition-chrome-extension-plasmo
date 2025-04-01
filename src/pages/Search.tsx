@@ -45,64 +45,67 @@ const Search: React.FC = () => {
   const triples = triplesData?.triples || []
 
   console.log("🔍 Search term:", searchTerm)
-console.log("📥 Triples data:", triplesData)
-console.log("⚠️ Error:", error)
-console.log(JSON.stringify({ search: searchTerm }))
-  const filteredTriples = triples.filter((triple) => {
-    if (activeTab === "Tag") {
-      return triple.predicate?.label?.toLowerCase().includes("tag")
-    }
-    if (activeTab === "Organization") {
-      return triple.predicate?.label?.toLowerCase().includes("organization")
-    }
-    if (activeTab === "User") {
-      return triple.predicate?.label?.toLowerCase().includes("user")
-    }
-    return true // All
-  })
+  console.log("📥 Triples data:", triplesData)
+  console.log("⚠️ Error:", error)
+  console.log(JSON.stringify({ search: searchTerm }))
 
-  const renderResults = () => {
-    if (isLoading) return <p>Loading...</p>
-    if (error) return <p className="text-red-500">Error loading results.</p>
-    if (!filteredTriples.length) return <p>No results found.</p>
 
-    return (
-      <div className="space-y-2">
-      {triples.length === 0 && <p>Aucun résultat.</p>}
-      {triples.map((triple, index) => (
-        <ClaimRowLite
-          key={triple.id}
-          subjectLabel={triple.subject?.label ?? "No subject"}
-          subjectImage={triple.subject?.image ?? undefined}
-          predicateLabel={triple.predicate?.label ?? "No predicate"}
-          predicateImage={triple.predicate?.image ?? undefined}
-          objectLabel={triple.object?.label ?? "No object"}
-          objectImage={triple.object?.image ?? undefined}
-          numPositionsFor={triple.vault?.positions?.length ?? 0}
-          numPositionsAgainst={triple.counter_vault?.positions?.length ?? 0}
-          userStake={0} // À mettre à jour plus tard si tu veux afficher la position de l'utilisateur
-          userCounterStake={0}
-          isFirst={index === 0}
-          isLast={index === triples.length - 1}
-          vaultId={triple.vault_id ? BigInt(triple.vault_id) : undefined}
-          counterVaultId={triple.counter_vault_id ? BigInt(triple.counter_vault_id) : undefined}
-        />
-      ))}
-    </div>
-    )
-  }
+
+
+    const renderResults = () => {
+      console.log("🔄 Active tab:", activeTab)
+      console.log("📦 All Triples:", triples)
+    
+      if (isLoading) return <p>Loading...</p>
+      if (error) return <p className="text-red-500">Error loading results.</p>
+      if (!triples.length) return <p>No results found.</p>
+    
+      const filteredTriples = triples.filter((triple) => {
+        if (activeTab === "Tag") {
+          return triple.predicate?.label?.toLowerCase().includes("tag")
+        }
+        if (activeTab === "Organization") {
+          return triple.predicate?.label?.toLowerCase().includes("organization")
+        }
+        if (activeTab === "User") {
+          return triple.predicate?.label?.toLowerCase().includes("follow")
+        }
+        return true // "All"
+      })
+    
+      console.log("🎯 Filtered triples:", filteredTriples)
+    
+      return (
+        <div className="space-y-2">
+          {filteredTriples.length === 0 && <p>No results found.</p>}
+          {filteredTriples.map((triple, index) => (
+            <ClaimRowLite
+              key={triple.id}
+              subjectLabel={triple.subject?.label ?? "No subject"}
+              subjectImage={triple.subject?.image ?? undefined}
+              predicateLabel={triple.predicate?.label ?? "No predicate"}
+              predicateImage={triple.predicate?.image ?? undefined}
+              objectLabel={triple.object?.label ?? "No object"}
+              objectImage={triple.object?.image ?? undefined}
+              numPositionsFor={triple.vault?.positions?.length ?? 0}
+              numPositionsAgainst={triple.counter_vault?.positions?.length ?? 0}
+              userStake={0}
+              userCounterStake={0}
+              isFirst={index === 0}
+              isLast={index === filteredTriples.length - 1}
+              vaultId={triple.vault_id ? BigInt(triple.vault_id) : undefined}
+              counterVaultId={triple.counter_vault_id ? BigInt(triple.counter_vault_id) : undefined}
+            />
+          ))}
+        </div>
+      )
+    }
+    
 
   const tabs = ["All", "Tag", "Organization", "User"].map((label) => ({
     label,
     content: (
       <div>
-        <input
-          type="text"
-          placeholder="Search triples..."
-          value={searchTerm}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="w-full p-2 mb-4 border rounded-md"
-        />
         {renderResults()}
       </div>
     )
@@ -121,7 +124,12 @@ console.log(JSON.stringify({ search: searchTerm }))
           />
         </div>
         <div className="w-full max-w-3xl">
-          <TabSystem tabs={tabs} onTabChange={setActiveTab} />
+          <TabSystem
+            tabs={tabs}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
+
         </div>
       </div>
     </div>
