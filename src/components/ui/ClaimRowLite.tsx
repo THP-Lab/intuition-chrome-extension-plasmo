@@ -58,7 +58,12 @@ export const ClaimRowLite = ({
                   className="w-5 h-5 rounded-full"
                 />
               )}
-              <span className="truncate">{label}</span>
+              <span
+                className="truncate max-w-[200px] overflow-hidden whitespace-nowrap block"
+                title={label}
+              >
+                {label}
+              </span>
             </div>
           ))}
       </div>

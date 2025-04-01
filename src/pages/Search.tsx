@@ -44,17 +44,10 @@ const Search: React.FC = () => {
   
   const triples = triplesData?.triples || []
 
-  console.log("🔍 Search term:", searchTerm)
-  console.log("📥 Triples data:", triplesData)
-  console.log("⚠️ Error:", error)
-  console.log(JSON.stringify({ search: searchTerm }))
-
-
-
 
     const renderResults = () => {
-      console.log("🔄 Active tab:", activeTab)
-      console.log("📦 All Triples:", triples)
+      console.log("Active tab:", activeTab)
+      console.log("All Triples:", triples)
     
       if (isLoading) return <p>Loading...</p>
       if (error) return <p className="text-red-500">Error loading results.</p>
@@ -71,7 +64,7 @@ const Search: React.FC = () => {
       const filteredTriples = triples.filter(filterFunctions[activeTab] || filterFunctions.All)
       
     
-      console.log("🎯 Filtered triples:", filteredTriples)
+      console.log("Filtered triples:", filteredTriples)
     
       return (
         <div className="space-y-2">
@@ -112,12 +105,12 @@ const Search: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Search</h1>
-      <div className="flex flex-col items-center space-y-8">
+      <div className="flex flex-col items-center">
         <div className="w-full max-w-3xl">
           <IntuitionSearchIcon
             onSearch={handleSearch}
             size={80}
-            position={{ x: isSidePanel ? "200px" : "0px", y: "0px" }}
+            //position={{ x: isSidePanel ? "200px" : "0px", y: "0px" }}
             className="hover:opacity-80 transition-opacity"
           />
         </div>
