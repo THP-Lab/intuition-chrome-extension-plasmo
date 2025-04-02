@@ -1,149 +1,114 @@
 import React, { useState } from 'react'
 import AtomAutocompleteInput from './AtomAutocompleteInput'
-import { Multivault } from '@0xintuition/protocol'
-import { getClients } from '../lib/viemClient'
+import { useCreateTriples } from '~src/hooks/useCreateTriples'
 
 interface Atom {
   id: string
   label: string
+  vault_id: string
 }
+
+type LabeledTriple = [Atom, Atom, Atom]
 
 const TripleForm: React.FC = () => {
   const [subject, setSubject] = useState<Atom | null>(null)
   const [predicate, setPredicate] = useState<Atom | null>(null)
   const [object, setObject] = useState<Atom | null>(null)
 
-  const [progressMessage, setProgressMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [progressMessage, setProgressMessage] = useState<string | null>(null)
+  const [labeledTriples, setLabeledTriples] = useState<LabeledTriple[]>([])
 
-  const checkVaultExists = async (
-    multivault: Multivault,
-    vaultId: bigint,
-    label: string
-  ): Promise<boolean> => {
+  const {
+    addTriple,
+    triples,
+    createTriples,
+    isLoading,
+    error,
+    txHash,
+    vaultIds
+  } = useCreateTriples()
+
+  const handleAddTriple = () => {
+    if (!subject || !predicate || !object) {
+      setErrorMessage("All three atoms must be selected.")
+      return
+    }
+
     try {
-      await multivault.getVaultState(vaultId)
-      console.log(` Vault "${label}" (${vaultId}) exists.`)
-      return true
-    } catch (err) {
-      console.warn(` Vault "${label}" (${vaultId}) does NOT exist.`)
-      return false
+      addTriple([
+        BigInt(subject.vault_id),
+        BigInt(predicate.vault_id),
+        BigInt(object.vault_id)
+      ])
+      setLabeledTriples((prev) => [...prev, [subject, predicate, object]])
+
+      setSubject(null)
+      setPredicate(null)
+      setObject(null)
+      setErrorMessage(null)
+    } catch (err: any) {
+      setErrorMessage("Invalid vault IDs or atoms.")
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setProgressMessage('Checking inputs...')
-    setErrorMessage(null)
-
+  const handleSubmitAll = async () => {
+    if (triples.length === 0) {
+      setErrorMessage("No triples to submit.")
+      return
+    }
 
     try {
-      if (!subject || !predicate || !object) {
-        throw new Error('All three atoms must be selected.')
-      }
-
-      const { walletClient, publicClient } = await getClients()
-      const multivault = new Multivault({ walletClient, publicClient })
-
-      const balance = await publicClient.getBalance({
-        address: walletClient.account.address,
-      })
-
-      const tripleCost = await multivault.getTripleCost()
-
-      if (balance < tripleCost) {
-        throw new Error(
-          `Insufficient funds: you need at least ${tripleCost} wei`,
-        )
-      }
-
-      const subjectId = BigInt(subject.vault_id)
-      const predicateId = BigInt(predicate.vault_id)
-      const objectId = BigInt(object.vault_id)
-
-
-      const [subjectExists, predicateExists, objectExists] = await Promise.all([
-        checkVaultExists(multivault, subjectId, subject.label),
-        checkVaultExists(multivault, predicateId, predicate.label),
-        checkVaultExists(multivault, objectId, object.label),
-      ])
-      
-      if (!subjectExists || !predicateExists || !objectExists) {
-        throw new Error('One or more of the selected atoms do not exist on-chain.')
-      }
-
-      
-      const existing = await multivault.getTripleIdFromAtoms(
-        subjectId,
-        predicateId,
-        objectId,
-      )
-
-      if (existing) {
-        throw new Error(
-          `Triple already exists with vault ID ${existing.toString()}`,
-        )
-      }
-
-      setProgressMessage('Creating triple...')
-
-      const { vaultId, hash } = await multivault.createTriple({
-        subjectId,
-        predicateId,
-        objectId,
-        initialDeposit: tripleCost,
-        wait: true,
-      })
-
-      setProgressMessage(
-        `Triple created with vault ID ${vaultId.toString()} (tx: ${hash})`,
-      )
+      setProgressMessage("Submitting triples...")
+      await createTriples()
+      setProgressMessage("Triples submitted successfully!")
     } catch (err: any) {
-      console.error('Error:', err)
-      if (err?.walk) {
-        const revert = err.walk((e: any) => e.name === 'ContractFunctionRevertedError')
-        if (revert) {
-          console.error('Smart contract reverted with error:', revert)
-        }
-      }
       setErrorMessage(err.message || 'An unknown error occurred.')
-    } finally {
-      setIsSubmitting(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-background rounded">
-      <AtomAutocompleteInput
-        label="Subject"
-        onSelect={(atom) => setSubject(atom)}
-      />
-      <AtomAutocompleteInput
-        label="Predicate"
-        onSelect={(atom) => setPredicate(atom)}
-      />
-      <AtomAutocompleteInput
-        label="Object"
-        onSelect={(atom) => setObject(atom)}
-      />
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full px-4 py-2 bg-background text-foreground hover:bg-accent hover:text-accent-foreground rounded"
-      >
-        {isSubmitting ? 'Creating...' : 'Create Triple'}
-      </button>
-
-      {progressMessage && (
-        <p className="text-green-600 text-sm">{progressMessage}</p>
+    <div className="space-y-6">
+      {labeledTriples.length > 0 && (
+        <div className="bg-muted p-4 rounded">
+          <h3 className="font-semibold mb-2">Triples en attente :</h3>
+          <ul className="list-disc pl-6 space-y-1">
+            {labeledTriples.map(([s, p, o], i) => (
+              <li key={i}>{s.label} → {p.label} → {o.label}</li>
+            ))}
+          </ul>
+        </div>
       )}
-      {errorMessage && (
-        <p className="text-red-600 text-sm">{errorMessage}</p>
-      )}
-    </form>
+
+      <form className="space-y-4 p-4 bg-background rounded" onSubmit={(e) => e.preventDefault()}>
+        <AtomAutocompleteInput label="Subject" onSelect={setSubject} selected={subject} />
+        <AtomAutocompleteInput label="Predicate" onSelect={setPredicate} selected={predicate} />
+        <AtomAutocompleteInput label="Object" onSelect={setObject} selected={object} />
+
+        <div className="flex gap-4">
+          <button
+            type="button"
+            onClick={handleAddTriple}
+            className="px-4 py-2 bg-accent hover:bg-accent-foreground text-white rounded"
+          >
+            Add</button>
+
+          <button
+            type="button"
+            onClick={handleSubmitAll}
+            disabled={isLoading}
+            className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded"
+          >
+            {isLoading ? "Send..." : "Submit all triples"}
+          </button>
+        </div>
+
+        {txHash && <p className="text-green-600 text-sm">Transaction hash: {txHash}</p>}
+        {vaultIds && <p className="text-green-600 text-sm">Vault IDs: {vaultIds.join(', ')}</p>}
+        {progressMessage && <p className="text-green-600 text-sm">{progressMessage}</p>}
+        {errorMessage || error ? <p className="text-red-600 text-sm">{errorMessage || error}</p> : null}
+      </form>
+    </div>
   )
 }
 

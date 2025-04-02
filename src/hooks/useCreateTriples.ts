@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { Multivault } from '@0xintuition/protocol'
 import { getClients } from '../lib/viemClient'
 
+
 type TripleInput = [bigint, bigint, bigint]
 
 export const useCreateTriples = () => {
@@ -10,8 +11,17 @@ export const useCreateTriples = () => {
   const [error, setError] = useState<string | null>(null)
   const [receipt, setReceipt] = useState<any>(null)
   const [vaultIds, setVaultIds] = useState<bigint[] | null>(null)
+  const [triples, setTriples] = useState<TripleInput[]>([])
 
-  const createTriples = useCallback(async (triples: TripleInput[]) => {
+  const addTriple = (triple: TripleInput) => {
+    setTriples((prev) => [...prev, triple])
+  }
+
+  const clearTriples = () => {
+    setTriples([])
+  }
+
+  const createTriples = useCallback(async () => {
     setIsLoading(true)
     setError(null)
     setTxHash(null)
@@ -25,14 +35,25 @@ export const useCreateTriples = () => {
       const costPerTriple = await multivault.getTripleCost()
       const totalCost = costPerTriple * BigInt(triples.length)
 
-      const triplesFormatted = triples.map(([s, p, o]) => ({
-        subjectId: s,
-        predicateId: p,
-        objectId: o,
-      }))
+      const subjectIds = triples.map(([s]) => s)
+      const predicateIds = triples.map(([, p]) => p)
+      const objectIds = triples.map(([, , o]) => o)
 
-      const { hash, vaultIds, events } = await multivault.batchCreateTriple(triplesFormatted)
 
+      console.log(" subjects:", subjectIds)
+      console.log(" predicates:", predicateIds)
+      console.log(" objects:", objectIds)
+
+
+      const { hash, vaultIds, events } = await multivault.contract.write.batchCreateTriple(
+        [subjectIds, predicateIds, objectIds],
+        {
+          value: totalCost,
+          account: walletClient.account.address,
+        }
+      )
+
+      
       setTxHash(hash)
       setVaultIds(vaultIds)
       setReceipt(events)
@@ -45,10 +66,13 @@ export const useCreateTriples = () => {
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [triples])
 
   return {
+    addTriple,
+    clearTriples,
     createTriples,
+    triples,
     isLoading,
     error,
     txHash,
