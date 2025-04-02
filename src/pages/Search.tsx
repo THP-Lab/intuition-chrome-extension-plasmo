@@ -44,17 +44,10 @@ const Search: React.FC = () => {
   
   const triples = triplesData?.triples || []
 
-  console.log("🔍 Search term:", searchTerm)
-  console.log("📥 Triples data:", triplesData)
-  console.log("⚠️ Error:", error)
-  console.log(JSON.stringify({ search: searchTerm }))
-
-
-
 
     const renderResults = () => {
-      console.log("🔄 Active tab:", activeTab)
-      console.log("📦 All Triples:", triples)
+      console.log("Active tab:", activeTab)
+      console.log("All Triples:", triples)
     
       if (isLoading) return <p>Loading...</p>
       if (error) return <p className="text-red-500">Error loading results.</p>
@@ -71,7 +64,7 @@ const Search: React.FC = () => {
       const filteredTriples = triples.filter(filterFunctions[activeTab] || filterFunctions.All)
       
     
-      console.log("🎯 Filtered triples:", filteredTriples)
+      console.log("Filtered triples:", filteredTriples)
     
       return (
         <div className="space-y-2">

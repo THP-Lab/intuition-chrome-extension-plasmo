@@ -11,6 +11,8 @@ function Home() {
   const { theme } = useTheme()
   const [currentUrl, setCurrentUrl] = useState<string>("")
   const [walletAddress] = useStorage<string>("metamask-account")
+  const [activeTab, setActiveTab] = useState("Claims")
+
   useQueryClient() 
 
   const getCurrentUrl = async () => {
@@ -119,7 +121,11 @@ function Home() {
         <div className="p-4">
         {error && <p className="text-red-500">An error occurred while requesting this page.</p>}
 
-        <TabSystem tabs={tabs} />
+        <TabSystem
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
 
 
         
