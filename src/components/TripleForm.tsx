@@ -52,6 +52,10 @@ const TripleForm: React.FC = () => {
     }
   }
 
+  const handleRemoveTriple = (index: number) => {
+    setLabeledTriples((prev) => prev.filter((_, i) => i !== index))
+  }
+
   const handleSubmitAll = async () => {
     if (triples.length === 0) {
       setErrorMessage("No triples to submit.")
@@ -74,7 +78,15 @@ const TripleForm: React.FC = () => {
           <h3 className="font-semibold mb-2">Triples en attente :</h3>
           <ul className="list-disc pl-6 space-y-1">
             {labeledTriples.map(([s, p, o], i) => (
-              <li key={i}>{s.label} → {p.label} → {o.label}</li>
+              <li key={i} className="flex justify-between items-center">
+              <span>{s.label} → {p.label} → {o.label}</span>
+              <button
+                onClick={() => handleRemoveTriple(i)}
+                className="ml-4 text-red-500 hover:text-red-700 text-sm"
+              >
+                ✕
+              </button>
+              </li>
             ))}
           </ul>
         </div>
