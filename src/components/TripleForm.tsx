@@ -131,7 +131,7 @@ const TripleForm: React.FC = () => {
           <button
             type="button"
             onClick={handleAddTriple}
-            className="px-4 py-2 bg-accent hover:bg-accent-foreground text-white rounded"
+            className="px-4 py-2 bg-accent hover:bg-accent-foreground rounded"
           >
             Add</button>
 
@@ -139,7 +139,7 @@ const TripleForm: React.FC = () => {
             type="button"
             onClick={handleSubmitAll}
             disabled={isLoading}
-            className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded"
+            className="px-4 py-2 bg-primary hover:bg-primary/80 rounded"
           >
             {isLoading ? "Send..." : triples.length > 1 ? "Submit all triples" : "Submit"}
           </button>
