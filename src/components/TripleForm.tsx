@@ -21,6 +21,7 @@ const TripleForm: React.FC = () => {
 
   const {
     addTriple,
+    clearTriples,
     removeTriple,
     triples,
     createTriples,
@@ -60,18 +61,45 @@ const TripleForm: React.FC = () => {
 
   const handleSubmitAll = async () => {
     if (triples.length === 0) {
-      setErrorMessage("No triples to submit.")
-      return
-    }
-
-    try {
-      setProgressMessage("Submitting triples...")
-      await createTriples()
-      setProgressMessage("Triples submitted successfully!")
-    } catch (err: any) {
-      setErrorMessage(err.message || 'An unknown error occurred.')
+      
+      if (!subject || !predicate || !object) {
+        setErrorMessage("All three atoms must be selected.")
+        return
+      }
+  
+      try {
+        setProgressMessage("Submitting triple...")
+  
+        const oneTriple: TripleInput = [
+          BigInt(subject.vault_id),
+          BigInt(predicate.vault_id),
+          BigInt(object.vault_id),
+        ]
+  
+        addTriple(oneTriple)
+        await createTriples()
+  
+        setProgressMessage("Triple submitted successfully!")
+        setSubject(null)
+        setPredicate(null)
+        setObject(null)
+        clearTriples()
+      } catch (err: any) {
+        setErrorMessage(err.message || "An unknown error occurred.")
+      }
+    } else {
+      
+      try {
+        setProgressMessage("Submitting all triples...")
+        await createTriples()
+        setProgressMessage("Triples submitted successfully!")
+        clearTriples()
+      } catch (err: any) {
+        setErrorMessage(err.message || "An unknown error occurred.")
+      }
     }
   }
+  
 
   return (
     <div className="space-y-6">
@@ -113,7 +141,7 @@ const TripleForm: React.FC = () => {
             disabled={isLoading}
             className="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded"
           >
-            {isLoading ? "Send..." : "Submit all triples"}
+            {isLoading ? "Send..." : triples.length > 1 ? "Submit all triples" : "Submit"}
           </button>
         </div>
 

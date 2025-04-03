@@ -11,7 +11,7 @@ interface Atom {
 
 interface AtomAutocompleteInputProps {
   label: string;
-  onSelect: (atom: Atom) => void; 
+  onSelect: (atom: Atom) => void;
 }
 
 const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, onSelect }) => {
