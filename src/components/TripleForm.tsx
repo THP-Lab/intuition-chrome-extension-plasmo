@@ -21,6 +21,7 @@ const TripleForm: React.FC = () => {
 
   const {
     addTriple,
+    removeTriple,
     triples,
     createTriples,
     isLoading,
@@ -54,6 +55,7 @@ const TripleForm: React.FC = () => {
 
   const handleRemoveTriple = (index: number) => {
     setLabeledTriples((prev) => prev.filter((_, i) => i !== index))
+    removeTriple(index)
   }
 
   const handleSubmitAll = async () => {

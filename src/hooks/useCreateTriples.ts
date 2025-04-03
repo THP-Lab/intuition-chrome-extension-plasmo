@@ -17,6 +17,10 @@ export const useCreateTriples = () => {
     setTriples((prev) => [...prev, triple])
   }
 
+  const removeTriple = (index: number) => {
+    setTriples((prev) => prev.filter((_, i) => i !== index))
+  }
+
   const clearTriples = () => {
     setTriples([])
   }
@@ -70,6 +74,7 @@ export const useCreateTriples = () => {
 
   return {
     addTriple,
+    removeTriple,
     clearTriples,
     createTriples,
     triples,
