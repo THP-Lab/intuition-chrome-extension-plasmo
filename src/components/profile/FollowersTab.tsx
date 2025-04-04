@@ -25,7 +25,7 @@ const FollowersTab = () => {
       {followers.map((follower, index) => (
         <div
           key={index}
-          className="flex items-center space-x-3 border p-2 rounded shadow-sm"
+          className="flex items-center space-x-3 border p-2 rounded shadow-xs"
         >
           <img
             src={

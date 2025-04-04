@@ -4,7 +4,7 @@ type Props = {
   
   const AtomProfileSection = ({ person }: Props) => {
     return (
-      <section className="border rounded-lg p-4 bg-background text-foreground shadow-sm hover:shadow-md transition-shadow">
+      <section className="border rounded-lg p-4 bg-background text-foreground shadow-xs hover:shadow-md transition-shadow">
         <h2 className="text-xl font-semibold mb-4">Your Atom Profile</h2>
         <div className="space-y-2">
           <p><strong>Name:</strong> {person?.name || "Unnamed"}</p>

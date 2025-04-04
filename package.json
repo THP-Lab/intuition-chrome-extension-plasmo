@@ -8,7 +8,8 @@
     "dev": "plasmo dev",
     "build": "plasmo build",
     "package": "plasmo package",
-    "graphql:build": " cd src/graphql && NODE_ENV=production graphql-codegen --config codegen.ts"
+    "graphql:build": " cd src/graphql && NODE_ENV=production graphql-codegen --config codegen.ts",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@0xintuition/1ui": "^0.3.6",
@@ -46,17 +47,20 @@
     "@graphql-typed-document-node/core": "^3.2.0",
     "@ianvs/prettier-plugin-sort-imports": "4.1.1",
     "@parcel/watcher": "^2.4.1",
+    "@plasmohq/parcel-resolver": "^0.14.1",
+    "@tailwindcss/postcss": "^4.1.1",
     "@types/chrome": "0.0.258",
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
-    "autoprefixer": "10.4.16",
     "concurrently": "^8.2.2",
+    "patch-package": "^8.0.0",
     "plasmo": "0.90.3",
     "postcss": "8.4.31",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "3.2.4",
     "svgo": "^3.0.2",
-    "tailwindcss": "3.3.0",
+    "tailwindcss": "4.1.1",
     "tsup": "^6.7.0",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
@@ -86,11 +90,17 @@
     "onlyBuiltDependencies": [
       "@parcel/watcher",
       "@swc/core",
+      "bufferutil",
       "esbuild",
       "lmdb",
       "msgpackr-extract",
-      "sharp"
-    ]
+      "postinstall-postinstall",
+      "sharp",
+      "utf-8-validate"
+    ],
+    "patchedDependencies": {
+      "jiti@2.4.2": "patches/jiti+2.4.2.patch"
+    }
   },
   "packageManager": "pnpm@10.5.0+sha512.11106a5916c7406fe4b8cb8e3067974b8728f47308a4f5ac5e850304afa6f57e2847d7950dfe78877d8d36bfb401d381c4215db3a4c3547ffa63c14333a6fa51"
 }

@@ -14,7 +14,7 @@ const AccountSection = ({ account, person, editMode, setEditMode }: Props) => {
     <section className={cn(
       "border rounded-lg p-4",
       "bg-background text-foreground",
-      "shadow-sm hover:shadow-md transition-shadow"
+      "shadow-xs hover:shadow-md transition-shadow"
     )}>
       <h2 className="text-xl font-semibold mb-4">Account Info</h2>
 
