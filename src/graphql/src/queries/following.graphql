@@ -43,7 +43,26 @@ query getFollowingsFromAddress($address: String!) {
                 }
               }
             }
-          } 
+          }
+          atom {
+            id
+            data
+            label
+            type
+            image
+            emoji
+            vault {
+              position_count
+            }
+            value {
+              thing {
+                image
+                name
+                url
+                description
+              }
+            }
+          }
         }
       }
     }

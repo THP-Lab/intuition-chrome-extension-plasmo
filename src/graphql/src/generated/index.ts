@@ -10996,6 +10996,26 @@ export type GetFollowingsFromAddressQuery = {
               }
             } | null
           } | null
+          atom?: {
+            __typename?: "atoms"
+            id: any
+            data?: string | null
+            label?: string | null
+            type: any
+            image?: string | null
+            emoji?: string | null
+            vault?: { __typename?: "vaults"; position_count: number } | null
+            value?: {
+              __typename?: "atom_values"
+              thing?: {
+                __typename?: "things"
+                image?: string | null
+                name?: string | null
+                url?: string | null
+                description?: string | null
+              } | null
+            } | null
+          } | null
         }
       }>
     }
@@ -13811,7 +13831,6 @@ export const GetClaimsByAddressDocument = `
           type
         }
         vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -13819,7 +13838,6 @@ export const GetClaimsByAddressDocument = `
           }
         }
         counter_vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -13994,7 +14012,6 @@ export const GetClaimsByUriDocument = `
           type
         }
         vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -14002,7 +14019,6 @@ export const GetClaimsByUriDocument = `
           }
         }
         counter_vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -14368,6 +14384,25 @@ export const GetFollowingsFromAddressDocument = `
                 aggregate {
                   count
                 }
+              }
+            }
+          }
+          atom {
+            id
+            data
+            label
+            type
+            image
+            emoji
+            vault {
+              position_count
+            }
+            value {
+              thing {
+                image
+                name
+                url
+                description
               }
             }
           }
@@ -16200,7 +16235,6 @@ export const GetTriplesByCreatorDocument = `
       type
     }
     vault {
-      id
       positions_aggregate {
         aggregate {
           count
@@ -16208,7 +16242,6 @@ export const GetTriplesByCreatorDocument = `
       }
     }
     counter_vault {
-      id
       positions_aggregate {
         aggregate {
           count
@@ -23616,6 +23649,110 @@ export const GetFollowingsFromAddress = {
                                                             }
                                                           }
                                                         ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "atom" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "id" }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "data" }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "label" }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "type" }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "image" }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "emoji" }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "vault"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "position_count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "value"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "thing"
+                                                },
+                                                selectionSet: {
+                                                  kind: "SelectionSet",
+                                                  selections: [
+                                                    {
+                                                      kind: "Field",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "image"
+                                                      }
+                                                    },
+                                                    {
+                                                      kind: "Field",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "name"
+                                                      }
+                                                    },
+                                                    {
+                                                      kind: "Field",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "url"
+                                                      }
+                                                    },
+                                                    {
+                                                      kind: "Field",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "description"
                                                       }
                                                     }
                                                   ]

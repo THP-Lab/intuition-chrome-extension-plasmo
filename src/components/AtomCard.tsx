@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from "react-router-dom"
 import { UserRound } from 'lucide-react';
 
@@ -10,7 +10,7 @@ interface Atom {
   label: string;
   image?: string;
   emoji?: string;
-  value: {
+  value?: {
     thing?: {
       name?: string;
       image?: string;
@@ -54,33 +54,32 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
         <p className="text-sm"><UserRound /> {atom.vault.position_count}</p>
         </div>
       </div>
-
-
-      {atom.value.thing && (
+       {atom.value?.thing && (
         <div className="mt-2">
-          {atom.value.thing.name && (
+          {atom.value?.thing.name && (
             <h3 className="text-lg font-semibold">
               {atom.value.thing.name}
             </h3>
               
           )}
-          {atom.value.thing.description && (
+          {atom.value?.thing.description && (
             <p className="text-sm text-gray-600">
               {atom.value.thing.description}
             </p>
           )}
-          {atom.value.thing.url && (
+          {atom.value?.thing.url && (
             <Link
-            to={atom.value.thing.url}
+            to={atom.value?.thing.url}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-500 underline text-sm"
             >
-            {atom.value.thing.url}
+            {atom.value?.thing.url}
             </Link>
           )}
         </div>
       )}
+      
 
     </div>
   );

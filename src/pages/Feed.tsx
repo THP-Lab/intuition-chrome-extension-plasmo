@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import AtomCard from "~src/components/AtomCard"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 
 import { useGetFollowingsFromAddressQuery } from "~src/graphql/src"
@@ -13,21 +14,27 @@ function Feed() {
 
   const default_img = "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000"
   if (!accountId) return <p>Connect your wallet</p>
-  if (isLoading) return <p>Loading who you follow...</p>
-  if (isError) return <p>Error loading followings</p>
+  if (isLoading) return <p>Loading your feed...</p>
+  if (isError) return <p>Error loading your feed</p>
 
   return (
     <div>
-      <h1> Feed page </h1>
+      <h1 className="text-2xl font-bold mb-4">Feed</h1>
       {followings.map((following) => {
-        const positions = following.positions_aggregate.nodes.filter((position) => position.vault.triple !== null)
+        const positions = following.positions_aggregate.nodes
         return (
           <>
-         <img src={following.image ?? default_img} className="w-8 h-8 rounded-full mt-1"/><p>{following.label}</p> 
-          {positions.length === 0 ? <p>No recent activity</p> : positions.map((position, index) => (
+         <img src={following.image ?? default_img} alt={following.label} className="w-8 h-8 rounded-full mt-1"/><p>{following.label}</p> 
+          {positions.length === 0 ? 
+              <p className="text-muted-foreground">No recent activity...</p> 
+              :
+              positions.map((position) => 
+               { 
+                  return(
           <>
-            <p>{position.shares} ETH</p>
-            <p>On :</p>
+
+            <p>{position.shares} ETH on :</p>
+            {position.vault.triple ?
             <ClaimRowLite
               key={position.vault.triple?.id} 
               subjectLabel={position.vault.triple?.subject.label ?? "No subject"}
@@ -40,11 +47,18 @@ function Feed() {
               numPositionsAgainst={position.vault.triple?.counter_vault?.positions_aggregate.aggregate?.count ?? 0}
               userStake={Number(0)}
               userCounterStake={Number(0)}
-              isFirst={index === 0}
-              isLast={index === positions.length - 1}
+              isFirst={true}
+              isLast={true}
+              vaultId={""}
+              counterVaultId={""}
             />
+            :
+            <AtomCard atom={position.vault.atom} />
+
+            }
+            
           </>
-          ))}
+          )})}
           </>
         )
       })}
