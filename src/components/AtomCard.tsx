@@ -69,6 +69,16 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
         <div className="ml-auto" title={`${atom.vault.position_count} users staked on this atom`}>
         <p className="text-sm"><UserRound /> {atom.vault.position_count}</p>
         </div>
+              <div className="mt-4 flex flex-col items-start">
+      <button
+          onClick={handleVote}
+          disabled={isVoting}
+          className="text-for border border-for rounded-md px-2 py-1 hover:bg-for hover:text-white ml-1"
+        >
+          ↑
+        </button>
+        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      </div>
       </div>
 
 
@@ -98,16 +108,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
         </div>
       )}
       
-      <div className="mt-4 flex flex-col items-start">
-        <button
-          onClick={handleVote}
-          disabled={isVoting}
-          className="px-3 py-1 bg-primary text-white rounded hover:bg-primary/80 disabled:opacity-50"
-        >
-          {isVoting ? 'Voting...' : 'Vote for this atom'}
-        </button>
-        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-      </div>
+
     </div>
   );
 };
