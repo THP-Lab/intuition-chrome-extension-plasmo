@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom"
 import { UserRound } from 'lucide-react';
+import { useAtomPosition } from "../hooks/useAtomPosition"
 
 
 interface Atom {
@@ -29,7 +30,7 @@ interface Atom {
       position_count?: string;
       positions?: string;
   }
-
+  vault_id: string;
 }
 
 interface AtomCardProps {
@@ -37,6 +38,21 @@ interface AtomCardProps {
 }
 
 export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
+  const { atomPosition } = useAtomPosition();
+  const [error, setError] = useState<string | null>(null);
+  const [isVoting, setIsVoting] = useState(false);
+
+  const handleVote = async () => {
+    setError(null);
+    setIsVoting(true);
+    try {
+      await atomPosition({ vaultId: BigInt(atom.id) })
+    } catch (err: any) {
+      setError(err.message || 'Failed to vote');
+    } finally {
+      setIsVoting(false);
+    }
+  }
   return (
     <div className="border rounded p-4 my-2">
       <div className="flex items-center mb-2">
@@ -81,7 +97,17 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
           )}
         </div>
       )}
-
+      
+      <div className="mt-4 flex flex-col items-start">
+        <button
+          onClick={handleVote}
+          disabled={isVoting}
+          className="px-3 py-1 bg-primary text-white rounded hover:bg-primary/80 disabled:opacity-50"
+        >
+          {isVoting ? 'Voting...' : 'Vote for this atom'}
+        </button>
+        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      </div>
     </div>
   );
 };

@@ -2,8 +2,8 @@ import { useCallback } from "react"
 import { Multivault } from "@0xintuition/protocol"
 import { getClients } from "~src/lib/viemClient"
 
-export function useCreateAtomPosition() {
-  const createAtomPosition = useCallback(
+export function useAtomPosition() {
+  const atomPosition = useCallback(
     async ({
       vaultId,
       amount = 30_000_000_000_000n
@@ -43,5 +43,5 @@ export function useCreateAtomPosition() {
     []
   )
 
-  return { createAtomPosition }
+  return { atomPosition }
 }
