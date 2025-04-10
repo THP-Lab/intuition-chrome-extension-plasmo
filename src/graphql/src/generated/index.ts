@@ -10753,6 +10753,7 @@ export type GetClaimsByAddressQuery = {
 
 export type GetClaimsByUriQueryVariables = Exact<{
   uri?: InputMaybe<Scalars["String"]["input"]>
+  address?: InputMaybe<Scalars["String"]["input"]>
 }>
 
 export type GetClaimsByUriQuery = {
@@ -10794,6 +10795,7 @@ export type GetClaimsByUriQuery = {
         }
         vault: {
           __typename?: "vaults"
+          id: any
           positions_aggregate: {
             __typename?: "positions_aggregate"
             aggregate?: {
@@ -10801,9 +10803,11 @@ export type GetClaimsByUriQuery = {
               count: number
             } | null
           }
+          positions: Array<{ __typename?: "positions"; shares: any }>
         }
         counter_vault: {
           __typename?: "vaults"
+          id: any
           positions_aggregate: {
             __typename?: "positions_aggregate"
             aggregate?: {
@@ -10811,6 +10815,7 @@ export type GetClaimsByUriQuery = {
               count: number
             } | null
           }
+          positions: Array<{ __typename?: "positions"; shares: any }>
         }
       }>
     }
@@ -10846,6 +10851,7 @@ export type GetClaimsByUriQuery = {
         }
         vault: {
           __typename?: "vaults"
+          id: any
           positions_aggregate: {
             __typename?: "positions_aggregate"
             aggregate?: {
@@ -10853,9 +10859,11 @@ export type GetClaimsByUriQuery = {
               count: number
             } | null
           }
+          positions: Array<{ __typename?: "positions"; shares: any }>
         }
         counter_vault: {
           __typename?: "vaults"
+          id: any
           positions_aggregate: {
             __typename?: "positions_aggregate"
             aggregate?: {
@@ -10863,6 +10871,7 @@ export type GetClaimsByUriQuery = {
               count: number
             } | null
           }
+          positions: Array<{ __typename?: "positions"; shares: any }>
         }
       }>
     }
@@ -13811,7 +13820,6 @@ export const GetClaimsByAddressDocument = `
           type
         }
         vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -13819,7 +13827,6 @@ export const GetClaimsByAddressDocument = `
           }
         }
         counter_vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -13928,7 +13935,7 @@ useGetClaimsByAddressQuery.fetcher = (
   )
 
 export const GetClaimsByUriDocument = `
-    query GetClaimsByUri($uri: String) {
+    query GetClaimsByUri($uri: String, $address: String) {
   atoms(
     where: {_or: [{data: {_eq: $uri}}, {value: {thing: {url: {_eq: $uri}}}}, {value: {person: {url: {_eq: $uri}}}}, {value: {organization: {url: {_eq: $uri}}}}, {value: {book: {url: {_eq: $uri}}}}]}
   ) {
@@ -13954,17 +13961,25 @@ export const GetClaimsByUriDocument = `
           type
         }
         vault {
+          id
           positions_aggregate {
             aggregate {
               count
             }
           }
+          positions(where: {account_id: {_eq: $address}}) {
+            shares
+          }
         }
         counter_vault {
+          id
           positions_aggregate {
             aggregate {
               count
             }
+          }
+          positions(where: {account_id: {_eq: $address}}) {
+            shares
           }
         }
         triple_id
@@ -14000,6 +14015,9 @@ export const GetClaimsByUriDocument = `
               count
             }
           }
+          positions(where: {account_id: {_eq: $address}}) {
+            shares
+          }
         }
         counter_vault {
           id
@@ -14007,6 +14025,9 @@ export const GetClaimsByUriDocument = `
             aggregate {
               count
             }
+          }
+          positions(where: {account_id: {_eq: $address}}) {
+            shares
           }
         }
         triple_id
@@ -16200,7 +16221,6 @@ export const GetTriplesByCreatorDocument = `
       type
     }
     vault {
-      id
       positions_aggregate {
         aggregate {
           count
@@ -16208,7 +16228,6 @@ export const GetTriplesByCreatorDocument = `
       }
     }
     counter_vault {
-      id
       positions_aggregate {
         aggregate {
           count
@@ -22300,6 +22319,14 @@ export const GetClaimsByUri = {
           kind: "VariableDefinition",
           variable: { kind: "Variable", name: { kind: "Name", value: "uri" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
         }
       ],
       selectionSet: {
@@ -22652,6 +22679,10 @@ export const GetClaimsByUri = {
                                 selections: [
                                   {
                                     kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
                                     name: {
                                       kind: "Name",
                                       value: "positions_aggregate"
@@ -22680,6 +22711,59 @@ export const GetClaimsByUri = {
                                         }
                                       ]
                                     }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "positions" },
+                                    arguments: [
+                                      {
+                                        kind: "Argument",
+                                        name: { kind: "Name", value: "where" },
+                                        value: {
+                                          kind: "ObjectValue",
+                                          fields: [
+                                            {
+                                              kind: "ObjectField",
+                                              name: {
+                                                kind: "Name",
+                                                value: "account_id"
+                                              },
+                                              value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                  {
+                                                    kind: "ObjectField",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "_eq"
+                                                    },
+                                                    value: {
+                                                      kind: "Variable",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "address"
+                                                      }
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ],
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "shares"
+                                          }
+                                        }
+                                      ]
+                                    }
                                   }
                                 ]
                               }
@@ -22690,6 +22774,10 @@ export const GetClaimsByUri = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
                                   {
                                     kind: "Field",
                                     name: {
@@ -22716,6 +22804,59 @@ export const GetClaimsByUri = {
                                                 }
                                               }
                                             ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "positions" },
+                                    arguments: [
+                                      {
+                                        kind: "Argument",
+                                        name: { kind: "Name", value: "where" },
+                                        value: {
+                                          kind: "ObjectValue",
+                                          fields: [
+                                            {
+                                              kind: "ObjectField",
+                                              name: {
+                                                kind: "Name",
+                                                value: "account_id"
+                                              },
+                                              value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                  {
+                                                    kind: "ObjectField",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "_eq"
+                                                    },
+                                                    value: {
+                                                      kind: "Variable",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "address"
+                                                      }
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ],
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "shares"
                                           }
                                         }
                                       ]
@@ -22842,6 +22983,10 @@ export const GetClaimsByUri = {
                                 selections: [
                                   {
                                     kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
                                     name: {
                                       kind: "Name",
                                       value: "positions_aggregate"
@@ -22870,6 +23015,59 @@ export const GetClaimsByUri = {
                                         }
                                       ]
                                     }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "positions" },
+                                    arguments: [
+                                      {
+                                        kind: "Argument",
+                                        name: { kind: "Name", value: "where" },
+                                        value: {
+                                          kind: "ObjectValue",
+                                          fields: [
+                                            {
+                                              kind: "ObjectField",
+                                              name: {
+                                                kind: "Name",
+                                                value: "account_id"
+                                              },
+                                              value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                  {
+                                                    kind: "ObjectField",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "_eq"
+                                                    },
+                                                    value: {
+                                                      kind: "Variable",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "address"
+                                                      }
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ],
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "shares"
+                                          }
+                                        }
+                                      ]
+                                    }
                                   }
                                 ]
                               }
@@ -22880,6 +23078,10 @@ export const GetClaimsByUri = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
                                   {
                                     kind: "Field",
                                     name: {
@@ -22906,6 +23108,59 @@ export const GetClaimsByUri = {
                                                 }
                                               }
                                             ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "positions" },
+                                    arguments: [
+                                      {
+                                        kind: "Argument",
+                                        name: { kind: "Name", value: "where" },
+                                        value: {
+                                          kind: "ObjectValue",
+                                          fields: [
+                                            {
+                                              kind: "ObjectField",
+                                              name: {
+                                                kind: "Name",
+                                                value: "account_id"
+                                              },
+                                              value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                  {
+                                                    kind: "ObjectField",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "_eq"
+                                                    },
+                                                    value: {
+                                                      kind: "Variable",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "address"
+                                                      }
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ],
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "shares"
                                           }
                                         }
                                       ]

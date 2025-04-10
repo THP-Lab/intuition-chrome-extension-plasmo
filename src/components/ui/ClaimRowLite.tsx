@@ -33,7 +33,6 @@ export const ClaimRowLite = ({
   vaultId: string
   counterVaultId: string
 }) => {
-  const isFor = userStake > 0
   return (
     <div
       className={cn(
@@ -47,8 +46,7 @@ export const ClaimRowLite = ({
           { label: predicateLabel, img: predicateImage },
           { label: objectLabel, img: objectImage }]
           .map(({ label, img }, index) => (
-            <div
-            key={`${label}-${index}`}
+            <div key={`${index}-${label}`}
               className="flex items-center gap-1 border border-border rounded-full px-2 py-1 text-sm text-foreground bg-[oklch(var(--triple-background))]"
             >
               {img && (
@@ -74,10 +72,17 @@ export const ClaimRowLite = ({
       </div>
 
       {vaultId && counterVaultId ? (
-        <VoteButtons
-          vaultId={BigInt(vaultId)}
-          counterVaultId={BigInt(counterVaultId)}
-        />
+        <div className="flex flex-col items-end gap-1">
+          <VoteButtons
+            vaultId={BigInt(vaultId)}
+            counterVaultId={BigInt(counterVaultId)}
+          />
+          {(userStake) > 0 ? (
+            <div className="text-sm text-green-600">You have voting FOR</div>
+          ) : (userCounterStake) > 0 ? (
+            <div className="text-sm text-red-600">You have voting AGAINST</div>
+          ) : null}
+        </div>
       ) : (
         <div className="text-xs text-gray-500">Missing ID</div>
       )}

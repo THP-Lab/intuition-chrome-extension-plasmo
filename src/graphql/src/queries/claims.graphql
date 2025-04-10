@@ -48,7 +48,7 @@ query GetClaimsByAddress($address: String) {
   }
 }
 
-query GetClaimsByUri($uri: String) {
+query GetClaimsByUri($uri: String, $address: String) {
   atoms(
     where: {
       _or: [
@@ -82,17 +82,25 @@ query GetClaimsByUri($uri: String) {
           type
         }
         vault {
+          id
           positions_aggregate {
             aggregate {
               count
             }
           }
+          positions(where: { account_id: { _eq: $address } }) {
+            shares
+          }
         }
         counter_vault {
+          id
           positions_aggregate {
             aggregate {
               count
             }
+          }
+          positions(where: { account_id: { _eq: $address } }) {
+            shares
           }
         }
         triple_id
@@ -122,17 +130,25 @@ query GetClaimsByUri($uri: String) {
           type
         }
         vault {
+          id
           positions_aggregate {
             aggregate {
               count
             }
           }
+          positions(where: { account_id: { _eq: $address } }) {
+            shares
+          }
         }
         counter_vault {
+          id
           positions_aggregate {
             aggregate {
               count
             }
+          }
+          positions(where: { account_id: { _eq: $address } }) {
+            shares
           }
         }
         triple_id

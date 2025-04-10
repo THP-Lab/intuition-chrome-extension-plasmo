@@ -38,7 +38,7 @@ function Home() {
     })
   }, [])
 
-  const { data, isLoading, error } = useGetClaimsByUriQuery({uri: currentUrl})
+  const { data, isLoading, error } = useGetClaimsByUriQuery({uri: currentUrl, address: walletAddress })
   const atoms = data?.atoms ?? []
 
   const claims = Array.from(
@@ -61,7 +61,7 @@ function Home() {
         
         
         <ClaimRowLite
-              key={claim.id} 
+              key={`${claim.id}-${index}`} 
               subjectLabel={claim.subject.label ?? "No subject"}
               subjectImage={claim.subject?.image ?? undefined}
               predicateLabel={claim.predicate?.label ?? "No predicate"}
@@ -70,8 +70,8 @@ function Home() {
               objectImage={claim.object?.image ?? undefined}
               numPositionsFor={claim.vault.positions_aggregate.aggregate?.count ?? 0}
               numPositionsAgainst={claim.counter_vault.positions_aggregate.aggregate?.count ?? 0}
-              userStake={Number(claim.shares ?? 0)}
-              userCounterStake={Number(claim.counter_shares ?? 0)}
+              userStake={Number(claim.vault.positions?.[0]?.shares ?? 0)}
+              userCounterStake={Number(claim.counter_vault.positions?.[0]?.shares ?? 0)}
               isFirst={index === 0}
               isLast={index === claims.length - 1}
               vaultId={claim.vault?.id}
