@@ -38,19 +38,12 @@ interface AtomCardProps {
 }
 
 export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
-  const { atomPosition } = useAtomPosition();
-  const [error, setError] = useState<string | null>(null);
-  const [isVoting, setIsVoting] = useState(false);
+  const { atomPosition, isVoting, txHash, error } = useAtomPosition()
 
   const handleVote = async () => {
-    setError(null);
-    setIsVoting(true);
     try {
-      await atomPosition({ vaultId: BigInt(atom.id) })
-    } catch (err: any) {
-      setError(err.message || 'Failed to vote');
-    } finally {
-      setIsVoting(false);
+      await atomPosition(BigInt(atom.id))
+    } catch (err) {
     }
   }
   return (
@@ -77,6 +70,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
         >
           ↑
         </button>
+        {txHash && <p className="text-green-600 text-sm mt-2">Tx: {txHash}</p>}
         {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
       </div>
       </div>
