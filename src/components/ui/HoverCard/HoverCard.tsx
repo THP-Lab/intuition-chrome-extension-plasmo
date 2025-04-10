@@ -21,8 +21,7 @@ export const HoverCard = ({ children, open, onOpenChange }: HoverCardProps) => {
       onOpenChange?.(open)
     }
   }, [open, onOpenChange])
-  
-  console.log("HoverCard rendu, isOpen:", isOpen);
+
 
   return (
     <div 
@@ -31,18 +30,15 @@ export const HoverCard = ({ children, open, onOpenChange }: HoverCardProps) => {
     >
       {React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-          // Ne pas passer setIsOpen aux éléments DOM
           const childType = child.type;
           const isCustomComponent = typeof childType !== 'string'; 
           
           if (isCustomComponent) {
-            // Pour les composants personnalisés uniquement
             return React.cloneElement(child, { 
               isOpen,
               setIsOpen
             } as HoverCardChildProps);
           } else {
-            // Pour les éléments DOM, ne rien modifier
             return child;
           }
         }
