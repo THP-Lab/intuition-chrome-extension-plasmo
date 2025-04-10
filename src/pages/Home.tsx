@@ -91,7 +91,7 @@ function Home() {
         {isLoading ? "Chargement...": (typeof data !== "undefined" &&  atoms.length != 0)?
           (atoms.map((atom) => {
             return (
-              <AtomCard atom={atom} />
+              <AtomCard key={atom.id} atom={atom} />
             );
           })):
           (
