@@ -6,10 +6,8 @@ export function useCreatePosition() {
   const createPosition = useCallback(
     async ({
       vaultId,
-      amount = 30_000_000_000_000n 
     }: {
       vaultId: bigint
-      amount?: bigint
     }) => {
       try {
         console.log("Starting createPosition")
@@ -19,17 +17,21 @@ export function useCreatePosition() {
         const address = walletClient.account.address
         console.log("Wallet address:", address)
 
+
+
+
+        const multivault = new Multivault({ walletClient, publicClient })
+        
+        const { minDeposit } = await multivault.getGeneralConfig()
+        const amount = minDeposit
+
         const balance = await publicClient.getBalance({ address })
-        console.log("Wallet balance:", balance.toString())
-        console.log("Required amount:", amount.toString())
 
         if (balance < amount) {
           console.warn("Insufficient balance")
           throw new Error("Insufficient balance")
         }
 
-        const multivault = new Multivault({ walletClient, publicClient })
-        
         console.log("Simulating deposit...")
         await multivault.contract.simulate.depositTriple(
           [address, vaultId],
