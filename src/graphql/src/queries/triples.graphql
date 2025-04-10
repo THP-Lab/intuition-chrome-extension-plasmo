@@ -21,6 +21,7 @@ query GetTriplesByCreator($address: String) {
       type
     }
     vault {
+      id
       positions_aggregate {
         aggregate {
           count
@@ -28,6 +29,7 @@ query GetTriplesByCreator($address: String) {
       }
     }
     counter_vault {
+      id
       positions_aggregate {
         aggregate {
           count

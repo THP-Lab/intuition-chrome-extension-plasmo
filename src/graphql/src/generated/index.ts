@@ -10728,6 +10728,7 @@ export type GetClaimsByAddressQuery = {
         }
         vault?: {
           __typename?: "vaults"
+          id: any
           positions_aggregate: {
             __typename?: "positions_aggregate"
             aggregate?: {
@@ -10738,6 +10739,7 @@ export type GetClaimsByAddressQuery = {
         } | null
         counter_vault?: {
           __typename?: "vaults"
+          id: any
           positions_aggregate: {
             __typename?: "positions_aggregate"
             aggregate?: {
@@ -12746,6 +12748,7 @@ export type GetTriplesByCreatorQuery = {
     }
     vault?: {
       __typename?: "vaults"
+      id: any
       positions_aggregate: {
         __typename?: "positions_aggregate"
         aggregate?: {
@@ -12756,6 +12759,7 @@ export type GetTriplesByCreatorQuery = {
     } | null
     counter_vault?: {
       __typename?: "vaults"
+      id: any
       positions_aggregate: {
         __typename?: "positions_aggregate"
         aggregate?: {
@@ -13820,6 +13824,7 @@ export const GetClaimsByAddressDocument = `
           type
         }
         vault {
+          id
           positions_aggregate {
             aggregate {
               count
@@ -13827,6 +13832,7 @@ export const GetClaimsByAddressDocument = `
           }
         }
         counter_vault {
+          id
           positions_aggregate {
             aggregate {
               count
@@ -16221,6 +16227,7 @@ export const GetTriplesByCreatorDocument = `
       type
     }
     vault {
+      id
       positions_aggregate {
         aggregate {
           count
@@ -16228,6 +16235,7 @@ export const GetTriplesByCreatorDocument = `
       }
     }
     counter_vault {
+      id
       positions_aggregate {
         aggregate {
           count
@@ -22204,6 +22212,10 @@ export const GetClaimsByAddress = {
                                 selections: [
                                   {
                                     kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
                                     name: {
                                       kind: "Name",
                                       value: "positions_aggregate"
@@ -22242,6 +22254,10 @@ export const GetClaimsByAddress = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
                                   {
                                     kind: "Field",
                                     name: {
@@ -29425,6 +29441,7 @@ export const GetTriplesByCreator = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "positions_aggregate" },
@@ -29456,6 +29473,7 @@ export const GetTriplesByCreator = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "positions_aggregate" },
