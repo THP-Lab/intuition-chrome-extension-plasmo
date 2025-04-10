@@ -70,16 +70,19 @@ query GetClaimsByUri($uri: String) {
           label
           image
           type
+          id
         }
         subject {
           image
           label
           type
+          id
         }
         object {
           label
           image
           type
+          id
         }
         vault {
           positions_aggregate {
@@ -110,16 +113,19 @@ query GetClaimsByUri($uri: String) {
           label
           image
           type
+          id
         }
         object {
           label
           image
           type
+          id  
         }
         subject {
           label
           image
           type
+          id
         }
         vault {
           positions_aggregate {

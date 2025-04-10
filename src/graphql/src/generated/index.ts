@@ -10779,18 +10779,21 @@ export type GetClaimsByUriQuery = {
           label?: string | null
           image?: string | null
           type: any
+          id: any
         }
         subject: {
           __typename?: "atoms"
           image?: string | null
           label?: string | null
           type: any
+          id: any
         }
         object: {
           __typename?: "atoms"
           label?: string | null
           image?: string | null
           type: any
+          id: any
         }
         vault: {
           __typename?: "vaults"
@@ -10831,18 +10834,21 @@ export type GetClaimsByUriQuery = {
           label?: string | null
           image?: string | null
           type: any
+          id: any
         }
         object: {
           __typename?: "atoms"
           label?: string | null
           image?: string | null
           type: any
+          id: any
         }
         subject: {
           __typename?: "atoms"
           label?: string | null
           image?: string | null
           type: any
+          id: any
         }
         vault: {
           __typename?: "vaults"
@@ -13811,7 +13817,6 @@ export const GetClaimsByAddressDocument = `
           type
         }
         vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -13819,7 +13824,6 @@ export const GetClaimsByAddressDocument = `
           }
         }
         counter_vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -13942,16 +13946,19 @@ export const GetClaimsByUriDocument = `
           label
           image
           type
+          id
         }
         subject {
           image
           label
           type
+          id
         }
         object {
           label
           image
           type
+          id
         }
         vault {
           positions_aggregate {
@@ -13982,19 +13989,21 @@ export const GetClaimsByUriDocument = `
           label
           image
           type
+          id
         }
         object {
           label
           image
           type
+          id
         }
         subject {
           label
           image
           type
+          id
         }
         vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -14002,7 +14011,6 @@ export const GetClaimsByUriDocument = `
           }
         }
         counter_vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -16200,7 +16208,6 @@ export const GetTriplesByCreatorDocument = `
       type
     }
     vault {
-      id
       positions_aggregate {
         aggregate {
           count
@@ -16208,7 +16215,6 @@ export const GetTriplesByCreatorDocument = `
       }
     }
     counter_vault {
-      id
       positions_aggregate {
         aggregate {
           count
@@ -22598,6 +22604,10 @@ export const GetClaimsByUri = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "type" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -22619,6 +22629,10 @@ export const GetClaimsByUri = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "type" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -22640,6 +22654,10 @@ export const GetClaimsByUri = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "type" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -22788,6 +22806,10 @@ export const GetClaimsByUri = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "type" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -22809,6 +22831,10 @@ export const GetClaimsByUri = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "type" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -22830,6 +22856,10 @@ export const GetClaimsByUri = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "type" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }

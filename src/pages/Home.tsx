@@ -58,7 +58,7 @@ function Home() {
       <div>        
         {isLoading ? "Chargement..." : (typeof data !== "undefined" && claims.length !== 0)? 
         ( claims.map((claim, index) => (
-        
+          console.log(claim),
         
         <ClaimRowLite
               key={claim.id} 
@@ -76,6 +76,9 @@ function Home() {
               isLast={index === claims.length - 1}
               vaultId={claim.vault?.id}
               counterVaultId={claim.counter_vault?.id}
+              subjectId={claim.subject.id}
+              predicateId={claim.predicate.id}
+              objectId={claim.object.id}
             />
           
             ))
