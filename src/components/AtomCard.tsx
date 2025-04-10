@@ -61,7 +61,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
         </div>
         <div className="mt-4 flex flex-col items-start">
           <button
-            onClick={atomPosition(BigInt(atom.id))}
+            onClick={() => atomPosition(BigInt(atom.id))}
             disabled={isVoting}
             className="text-for border border-for rounded-md px-2 py-1 hover:bg-for hover:text-white ml-1">
             ↑
