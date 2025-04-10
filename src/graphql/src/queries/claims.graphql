@@ -72,16 +72,19 @@ query GetClaimsByUri($uri: String, $address: String) {
           label
           image
           type
+          id
         }
         subject {
           image
           label
           type
+          id
         }
         object {
           label
           image
           type
+          id
         }
         vault {
           id
@@ -120,16 +123,19 @@ query GetClaimsByUri($uri: String, $address: String) {
           label
           image
           type
+          id
         }
         object {
           label
           image
           type
+          id  
         }
         subject {
           label
           image
           type
+          id
         }
         vault {
           id
