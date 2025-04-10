@@ -40,6 +40,7 @@
     --popover: 224 71% 4%;
     --popover-foreground: 215 20.2% 65.1%;
     --border: 216 34% 17%;
+    --borderAtom: oklch(98.5% 0 0)
     --input: 216 34% 17%;
     --card: 224 71% 4%;
     --card-foreground: 213 31% 91%;
@@ -155,6 +156,7 @@
   animation: fadeBg 2s ease-out forwards;
 }
 
+
 @layer utilities {
   .step {
     counter-increment: step;
@@ -165,5 +167,15 @@
     @apply ml-[-50px] mt-[-4px];
     @apply rounded-md font-mono font-medium text-center text-sm text-muted-foreground;
     content: counter(step);
+  }
+}
+
+@layer utilities {
+  .claims-hover-effect {
+    @apply opacity-70 transition-all duration-200 ease-in-out relative z-[1];
+  }
+  
+  .claims-hover-effect:hover {
+    @apply opacity-100 transform-gpu scale-[1.1] z-[3];;
   }
 }
