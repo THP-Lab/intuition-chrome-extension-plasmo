@@ -56,14 +56,10 @@ export const ClaimRowLite = ({
             { label: predicateLabel, img: predicateImage, id: predicateId },
             { label: objectLabel, img: objectImage, id: objectId }
           ].map((atom, index) => {
-            
             return (
               <PopupAtom
-                key={`${atom.id}-${index}`}
-                id={atom.id}
-                label={atom.label}
-                image={atom.img}
-                type={atom.label}
+                key={index.toString()}
+                atom={atom}
                 className="flex items-center gap-1 border border-[oklch(var(--borderAtom))] rounded-full px-2 py-1 text-sm text-foreground bg-[oklch(var(--triple-background))] w-fit flex-shrink-0"
               />
             );

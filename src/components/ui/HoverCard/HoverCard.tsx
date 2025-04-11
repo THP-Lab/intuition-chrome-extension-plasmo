@@ -6,11 +6,10 @@ interface HoverCardProps {
   open?: boolean
   onOpenChange?: (open: boolean) => void
 }
+
 interface HoverCardChildProps {
   isOpen?: boolean;
   setIsOpen?: (isOpen: boolean) => void;
-  'data-state'?: string;
-  className?: string;
 }
 
 export const HoverCard = ({ children, open, onOpenChange }: HoverCardProps) => {
@@ -22,6 +21,8 @@ export const HoverCard = ({ children, open, onOpenChange }: HoverCardProps) => {
       onOpenChange?.(open)
     }
   }, [open, onOpenChange])
+  
+  console.log("HoverCard rendu, isOpen:", isOpen);
 
   return (
     <div 
@@ -30,14 +31,22 @@ export const HoverCard = ({ children, open, onOpenChange }: HoverCardProps) => {
     >
       {React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child, { 
-            isOpen,
-            setIsOpen,
-            'data-state': isOpen ? "open" : "closed",
-            className: cn(child.props.className)
-          } as HoverCardChildProps);
+          // Ne pas passer setIsOpen aux éléments DOM
+          const childType = child.type;
+          const isCustomComponent = typeof childType !== 'string'; 
+          
+          if (isCustomComponent) {
+            // Pour les composants personnalisés uniquement
+            return React.cloneElement(child, { 
+              isOpen,
+              setIsOpen
+            } as HoverCardChildProps);
+          } else {
+            // Pour les éléments DOM, ne rien modifier
+            return child;
+          }
         }
-        return child
+        return child;
       })}
     </div>
   )
