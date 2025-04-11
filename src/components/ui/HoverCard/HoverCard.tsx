@@ -1,13 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { cn } from '~src/lib/utils'
 
 interface HoverCardProps {
   children: React.ReactNode
-  onClick?: () => void
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}
+interface HoverCardChildProps {
+  isOpen?: boolean;
+  setIsOpen?: (isOpen: boolean) => void;
+  'data-state'?: string;
+  className?: string;
 }
 
-export const HoverCard = ({ children, onClick  }: HoverCardProps) => {
-  const [isOpen, setIsOpen] = useState(false)
+export const HoverCard = ({ children, open, onOpenChange }: HoverCardProps) => {
+  const [isOpen, setIsOpen] = useState(open || false)
+
+  useEffect(() => {
+    if (open !== undefined) {
+      setIsOpen(open)
+      onOpenChange?.(open)
+    }
+  }, [open, onOpenChange])
 
   return (
     <div 
@@ -16,11 +30,12 @@ export const HoverCard = ({ children, onClick  }: HoverCardProps) => {
     >
       {React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child as React.ReactElement<any>, { 
+          return React.cloneElement(child, { 
             isOpen,
             setIsOpen,
+            'data-state': isOpen ? "open" : "closed",
             className: cn(child.props.className)
-          })
+          } as HoverCardChildProps);
         }
         return child
       })}

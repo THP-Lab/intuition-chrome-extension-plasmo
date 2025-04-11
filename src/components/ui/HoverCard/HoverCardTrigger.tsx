@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { cn } from '~src/lib/utils'
 
 interface HoverCardTriggerProps {
@@ -7,24 +7,40 @@ interface HoverCardTriggerProps {
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
   asChild?: boolean
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
 }
 
-export const HoverCardTrigger = React.forwardRef<HTMLDivElement, HoverCardTriggerProps>(
+export const HoverCardTrigger = forwardRef<HTMLDivElement, HoverCardTriggerProps>(
   ({ children, className, isOpen, setIsOpen, asChild, ...props }, ref) => {
-    // Si asChild est true, on clone l'enfant avec les props nécessaires
+    const handleMouseEnter = () => {
+      console.log("HoverCardTrigger: onMouseEnter");
+      props.onMouseEnter?.();
+      setIsOpen?.(true);
+    }
+
+    const handleMouseLeave = () => {
+      console.log("HoverCardTrigger: onMouseLeave");
+      props.onMouseLeave?.();
+      setIsOpen?.(false);
+    }
+
     if (asChild && React.isValidElement(children)) {
       return React.cloneElement(children, {
         ref,
-        onClick: () => setIsOpen?.(!isOpen),
+        onMouseEnter: handleMouseEnter,
+        onMouseLeave: handleMouseLeave,
         className: cn(children.props.className, className),
         ...props
-      })
+      } as React.HTMLAttributes<HTMLElement>)
     }
+
     return (
       <div 
         ref={ref}
         className={cn("cursor-pointer w-full", className)}
-        onClick={() => setIsOpen?.(!isOpen)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         {...props}
       >
         {children}
@@ -32,4 +48,5 @@ export const HoverCardTrigger = React.forwardRef<HTMLDivElement, HoverCardTrigge
     )
   }
 )
+
 HoverCardTrigger.displayName = 'HoverCardTrigger'

@@ -40,7 +40,6 @@
     --popover: 224 71% 4%;
     --popover-foreground: 215 20.2% 65.1%;
     --border: 216 34% 17%;
-    --borderAtom: oklch(98.5% 0 0)
     --input: 216 34% 17%;
     --card: 224 71% 4%;
     --card-foreground: 213 31% 91%;
@@ -178,4 +177,30 @@
   .claims-hover-effect:hover {
     @apply opacity-100 transform-gpu scale-[1.1] z-[3];;
   }
+}
+
+@layer base {
+  :root {
+    --borderAtom: oklch(98.5% 0.1 0);
+    --borderAtomSelect: oklch(60% 0.4 270);
+  }
+
+  :root.dark {
+    --borderAtom: oklch(30% 0.1 0);
+    --borderAtomSelect: oklch(70% 0.4 270);
+  }
+}
+
+.atom-selected {
+  @apply border-2;
+  border-color: oklch(var(--borderAtomSelect));
+  animation: pulseOpacity 2s ease-in-out infinite;
+  z-index: 9999;
+  box-shadow: 0 0 0 2px oklch(var(--borderAtomSelect) / 0.3);
+}
+
+@keyframes pulseOpacity {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
 }
