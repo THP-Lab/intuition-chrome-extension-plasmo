@@ -1,10 +1,9 @@
 import { usePinThingMutation } from "@0xintuition/graphql"
 import { Multivault } from "@0xintuition/protocol"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { parseEther } from "viem"
 
 import { getClients } from "../lib/viemClient"
-
 import { LinkTypeSelector } from "./LinkTypeSelector"
 
 const AtomForm: React.FC = () => {
@@ -18,6 +17,28 @@ const AtomForm: React.FC = () => {
   const [progressMessage, setProgressMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const [linkType, setLinkType] = useState<"url" | "domain">("url")
+
+  useEffect(() => {
+    const getCurrentUrl = async () => {
+      const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
+      if (tab?.url) {
+        const pageUrl = tab.url
+        if (linkType === "url") {
+          setUrl(pageUrl)
+        } else {
+          try {
+            const domain = new URL(pageUrl).hostname
+            setUrl(domain)
+          } catch (e) {
+            console.warn("URL invalide", e)
+          }
+        }
+      }
+    }
+    getCurrentUrl()
+  }, [linkType])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -102,10 +123,7 @@ const AtomForm: React.FC = () => {
         />
       </div>
       <div>
-        <label htmlFor="url" className="block font-bold mb-1">
-          URL
-        </label>
-        <LinkTypeSelector />
+        <LinkTypeSelector linkType={linkType} setLinkType={setLinkType} />
         <input
           id="url"
           type="url"
