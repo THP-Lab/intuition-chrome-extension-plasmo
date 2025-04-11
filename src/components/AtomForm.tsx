@@ -5,6 +5,8 @@ import { parseEther } from "viem"
 
 import { getClients } from "../lib/viemClient"
 
+import { LinkTypeSelector } from "./LinkTypeSelector"
+
 const AtomForm: React.FC = () => {
   const { mutateAsync: pinThing } = usePinThingMutation()
 
@@ -103,6 +105,7 @@ const AtomForm: React.FC = () => {
         <label htmlFor="url" className="block font-bold mb-1">
           URL
         </label>
+        <LinkTypeSelector />
         <input
           id="url"
           type="url"
