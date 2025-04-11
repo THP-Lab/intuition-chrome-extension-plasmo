@@ -56,8 +56,6 @@ export const ClaimRowLite = ({
             { label: predicateLabel, img: predicateImage, id: predicateId },
             { label: objectLabel, img: objectImage, id: objectId }
           ].map((atom, index) => {
-            // Debug log pour voir ce qui est passé à PopupAtom
-            console.log(`Passing to PopupAtom ${index}:`, atom);
             
             return (
               <PopupAtom

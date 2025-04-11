@@ -1,8 +1,8 @@
-// components/ui/PopupAtom.tsx
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import { HoverCard, HoverCardTrigger, HoverCardContent } from './HoverCard'
 import { cn } from '~src/lib/utils'
 import { useGetAtomQuery } from "@0xintuition/graphql"
+import { useOnClickOutside } from '~src/hooks/useOnClickOutside'
 
 
 interface PopupAtomProps {
@@ -14,24 +14,61 @@ interface PopupAtomProps {
 }
 
 export const PopupAtom = ({ id, label, image, type, className }: PopupAtomProps) => {
-  console.log("PopupAtom props:", { id, label, image, type });
+  const [isSelected, setIsSelected] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const atomRef = useRef<HTMLDivElement>(null);
+  const { data, isLoading } = useGetAtomQuery({ id });
 
-  const { data, isLoading } = useGetAtomQuery({
-    id: Number(id)
-  })
-
-  console.log("PopupAtom query result:", data);
+  useOnClickOutside(atomRef, () => {
+    if (isSelected) {
+      setIsSelected(false);
+      console.log("Clicked outside, closing popup");
+    }
+  });
   return (
-    <HoverCard>
-      <HoverCardTrigger>
-        <div 
+    <div ref={atomRef}>
+    <HoverCard 
+      open={isSelected || isHovered}
+      onOpenChange={(open) => {
+        console.log("HoverCard onOpenChange:", { open, isSelected });
+        if (!isSelected) {
+          setIsHovered(open)
+        }
+      }}
+    >
+      <HoverCardTrigger 
+        asChild
+        onMouseEnter={() => {
+          console.log("PopupAtom: onMouseEnter");
+          setIsHovered(true);
+        }}
+        onMouseLeave={() => {
+          console.log("PopupAtom: onMouseLeave");
+          if (!isSelected) {
+            setIsHovered(false);
+          }
+        }}
+      >
+        <button 
           className={cn(
             "relative z-[9999]",
-            "flex items-center gap-1 border border-border rounded-full px-2 py-1 text-sm text-foreground bg-[oklch(var(--triple-background))]",
+            "flex items-center gap-1",
+            "rounded-full px-2 py-1",
+            "text-sm text-foreground",
+            "bg-[oklch(var(--triple-background))]",
             "hover:bg-[oklch(var(--triple-background-hover))]",
-            "transition-colors duration-200",
+            "transition-all duration-200",
+            isSelected 
+              ? "border-2 border-[oklch(var(--borderAtomSelect))] atom-selected" 
+              : "border border-[oklch(var(--borderAtom))]",
             className
           )}
+          onClick={(e) => {
+            e.stopPropagation()
+            setIsSelected(!isSelected)
+            console.log("Atom clicked, new state:", !isSelected)
+          }}
+          type="button"
         >
           {image && (
             <img 
@@ -49,16 +86,16 @@ export const PopupAtom = ({ id, label, image, type, className }: PopupAtomProps)
           >
             {label}
           </span>
-        </div>
+        </button>
       </HoverCardTrigger>
 
       <HoverCardContent 
-        className="w-80 bg-background border border-border shadow-lg rounded-lg z-[2]"
+        className="w-80 bg-background border border-border shadow-lg rounded-lg z-[9999]"
       >
         {isLoading ? (
           <div>Chargement...</div>
         ) : data?.atom ? (
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-2 p-4">
             {data.atom.image && (
               <img 
                 src={data.atom.image} 
@@ -88,6 +125,7 @@ export const PopupAtom = ({ id, label, image, type, className }: PopupAtomProps)
         ) : null}
       </HoverCardContent>
     </HoverCard>
+    </div>
   )
 }
 

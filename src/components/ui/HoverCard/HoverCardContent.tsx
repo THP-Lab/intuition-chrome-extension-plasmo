@@ -23,6 +23,7 @@ export const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardConten
           "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
           className
         )}
+        data-state={isOpen ? "open" : "closed"}
         {...props}
       >
         {children}
