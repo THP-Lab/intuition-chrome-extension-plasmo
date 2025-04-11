@@ -14,25 +14,34 @@ interface HoverCardTriggerProps {
 export const HoverCardTrigger = forwardRef<HTMLDivElement, HoverCardTriggerProps>(
   ({ children, className, isOpen, setIsOpen, asChild, ...props }, ref) => {
     const handleMouseEnter = () => {
-      console.log("HoverCardTrigger: onMouseEnter");
       props.onMouseEnter?.();
       setIsOpen?.(true);
     }
 
     const handleMouseLeave = () => {
-      console.log("HoverCardTrigger: onMouseLeave");
       props.onMouseLeave?.();
       setIsOpen?.(false);
     }
 
     if (asChild && React.isValidElement(children)) {
-      return React.cloneElement(children, {
+      // Créer un objet de props filtré sans les props spécifiques à nos composants
+      const childProps = {
+        ...props,
         ref,
         onMouseEnter: handleMouseEnter,
         onMouseLeave: handleMouseLeave,
-        className: cn(children.props.className, className),
-        ...props
-      } as React.HTMLAttributes<HTMLElement>)
+        className: cn(children.props.className, className)
+      };
+      
+      // Utiliser un objet séparé pour éviter les erreurs TypeScript
+      const cleanedProps: Record<string, any> = {};
+      Object.keys(childProps).forEach(key => {
+        if (key !== 'isOpen' && key !== 'setIsOpen' && key !== 'asChild') {
+          cleanedProps[key] = childProps[key as keyof typeof childProps];
+        }
+      });
+      
+      return React.cloneElement(children, cleanedProps);
     }
 
     return (
@@ -45,8 +54,8 @@ export const HoverCardTrigger = forwardRef<HTMLDivElement, HoverCardTriggerProps
       >
         {children}
       </div>
-    )
+    );
   }
-)
+);
 
-HoverCardTrigger.displayName = 'HoverCardTrigger'
+HoverCardTrigger.displayName = 'HoverCardTrigger';
