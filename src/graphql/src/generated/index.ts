@@ -10688,6 +10688,43 @@ export type PinThingMutation = {
   pinThing?: { __typename?: "PinOutput"; uri?: string | null } | null
 }
 
+export type GetAtomsByCreatorQueryVariables = Exact<{
+  address: Scalars["String"]["input"]
+}>
+
+export type GetAtomsByCreatorQuery = {
+  __typename?: "query_root"
+  atoms: Array<{
+    __typename?: "atoms"
+    id: any
+    data?: string | null
+    image?: string | null
+    label?: string | null
+    type: any
+    block_number: any
+    block_timestamp: any
+    transaction_hash: string
+    creator_id: string
+    vault_id: any
+    value?: {
+      __typename?: "atom_values"
+      thing?: {
+        __typename?: "things"
+        name?: string | null
+        image?: string | null
+        description?: string | null
+        url?: string | null
+      } | null
+    } | null
+    vault?: {
+      __typename?: "vaults"
+      position_count: number
+      total_shares: any
+      current_share_price: any
+    } | null
+  }>
+}
+
 export type GetClaimsByAddressQueryVariables = Exact<{
   address?: InputMaybe<Scalars["String"]["input"]>
 }>
@@ -13796,6 +13833,114 @@ usePinThingMutation.fetcher = (
     options
   )
 
+export const GetAtomsByCreatorDocument = `
+    query GetAtomsByCreator($address: String!) {
+  atoms(where: {creator: {id: {_eq: $address}}}) {
+    id
+    data
+    image
+    label
+    type
+    block_number
+    block_timestamp
+    transaction_hash
+    creator_id
+    value {
+      thing {
+        name
+        image
+        description
+        url
+      }
+    }
+    vault_id
+    vault {
+      position_count
+      total_shares
+      current_share_price
+    }
+  }
+}
+    `
+
+export const useGetAtomsByCreatorQuery = <
+  TData = GetAtomsByCreatorQuery,
+  TError = unknown
+>(
+  variables: GetAtomsByCreatorQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetAtomsByCreatorQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<
+      GetAtomsByCreatorQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useQuery<GetAtomsByCreatorQuery, TError, TData>({
+    queryKey: ["GetAtomsByCreator", variables],
+    queryFn: fetcher<GetAtomsByCreatorQuery, GetAtomsByCreatorQueryVariables>(
+      GetAtomsByCreatorDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetAtomsByCreatorQuery.document = GetAtomsByCreatorDocument
+
+useGetAtomsByCreatorQuery.getKey = (
+  variables: GetAtomsByCreatorQueryVariables
+) => ["GetAtomsByCreator", variables]
+
+export const useInfiniteGetAtomsByCreatorQuery = <
+  TData = InfiniteData<GetAtomsByCreatorQuery>,
+  TError = unknown
+>(
+  variables: GetAtomsByCreatorQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetAtomsByCreatorQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetAtomsByCreatorQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetAtomsByCreatorQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ["GetAtomsByCreator.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetAtomsByCreatorQuery, GetAtomsByCreatorQueryVariables>(
+            GetAtomsByCreatorDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetAtomsByCreatorQuery.getKey = (
+  variables: GetAtomsByCreatorQueryVariables
+) => ["GetAtomsByCreator.infinite", variables]
+
+useGetAtomsByCreatorQuery.fetcher = (
+  variables: GetAtomsByCreatorQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetAtomsByCreatorQuery, GetAtomsByCreatorQueryVariables>(
+    GetAtomsByCreatorDocument,
+    variables,
+    options
+  )
+
 export const GetClaimsByAddressDocument = `
     query GetClaimsByAddress($address: String) {
   claims_aggregate(where: {account_id: {_eq: $address}}) {
@@ -13824,7 +13969,6 @@ export const GetClaimsByAddressDocument = `
           type
         }
         vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -13832,7 +13976,6 @@ export const GetClaimsByAddressDocument = `
           }
         }
         counter_vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -14015,7 +14158,6 @@ export const GetClaimsByUriDocument = `
           type
         }
         vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -14026,7 +14168,6 @@ export const GetClaimsByUriDocument = `
           }
         }
         counter_vault {
-          id
           positions_aggregate {
             aggregate {
               count
@@ -16227,7 +16368,6 @@ export const GetTriplesByCreatorDocument = `
       type
     }
     vault {
-      id
       positions_aggregate {
         aggregate {
           count
@@ -16235,7 +16375,6 @@ export const GetTriplesByCreatorDocument = `
       }
     }
     counter_vault {
-      id
       positions_aggregate {
         aggregate {
           count
@@ -22040,6 +22179,154 @@ export const PinThing = {
               kind: "SelectionSet",
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "uri" } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetAtomsByCreator = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetAtomsByCreator" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "atoms" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "creator" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "id" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "_eq" },
+                                  value: {
+                                    kind: "Variable",
+                                    name: { kind: "Name", value: "address" }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "data" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } },
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "type" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "block_number" }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "block_timestamp" }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "transaction_hash" }
+                },
+                { kind: "Field", name: { kind: "Name", value: "creator_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "value" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "thing" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "image" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "url" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                { kind: "Field", name: { kind: "Name", value: "vault_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "vault" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "position_count" }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "total_shares" }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "current_share_price" }
+                      }
+                    ]
+                  }
+                }
               ]
             }
           }
