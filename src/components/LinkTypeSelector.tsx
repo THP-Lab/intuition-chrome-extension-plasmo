@@ -11,7 +11,7 @@ export const LinkTypeSelector = ({
     <div className="flex flex-row gap-1 p-2">
       <div
         role="button"
-        className="flex w-full items-center rounded-lg p-0 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100"
+        className="w-full px-4 py-1 bg-background text-foreground hover:bg-accent hover:text-accent-foreground rounded"
       >
         <label
           htmlFor="url-switch"
@@ -27,9 +27,9 @@ export const LinkTypeSelector = ({
                 checked={linkType === "url"}
                 onChange={() => setLinkType("url")}
               />
-              <span className="absolute bg-slate-800 w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
+              <span className="absolute bg-slate-50 w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
             </label>
-            <label className="ml-2 text-slate-600 cursor-pointer text-sm" htmlFor="url-switch">
+            <label className="ml-2 font-bold cursor-pointer text-sm" htmlFor="url-switch">
               URL
             </label>
           </div>
@@ -37,7 +37,7 @@ export const LinkTypeSelector = ({
       </div>
       <div
         role="button"
-        className="flex w-full items-center rounded-lg p-0 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100"
+        className="w-full px-4 py-1 bg-background text-foreground hover:bg-accent hover:text-accent-foreground rounded"
       >
         <label
           htmlFor="domain-switch"
@@ -53,9 +53,9 @@ export const LinkTypeSelector = ({
                 checked={linkType === "domain"}
                 onChange={() => setLinkType("domain")}
               />
-              <span className="absolute bg-slate-800 w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
+              <span className="absolute bg-slate-50 w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
             </label>
-            <label className="ml-2 text-slate-600 cursor-pointer text-sm" htmlFor="domain-switch">
+            <label className="ml-2 font-bold cursor-pointer text-sm" htmlFor="domain-switch">
               Domain
             </label>
           </div>
