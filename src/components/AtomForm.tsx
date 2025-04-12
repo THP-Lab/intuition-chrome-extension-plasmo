@@ -21,23 +21,41 @@ const AtomForm: React.FC = () => {
   const [linkType, setLinkType] = useState<"url" | "domain">("url")
 
   useEffect(() => {
-    const getCurrentUrl = async () => {
+    const fetchPageDetails = async () => {
       const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
-      if (tab?.url) {
-        const pageUrl = tab.url
-        if (linkType === "url") {
-          setUrl(pageUrl)
-        } else {
-          try {
-            const domain = new URL(pageUrl).hostname
-            setUrl(domain)
-          } catch (e) {
-            console.warn("URL invalide", e)
+      if (!tab?.id || !tab.url) return
+
+      const pageUrl = tab.url
+      const finalUrl = linkType === "url" ? pageUrl : new URL(pageUrl).hostname
+      setUrl(finalUrl)
+
+      chrome.scripting.executeScript(
+        {
+          target: { tabId: tab.id },
+          func: () => {
+            const getMeta = (name: string) =>
+              document.querySelector(`meta[name="${name}"]`)?.getAttribute("content")
+
+            return {
+              title: document.title,
+              description: getMeta("description") || "",
+              favicon: [...document.querySelectorAll("link[rel~='icon']")]
+                .map((el) => (el as HTMLLinkElement).href)[0] || ""
+            }
+          }
+        },
+        (results) => {
+          const result = results?.[0]?.result
+          if (result) {
+            setName(result.title || "")
+            setDescription(result.description || "")
+            setImage(result.favicon || "")
           }
         }
-      }
+      )
     }
-    getCurrentUrl()
+
+    fetchPageDetails()
   }, [linkType])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -122,16 +140,16 @@ const AtomForm: React.FC = () => {
           className="w-full p-2 border rounded"
         />
       </div>
-      <div>
-        <LinkTypeSelector linkType={linkType} setLinkType={setLinkType} />
-        <input
-          id="url"
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-      </div>
+
+      <LinkTypeSelector linkType={linkType} setLinkType={setLinkType} />
+      <input
+        id="url"
+        type="text"
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+        className="w-full p-2 border rounded"
+      />
+
       <button
         type="submit"
         disabled={isSubmitting}

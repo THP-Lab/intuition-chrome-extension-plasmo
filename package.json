@@ -79,6 +79,8 @@
     ],
     "name": "Intuition",
     "permissions": [
+      "scripting",
+      "tabs",
       "activeTab",
       "sidePanel"
     ]
