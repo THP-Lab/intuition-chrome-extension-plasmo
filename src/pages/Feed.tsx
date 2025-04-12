@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
+import { useStorage } from "@plasmohq/storage/dist/hook"
 
 import { useGetFollowingsFromAddressQuery } from "~src/graphql/src"
 
 function Feed() {
-  const accountId = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
+  //const [walletAddress] = useStorage<string>("metamask-account")
+  
+  const walletAddress = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
   const { data, isLoading, isError } = useGetFollowingsFromAddressQuery({
-    address: accountId
+    address: walletAddress
   })
 
   const followings = data?.following ?? []
 
   const default_img = "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000"
-  if (!accountId) return <p>Connect your wallet</p>
+  if (!walletAddress) return <p>Connect your wallet</p>
   if (isLoading) return <p>Loading who you follow...</p>
   if (isError) return <p>Error loading followings</p>
 
