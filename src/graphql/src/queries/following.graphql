@@ -30,6 +30,7 @@ query getFollowingsFromAddress($address: String!) {
               label
             }
             counter_vault {
+              id
               positions_aggregate {
                 aggregate {
                   count
@@ -37,6 +38,7 @@ query getFollowingsFromAddress($address: String!) {
               }
             }
             vault {
+              id
               positions_aggregate {
                 aggregate {
                   count

@@ -3,11 +3,12 @@ import { useStorage } from "@plasmohq/storage/hook"
 import { useGetFollowingsFromAddressQuery, useGetFollowingsTriplesQuery } from "~src/graphql/src"
 
 const FollowingTab = () => {
-  const accountId = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
+  //const walletAddress = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
+  const [walletAddress] = useStorage<string>("metamask-account")
 
-  const { data, isLoading, isError} = useGetFollowingsFromAddressQuery({address: accountId});
+  const { data, isLoading, isError} = useGetFollowingsFromAddressQuery({address: walletAddress});
 
-  if (!accountId) return <p>Connect your wallet</p>
+  if (!walletAddress) return <p>Connect your wallet</p>
   if (isLoading) return <p>Loading who you follow...</p>
   if (isError) return <p>Error loading followings</p>
 

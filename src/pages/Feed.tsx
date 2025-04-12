@@ -5,9 +5,9 @@ import { useStorage } from "@plasmohq/storage/dist/hook"
 import { useGetFollowingsFromAddressQuery } from "~src/graphql/src"
 
 function Feed() {
-  //const [walletAddress] = useStorage<string>("metamask-account")
+  const [walletAddress] = useStorage<string>("metamask-account")
   
-  const walletAddress = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
+  //const walletAddress = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
   const { data, isLoading, isError } = useGetFollowingsFromAddressQuery({
     address: walletAddress
   })

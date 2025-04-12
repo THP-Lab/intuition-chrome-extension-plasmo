@@ -11034,6 +11034,7 @@ export type GetFollowingsFromAddressQuery = {
             }
             counter_vault?: {
               __typename?: "vaults"
+              id: any
               positions_aggregate: {
                 __typename?: "positions_aggregate"
                 aggregate?: {
@@ -11044,6 +11045,7 @@ export type GetFollowingsFromAddressQuery = {
             } | null
             vault?: {
               __typename?: "vaults"
+              id: any
               positions_aggregate: {
                 __typename?: "positions_aggregate"
                 aggregate?: {
@@ -14547,6 +14549,7 @@ export const GetFollowingsFromAddressDocument = `
               label
             }
             counter_vault {
+              id
               positions_aggregate {
                 aggregate {
                   count
@@ -14554,6 +14557,7 @@ export const GetFollowingsFromAddressDocument = `
               }
             }
             vault {
+              id
               positions_aggregate {
                 aggregate {
                   count
@@ -24169,6 +24173,13 @@ export const GetFollowingsFromAddress = {
                                                 kind: "Field",
                                                 name: {
                                                   kind: "Name",
+                                                  value: "id"
+                                                }
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
                                                   value: "positions_aggregate"
                                                 },
                                                 selectionSet: {
@@ -24208,6 +24219,13 @@ export const GetFollowingsFromAddress = {
                                           selectionSet: {
                                             kind: "SelectionSet",
                                             selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "id"
+                                                }
+                                              },
                                               {
                                                 kind: "Field",
                                                 name: {
