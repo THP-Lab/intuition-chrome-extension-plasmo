@@ -155,6 +155,15 @@ const AtomForm: React.FC = () => {
           onChange={(e) => setImage(e.target.value)}
           className="w-full p-2 border rounded"
         />
+        {image && (
+          <div className="mt-2">
+            <img
+              src={image}
+              alt="Favicon preview"
+              className="w-10 h-10 rounded shadow"
+            />
+          </div>
+        )}
       </div>
 
       <LinkTypeSelector linkType={linkType} setLinkType={setLinkType} />
