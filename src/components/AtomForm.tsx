@@ -19,6 +19,14 @@ const AtomForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [linkType, setLinkType] = useState<"url" | "domain">("url")
+  const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value)
+    e.target.style.height = "auto"
+    e.target.style.height = e.target.scrollHeight + "px"
+  }
+  
 
   useEffect(() => {
     const fetchPageDetails = async () => {
@@ -50,6 +58,13 @@ const AtomForm: React.FC = () => {
             setName(result.title || "")
             setDescription(result.description || "")
             setImage(result.favicon || "")
+          
+            setTimeout(() => {
+              if (descriptionRef.current) {
+                descriptionRef.current.style.height = "auto"
+                descriptionRef.current.style.height = descriptionRef.current.scrollHeight + "px"
+              }
+            }, 0)
           }
         }
       )
@@ -83,8 +98,7 @@ const AtomForm: React.FC = () => {
 
       const ipfsUri = result.pinThing.uri
 
-      const atomCost = await multivault.getAtomCost()
-      const deposit = parseEther("0.000025")
+      const deposit = await multivault.getAtomCost()
 
       const { vaultId, hash } = await multivault.createAtom({
         uri: ipfsUri,
@@ -122,10 +136,12 @@ const AtomForm: React.FC = () => {
           Description
         </label>
         <textarea
+          ref={descriptionRef}
           id="description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 border rounded"
+          onChange={handleDescriptionChange}
+          className="w-full p-2 border rounded resize-none overflow-hidden"
+          rows={1}
         />
       </div>
       <div>
