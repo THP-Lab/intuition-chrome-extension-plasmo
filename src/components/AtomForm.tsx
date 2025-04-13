@@ -71,6 +71,14 @@ const AtomForm: React.FC = () => {
     }
 
     fetchPageDetails()
+
+    chrome.tabs.onUpdated.addListener(fetchPageDetails)
+    chrome.tabs.onActivated.addListener(fetchPageDetails)
+  
+    return () => {
+      chrome.tabs.onUpdated.removeListener(fetchPageDetails)
+      chrome.tabs.onActivated.removeListener(fetchPageDetails)
+    }
   }, [linkType])
 
   async function handleSubmit(e: React.FormEvent) {
