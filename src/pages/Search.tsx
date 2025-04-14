@@ -65,7 +65,7 @@ const Search: React.FC = () => {
       
     
       console.log("Filtered triples:", filteredTriples)
-console.log("dataaaaaa",filteredTriples)
+
     
       return (
         <div className="space-y-2">

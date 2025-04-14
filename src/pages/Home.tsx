@@ -105,7 +105,6 @@ function Home() {
         </p>
       </div>
 
-
         <div className="p-4">
         {error && <p className="text-red-500">An error occurred while requesting this page.</p>}
 
@@ -114,8 +113,6 @@ function Home() {
           activeTab={activeTab}
           onTabChange={setActiveTab}
         />
-
-
         
       </div>
     </div>
