@@ -10,13 +10,7 @@ interface ClaimRowLiteProps {
 
 export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   const [walletAddress] = useStorage<string>("metamask-account")
-  const { subject = {}, predicate = {}, object = {}, vault = {}, counter_vault: counterVault = {} } = claim
-
-  const atoms = [
-    { label: subject.label ?? "No subject", image: subject.image, id: subject.id },
-    { label: predicate.label ?? "No predicate", image: predicate.image, id: predicate.id },
-    { label: object.label ?? "No object", image: object.image, id: object.id }
-  ]
+  const { vault = {}, counter_vault: counterVault = {} } = claim
 
   const numPositionsFor = vault.positions_aggregate?.aggregate?.count ?? claim.vault?.positions?.length ?? 0
   const numPositionsAgainst = counterVault.positions_aggregate?.aggregate?.count ?? claim.counter_vault?.positions?.length ?? 0
@@ -34,21 +28,18 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
         )}
     >
       <div className="flex gap-1 items-center flex-wrap flex-1 min-w-0">
-        <React.Fragment>
-          {[
-            { label: subjectLabel, img: subjectImage, id: subjectId },
-            { label: predicateLabel, img: predicateImage, id: predicateId },
-            { label: objectLabel, img: objectImage, id: objectId }
-          ].map((atom, index) => {
-            return (
-              <PopupAtom
-                key={index.toString()}
-                atom={atom}
-                className="flex items-center gap-1 rounded-full px-2 py-1 text-sm text-foreground bg-[oklch(var(--triple-background))] w-fit flex-shrink-0"
-              />
-            );
-          })}
-        </React.Fragment>
+        <PopupAtom
+          key={claim.id.toString()}
+          atom={claim.subject}
+        />
+        <PopupAtom
+          key={claim.id.toString()}
+          atom={claim.predicate}
+        />
+        <PopupAtom
+          key={claim.id.toString()}
+          atom={claim.object}
+        />
       </div>
 
       {vaultId && counterVaultId ? (
