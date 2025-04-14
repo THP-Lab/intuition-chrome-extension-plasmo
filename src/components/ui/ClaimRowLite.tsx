@@ -24,8 +24,8 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   return (
     <div
       className={cn(
-          'flex justify-between items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-3 claims-hover-effect'
-        )}
+        'flex justify-between items-center p-3 border border-border/10 bg-[oklch(var(--container-background))] rounded-xl mt-3 claims-hover-effect'
+      )}
     >
       <div className="flex gap-1 items-center flex-wrap flex-1 min-w-0">
         <PopupAtom
@@ -51,7 +51,9 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
             numPositionsAgainst={numPositionsAgainst}
           />
           {userStake > 0 ? (
+          {userStake > 0 ? (
             <div className="text-sm text-green-600">You have voting FOR</div>
+          ) : userCounterStake > 0 ? (
           ) : userCounterStake > 0 ? (
             <div className="text-sm text-red-600">You have voting AGAINST</div>
           ) : null}
@@ -64,3 +66,4 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 }
 
 export default ClaimRowLite
+
