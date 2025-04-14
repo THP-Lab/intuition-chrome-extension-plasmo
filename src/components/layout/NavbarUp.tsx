@@ -21,7 +21,7 @@ function NavbarUp() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur-lg">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b bg-[hsl(var(--navbar-bg))] backdrop-blur-lg">
       <div className="flex h-14 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <Button

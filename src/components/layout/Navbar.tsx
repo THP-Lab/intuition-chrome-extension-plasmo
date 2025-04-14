@@ -23,7 +23,7 @@ function Navbar() {
   const isActive = (path: string) => location.pathname === path
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/80 backdrop-blur-lg">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-[hsl(var(--navbar-bg))] backdrop-blur-lg">
       <div className="flex items-center justify-around p-2">
         <Button
           variant="ghost"

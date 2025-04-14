@@ -63,12 +63,13 @@ export const PopupAtom = ({ atom, className }: PopupAtomProps) => {
             "flex items-center gap-1",
             "rounded-full px-2 py-1",
             "text-sm text-foreground",
-            "bg-[oklch(var(--triple-background))]",
-            "hover:bg-[oklch(var(--triple-background-hover))]",
+            "bg-[hsl(var(--triple-background))]",
+            "hover:border-[hsl(var(--focus-atom-border))]",
+            "focus-visible:border-[hsl(var(--focus-atom-border))]",
             "transition-all duration-200",
             isSelected 
               ? "border-2 border-[oklch(var(--borderAtomSelect))] atom-selected" 
-              : "border border-[oklch(var(--borderAtom))]",
+              : "border border-[hsl(var(--border-atom))]",
             className
           )}
           onClick={(e) => {
