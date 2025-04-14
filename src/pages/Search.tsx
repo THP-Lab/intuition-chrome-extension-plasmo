@@ -74,6 +74,8 @@ const Search: React.FC = () => {
             <ClaimRowLite
               key={`${triple.id}-${index}`}
               claim={triple}
+              key={`${triple.id}-${index}`}
+              claim={triple}
             />
           ))}
         </div>
