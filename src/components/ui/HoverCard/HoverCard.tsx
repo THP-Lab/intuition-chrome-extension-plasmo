@@ -21,7 +21,7 @@ export const HoverCard = ({ children, open, onOpenChange }: HoverCardProps) => {
       onOpenChange?.(open)
     }
   }, [open, onOpenChange])
-
+  
 
   return (
     <div 
