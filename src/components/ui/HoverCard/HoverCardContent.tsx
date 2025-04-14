@@ -17,6 +17,7 @@ export const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardConten
     // Filtrer setIsOpen des props
     const { setIsOpen, ...domProps } = props;
     
+    
     return (
       <HoverCardPrimitive.Portal>
         <HoverCardPrimitive.Content
