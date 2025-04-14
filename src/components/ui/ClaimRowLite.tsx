@@ -67,10 +67,6 @@ export const ClaimRowLite = ({
         </React.Fragment>
       </div>
 
-      <div className="flex gap-2 text-sm mr-4 flex-shrink-0">
-        <span className="text-for">↑ {numPositionsFor}</span>
-        <span className="text-against">↓ {numPositionsAgainst}</span>
-      </div>
 
       {vaultId && counterVaultId ? (
         <div className="flex flex-col items-end gap-1">

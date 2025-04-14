@@ -16,7 +16,8 @@ interface PopupAtomProps {
 }
 
 export const PopupAtom = ({ atom, className }: PopupAtomProps) => {
-  const { id, label, image, instanceId } = atom;
+  const { id, label, image: propImage, img, instanceId } = atom;
+  const imageToUse = propImage || img;
   const uniqueIdRef = useRef<string>(
     instanceId || `${id}-${Math.random().toString(36).substr(2, 9)}`
   );
@@ -29,12 +30,10 @@ export const PopupAtom = ({ atom, className }: PopupAtomProps) => {
   const { data, isLoading } = useGetAtomQuery({ id });
   
   useEffect(() => {
-    console.log(`Atom ${id} (${uniqueInstanceId}) - isSelected: ${isSelected}`);
   }, [id, uniqueInstanceId, isSelected]);
 
   useOnClickOutside(atomRef, () => {
     if (isSelected) {
-      console.log(`Clicked outside atom ${id} (${uniqueInstanceId}), closing popup`);
       setSelectedAtomId(null);
     }
   });
@@ -81,9 +80,9 @@ export const PopupAtom = ({ atom, className }: PopupAtomProps) => {
           }}
           type="button"
         >
-          {image && (
+          {imageToUse && (
             <img 
-              src={image} 
+              src={imageToUse}  
               alt={label} 
               className="w-5 h-5 rounded-full object-cover"
               onError={(e) => {
@@ -120,7 +119,6 @@ export const PopupAtom = ({ atom, className }: PopupAtomProps) => {
             )}
             <div>
               <h3 className="font-medium text-lg">{data.atom.label}</h3>
-              <p className="text-sm text-muted-foreground capitalize">{data.atom.type}</p>
               {data.atom.value?.thing?.description && (
                 <p className="text-sm text-muted-foreground mt-2">
                   {data.atom.value.thing.description}
