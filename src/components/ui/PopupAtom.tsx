@@ -72,12 +72,9 @@ export const PopupAtom = ({ atom, className }: PopupAtomProps) => {
               : "border border-[oklch(var(--borderAtom))]",
             className
           )}
-          // Dans le onClick du bouton:
-          // Dans le onClick du bouton:
           onClick={(e) => {
             e.stopPropagation();
             setSelectedAtomId(null);
-            // Si on clique sur un atom déjà sélectionné, on le ferme simplement
             if (isSelected) return;
             
             setSelectedAtomId(uniqueInstanceId);

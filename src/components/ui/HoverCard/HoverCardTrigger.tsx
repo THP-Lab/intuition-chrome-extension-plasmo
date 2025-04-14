@@ -24,7 +24,6 @@ export const HoverCardTrigger = forwardRef<HTMLDivElement, HoverCardTriggerProps
     }
 
     if (asChild && React.isValidElement(children)) {
-      // Créer un objet de props filtré sans les props spécifiques à nos composants
       const childProps = {
         ...props,
         ref,
@@ -33,7 +32,6 @@ export const HoverCardTrigger = forwardRef<HTMLDivElement, HoverCardTriggerProps
         className: cn(children.props.className, className)
       };
       
-      // Utiliser un objet séparé pour éviter les erreurs TypeScript
       const cleanedProps: Record<string, any> = {};
       Object.keys(childProps).forEach(key => {
         if (key !== 'isOpen' && key !== 'setIsOpen' && key !== 'asChild') {
