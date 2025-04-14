@@ -1,9 +1,6 @@
 // src/components/ui/HoverCard/HoverCardContent.tsx
 import React from 'react'
-// src/components/ui/HoverCard/HoverCardContent.tsx
-import React from 'react'
 import { cn } from '~src/lib/utils'
-import * as HoverCardPrimitive from '@radix-ui/react-hover-card'
 import * as HoverCardPrimitive from '@radix-ui/react-hover-card'
 
 interface HoverCardContentProps {
@@ -17,6 +14,7 @@ interface HoverCardContentProps {
 export const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>(
   ({ className, isOpen, children, triggerRef, ...props }, ref) => {
     const { setIsOpen, ...domProps } = props;
+    
     
     return (
       <HoverCardPrimitive.Portal>
