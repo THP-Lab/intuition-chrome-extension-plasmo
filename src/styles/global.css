@@ -40,6 +40,7 @@
     --popover: 224 71% 4%;
     --popover-foreground: 215 20.2% 65.1%;
     --border: 216 34% 17%;
+    --borderAtom: oklch(98.5% 0 0)
     --input: 216 34% 17%;
     --card: 224 71% 4%;
     --card-foreground: 213 31% 91%;
@@ -155,6 +156,8 @@
   animation: fadeBg 2s ease-out forwards;
 }
 
+
+
 @layer utilities {
   .step {
     counter-increment: step;
@@ -166,4 +169,90 @@
     @apply rounded-md font-mono font-medium text-center text-sm text-muted-foreground;
     content: counter(step);
   }
+}
+
+@layer utilities {
+  .claims-hover-effect {
+    @apply opacity-70 transition-all duration-200 ease-in-out relative z-[1];
+  }
+  
+  .claims-hover-effect:hover {
+    @apply opacity-100 transform-gpu scale-[1.1] z-[3];;
+  }
+}
+
+@layer base {
+  :root {
+    --borderAtom: oklch(98.5% 0.2 0);
+    --borderAtomSelect: oklch(60% 0.5 270);
+  }
+
+  :root.dark {
+    --borderAtom: oklch(30% 0.2 0);
+    --borderAtomSelect: oklch(70% 0.5 270);
+  }
+}
+
+.portal-container {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10000;
+  background-color: #00000000; /* Commencer avec fond transparent */
+  transition: background-color 0.3s ease-in-out;
+}
+
+.portal-container.active,
+.portal-container:has(.hover-card-content-open) {
+  background-color: #00000070; /* Finir avec fond noir à 40% d'opacité */
+  transition: background-color 0.3s ease-in-out;
+}
+
+.portal-container > * {
+  pointer-events: auto;
+}
+
+.hover-card-content-open {
+  position: fixed !important;
+  z-index: 10000 !important; 
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  background-color: white !important;
+  color: black !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  max-height: 80vh;
+  overflow-y: auto;
+  transition: opacity 0.3s ease, transform 0.3s ease !important;
+  transform: translateY(0) scale(1);
+}
+
+.hover-card-content {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.dark .hover-card-content-open {
+  background-color: #2d3748 !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.atom-selected {
+  @apply border-2;
+  border-color: oklch(var(--borderAtomSelect));
+  animation: pulseOpacity 2s ease-in-out infinite;
+  z-index: 9999;
+  box-shadow: 0 0 0 2px oklch(var(--borderAtomSelect) / 0.5);
+}
+
+@keyframes pulseOpacity {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
 }
