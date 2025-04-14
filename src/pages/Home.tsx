@@ -61,25 +61,10 @@ function Home() {
           console.log(claim),
         
         <ClaimRowLite
-              key={`${claim.id}-${index}`} 
-              subjectLabel={claim.subject.label ?? "No subject"}
-              subjectImage={claim.subject?.image ?? undefined}
-              predicateLabel={claim.predicate?.label ?? "No predicate"}
-              predicateImage={claim.predicate?.image ?? undefined}
-              objectLabel={claim.object?.label ?? "No object"}
-              objectImage={claim.object?.image ?? undefined}
-              numPositionsFor={claim.vault.positions_aggregate.aggregate?.count ?? 0}
-              numPositionsAgainst={claim.counter_vault.positions_aggregate.aggregate?.count ?? 0}
-              userStake={Number(claim.vault.positions?.[0]?.shares ?? 0)}
-              userCounterStake={Number(claim.counter_vault.positions?.[0]?.shares ?? 0)}
-              isFirst={index === 0}
-              isLast={index === claims.length - 1}
-              vaultId={claim.vault?.id}
-              counterVaultId={claim.counter_vault?.id}
-              subjectId={claim.subject.id}
-              predicateId={claim.predicate.id}
-              objectId={claim.object.id}
-            />
+          key={`${claim.id}-${index}`}
+          claim={claim}
+        />
+
           
             ))
         ) : (

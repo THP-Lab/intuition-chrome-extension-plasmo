@@ -4,69 +4,41 @@ import VoteButtons from "~src/components/VoteButtons"
 import { PopupAtom } from "./PopupAtom"
 
 interface ClaimRowLiteProps {
-  subjectLabel: string
-  subjectImage?: string
-  predicateLabel: string
-  predicateImage?: string
-  objectLabel: string
-  objectImage?: string
-  numPositionsFor: number
-  numPositionsAgainst: number
-  userStake: number
-  userCounterStake: number
-  isFirst?: boolean
-  isLast?: boolean
-  vaultId: string
-  counterVaultId: string
-  subjectId: string
-  predicateId: string
-  objectId: string
+  claim: any
 }
 
-export const ClaimRowLite = ({
-  subjectLabel,
-  subjectImage,
-  predicateLabel,
-  predicateImage,
-  objectLabel,
-  objectImage,
-  numPositionsFor,
-  numPositionsAgainst,
-  userStake,
-  userCounterStake,
-  isFirst = true,
-  isLast = true,
-  vaultId,
-  counterVaultId,
-  subjectId,
-  predicateId,
-  objectId
-}: ClaimRowLiteProps) => {
-  const isFor = userStake > 0
+export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
+  const { subject = {}, predicate = {}, object = {}, vault = {}, counter_vault: counterVault = {} } = claim
+
+  const atoms = [
+    { label: subject.label ?? "No subject", image: subject.image, id: subject.id },
+    { label: predicate.label ?? "No predicate", image: predicate.image, id: predicate.id },
+    { label: object.label ?? "No object", image: object.image, id: object.id }
+  ]
+
+  const numPositionsFor = vault.positions_aggregate?.aggregate?.count ?? 0
+  const numPositionsAgainst = counterVault.positions_aggregate?.aggregate?.count ?? 0
+  const userStake = Number(vault.positions?.[0]?.shares ?? 0)
+  const userCounterStake = Number(counterVault.positions?.[0]?.shares ?? 0)
+
+  const vaultId = vault.id
+  const counterVaultId = counterVault.id
+
   return (
     <div
       className={cn(
-          'flex justify-between items-center p-3 border border-border/10 bg-[oklch(var(--container-background))] rounded-xl mt-3 claims-hover-effect'
-        )}
+        'flex justify-between items-center p-3 border border-border/10 bg-[oklch(var(--container-background))] rounded-xl mt-3 claims-hover-effect'
+      )}
     >
       <div className="flex gap-1 items-center flex-wrap flex-1 min-w-0">
-        <React.Fragment>
-          {[
-            { label: subjectLabel, img: subjectImage, id: subjectId },
-            { label: predicateLabel, img: predicateImage, id: predicateId },
-            { label: objectLabel, img: objectImage, id: objectId }
-          ].map((atom, index) => {
-            return (
-              <PopupAtom
-                key={index.toString()}
-                atom={atom}
-                className="flex items-center gap-1 border border-[oklch(var(--borderAtom))] rounded-full px-2 py-1 text-sm text-foreground bg-[oklch(var(--triple-background))] w-fit flex-shrink-0"
-              />
-            );
-          })}
-        </React.Fragment>
+        {atoms.map((atom, idx) => (
+            <PopupAtom
+              key={idx.toString()}
+              atom={atom}
+              className="flex items-center gap-1 border border-[oklch(var(--borderAtom))] rounded-full px-2 py-1 text-sm text-foreground bg-[oklch(var(--triple-background))] w-fit flex-shrink-0"
+            />
+          ))}
       </div>
-
 
       {vaultId && counterVaultId ? (
         <div className="flex flex-col items-end gap-1">
@@ -76,9 +48,9 @@ export const ClaimRowLite = ({
             numPositionsFor={numPositionsFor}
             numPositionsAgainst={numPositionsAgainst}
           />
-          {(userStake) > 0 ? (
+          {userStake > 0 ? (
             <div className="text-sm text-green-600">You have voting FOR</div>
-          ) : (userCounterStake) > 0 ? (
+          ) : userCounterStake > 0 ? (
             <div className="text-sm text-red-600">You have voting AGAINST</div>
           ) : null}
         </div>
