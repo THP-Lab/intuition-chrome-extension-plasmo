@@ -65,15 +65,13 @@ const Search: React.FC = () => {
       
     
       console.log("Filtered triples:", filteredTriples)
-
+console.log("dataaaaaa",filteredTriples)
     
       return (
         <div className="space-y-2">
           {filteredTriples.length === 0 && <p>No results found.</p>}
           {filteredTriples.map((triple, index) => (
             <ClaimRowLite
-              key={`${triple.id}-${index}`}
-              claim={triple}
               key={`${triple.id}-${index}`}
               claim={triple}
             />

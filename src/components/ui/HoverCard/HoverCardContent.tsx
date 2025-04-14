@@ -9,6 +9,7 @@ interface HoverCardContentProps {
   isOpen?: boolean
   triggerRef?: React.RefObject<HTMLElement>
   setIsOpen?: (isOpen: boolean) => void
+  setIsOpen?: (isOpen: boolean) => void
 }
 
 export const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>(

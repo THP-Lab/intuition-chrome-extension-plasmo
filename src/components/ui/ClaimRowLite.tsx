@@ -51,9 +51,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
             numPositionsAgainst={numPositionsAgainst}
           />
           {userStake > 0 ? (
-          {userStake > 0 ? (
             <div className="text-sm text-green-600">You have voting FOR</div>
-          ) : userCounterStake > 0 ? (
           ) : userCounterStake > 0 ? (
             <div className="text-sm text-red-600">You have voting AGAINST</div>
           ) : null}
