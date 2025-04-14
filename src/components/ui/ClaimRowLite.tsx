@@ -1,8 +1,11 @@
 import React from "react"
-import { cn } from "~src/lib/utils"
-import VoteButtons from "~src/components/VoteButtons"
-import { PopupAtom } from "./PopupAtom"
+
 import { useStorage } from "@plasmohq/storage/hook"
+
+import VoteButtons from "~src/components/VoteButtons"
+import { cn } from "~src/lib/utils"
+
+import { PopupAtom } from "./PopupAtom"
 
 interface ClaimRowLiteProps {
   claim: any
@@ -12,11 +15,20 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   const [walletAddress] = useStorage<string>("metamask-account")
   const { vault = {}, counter_vault: counterVault = {} } = claim
 
-  const numPositionsFor = vault.positions_aggregate?.aggregate?.count ?? claim.vault?.positions?.length ?? 0
-  const numPositionsAgainst = counterVault.positions_aggregate?.aggregate?.count ?? claim.counter_vault?.positions?.length ?? 0
-  const userStake = vault.positions?.find((pos) => pos.account?.id === walletAddress)?.shares ?? 0
-  const userCounterStake = counterVault.positions?.find((pos) => pos.account?.id === walletAddress)?.shares ?? 0
-
+  const numPositionsFor =
+    vault.positions_aggregate?.aggregate?.count ??
+    claim.vault?.positions?.length ??
+    0
+  const numPositionsAgainst =
+    counterVault.positions_aggregate?.aggregate?.count ??
+    claim.counter_vault?.positions?.length ??
+    0
+  const userStake =
+    vault.positions?.find((pos) => pos.account?.id === walletAddress)?.shares ??
+    0
+  const userCounterStake =
+    counterVault.positions?.find((pos) => pos.account?.id === walletAddress)
+      ?.shares ?? 0
 
   const vaultId = vault.id ?? claim.vault_id
   const counterVaultId = counterVault.id ?? claim.counter_vault_id
@@ -24,22 +36,12 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   return (
     <div
       className={cn(
-          'flex justify-between items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-3 claims-hover-effect'
-        )}
-    >
+        "flex justify-between items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-3 claims-hover-effect"
+      )}>
       <div className="flex gap-1 items-center flex-wrap flex-1 min-w-0">
-        <PopupAtom
-          key={claim.id.toString()}
-          atom={claim.subject}
-        />
-        <PopupAtom
-          key={claim.id.toString()}
-          atom={claim.predicate}
-        />
-        <PopupAtom
-          key={claim.id.toString()}
-          atom={claim.object}
-        />
+        <PopupAtom key={claim.id.toString()} atom={claim.subject} />
+        <PopupAtom key={claim.id.toString()} atom={claim.predicate} />
+        <PopupAtom key={claim.id.toString()} atom={claim.object} />
       </div>
 
       {vaultId && counterVaultId ? (
@@ -64,4 +66,3 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 }
 
 export default ClaimRowLite
-
