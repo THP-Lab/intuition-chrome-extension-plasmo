@@ -13,7 +13,6 @@ interface HoverCardContentProps {
 
 export const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>(
   ({ className, isOpen, children, triggerRef, ...props }, ref) => {
-    // Filtrer setIsOpen des props
     const { setIsOpen, ...domProps } = props;
     
     return (
