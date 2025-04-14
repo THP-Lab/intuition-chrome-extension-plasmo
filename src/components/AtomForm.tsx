@@ -19,25 +19,66 @@ const AtomForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [linkType, setLinkType] = useState<"url" | "domain">("url")
+  const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value)
+    e.target.style.height = "auto"
+    e.target.style.height = e.target.scrollHeight + "px"
+  }
+  
 
   useEffect(() => {
-    const getCurrentUrl = async () => {
+    const fetchPageDetails = async () => {
       const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
-      if (tab?.url) {
-        const pageUrl = tab.url
-        if (linkType === "url") {
-          setUrl(pageUrl)
-        } else {
-          try {
-            const domain = new URL(pageUrl).hostname
-            setUrl(domain)
-          } catch (e) {
-            console.warn("URL invalide", e)
+      if (!tab?.id || !tab.url) return
+
+      const pageUrl = tab.url
+      const finalUrl = linkType === "url" ? pageUrl : new URL(pageUrl).hostname
+      setUrl(finalUrl)
+
+      chrome.scripting.executeScript(
+        {
+          target: { tabId: tab.id },
+          func: () => {
+            const getMeta = (name: string) =>
+              document.querySelector(`meta[name="${name}"]`)?.getAttribute("content")
+
+            return {
+              title: document.title,
+              description: getMeta("description") || "",
+              favicon: [...document.querySelectorAll("link[rel~='icon']")]
+                .map((el) => (el as HTMLLinkElement).href)[0] || ""
+            }
+          }
+        },
+        (results) => {
+          const result = results?.[0]?.result
+          if (result) {
+            setName(result.title || "")
+            setDescription(result.description || "")
+            setImage(result.favicon || "")
+          
+            setTimeout(() => {
+              if (descriptionRef.current) {
+                descriptionRef.current.style.height = "auto"
+                descriptionRef.current.style.height = descriptionRef.current.scrollHeight + "px"
+              }
+            }, 0)
           }
         }
-      }
+      )
     }
-    getCurrentUrl()
+
+    fetchPageDetails()
+
+    chrome.tabs.onUpdated.addListener(fetchPageDetails)
+    chrome.tabs.onActivated.addListener(fetchPageDetails)
+  
+    return () => {
+      chrome.tabs.onUpdated.removeListener(fetchPageDetails)
+      chrome.tabs.onActivated.removeListener(fetchPageDetails)
+    }
   }, [linkType])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -65,8 +106,7 @@ const AtomForm: React.FC = () => {
 
       const ipfsUri = result.pinThing.uri
 
-      const atomCost = await multivault.getAtomCost()
-      const deposit = parseEther("0.000025")
+      const deposit = await multivault.getAtomCost()
 
       const { vaultId, hash } = await multivault.createAtom({
         uri: ipfsUri,
@@ -104,10 +144,12 @@ const AtomForm: React.FC = () => {
           Description
         </label>
         <textarea
+          ref={descriptionRef}
           id="description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 border rounded"
+          onChange={handleDescriptionChange}
+          className="w-full p-2 border rounded resize-none overflow-hidden"
+          rows={1}
         />
       </div>
       <div>
@@ -121,17 +163,26 @@ const AtomForm: React.FC = () => {
           onChange={(e) => setImage(e.target.value)}
           className="w-full p-2 border rounded"
         />
+        {image && (
+          <div className="mt-2">
+            <img
+              src={image}
+              alt="Favicon preview"
+              className="w-10 h-10 rounded shadow"
+            />
+          </div>
+        )}
       </div>
-      <div>
-        <LinkTypeSelector linkType={linkType} setLinkType={setLinkType} />
-        <input
-          id="url"
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-      </div>
+
+      <LinkTypeSelector linkType={linkType} setLinkType={setLinkType} />
+      <input
+        id="url"
+        type="text"
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+        className="w-full p-2 border rounded"
+      />
+
       <button
         type="submit"
         disabled={isSubmitting}
