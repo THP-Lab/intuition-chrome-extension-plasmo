@@ -24,12 +24,12 @@ export const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardConten
             isOpen && "hover-card-content-open",
             className
           )}
-          sticky="partial"
-          collisionPadding={16}
-          side="bottom"
-          align="center" 
-          sideOffset={8}
-          avoidCollisions={true}
+          data-state={isOpen ? "open" : "closed"}
+          style={{
+            ...style,
+            visibility: isOpen ? 'visible' : 'hidden',
+            pointerEvents: isOpen ? 'auto' : 'none',
+          }}
           {...domProps}
         >
           {children}
