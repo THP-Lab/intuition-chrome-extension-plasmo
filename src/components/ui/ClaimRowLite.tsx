@@ -6,7 +6,6 @@ import VoteButtons from "~src/components/VoteButtons"
 import { cn } from "~src/lib/utils"
 
 import { PopupAtom } from "./PopupAtom"
-import { useStorage } from "@plasmohq/storage/hook"
 
 interface ClaimRowLiteProps {
   claim: any
