@@ -3,6 +3,7 @@ import React from 'react'
 
 import { cn } from '~src/lib/utils'
 import * as HoverCardPrimitive from '@radix-ui/react-hover-card'
+import * as HoverCardPrimitive from '@radix-ui/react-hover-card'
 
 interface HoverCardContentProps {
   children: React.ReactNode
