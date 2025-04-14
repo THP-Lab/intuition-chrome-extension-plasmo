@@ -22,25 +22,14 @@ const YourClaimsTab = () => {
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Your Claims</h2>
-      {data.triples.map((triple, i) => {
-        const numPositionsFor =
-          triple.vault?.positions_aggregate?.aggregate?.count ?? 0
-        const numPositionsAgainst =
-          triple.counter_vault?.positions_aggregate?.aggregate?.count ?? 0
+      {data.triples.map((triple, index) => {
+
 
         return (
-          <ClaimRowLite
-          key={triple.id}
-          subjectLabel={triple.subject?.label}
-          predicateLabel={triple.predicate?.label}
-          objectLabel={triple.object?.label}
-          numPositionsFor={numPositionsFor}
-          numPositionsAgainst={numPositionsAgainst}
-          isFirst={i === 0}
-          isLast={i === data.triples.length - 1}
-          vaultId={triple.vault?.id}
-          counterVaultId={triple.counter_vault?.id}
-        />        
+        <ClaimRowLite
+          key={`${triple.id}-${index}`}
+          claim={triple}
+        />     
         )
       })}
     </div>
