@@ -7,12 +7,14 @@ interface HoverCardContentProps {
   className?: string
   isOpen?: boolean
   triggerRef?: React.RefObject<HTMLElement>
+  setIsOpen?: (isOpen: boolean) => void
 }
 
 export const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>(
   ({ className, isOpen, children, triggerRef, ...props }, ref) => {
     const style = triggerRef?.current ? getPopupPosition(triggerRef.current) : {};
-    
+    const { setIsOpen, ...domProps } = props;
+
     return (
       <Portal>
         <div
@@ -34,7 +36,7 @@ export const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardConten
             visibility: isOpen ? 'visible' : 'hidden',
             pointerEvents: isOpen ? 'auto' : 'none',
           }}
-          {...props}
+          {...domProps}
         >
           {isOpen && (
             <>

@@ -2,12 +2,14 @@ import React from "react"
 import { cn } from "~src/lib/utils"
 import VoteButtons from "~src/components/VoteButtons"
 import { PopupAtom } from "./PopupAtom"
+import { useStorage } from "@plasmohq/storage/hook"
 
 interface ClaimRowLiteProps {
   claim: any
 }
 
 export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
+  const [walletAddress] = useStorage<string>("metamask-account")
   const { subject = {}, predicate = {}, object = {}, vault = {}, counter_vault: counterVault = {} } = claim
 
   const atoms = [
@@ -16,13 +18,14 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
     { label: object.label ?? "No object", image: object.image, id: object.id }
   ]
 
-  const numPositionsFor = vault.positions_aggregate?.aggregate?.count ?? 0
-  const numPositionsAgainst = counterVault.positions_aggregate?.aggregate?.count ?? 0
-  const userStake = Number(vault.positions?.[0]?.shares ?? 0)
-  const userCounterStake = Number(counterVault.positions?.[0]?.shares ?? 0)
+  const numPositionsFor = vault.positions_aggregate?.aggregate?.count ?? claim.vault?.positions?.length ?? 0
+  const numPositionsAgainst = counterVault.positions_aggregate?.aggregate?.count ?? claim.counter_vault?.positions?.length ?? 0
+  const userStake = vault.positions?.find((pos) => pos.account?.id === walletAddress)?.shares ?? 0
+  const userCounterStake = counterVault.positions?.find((pos) => pos.account?.id === walletAddress)?.shares ?? 0
 
-  const vaultId = vault.id
-  const counterVaultId = counterVault.id
+
+  const vaultId = vault.id ?? claim.vault_id
+  const counterVaultId = counterVault.id ?? claim.counter_vault_id
 
   return (
     <div
