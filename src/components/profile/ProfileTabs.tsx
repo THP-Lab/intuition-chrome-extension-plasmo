@@ -44,18 +44,26 @@ const ProfileTabs = () => {
       </div>
 
       {(isClaims || isIdentities) && (
-        <div className="flex gap-4 mt-2 mb-4 ml-2 text-xs italic text-gray-400">
+        <div className="flex gap-4 justify-center mt-1 mb-1">
           {isClaims && (
             <>
               <Link
                 to="/profile/claims/all"
-                className={location.pathname === "/profile/claims/all" ? "font-semibold underline text-gray-200" : ""}
+                className={`px-3 py-1 rounded-full border text-xs italic ${
+                  location.pathname === "/profile/claims/all"
+                    ? "bg-white text-black font-semibold"
+                    : "border-gray-600 text-gray-400 hover:bg-gray-800"
+                }`}
               >
                 All claims
               </Link>
               <Link
                 to="/profile/claims/created"
-                className={location.pathname === "/profile/claims/created" ? "font-semibold underline text-gray-200" : ""}
+                className={`px-3 py-1 rounded-full border text-xs italic ${
+                  location.pathname === "/profile/claims/created"
+                    ? "bg-white text-black font-semibold"
+                    : "border-gray-600 text-gray-400 hover:bg-gray-800"
+                }`}
               >
                 Created claims
               </Link>
@@ -65,13 +73,21 @@ const ProfileTabs = () => {
             <>
               <Link
                 to="/profile/identities/all"
-                className={location.pathname === "/profile/identities/all" ? "font-semibold underline text-gray-200" : ""}
+                className={`px-3 py-1 rounded-full border text-[11px] italic ${
+                  location.pathname === "/profile/identities/all"
+                    ? "bg-white text-black font-semibold"
+                    : "border-gray-600 text-gray-400 hover:bg-gray-800"
+                }`}
               >
                 All identities
               </Link>
               <Link
                 to="/profile/identities/created"
-                className={location.pathname === "/profile/identities/created" ? "font-semibold underline text-gray-200" : ""}
+                className={`px-3 py-1 rounded-full border text-[11px] italic ${
+                  location.pathname === "/profile/identities/created"
+                    ? "bg-white text-black font-semibold"
+                    : "border-gray-600 text-gray-400 hover:bg-gray-800"
+                }`}
               >
                 Created identities
               </Link>

@@ -18,7 +18,6 @@ const YourClaimsTab = () => {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Your Claims</h2>
       {data.triples.map((triple, index) => {
 
 
