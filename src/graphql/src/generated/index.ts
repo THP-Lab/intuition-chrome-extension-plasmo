@@ -10747,18 +10747,21 @@ export type GetClaimsByAddressQuery = {
         id: any
         subject: {
           __typename?: "atoms"
+          id: any
           label?: string | null
           image?: string | null
           type: any
         }
         predicate: {
           __typename?: "atoms"
+          id: any
           label?: string | null
           image?: string | null
           type: any
         }
         object: {
           __typename?: "atoms"
+          id: any
           label?: string | null
           image?: string | null
           type: any
@@ -13960,16 +13963,19 @@ export const GetClaimsByAddressDocument = `
       triple {
         id
         subject {
+          id
           label
           image
           type
         }
         predicate {
+          id
           label
           image
           type
         }
         object {
+          id
           label
           image
           type
@@ -22454,6 +22460,10 @@ export const GetClaimsByAddress = {
                                 selections: [
                                   {
                                     kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
                                     name: { kind: "Name", value: "label" }
                                   },
                                   {
@@ -22475,6 +22485,10 @@ export const GetClaimsByAddress = {
                                 selections: [
                                   {
                                     kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
                                     name: { kind: "Name", value: "label" }
                                   },
                                   {
@@ -22494,6 +22508,10 @@ export const GetClaimsByAddress = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "label" }

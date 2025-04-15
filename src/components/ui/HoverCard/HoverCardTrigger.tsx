@@ -1,30 +1,58 @@
-// src/components/ui/HoverCard/HoverCardTrigger.tsx
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { cn } from '~src/lib/utils'
 import * as HoverCardPrimitive from '@radix-ui/react-hover-card'
 
-interface HoverCardTriggerProps {
-  children: React.ReactNode
-  className?: string
-  asChild?: boolean
-  onMouseEnter?: () => void
-  onMouseLeave?: () => void
+interface HoverCardTriggerProps extends React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Trigger> {
+  className?: string;
+  asChild?: boolean;
+  isAtomTrigger?: boolean;
+  isSelected?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
-// Changeons le type de référence pour correspondre à ce que Radix UI attend
-export const HoverCardTrigger = React.forwardRef<HTMLAnchorElement, HoverCardTriggerProps>(
-  ({ children, className, asChild = false, ...props }, ref) => {
-    return (
-      <HoverCardPrimitive.Trigger
-        ref={ref}
-        className={cn("cursor-pointer w-full", className)}
-        asChild={asChild}
-        {...props}
-      >
-        {children}
-      </HoverCardPrimitive.Trigger>
-    );
-  }
-);
+export const HoverCardTrigger = forwardRef<
+  React.ElementRef<typeof HoverCardPrimitive.Trigger>, 
+  HoverCardTriggerProps
+>(({ 
+  className, 
+  asChild = false, 
+  isAtomTrigger = false, 
+  isSelected = false, 
+  ...props 
+}, ref) => {
+  // Style de base pour tous les triggers
+  const baseStyles = "cursor-pointer";
+  
+  // Styles spécifiques pour les atomes
+  const atomStyles = isAtomTrigger ? [
+    "relative z-[9000]",
+    "flex items-center gap-1",
+    "rounded-full px-2 py-1",
+    "text-sm text-foreground",
+    "bg-[hsl(var(--triple-background))]",
+    "hover:border-[hsl(var(--focus-atom-border))]",
+    "focus-visible:border-[hsl(var(--focus-atom-border))]",
+    "transition-all duration-200",
+    isSelected 
+      ? "border-2 border-[oklch(var(--borderAtomSelect))] atom-selected" 
+      : "border border-[hsl(var(--border-atom))]",
+  ] : [];
 
-HoverCardTrigger.displayName = 'HoverCardTrigger';
+  return (
+    <HoverCardPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        baseStyles, 
+        ...atomStyles,
+        className
+      )}
+      {...props}
+      asChild={asChild}
+    />
+  )
+})
+
+HoverCardTrigger.displayName = 'HoverCardTrigger'
+
+export default HoverCardTrigger

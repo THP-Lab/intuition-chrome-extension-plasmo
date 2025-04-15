@@ -19,7 +19,7 @@
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-    --accent: 210 40% 96.1%;
+    --accent: 0, 0%, 80%;
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
@@ -164,10 +164,40 @@
   }
 }
 
-.animate-fade-bg {
-  animation: fadeBg 2s ease-out forwards;
+html body nav .animate-fade-bg:hover {
+  background-color: transparent;
 }
 
+.animate-fade-bg {
+  position: relative;
+  background-color: transparent; /* Force le fond transparent */
+  animation: none; /* Désactive l'animation sur l'élément principal */
+}
+
+.animate-fade-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  border-radius: inherit; /* Hérite du border-radius du parent */
+  background-color: hsl(var(--accent));
+  animation: fadeOnlyBg 2s ease-out forwards;
+}
+
+@keyframes fadeOnlyBg {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6; /* Ajustez selon le niveau d'opacité souhaité */
+  }
+}
 
 
 @layer utilities {
@@ -209,6 +239,7 @@ html body .hover-card-content {
   opacity: 0;
   transform: translateY(10px) scale(0.98);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  visibility: hidden;
 }
 
 html body .hover-card-content[data-state="open"] {
@@ -216,9 +247,12 @@ html body .hover-card-content[data-state="open"] {
   background-color: white;
   color: black;
   opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
   border: 1px solid rgba(0, 0, 0, 0.1);
   max-height: 80vh;
   overflow-y: auto;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 html.dark body .hover-card-content[data-state="open"] {
@@ -230,13 +264,19 @@ html.dark body .hover-card-content[data-state="open"] {
 .atom-selected {
   @apply border-2;
   border-color: oklch(var(--borderAtomSelect));
-  animation: pulseOpacity 2s ease-in-out infinite;
+  animation: pulseOpacity 1.7s ease-in-out infinite;
   z-index: 9999;
-  box-shadow: 0 0 0 2px oklch(var(--borderAtomSelect) / 0.5);
+  transform: scale(1.05);
 }
 
 @keyframes pulseOpacity {
-  0% { opacity: 0.8; }
-  50% { opacity: 1; }
-  100% { opacity: 0.8; }
+  0% { 
+    opacity: 0.6; 
+  }
+  50% { 
+    opacity: 1; 
+  }
+  100% { 
+    opacity: 0.6; 
+  }
 }
