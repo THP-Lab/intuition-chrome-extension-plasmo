@@ -16,7 +16,6 @@ const ProfileTabs = () => {
 
   return (
     <>
-      {/* Onglets principaux */}
       <div className="flex gap-6 border-b pb-2">
         <Link
           to="/profile/claims/all"
@@ -44,7 +43,6 @@ const ProfileTabs = () => {
         </Link>
       </div>
 
-      {/* Sous-onglets dynamiques */}
       {(isClaims || isIdentities) && (
         <div className="flex gap-4 mt-2 mb-4 ml-2 text-xs italic text-gray-400">
           {isClaims && (
