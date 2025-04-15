@@ -13975,6 +13975,7 @@ export const GetClaimsByAddressDocument = `
           type
         }
         vault {
+          id
           positions_aggregate {
             aggregate {
               count
@@ -13982,6 +13983,7 @@ export const GetClaimsByAddressDocument = `
           }
         }
         counter_vault {
+          id
           positions_aggregate {
             aggregate {
               count
@@ -14170,6 +14172,7 @@ export const GetClaimsByUriDocument = `
           id
         }
         vault {
+          id
           positions_aggregate {
             aggregate {
               count
@@ -14180,6 +14183,7 @@ export const GetClaimsByUriDocument = `
           }
         }
         counter_vault {
+          id
           positions_aggregate {
             aggregate {
               count
@@ -16380,6 +16384,7 @@ export const GetTriplesByCreatorDocument = `
       type
     }
     vault {
+      id
       positions_aggregate {
         aggregate {
           count
@@ -16387,6 +16392,7 @@ export const GetTriplesByCreatorDocument = `
       }
     }
     counter_vault {
+      id
       positions_aggregate {
         aggregate {
           count

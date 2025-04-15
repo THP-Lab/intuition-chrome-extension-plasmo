@@ -23,21 +23,11 @@ const RelatedClaims = () => {
       </h2>
       
       <div className="space-y-2">
-        {data.claims_aggregate.nodes.map(({ triple, shares, counter_shares }) => (
+        {data.claims_aggregate.nodes.map(({ triple }) => (
           <div key={triple.id} className="transition-colors hover:bg-accent/5 rounded-md">
             <ClaimRowLite
-              subjectLabel={triple.subject?.label ?? "N/A"}
-              subjectImage={triple.subject?.image ?? undefined}
-              predicateLabel={triple.predicate?.label ?? "N/A"}
-              predicateImage={triple.predicate?.image ?? undefined}
-              objectLabel={triple.object?.label ?? "N/A"}
-              objectImage={triple.object?.image ?? undefined}
-              numPositionsFor={triple.vault?.positions_aggregate?.aggregate?.count ?? 0}
-              numPositionsAgainst={triple.counter_vault?.positions_aggregate?.aggregate?.count ?? 0}
-              userStake={Number(shares ?? 0)}
-              userCounterStake={Number(counter_shares ?? 0)}
-              vaultId={triple.vault?.id ?? ""}
-              counterVaultId={triple.counter_vault?.id ?? ""}
+              key={triple.id}
+              claim={triple}
             />
           </div>
         ))}

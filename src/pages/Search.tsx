@@ -65,27 +65,15 @@ const Search: React.FC = () => {
       
     
       console.log("Filtered triples:", filteredTriples)
+console.log("dataaaaaa",filteredTriples)
     
       return (
         <div className="space-y-2">
           {filteredTriples.length === 0 && <p>No results found.</p>}
           {filteredTriples.map((triple, index) => (
             <ClaimRowLite
-              key={triple.id}
-              subjectLabel={triple.subject?.label ?? "No subject"}
-              subjectImage={triple.subject?.image ?? undefined}
-              predicateLabel={triple.predicate?.label ?? "No predicate"}
-              predicateImage={triple.predicate?.image ?? undefined}
-              objectLabel={triple.object?.label ?? "No object"}
-              objectImage={triple.object?.image ?? undefined}
-              numPositionsFor={triple.vault?.positions?.length ?? 0}
-              numPositionsAgainst={triple.counter_vault?.positions?.length ?? 0}
-              userStake={0}
-              userCounterStake={0}
-              isFirst={index === 0}
-              isLast={index === filteredTriples.length - 1}
-              vaultId={triple.vault_id ? BigInt(triple.vault_id) : undefined}
-              counterVaultId={triple.counter_vault_id ? BigInt(triple.counter_vault_id) : undefined}
+              key={`${triple.id}-${index}`}
+              claim={triple}
             />
           ))}
         </div>

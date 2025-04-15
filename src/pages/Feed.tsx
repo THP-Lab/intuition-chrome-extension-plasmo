@@ -28,21 +28,10 @@ function Feed() {
           <>
             <p>{position.shares} ETH</p>
             <p>On :</p>
-            <ClaimRowLite
-              key={position.vault.triple?.id} 
-              subjectLabel={position.vault.triple?.subject.label ?? "No subject"}
-              subjectImage={position.vault.triple?.subject?.image ?? undefined}
-              predicateLabel={position.vault.triple?.predicate?.label ?? "No predicate"}
-              predicateImage={position.vault.triple?.predicate?.image ?? undefined}
-              objectLabel={position.vault.triple?.object?.label ?? "No object"}
-              objectImage={position.vault.triple?.object?.image ?? undefined}
-              numPositionsFor={position.vault.triple?.vault?.positions_aggregate.aggregate?.count ?? 0}
-              numPositionsAgainst={position.vault.triple?.counter_vault?.positions_aggregate.aggregate?.count ?? 0}
-              userStake={Number(0)}
-              userCounterStake={Number(0)}
-              isFirst={index === 0}
-              isLast={index === positions.length - 1}
-            />
+        <ClaimRowLite
+          key={`${position.vault.triple?.id}-${index}`}
+          claim={position}
+        />
           </>
           ))}
           </>

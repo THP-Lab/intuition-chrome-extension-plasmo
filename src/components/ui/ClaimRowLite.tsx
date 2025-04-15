@@ -2,47 +2,25 @@ import React from "react"
 import { cn } from "~src/lib/utils"
 import VoteButtons from "~src/components/VoteButtons"
 import { PopupAtom } from "./PopupAtom"
+import { useStorage } from "@plasmohq/storage/hook"
 
 interface ClaimRowLiteProps {
-  subjectLabel: string
-  subjectImage?: string
-  predicateLabel: string
-  predicateImage?: string
-  objectLabel: string
-  objectImage?: string
-  numPositionsFor: number
-  numPositionsAgainst: number
-  userStake: number
-  userCounterStake: number
-  isFirst?: boolean
-  isLast?: boolean
-  vaultId: string
-  counterVaultId: string
-  subjectId: string
-  predicateId: string
-  objectId: string
+  claim: any
 }
 
-export const ClaimRowLite = ({
-  subjectLabel,
-  subjectImage,
-  predicateLabel,
-  predicateImage,
-  objectLabel,
-  objectImage,
-  numPositionsFor,
-  numPositionsAgainst,
-  userStake,
-  userCounterStake,
-  isFirst = true,
-  isLast = true,
-  vaultId,
-  counterVaultId,
-  subjectId,
-  predicateId,
-  objectId
-}: ClaimRowLiteProps) => {
-  const isFor = userStake > 0
+export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
+  const [walletAddress] = useStorage<string>("metamask-account")
+  const { vault = {}, counter_vault: counterVault = {} } = claim
+
+  const numPositionsFor = vault.positions_aggregate?.aggregate?.count ?? claim.vault?.positions?.length ?? 0
+  const numPositionsAgainst = counterVault.positions_aggregate?.aggregate?.count ?? claim.counter_vault?.positions?.length ?? 0
+  const userStake = vault.positions?.find((pos) => pos.account?.id === walletAddress)?.shares ?? 0
+  const userCounterStake = counterVault.positions?.find((pos) => pos.account?.id === walletAddress)?.shares ?? 0
+
+
+  const vaultId = vault.id ?? claim.vault_id
+  const counterVaultId = counterVault.id ?? claim.counter_vault_id
+
   return (
     <div
       className={cn(
@@ -50,23 +28,19 @@ export const ClaimRowLite = ({
         )}
     >
       <div className="flex gap-1 items-center flex-wrap flex-1 min-w-0">
-        <React.Fragment>
-          {[
-            { label: subjectLabel, img: subjectImage, id: subjectId },
-            { label: predicateLabel, img: predicateImage, id: predicateId },
-            { label: objectLabel, img: objectImage, id: objectId }
-          ].map((atom, index) => {
-            return (
-              <PopupAtom
-                key={index.toString()}
-                atom={atom}
-                className="flex items-center gap-1 rounded-full px-2 py-1 text-sm text-foreground bg-[oklch(var(--triple-background))] w-fit flex-shrink-0"
-              />
-            );
-          })}
-        </React.Fragment>
+        <PopupAtom
+          key={claim.id.toString()}
+          atom={claim.subject}
+        />
+        <PopupAtom
+          key={claim.id.toString()}
+          atom={claim.predicate}
+        />
+        <PopupAtom
+          key={claim.id.toString()}
+          atom={claim.object}
+        />
       </div>
-
 
       {vaultId && counterVaultId ? (
         <div className="flex flex-col items-end gap-1">
@@ -76,9 +50,9 @@ export const ClaimRowLite = ({
             numPositionsFor={numPositionsFor}
             numPositionsAgainst={numPositionsAgainst}
           />
-          {(userStake) > 0 ? (
+          {userStake > 0 ? (
             <div className="text-sm text-green-600">You have voting FOR</div>
-          ) : (userCounterStake) > 0 ? (
+          ) : userCounterStake > 0 ? (
             <div className="text-sm text-red-600">You have voting AGAINST</div>
           ) : null}
         </div>
@@ -90,3 +64,4 @@ export const ClaimRowLite = ({
 }
 
 export default ClaimRowLite
+
