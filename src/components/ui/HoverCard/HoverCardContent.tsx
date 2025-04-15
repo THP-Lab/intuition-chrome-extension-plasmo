@@ -1,5 +1,6 @@
 // src/components/ui/HoverCard/HoverCardContent.tsx
 import React from 'react'
+
 import { cn } from '~src/lib/utils'
 import * as HoverCardPrimitive from '@radix-ui/react-hover-card'
 
@@ -13,7 +14,6 @@ interface HoverCardContentProps {
 
 export const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>(
   ({ className, isOpen, children, triggerRef, ...props }, ref) => {
-    // Filtrer setIsOpen des props
     const { setIsOpen, ...domProps } = props;
     
     return (
@@ -42,6 +42,5 @@ export const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardConten
     )
   }
 )
-
 
 HoverCardContent.displayName = 'HoverCardContent'
