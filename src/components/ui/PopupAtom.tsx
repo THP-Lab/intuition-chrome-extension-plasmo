@@ -16,8 +16,7 @@ interface PopupAtomProps {
 }
 
 export const PopupAtom = ({ atom, className }: PopupAtomProps) => {
-  const { id, label, image: propImage, img, instanceId } = atom;
-  const imageToUse = propImage || img;
+  const { id, label, image, instanceId } = atom;
   const uniqueIdRef = useRef<string>(
     instanceId || `${id}-${Math.random().toString(36).substr(2, 9)}`
   );
@@ -81,16 +80,16 @@ export const PopupAtom = ({ atom, className }: PopupAtomProps) => {
           }}
           type="button"
         >
-          {imageToUse && (
-            <img 
-              src={imageToUse}  
-              alt={label} 
-              className="w-5 h-5 rounded-full object-cover"
-              onError={(e) => {
-                e.currentTarget.src = "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
-              }}
-            />
-          )}
+          {image && (
+              <img 
+                src={image}  
+                alt={label} 
+                className="w-5 h-5 rounded-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
+                }}
+              />
+            )}
           <span 
             className="truncate max-w-[200px] overflow-hidden whitespace-nowrap block" 
             title={label}
