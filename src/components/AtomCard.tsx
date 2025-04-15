@@ -1,8 +1,10 @@
-import { UserRound } from "lucide-react"
+import { Fingerprint, UserRound } from "lucide-react"
+
 import React from "react"
 import { Link } from "react-router-dom"
 
 import { useAtomPosition } from "../hooks/useAtomPosition"
+
 
 interface Atom {
   id: string
@@ -41,56 +43,63 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
   const thing = atom.value?.thing
 
   return (
-    <div className="border rounded p-4 my-2">
-      <div className="flex items-center mb-2">
-        {atom.image && (
-          <img
-            src={atom.image}
-            alt={atom.label}
-            className="w-16 h-16 object-cover rounded mr-4"
-          />
-        )}
-        <div>
-          <h2 className="text-xl font-bold">{atom.label}</h2>
+    <div className="border border-border-atom rounded-xl p-4 my-2 claims-hover-effect transition-all duration-200">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          {atom.image ? (
+            <img
+              src={atom.image}
+              alt={atom.label}
+              className="w-12 h-12 object-cover rounded-md"
+            />
+          ) : (
+            <div className="w-12 h-12 flex items-center justify-center rounded-md bg-muted text-muted-foreground">
+            <Fingerprint className="w-6 h-6" />
+          </div>
+          )}
+          <div>
+            <h2 className="text-base font-semibold">{atom.label}</h2>
+            {thing?.name && (
+              <p className="text-sm text-muted-foreground">{thing.name}</p>
+            )}
+          </div>
         </div>
-        <div
-          className="ml-auto"
-          title={`${atom.vault?.position_count ?? 0} users staked on this atom`}>
-          <p className="text-sm">
-            <UserRound /> {atom.vault?.position_count ?? 0}
+
+        <div className="flex items-center gap-2">
+          <p className="flex items-center text-sm text-muted-foreground">
+            <UserRound className="w-4 h-4 mr-1" />
+            {atom.vault?.position_count ?? 0}
           </p>
-        </div>
-        <div className="mt-4 flex flex-col items-start">
           <button
             onClick={() => atomPosition(BigInt(atom.id))}
             disabled={isVoting}
-            className="text-for border border-for rounded-md px-2 py-1 hover:bg-for hover:text-white ml-1">
+            className="text-for border border-for rounded-md px-2 py-0.5 hover:bg-for hover:text-white text-xs"
+            title="Vote for this atom"
+          >
             ↑
           </button>
-          {txHash && (
-            <p className="text-green-600 text-sm mt-2">Tx: {txHash}</p>
-          )}
         </div>
       </div>
 
-      {thing && (
-        <div className="mt-2">
-          {thing.name && (
-            <h3 className="text-lg font-semibold">{thing.name}</h3>
-          )}
-          {thing.description && (
-            <p className="text-sm text-gray-600">{thing.description}</p>
-          )}
-          {thing.url && (
-            <Link
-              to={thing.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 underline text-sm">
-              {thing.url}
-            </Link>
-          )}
-        </div>
+      {thing?.description && (
+        <p className="text-sm text-gray-400 line-clamp-3 mt-2">
+          {thing.description}
+        </p>
+      )}
+
+      {thing?.url && (
+        <Link
+          to={thing.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-blue-400 underline mt-1 inline-block"
+        >
+          {thing.url}
+        </Link>
+      )}
+
+      {txHash && (
+        <p className="text-green-500 text-xs mt-2">Tx: {txHash}</p>
       )}
     </div>
   )
