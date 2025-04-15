@@ -1,7 +1,5 @@
 import React from "react"
 
-import { useStorage } from "@plasmohq/storage/hook"
-
 import VoteButtons from "~src/components/VoteButtons"
 import { cn } from "~src/lib/utils"
 
@@ -12,23 +10,20 @@ interface ClaimRowLiteProps {
 }
 
 export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
-  const [walletAddress] = useStorage<string>("metamask-account")
   const { vault = {}, counter_vault: counterVault = {} } = claim
 
   const numPositionsFor =
     vault.positions_aggregate?.aggregate?.count ??
-    claim.vault?.positions?.length ??
-    0
+    vault.position_count ??
+    vault.positions?.length ?? 0
+    
   const numPositionsAgainst =
     counterVault.positions_aggregate?.aggregate?.count ??
-    claim.counter_vault?.positions?.length ??
-    0
-  const userStake =
-    vault.positions?.find((pos) => pos.account?.id === walletAddress)?.shares ??
-    0
-  const userCounterStake =
-    counterVault.positions?.find((pos) => pos.account?.id === walletAddress)
-      ?.shares ?? 0
+    counterVault.position_count ??
+    counterVault.positions?.length ?? 0
+
+    const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
+    const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
 
   const vaultId = vault.id ?? claim.vault_id
   const counterVaultId = counterVault.id ?? claim.counter_vault_id
