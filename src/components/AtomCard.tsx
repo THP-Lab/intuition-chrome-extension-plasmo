@@ -38,6 +38,7 @@ interface AtomCardProps {
 
 export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
   const { atomPosition, isVoting, txHash } = useAtomPosition()
+  const thing = atom.value?.thing
 
   return (
     <div className="border rounded p-4 my-2">
@@ -54,9 +55,9 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
         </div>
         <div
           className="ml-auto"
-          title={`${atom.vault.position_count} users staked on this atom`}>
+          title={`${atom.vault?.position_count ?? 0} users staked on this atom`}>
           <p className="text-sm">
-            <UserRound /> {atom.vault.position_count}
+            <UserRound /> {atom.vault?.position_count ?? 0}
           </p>
         </div>
         <div className="mt-4 flex flex-col items-start">
@@ -72,23 +73,21 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
         </div>
       </div>
 
-      {atom.value.thing && (
+      {thing && (
         <div className="mt-2">
-          {atom.value.thing.name && (
-            <h3 className="text-lg font-semibold">{atom.value.thing.name}</h3>
+          {thing.name && (
+            <h3 className="text-lg font-semibold">{thing.name}</h3>
           )}
-          {atom.value.thing.description && (
-            <p className="text-sm text-gray-600">
-              {atom.value.thing.description}
-            </p>
+          {thing.description && (
+            <p className="text-sm text-gray-600">{thing.description}</p>
           )}
-          {atom.value.thing.url && (
+          {thing.url && (
             <Link
-              to={atom.value.thing.url}
+              to={thing.url}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 underline text-sm">
-              {atom.value.thing.url}
+              {thing.url}
             </Link>
           )}
         </div>
