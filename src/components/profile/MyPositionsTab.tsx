@@ -23,6 +23,13 @@ const MyPositionsTab = () => {
 
   return (
     <div className="space-y-4">
+      <p className="text-xs text-gray-400 font-medium mt-2 mb-1 flex justify-start items-center gap-2">
+        Claims
+        <span className="bg-gray-700 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+          {filteredClaims.length}
+        </span>
+      </p>
+
       {filteredClaims.map((claim, index) => {
 
         console.log("CLAIM DEBUG", {
