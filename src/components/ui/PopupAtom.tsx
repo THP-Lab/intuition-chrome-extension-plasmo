@@ -39,7 +39,7 @@ export const PopupAtom = ({ atom, className }: PopupAtomProps) => {
   });
 
   return (
-    <div ref={atomRef} className="relative flex items-center gap-1 border border-[oklch(var(--borderAtom))] rounded-full px-2 py-1 text-sm text-foreground bg-[oklch(var(--triple-background))] w-fit flex-shrink-0">
+    <div ref={atomRef} className="relative">
       <HoverCard 
         open={isSelected || isHovered}
         onOpenChange={(open) => {
