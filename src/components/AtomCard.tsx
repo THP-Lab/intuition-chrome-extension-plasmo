@@ -11,12 +11,12 @@ interface Atom {
   label: string
   image?: string
   emoji?: string
-  value: {
+  value?: {
     thing?: {
-      name?: string
-      image?: string
-      description?: string
-      url?: string
+      name?: string | null
+      image?: string | null
+      description?: string | null
+      url?: string | null
     }
   }
   vault: {
@@ -29,7 +29,7 @@ interface Atom {
     position_count?: string
     positions?: string
   }
-  vault_id: string
+  vault_id?: string
 }
 
 interface AtomCardProps {
