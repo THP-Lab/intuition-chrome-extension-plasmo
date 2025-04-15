@@ -23,7 +23,6 @@ const MyPositionsTab = () => {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Your Positions</h2>
       {filteredClaims.map((claim, index) => {
 
         console.log("CLAIM DEBUG", {
