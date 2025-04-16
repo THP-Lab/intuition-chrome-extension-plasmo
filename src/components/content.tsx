@@ -53,7 +53,6 @@ const Content = ({ children }: ContentProps) => {
                 <Route path="*" element={<Home />} />
                 <Route path="/" element={<Home />} />
 
-                {/* PROFILE */}
                 <Route path="/profile" element={<Profile />}>
                   <Route index element={<Navigate to="/profile/claims/all" />} />
                   <Route element={<ProfileLayout />}>
@@ -71,8 +70,7 @@ const Content = ({ children }: ContentProps) => {
                     <Route path="following" element={<FollowingTab />} />
                   </Route>
                 </Route>
-
-                {/* AUTRES PAGES */}
+                
                 <Route path="/feed" element={<Feed />} />
                 <Route path="/page-form" element={<PageForm />} />
                 <Route path="/recent-activity" element={<RecentActivity />} />
