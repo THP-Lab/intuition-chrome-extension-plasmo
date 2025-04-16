@@ -1,8 +1,7 @@
-import React, { useState, useRef, useId } from 'react'
+import React, { useRef, useId } from 'react'
 import { HoverCard, HoverCardTrigger, HoverCardContent } from './HoverCard'
 import { useGetAtomQuery } from "@0xintuition/graphql"
 import { useOnClickOutside } from '~src/hooks/useOnClickOutside'
-import { useAtomSelection } from './AtomSelectionContext'
 import { ImageWithFallback } from './ImageWithFallback'
 import { useAtomInteraction } from '~src/hooks/useAtomInteraction'
 
@@ -13,10 +12,9 @@ interface PopupAtomProps {
     image?: string
     instanceId?: string
   }
-  className?: string
 }
 
-export const PopupAtom = ({ atom, className }: PopupAtomProps) => {
+export const PopupAtom = ({ atom }: PopupAtomProps) => {
   const { id, label, image, instanceId } = atom;
   
   const uniqueId = useId();
@@ -27,7 +25,6 @@ export const PopupAtom = ({ atom, className }: PopupAtomProps) => {
   
   const { 
     isSelected, 
-    isHovered, 
     setIsHovered, 
     handleClick, 
     isOpen, 
