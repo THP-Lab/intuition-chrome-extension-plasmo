@@ -4,47 +4,62 @@ query getFollowingsFromAddress($address: String!) {
     image
     label
     type
-    
-    triples( order_by: { id: desc }) {
-    id
-    subject {
+
+    triples(order_by: { id: desc }) {
       id
-      label
-      image
-      type
-    }
-    predicate {
-      id
-      label
-      image
-      type
-    }
-    object {
-      id
-      label
-      image
-      type
-    }
-    vault_id
-    counter_vault_id
-    vault {
-      id
-      positions_aggregate {
-        aggregate {
-          count
+      subject {
+        id
+        label
+        image
+        type
+      }
+      predicate {
+        id
+        label
+        image
+        type
+      }
+      object {
+        id
+        label
+        image
+        type
+      }
+      vault_id
+      counter_vault_id
+
+      vault {
+        id
+        positions_aggregate {
+          aggregate {
+            count
+          }
+        }
+        positions(where: { account_id: { _eq: $address } }) { 
+          shares
+          account {
+            id
+          }
+        }
+      }
+
+      counter_vault {
+        id
+        positions_aggregate {
+          aggregate {
+            count
+          }
+        }
+        positions(where: { account_id: { _eq: $address } }) {
+          shares
+          account {
+            id
+          }
         }
       }
     }
-    counter_vault {
-      id
-      positions_aggregate {
-        aggregate {
-          count
-        }
-      }
-    }
-  }
-    positions_aggregate( limit: 10 ) {
+
+    positions_aggregate(limit: 10) {
       aggregate {
         count
       }
@@ -55,16 +70,19 @@ query getFollowingsFromAddress($address: String!) {
           triple {
             id
             object {
+              id
               type
               image
               label
             }
             predicate {
+              id
               type
               image
               label
             }
             subject {
+              id
               type
               image
               label
@@ -76,6 +94,12 @@ query getFollowingsFromAddress($address: String!) {
                   count
                 }
               }
+              positions(where: { account_id: { _eq: $address } }) {
+                shares
+                account {
+                  id
+                }
+              }
             }
             vault {
               id
@@ -84,8 +108,14 @@ query getFollowingsFromAddress($address: String!) {
                   count
                 }
               }
+              positions(where: { account_id: { _eq: $address } }) {
+                shares
+                account {
+                  id
+                }
+              }
             }
-          } 
+          }
         }
       }
     }

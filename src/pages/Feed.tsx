@@ -70,7 +70,7 @@ function Feed() {
       </div>
 
       
-      {filteredActions.map((action, index) => (
+      {filteredActions.map((action, index) => action.triple ? (
         <div key={`${action.triple.id}-${index}`} className="border-b pb-3 mb-3">
           <div className="flex items-center gap-2 mb-2">
             <img
@@ -81,7 +81,7 @@ function Feed() {
             <span className="text-sm font-medium">{action.user.label}</span>
             {action.type === "vote" ? (
               <span
-                className={`text-xs ${action.isFor ? "text-green-400" : "text-red-400"}`}
+                className={`text-xs ${action.isFor ? "text-green-600" : "text-red-600"}`}
               >
                 {action.isFor ? "voted FOR this claim:" : "voted AGAINST this claim:"}
               </span>
@@ -91,8 +91,8 @@ function Feed() {
           </div>
 
           <ClaimRowLite claim={action.triple} />
-        </div>
-      ))}
+        </div> ) : null
+      )}
     </div>
   )
 }

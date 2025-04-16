@@ -11035,6 +11035,11 @@ export type GetFollowingsFromAddressQuery = {
             count: number
           } | null
         }
+        positions: Array<{
+          __typename?: "positions"
+          shares: any
+          account?: { __typename?: "accounts"; id: string } | null
+        }>
       } | null
       counter_vault?: {
         __typename?: "vaults"
@@ -11046,6 +11051,11 @@ export type GetFollowingsFromAddressQuery = {
             count: number
           } | null
         }
+        positions: Array<{
+          __typename?: "positions"
+          shares: any
+          account?: { __typename?: "accounts"; id: string } | null
+        }>
       } | null
     }>
     positions_aggregate: {
@@ -11065,18 +11075,21 @@ export type GetFollowingsFromAddressQuery = {
             id: any
             object: {
               __typename?: "atoms"
+              id: any
               type: any
               image?: string | null
               label?: string | null
             }
             predicate: {
               __typename?: "atoms"
+              id: any
               type: any
               image?: string | null
               label?: string | null
             }
             subject: {
               __typename?: "atoms"
+              id: any
               type: any
               image?: string | null
               label?: string | null
@@ -11091,6 +11104,11 @@ export type GetFollowingsFromAddressQuery = {
                   count: number
                 } | null
               }
+              positions: Array<{
+                __typename?: "positions"
+                shares: any
+                account?: { __typename?: "accounts"; id: string } | null
+              }>
             } | null
             vault?: {
               __typename?: "vaults"
@@ -11102,6 +11120,11 @@ export type GetFollowingsFromAddressQuery = {
                   count: number
                 } | null
               }
+              positions: Array<{
+                __typename?: "positions"
+                shares: any
+                account?: { __typename?: "accounts"; id: string } | null
+              }>
             } | null
           } | null
         }
@@ -14601,12 +14624,24 @@ export const GetFollowingsFromAddressDocument = `
             count
           }
         }
+        positions(where: {account_id: {_eq: $address}}) {
+          shares
+          account {
+            id
+          }
+        }
       }
       counter_vault {
         id
         positions_aggregate {
           aggregate {
             count
+          }
+        }
+        positions(where: {account_id: {_eq: $address}}) {
+          shares
+          account {
+            id
           }
         }
       }
@@ -14622,16 +14657,19 @@ export const GetFollowingsFromAddressDocument = `
           triple {
             id
             object {
+              id
               type
               image
               label
             }
             predicate {
+              id
               type
               image
               label
             }
             subject {
+              id
               type
               image
               label
@@ -14643,12 +14681,24 @@ export const GetFollowingsFromAddressDocument = `
                   count
                 }
               }
+              positions(where: {account_id: {_eq: $address}}) {
+                shares
+                account {
+                  id
+                }
+              }
             }
             vault {
               id
               positions_aggregate {
                 aggregate {
                   count
+                }
+              }
+              positions(where: {account_id: {_eq: $address}}) {
+                shares
+                account {
+                  id
                 }
               }
             }
@@ -24233,6 +24283,69 @@ export const GetFollowingsFromAddress = {
                                   }
                                 ]
                               }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "positions" },
+                              arguments: [
+                                {
+                                  kind: "Argument",
+                                  name: { kind: "Name", value: "where" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: {
+                                          kind: "Name",
+                                          value: "account_id"
+                                        },
+                                        value: {
+                                          kind: "ObjectValue",
+                                          fields: [
+                                            {
+                                              kind: "ObjectField",
+                                              name: {
+                                                kind: "Name",
+                                                value: "_eq"
+                                              },
+                                              value: {
+                                                kind: "Variable",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "address"
+                                                }
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ],
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "shares" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "account" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "id" }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
                             }
                           ]
                         }
@@ -24265,6 +24378,69 @@ export const GetFollowingsFromAddress = {
                                         {
                                           kind: "Field",
                                           name: { kind: "Name", value: "count" }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "positions" },
+                              arguments: [
+                                {
+                                  kind: "Argument",
+                                  name: { kind: "Name", value: "where" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: {
+                                          kind: "Name",
+                                          value: "account_id"
+                                        },
+                                        value: {
+                                          kind: "ObjectValue",
+                                          fields: [
+                                            {
+                                              kind: "ObjectField",
+                                              name: {
+                                                kind: "Name",
+                                                value: "_eq"
+                                              },
+                                              value: {
+                                                kind: "Variable",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "address"
+                                                }
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ],
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "shares" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "account" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "id" }
                                         }
                                       ]
                                     }
@@ -24347,6 +24523,13 @@ export const GetFollowingsFromAddress = {
                                                 kind: "Field",
                                                 name: {
                                                   kind: "Name",
+                                                  value: "id"
+                                                }
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
                                                   value: "type"
                                                 }
                                               },
@@ -24380,6 +24563,13 @@ export const GetFollowingsFromAddress = {
                                                 kind: "Field",
                                                 name: {
                                                   kind: "Name",
+                                                  value: "id"
+                                                }
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
                                                   value: "type"
                                                 }
                                               },
@@ -24409,6 +24599,13 @@ export const GetFollowingsFromAddress = {
                                           selectionSet: {
                                             kind: "SelectionSet",
                                             selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "id"
+                                                }
+                                              },
                                               {
                                                 kind: "Field",
                                                 name: {
@@ -24479,6 +24676,85 @@ export const GetFollowingsFromAddress = {
                                                     }
                                                   ]
                                                 }
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "positions"
+                                                },
+                                                arguments: [
+                                                  {
+                                                    kind: "Argument",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "where"
+                                                    },
+                                                    value: {
+                                                      kind: "ObjectValue",
+                                                      fields: [
+                                                        {
+                                                          kind: "ObjectField",
+                                                          name: {
+                                                            kind: "Name",
+                                                            value: "account_id"
+                                                          },
+                                                          value: {
+                                                            kind: "ObjectValue",
+                                                            fields: [
+                                                              {
+                                                                kind: "ObjectField",
+                                                                name: {
+                                                                  kind: "Name",
+                                                                  value: "_eq"
+                                                                },
+                                                                value: {
+                                                                  kind: "Variable",
+                                                                  name: {
+                                                                    kind: "Name",
+                                                                    value:
+                                                                      "address"
+                                                                  }
+                                                                }
+                                                              }
+                                                            ]
+                                                          }
+                                                        }
+                                                      ]
+                                                    }
+                                                  }
+                                                ],
+                                                selectionSet: {
+                                                  kind: "SelectionSet",
+                                                  selections: [
+                                                    {
+                                                      kind: "Field",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "shares"
+                                                      }
+                                                    },
+                                                    {
+                                                      kind: "Field",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "account"
+                                                      },
+                                                      selectionSet: {
+                                                        kind: "SelectionSet",
+                                                        selections: [
+                                                          {
+                                                            kind: "Field",
+                                                            name: {
+                                                              kind: "Name",
+                                                              value: "id"
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
                                               }
                                             ]
                                           }
@@ -24522,6 +24798,85 @@ export const GetFollowingsFromAddress = {
                                                             name: {
                                                               kind: "Name",
                                                               value: "count"
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              },
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "positions"
+                                                },
+                                                arguments: [
+                                                  {
+                                                    kind: "Argument",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "where"
+                                                    },
+                                                    value: {
+                                                      kind: "ObjectValue",
+                                                      fields: [
+                                                        {
+                                                          kind: "ObjectField",
+                                                          name: {
+                                                            kind: "Name",
+                                                            value: "account_id"
+                                                          },
+                                                          value: {
+                                                            kind: "ObjectValue",
+                                                            fields: [
+                                                              {
+                                                                kind: "ObjectField",
+                                                                name: {
+                                                                  kind: "Name",
+                                                                  value: "_eq"
+                                                                },
+                                                                value: {
+                                                                  kind: "Variable",
+                                                                  name: {
+                                                                    kind: "Name",
+                                                                    value:
+                                                                      "address"
+                                                                  }
+                                                                }
+                                                              }
+                                                            ]
+                                                          }
+                                                        }
+                                                      ]
+                                                    }
+                                                  }
+                                                ],
+                                                selectionSet: {
+                                                  kind: "SelectionSet",
+                                                  selections: [
+                                                    {
+                                                      kind: "Field",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "shares"
+                                                      }
+                                                    },
+                                                    {
+                                                      kind: "Field",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "account"
+                                                      },
+                                                      selectionSet: {
+                                                        kind: "SelectionSet",
+                                                        selections: [
+                                                          {
+                                                            kind: "Field",
+                                                            name: {
+                                                              kind: "Name",
+                                                              value: "id"
                                                             }
                                                           }
                                                         ]
