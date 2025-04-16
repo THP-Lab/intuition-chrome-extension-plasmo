@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react"
 import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
 import TabSystem from "../components/TabSystem"
-import { useGetTriplesQuery } from "@0xintuition/graphql"
+import { useGetTriplesWithPositionsQuery } from "@0xintuition/graphql"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
+import { useStorage } from "@plasmohq/storage/dist/hook"
 
 
 const Search: React.FC = () => {
   const [isSidePanel, setIsSidePanel] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("All")
+  const [walletAddress] = useStorage<string>("metamask-account")
 
   useEffect(() => {
     const checkWidth = () => {
@@ -29,16 +31,17 @@ const Search: React.FC = () => {
     data: triplesData,
     isLoading,
     error
-  } = useGetTriplesQuery({
+  } = useGetTriplesWithPositionsQuery({
     where: {
       _or: [
         { subject: { label: { _ilike: `%${searchTerm}%` } } },
         { predicate: { label: { _ilike: `%${searchTerm}%` } } },
         { object: { label: { _ilike: `%${searchTerm}%` } } }
       ]
-    }
+    },
+    address: walletAddress
   }, {
-    enabled: !!searchTerm
+    enabled: !!searchTerm && !!walletAddress
   })
 
   
