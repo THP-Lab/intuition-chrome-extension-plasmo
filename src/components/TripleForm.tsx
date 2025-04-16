@@ -127,19 +127,20 @@ const TripleForm: React.FC = () => {
         <AtomAutocompleteInput label="Predicate" onSelect={setPredicate} selected={predicate} />
         <AtomAutocompleteInput label="Object" onSelect={setObject} selected={object} />
 
-        <div className="flex gap-4">
+        <div className="flex gap-8 justify-center">
           <button
             type="button"
             onClick={handleAddTriple}
-            className="px-4 py-2 bg-background text-foreground  hover:bg-accent hover:text-accent-foreground rounded"
+            className="px-4 py-2 bg-background text-foreground rounded hover:bg-[hsl(var(--accent))] text-center"
           >
-            Add</button>
-
+            Add
+          </button>
+            
           <button
             type="button"
             onClick={handleSubmitAll}
             disabled={isLoading}
-            className="px-4 py-2 bg-background text-foreground  hover:bg-accent hover:text-accent-foreground rounded"
+            className="px-4 py-2 bg-background text-foreground rounded hover:bg-[hsl(var(--accent))] text-center"
           >
             {isLoading ? "Send..." : triples.length > 1 ? "Submit all triples" : "Submit"}
           </button>
