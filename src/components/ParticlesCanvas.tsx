@@ -18,10 +18,10 @@ const ParticlesCanvas: React.FC = () => {
   const mouse = useRef({ x: 0, y: 0 })
   const animationFrameId = useRef<number>()
   
-  // Configuration - réduit le nombre de particules
+  // Configuration - reduced number of particles
   const particleCount = 70 // Réduit de 100 à 50
   const connectionDistance = 200
-  // Adapte les couleurs au thème
+  // adapted colors to the theme
   const lightThemeColor = "rgba(0, 0, 0, 0.3)" // Couleur plus subtile pour thème clair
   const darkThemeColor = "rgba(255, 255, 255, 0.5)" // Couleur plus visible pour thème sombre
   const backgroundColor = "transparent"
@@ -33,29 +33,29 @@ const ParticlesCanvas: React.FC = () => {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
     
-    // Ajuster la taille du canvas à la fenêtre
+    // Adjust the size of the canvas to the window
     const handleResize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
       initParticles()
     }
     
-    // Initialiser les particules
+    // Initialize the particles
     const initParticles = () => {
       particles.current = []
       for (let i = 0; i < particleCount; i++) {
         particles.current.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          size: Math.random() * 2 + 1, // Taille légèrement réduite
-          speedX: Math.random() * 0.5 - 0.25, // Vitesse réduite
-          speedY: Math.random() * 0.5 - 0.25, // Vitesse réduite
+          size: Math.random() * 2 + 1, // Slightly reduced size
+          speedX: Math.random() * 0.5 - 0.25, // Reduced speed
+          speedY: Math.random() * 0.5 - 0.25, // Reduced speed
           color: theme === "dark" ? darkThemeColor : lightThemeColor
         })
       }
     }
     
-    // Suivre la position de la souris avec effet parallax
+    // Follow the mouse position with parallax effect
     const handleMouseMove = (e: MouseEvent) => {
       const prevX = mouse.current.x
       const prevY = mouse.current.y
@@ -63,14 +63,14 @@ const ParticlesCanvas: React.FC = () => {
       mouse.current.x = e.x
       mouse.current.y = e.y
       
-      // Effet parallax - déplacer légèrement toutes les particules
+      // Parallax effect - move the particles slightly
       particles.current.forEach(p => {
-        p.x += (mouse.current.x - prevX) * 0.05; // Rend l'effet plus visible
+        p.x += (mouse.current.x - prevX) * 0.05; // Make the effect more visible
         p.y += (mouse.current.y - prevY) * 0.05;
       });
     }
     
-    // Ajouter 4 particules au clic
+    // Add 4 particles on click
     const handleClick = () => {
       for (let i = 0; i < 4; i++) {
         particles.current.push({
@@ -84,29 +84,29 @@ const ParticlesCanvas: React.FC = () => {
       }
     }
     
-    // Animation du canvas
+    // Animation of the canvas
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height) // Plus efficace que fillRect avec transparent
+      ctx.clearRect(0, 0, canvas.width, canvas.height) // More efficient than fillRect with transparent
       
-      // Dessiner et mettre à jour chaque particule
+      // Draw and update each particle
       particles.current.forEach((particle, i) => {
-        // Mettre à jour la position
+        // Update the position
         particle.x += particle.speedX
         particle.y += particle.speedY
         
-        // Rebondir sur les bords
+        // Bounce on the edges
         if (particle.x > canvas.width) particle.x = 0
         else if (particle.x < 0) particle.x = canvas.width
         if (particle.y > canvas.height) particle.y = 0
         else if (particle.y < 0) particle.y = canvas.height
         
-        // Dessiner la particule
+        // Draw the particle
         ctx.fillStyle = particle.color
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fill()
         
-        // Connecter les particules proches
+        // Connect the nearby particles
         for (let j = i + 1; j < particles.current.length; j++) {
           const p2 = particles.current[j]
           const dx = particle.x - p2.x
@@ -114,7 +114,7 @@ const ParticlesCanvas: React.FC = () => {
           const distance = Math.sqrt(dx * dx + dy * dy)
           
           if (distance < connectionDistance) {
-            // Transparence des lignes adaptée au thème
+            // Transparency of the lines adapted to the theme
             const lineColor = theme === "dark" 
               ? `rgba(255, 255, 255, ${(1 - distance / connectionDistance) * 0.3})` 
               : `rgba(0, 0, 0, ${(1 - distance / connectionDistance) * 0.15})`
@@ -128,7 +128,7 @@ const ParticlesCanvas: React.FC = () => {
           }
         }
         
-        // Effet de répulsion au survol
+        // Repulsion effect when hovering
         const dx = mouse.current.x - particle.x
         const dy = mouse.current.y - particle.y
         const distance = Math.sqrt(dx * dx + dy * dy)
@@ -146,7 +146,7 @@ const ParticlesCanvas: React.FC = () => {
           particle.speedY = Math.sign(particle.speedY) * maxSpeed;
         }
 
-        // Ajoute une petite résistance pour éviter l'accélération continue
+        // Add a small resistance to avoid continuous acceleration
         particle.speedX *= 0.98;
         particle.speedY *= 0.98;
       })
@@ -154,16 +154,16 @@ const ParticlesCanvas: React.FC = () => {
       animationFrameId.current = requestAnimationFrame(animate)
     }
     
-    // Configurer les événements
+    // Configure the events
     window.addEventListener("resize", handleResize)
     canvas.addEventListener("mousemove", handleMouseMove)
     canvas.addEventListener("click", handleClick)
     
-    // Initialiser et démarrer l'animation
+    // Initialize and start the animation
     handleResize()
     animate()
     
-    // Nettoyage
+    // Cleaning
     return () => {
       window.removeEventListener("resize", handleResize)
       canvas.removeEventListener("mousemove", handleMouseMove)
@@ -172,7 +172,7 @@ const ParticlesCanvas: React.FC = () => {
         cancelAnimationFrame(animationFrameId.current)
       }
     }
-  }, [theme]) // Ajouter theme comme dépendance pour que l'effet se réinitialise quand le thème change
+  }, [theme]) // Add theme as a dependency so that the effect is reinitialized when the theme changes
 
   return (
     <div className="particles-container">
