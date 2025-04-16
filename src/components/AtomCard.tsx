@@ -82,7 +82,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
       </div>
 
       {thing?.description && (
-        <p className="text-sm text-gray-400 line-clamp-3 mt-2">
+        <p className="text-sm text-gray-400 line-clamp-2 mt-2">
           {thing.description}
         </p>
       )}

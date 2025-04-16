@@ -1,6 +1,8 @@
+import { useGetAtomQuery } from "@0xintuition/graphql"
 import React from "react"
 import { useParams } from "react-router-dom"
-import { useGetAtomQuery } from "@0xintuition/graphql"
+
+import AtomDisplay from "~src/components/ui/AtomDisplay"
 
 const AtomDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -10,18 +12,17 @@ const AtomDetailPage = () => {
   )
 
   if (isLoading) return <div className="p-4">Loading identity...</div>
-  if (isError) return <div className="p-4 text-red-500">Error: {(error as any).message}</div>
+  if (isError)
+    return (
+      <div className="p-4 text-red-500">Error: {(error as any).message}</div>
+    )
   if (!data?.atom) return <div className="p-4">No identity found</div>
 
   return (
-    <div className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">{data.atom.label}</h1>
-      {data.atom.value?.thing?.description && (
-        <p className="text-gray-400">{data.atom.value.thing.description}</p>
-      )}
+    <div className="p-4">
+      <AtomDisplay atom={data.atom} />
     </div>
   )
-
 }
 
-export default AtomDetailPage;
+export default AtomDetailPage
