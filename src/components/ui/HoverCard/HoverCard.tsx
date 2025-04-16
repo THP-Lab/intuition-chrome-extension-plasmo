@@ -1,5 +1,4 @@
-// src/components/ui/HoverCard/HoverCard.tsx
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import * as HoverCardPrimitive from '@radix-ui/react-hover-card'
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -22,32 +21,41 @@ interface HoverCardProps {
   children: React.ReactNode
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  openDelay?: number
+  closeDelay?: number
 }
 
-export const HoverCard = ({ children, open, onOpenChange }: HoverCardProps) => {
-  const [isOpen, setIsOpen] = useState(open || false)
-  // Utilisez le hook useDebounce pour lisser les changements d'état
+export const HoverCard = ({ 
+  children, 
+  open, 
+  onOpenChange,
+  openDelay = 200,
+  closeDelay = 300
+}: HoverCardProps) => {
+  const [isOpen, setIsOpen] = useState(open || false);
   const debouncedIsOpen = useDebounce<boolean>(isOpen, 100);
+
+  const handleOpenChange = useCallback((newOpen: boolean) => {
+    setIsOpen(newOpen);
+    onOpenChange?.(newOpen);
+  }, [onOpenChange]);
 
   useEffect(() => {
     if (open !== undefined) {
-      setIsOpen(open)
-      onOpenChange?.(open)
+      setIsOpen(open);
     }
-  }, [open, onOpenChange])
+  }, [open]);
   
   return (
     <HoverCardPrimitive.Root 
-      openDelay={200}
-      closeDelay={300}
-      // Utilisez debouncedIsOpen au lieu de isOpen
+      openDelay={openDelay}
+      closeDelay={closeDelay}
       open={debouncedIsOpen} 
-      onOpenChange={(newOpen: boolean) => {
-        setIsOpen(newOpen)
-        onOpenChange?.(newOpen)
-      }}
+      onOpenChange={handleOpenChange}
     >
       {children}
     </HoverCardPrimitive.Root>
   )
 }
+
+export default HoverCard;

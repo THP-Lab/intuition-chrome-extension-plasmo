@@ -20,7 +20,12 @@ function Navbar() {
     setTheme(theme === "dark" ? "light" : "dark")
   }
 
-  const isActive = (path: string) => location.pathname === path
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/' || location.pathname === '/home';
+    }
+    return location.pathname.startsWith(path);
+  }
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-[hsl(var(--navbar-bg))] backdrop-blur-lg">
