@@ -2,7 +2,7 @@ import React from "react"
 
 import { ThemeProvider } from "../components/ThemeProvider"
 import IntuitionPortalPanel from "~src/components/icons/intuition_portal_panel"
-
+import ParticlesCanvas from "~src/components/ParticlesCanvas"
 import Content from "~src/components/content"
 
 function IndexPopup() {
@@ -16,7 +16,7 @@ function IndexPopup() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="intuition-theme">
       <div className="min-w-[600px] min-h-[600px] p-4 bg-background text-foreground relative">
-      
+      <ParticlesCanvas />
         <div style={{ position: 'absolute', left: `${portalX}px`, top: `${portalY}px` }}>
           <IntuitionPortalPanel 
             onClick={handleSidePanel}
