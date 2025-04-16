@@ -15,6 +15,7 @@ import Profile from "~src/pages/Profile"
 import RecentActivity from "~src/pages/RecentActivity"
 import Search from "~src/pages/Search"
 import { AtomSelectionProvider } from "./ui/AtomSelectionContext"
+import AtomDetailPage from "~src/pages/AtomDetailPage"
 
 import Navbar from "./layout/Navbar"
 import NavbarUp from "./layout/NavbarUp"
@@ -76,6 +77,7 @@ const Content = ({ children }: ContentProps) => {
                 <Route path="/page-form" element={<PageForm />} />
                 <Route path="/recent-activity" element={<RecentActivity />} />
                 <Route path="/search" element={<Search />} />
+                <Route path="/atoms/:id" element={<AtomDetailPage />} />
               </Routes>
             </div>
           </main>

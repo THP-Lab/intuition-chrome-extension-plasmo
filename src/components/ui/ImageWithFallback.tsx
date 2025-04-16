@@ -1,27 +1,30 @@
-import React from 'react';
+import React from "react"
+import { Fingerprint } from "lucide-react"
 
-interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  fallbackSrc?: string;
-}
+interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
 
 export const ImageWithFallback = ({
   src,
   alt = '',
-  fallbackSrc = "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png",
   className,
   ...props
 }: ImageWithFallbackProps) => {
-  const [error, setError] = React.useState(false);
+  const [error, setError] = React.useState(false)
+
+  if (error) {
+    return <Fingerprint className={className} />
+  }
 
   return (
     <img
-      src={error ? fallbackSrc : src}
+      src={src}
       alt={alt}
       className={className}
       onError={() => setError(true)}
       {...props}
     />
-  );
-};
+  )
+}
+
 
 export default ImageWithFallback;
