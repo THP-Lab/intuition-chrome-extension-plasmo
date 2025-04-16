@@ -10,52 +10,54 @@ function Feed() {
     address: walletAddress
   })
 
-  const followings = data?.following ?? []
   const default_img = "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000"
 
   if (!walletAddress) return <p>Connect your wallet</p>
   if (isLoading) return <p>Loading who you follow...</p>
   if (isError) return <p>Error loading followings</p>
 
+  const actions = data?.following.flatMap((user) =>
+    user.positions_aggregate.nodes
+      .filter((pos) => pos.vault?.triple !== null)
+      .map((pos) => ({
+        user,
+        position: pos,
+        triple: pos.vault.triple
+      }))
+  ) ?? []
+
+  const sortedActions = actions.reverse()
+
   return (
-    <div className="p-4 space-y-4">
+<div className="p-4 space-y-4">
       <h1 className="text-xl font-bold mb-2">Your Feed</h1>
 
-      {followings.map((following) => {
-        const positions = following.positions_aggregate.nodes.filter((position) => position.vault.triple !== null)
+      {sortedActions.map(({ user, position, triple }, index) => {
+        if (!triple) return null
 
-        return (
-          <div key={following.id} className="space-y-2">
-            <div className="flex items-center gap-2">
+        const isFor = position.vault?.id === triple.vault?.id
+
+          return (
+          <div key={`${triple.id}-${index}`} className="border-b pb-3 mb-3">
+            <div className="flex items-center gap-2 mb-2">
               <img
-                src={following.image ?? default_img}
-                alt={following.label}
-                className="w-8 h-8 rounded-full"
+                src={user.image ?? default_img}
+                alt={user.label}
+                className="w-6 h-6 rounded-full"
               />
-              <p className="font-semibold">{following.label}</p>
+              <span className="text-sm font-medium">
+                {user.label}
+              </span>
+              <span className={`text-sm ${isFor ? "text-green-600" : "text-red-600"}`}>
+                {isFor ? "voted FOR this claim:" : "voted AGAINST this claim:"}
+              </span>
             </div>
 
-            {positions.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No recent activity</p>
-            ) : (
-              positions.map((position, index) => {
-                const triple = position.vault.triple
-
-                if (!triple) return null
-
-                return (
-                  <div key={`${triple.id}-${index}`} className="ml-4">
-                    <p className="text-sm text-gray-500 mb-1">
-                      {position.shares} ETH on:
-                    </p>
-                    <ClaimRowLite claim={triple} />
-                  </div>
-                )
-              })
-            )}
+            <ClaimRowLite claim={triple} />
           </div>
-        )
-      })}
+          )
+        })
+      }
     </div>
   )
 }
