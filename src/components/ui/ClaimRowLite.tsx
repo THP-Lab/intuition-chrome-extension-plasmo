@@ -34,9 +34,10 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
         "flex justify-between items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-3 claims-hover-effect"
       )}>
       <div className="flex gap-1 items-center flex-wrap flex-1 min-w-0">
-        <PopupAtom key={claim.id.toString()} atom={claim.subject} />
-        <PopupAtom key={claim.id.toString()} atom={claim.predicate} />
-        <PopupAtom key={claim.id.toString()} atom={claim.object} />
+        <PopupAtom key={`${claim.id}-subject`} atom={claim.subject} />
+        <PopupAtom key={`${claim.id}-predicate`} atom={claim.predicate} />
+        <PopupAtom key={`${claim.id}-object`} atom={claim.object} />
+
       </div>
 
       {vaultId && counterVaultId ? (
