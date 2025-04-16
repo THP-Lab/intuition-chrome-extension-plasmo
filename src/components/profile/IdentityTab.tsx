@@ -20,6 +20,13 @@ const IdentityTab = () => {
 
   return (
     <div>
+      <p className="text-xs text-gray-400 font-medium mt-2 mb-1 flex justify-start items-center gap-2">
+        Identities
+        <span className="bg-gray-700 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+          {atoms.length}
+        </span>
+      </p>
+
       {atoms.map((atom) => (
         <AtomCard key={atom.id} atom={atom} />
       ))}
