@@ -156,8 +156,8 @@ const ParticlesCanvas: React.FC = () => {
     
     // Configure the events
     window.addEventListener("resize", handleResize)
-    canvas.addEventListener("mousemove", handleMouseMove)
-    canvas.addEventListener("click", handleClick)
+    window.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("click", handleClick)
     
     // Initialize and start the animation
     handleResize()
@@ -165,13 +165,13 @@ const ParticlesCanvas: React.FC = () => {
     
     // Cleaning
     return () => {
-      window.removeEventListener("resize", handleResize)
-      canvas.removeEventListener("mousemove", handleMouseMove)
-      canvas.removeEventListener("click", handleClick)
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current)
+        window.removeEventListener("resize", handleResize)
+        window.removeEventListener("mousemove", handleMouseMove)
+        window.removeEventListener("click", handleClick)
+        if (animationFrameId.current) {
+          cancelAnimationFrame(animationFrameId.current)
+        }
       }
-    }
   }, [theme]) // Add theme as a dependency so that the effect is reinitialized when the theme changes
 
   return (
