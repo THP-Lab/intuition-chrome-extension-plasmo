@@ -4,6 +4,46 @@ query getFollowingsFromAddress($address: String!) {
     image
     label
     type
+    
+    triples( order_by: { id: desc }) {
+    id
+    subject {
+      id
+      label
+      image
+      type
+    }
+    predicate {
+      id
+      label
+      image
+      type
+    }
+    object {
+      id
+      label
+      image
+      type
+    }
+    vault_id
+    counter_vault_id
+    vault {
+      id
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+    counter_vault {
+      id
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
     positions_aggregate( limit: 10 ) {
       aggregate {
         count
