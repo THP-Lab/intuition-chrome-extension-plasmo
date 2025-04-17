@@ -184,7 +184,13 @@ query GetClaimsByUri($uri: String, $address: String) {
 
 query GetClaimsByAtom($id: numeric) {
   claims_aggregate(
-    where: { _or: [{ object_id: { _eq: $id } }, { subject_id: { _eq: $id } }] }
+    where: {
+      _or: [
+        { object_id: { _eq: $id } }
+        { subject_id: { _eq: $id } }
+        { predicate_id: { _eq: $id } }
+      ]
+    }
   ) {
     aggregate {
       count
@@ -205,7 +211,42 @@ query GetClaimsByAtom($id: numeric) {
           image
           type
         }
+        object {
+          id
+          label
+          image
+          type
+        }
+        vault {
+          id
+          positions {
+            shares
+            account {
+              id
+            }
+          }
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          id
+          positions {
+            shares
+            account {
+              id
+            }
+          }
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
       }
     }
   }
 }
+       
