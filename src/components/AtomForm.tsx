@@ -135,7 +135,7 @@ const AtomForm: React.FC = () => {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 bg-[hsl(var(--claims-bg))] rounded"
           required
         />
       </div>
@@ -148,7 +148,7 @@ const AtomForm: React.FC = () => {
           id="description"
           value={description}
           onChange={handleDescriptionChange}
-          className="w-full p-2 border rounded resize-none overflow-hidden"
+          className="w-full p-2 bg-[hsl(var(--claims-bg))] rounded resize-none overflow-hidden"
           rows={1}
         />
       </div>
@@ -161,7 +161,7 @@ const AtomForm: React.FC = () => {
           type="url"
           value={image}
           onChange={(e) => setImage(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 bg-[hsl(var(--claims-bg))] rounded"
         />
         {image && (
           <div className="mt-2">
@@ -180,7 +180,7 @@ const AtomForm: React.FC = () => {
         type="text"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
-        className="w-full p-2 border rounded"
+        className="w-full p-2 bg-[hsl(var(--claims-bg))] rounded"
       />
 
       <button
