@@ -11007,23 +11007,45 @@ export type GetClaimsByAtomQuery = {
   }
 }
 
-export type GetFollowersTriplesQueryVariables = Exact<{
-  accountId: Scalars["String"]["input"]
+export type GetFollowersFromAddressQueryVariables = Exact<{
+  address: Scalars["String"]["input"]
 }>
 
-export type GetFollowersTriplesQuery = {
+export type GetFollowersFromAddressQuery = {
   __typename?: "query_root"
   triples: Array<{
     __typename?: "triples"
     id: any
-    subject: {
-      __typename?: "atoms"
+    predicate: { __typename?: "atoms"; label?: string | null }
+    object: { __typename?: "atoms"; id: any }
+    vault?: {
+      __typename?: "vaults"
       id: any
-      label?: string | null
-      type: any
-      image?: string | null
-      accounts: Array<{ __typename?: "accounts"; id: string }>
-    }
+      positions: Array<{
+        __typename?: "positions"
+        shares: any
+        account?: {
+          __typename?: "accounts"
+          id: string
+          label: string
+          image?: string | null
+        } | null
+      }>
+    } | null
+    counter_vault?: {
+      __typename?: "vaults"
+      id: any
+      positions: Array<{
+        __typename?: "positions"
+        shares: any
+        account?: {
+          __typename?: "accounts"
+          id: string
+          label: string
+          image?: string | null
+        } | null
+      }>
+    } | null
   }>
 }
 
@@ -14562,102 +14584,124 @@ useGetClaimsByAtomQuery.fetcher = (
     options
   )
 
-export const GetFollowersTriplesDocument = `
-    query GetFollowersTriples($accountId: String!) {
+export const GetFollowersFromAddressDocument = `
+    query getFollowersFromAddress($address: String!) {
   triples(
-    where: {predicate: {label: {_eq: "follow"}}, object: {accounts: {id: {_eq: $accountId}}}, subject: {type: {_eq: "Account"}}}
+    where: {predicate: {label: {_eq: "follow"}}, object: {accounts: {id: {_eq: $address}}}}
   ) {
     id
-    subject {
-      id
+    predicate {
       label
-      type
-      image
-      accounts {
-        id
+    }
+    object {
+      id
+    }
+    vault {
+      id
+      positions {
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
+    counter_vault {
+      id
+      positions {
+        shares
+        account {
+          id
+          label
+          image
+        }
       }
     }
   }
 }
     `
 
-export const useGetFollowersTriplesQuery = <
-  TData = GetFollowersTriplesQuery,
+export const useGetFollowersFromAddressQuery = <
+  TData = GetFollowersFromAddressQuery,
   TError = unknown
 >(
-  variables: GetFollowersTriplesQueryVariables,
+  variables: GetFollowersFromAddressQueryVariables,
   options?: Omit<
-    UseQueryOptions<GetFollowersTriplesQuery, TError, TData>,
+    UseQueryOptions<GetFollowersFromAddressQuery, TError, TData>,
     "queryKey"
   > & {
     queryKey?: UseQueryOptions<
-      GetFollowersTriplesQuery,
+      GetFollowersFromAddressQuery,
       TError,
       TData
     >["queryKey"]
   }
 ) => {
-  return useQuery<GetFollowersTriplesQuery, TError, TData>({
-    queryKey: ["GetFollowersTriples", variables],
+  return useQuery<GetFollowersFromAddressQuery, TError, TData>({
+    queryKey: ["getFollowersFromAddress", variables],
     queryFn: fetcher<
-      GetFollowersTriplesQuery,
-      GetFollowersTriplesQueryVariables
-    >(GetFollowersTriplesDocument, variables),
+      GetFollowersFromAddressQuery,
+      GetFollowersFromAddressQueryVariables
+    >(GetFollowersFromAddressDocument, variables),
     ...options
   })
 }
 
-useGetFollowersTriplesQuery.document = GetFollowersTriplesDocument
+useGetFollowersFromAddressQuery.document = GetFollowersFromAddressDocument
 
-useGetFollowersTriplesQuery.getKey = (
-  variables: GetFollowersTriplesQueryVariables
-) => ["GetFollowersTriples", variables]
+useGetFollowersFromAddressQuery.getKey = (
+  variables: GetFollowersFromAddressQueryVariables
+) => ["getFollowersFromAddress", variables]
 
-export const useInfiniteGetFollowersTriplesQuery = <
-  TData = InfiniteData<GetFollowersTriplesQuery>,
+export const useInfiniteGetFollowersFromAddressQuery = <
+  TData = InfiniteData<GetFollowersFromAddressQuery>,
   TError = unknown
 >(
-  variables: GetFollowersTriplesQueryVariables,
+  variables: GetFollowersFromAddressQueryVariables,
   options: Omit<
-    UseInfiniteQueryOptions<GetFollowersTriplesQuery, TError, TData>,
+    UseInfiniteQueryOptions<GetFollowersFromAddressQuery, TError, TData>,
     "queryKey"
   > & {
     queryKey?: UseInfiniteQueryOptions<
-      GetFollowersTriplesQuery,
+      GetFollowersFromAddressQuery,
       TError,
       TData
     >["queryKey"]
   }
 ) => {
-  return useInfiniteQuery<GetFollowersTriplesQuery, TError, TData>(
+  return useInfiniteQuery<GetFollowersFromAddressQuery, TError, TData>(
     (() => {
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey: optionsQueryKey ?? [
-          "GetFollowersTriples.infinite",
+          "getFollowersFromAddress.infinite",
           variables
         ],
         queryFn: (metaData) =>
-          fetcher<GetFollowersTriplesQuery, GetFollowersTriplesQueryVariables>(
-            GetFollowersTriplesDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
+          fetcher<
+            GetFollowersFromAddressQuery,
+            GetFollowersFromAddressQueryVariables
+          >(GetFollowersFromAddressDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {})
+          })(),
         ...restOptions
       }
     })()
   )
 }
 
-useInfiniteGetFollowersTriplesQuery.getKey = (
-  variables: GetFollowersTriplesQueryVariables
-) => ["GetFollowersTriples.infinite", variables]
+useInfiniteGetFollowersFromAddressQuery.getKey = (
+  variables: GetFollowersFromAddressQueryVariables
+) => ["getFollowersFromAddress.infinite", variables]
 
-useGetFollowersTriplesQuery.fetcher = (
-  variables: GetFollowersTriplesQueryVariables,
+useGetFollowersFromAddressQuery.fetcher = (
+  variables: GetFollowersFromAddressQueryVariables,
   options?: RequestInit["headers"]
 ) =>
-  fetcher<GetFollowersTriplesQuery, GetFollowersTriplesQueryVariables>(
-    GetFollowersTriplesDocument,
+  fetcher<GetFollowersFromAddressQuery, GetFollowersFromAddressQueryVariables>(
+    GetFollowersFromAddressDocument,
     variables,
     options
   )
@@ -24285,19 +24329,19 @@ export const GetClaimsByAtom = {
     }
   ]
 } as unknown as DocumentNode
-export const GetFollowersTriples = {
+export const GetFollowersFromAddress = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "GetFollowersTriples" },
+      name: { kind: "Name", value: "getFollowersFromAddress" },
       variableDefinitions: [
         {
           kind: "VariableDefinition",
           variable: {
             kind: "Variable",
-            name: { kind: "Name", value: "accountId" }
+            name: { kind: "Name", value: "address" }
           },
           type: {
             kind: "NonNullType",
@@ -24370,38 +24414,11 @@ export const GetFollowersTriples = {
                                           kind: "Variable",
                                           name: {
                                             kind: "Name",
-                                            value: "accountId"
+                                            value: "address"
                                           }
                                         }
                                       }
                                     ]
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "subject" },
-                      value: {
-                        kind: "ObjectValue",
-                        fields: [
-                          {
-                            kind: "ObjectField",
-                            name: { kind: "Name", value: "type" },
-                            value: {
-                              kind: "ObjectValue",
-                              fields: [
-                                {
-                                  kind: "ObjectField",
-                                  name: { kind: "Name", value: "_eq" },
-                                  value: {
-                                    kind: "StringValue",
-                                    value: "Account",
-                                    block: false
                                   }
                                 }
                               ]
@@ -24420,23 +24437,105 @@ export const GetFollowersTriples = {
                 { kind: "Field", name: { kind: "Name", value: "id" } },
                 {
                   kind: "Field",
-                  name: { kind: "Name", value: "subject" },
+                  name: { kind: "Name", value: "predicate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "label" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "object" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "vault" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "label" } },
-                      { kind: "Field", name: { kind: "Name", value: "type" } },
-                      { kind: "Field", name: { kind: "Name", value: "image" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "accounts" },
+                        name: { kind: "Name", value: "positions" },
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
                             {
                               kind: "Field",
-                              name: { kind: "Name", value: "id" }
+                              name: { kind: "Name", value: "shares" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "account" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "counter_vault" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "positions" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "account" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  }
+                                ]
+                              }
                             }
                           ]
                         }

@@ -1,43 +1,61 @@
 import React from "react"
 import { useStorage } from "@plasmohq/storage/hook"
-import { useGetFollowersTriplesQuery } from "~src/graphql/src"
+import { useGetFollowersFromAddressQuery } from "~src/graphql/src"
 
 const FollowersTab = () => {
-  const [account] = useStorage<string>("metamask-account")
-  // const account = "0x746e4d35f62a62c2c1b2c4c3b9d780319d887080"
+  const [walletAddress] = useStorage<string>("metamask-account")
+  //const walletAddress = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
 
-  const { data } = useGetFollowersTriplesQuery(
-    { accountId: account },
-    { enabled: true }
+  const isAddressReady = !!walletAddress
+
+  const { data, isLoading, isError, error } = useGetFollowersFromAddressQuery(
+    { address: walletAddress },
+    { enabled: isAddressReady } 
   )
 
-  console.log("QUERY KEY", useGetFollowersTriplesQuery.getKey({ accountId: account }))
-  console.log("FOLLOWERS DATA", data)
+  const followers =
+  data?.triples
+    ?.flatMap((t) => [
+      ...(t.vault?.positions ?? []),
+      ...(t.counter_vault?.positions ?? [])
+    ])
+    ?.filter((p) => p.account?.id !== walletAddress)
+    ?.map((p) => p.account) ?? []
 
-  const followers = data?.triples
-    .map((triple) => triple.subject)
-    .filter((subject) => !!subject) ?? []
+  const default_img =
+    "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
+
+  if (!walletAddress) return <p>Connect your wallet</p>
+  if (isLoading) return <p>Loading your followers...</p>
+  if (isError) {
+    console.error("GraphQL error", error)
+    return <p>Error loading followers</p>
+  }
 
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Your Followers</h2>
-      {followers.length === 0 && <div>No followers found</div>}
-      {followers.map((follower, index) => (
-        <div
-          key={index}
-          className="flex items-center space-x-3 border p-2 rounded shadow-sm"
-        >
-          <img
-            src={
-              follower.image ??
-              "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
-            }
-            alt={follower.label}
-            className="w-8 h-8 rounded-full"
-          />
-          <span className="text-sm font-medium">{follower.label}</span>
-        </div>
-      ))}
+      {followers.length === 0 ? (
+        <p>You don’t have any followers yet.</p>
+      ) : (
+        <ul className="space-y-2">
+          {followers.map((follower) => (
+            <li
+              key={follower.id}
+              className="border p-3 rounded flex items-center gap-3"
+            >
+              <img
+                src={follower.image || default_img}
+                alt={follower.label}
+                className="w-8 h-8 rounded-full"
+              />
+              <span className="font-medium text-sm">
+                {follower.label || follower.id}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
