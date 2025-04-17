@@ -121,9 +121,9 @@ function Home() {
     <div className="space-y-6">
       <div className="space-y-2">
 
-      <h1 className="light-sweep-heading">Welcome to Intuition</h1>
+      <h1 className="light-sweep-heading">Intuition</h1>
 
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground, text-center ">
         "Intuition lets you explore, vote, and debate verifiable facts — all directly from your browser."
         </p>
       </div>
