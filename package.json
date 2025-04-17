@@ -6,7 +6,8 @@
   "author": "THP",
   "scripts": {
     "dev": "plasmo dev",
-    "build": "plasmo build",
+    "build": "cross-env PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3",
+    "build:firefox": "cross-env PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2",
     "package": "plasmo package",
     "graphql:build": " cd src/graphql && NODE_ENV=production graphql-codegen --config codegen.ts"
   },
@@ -55,6 +56,7 @@
     "@types/react-dom": "18.2.18",
     "autoprefixer": "10.4.16",
     "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "plasmo": "0.90.3",
     "postcss": "8.4.31",
     "prettier": "3.2.4",
