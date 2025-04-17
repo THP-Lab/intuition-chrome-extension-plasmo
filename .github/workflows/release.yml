@@ -1,14 +1,12 @@
 name: Create Release
 
 on:
-  pull_request:
-    types: [closed]
+  # Trigger on any push to dev branch (including PR merges)
+  push:
     branches: [dev]
 
 jobs:
   release:
-    # Only run if the PR was merged (not just closed)
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
