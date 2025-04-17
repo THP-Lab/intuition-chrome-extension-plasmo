@@ -69,6 +69,11 @@
   }
 }
 
+.light-sweep-heading {
+  @apply text-center text-5xl md:text-6xl lg:text-7xl font-bold text-foreground;
+  position: relative;
+}
+/* 
 @keyframes light-sweep-alternate {
   0% {
     background-position: -95% 0;  
@@ -135,7 +140,7 @@
       rgba(255, 255, 255, 0.9) 100%
     );
   }
-}
+} */
 
 @layer base {
   * {
