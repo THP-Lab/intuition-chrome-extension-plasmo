@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import { useGetAtomQuery } from "@0xintuition/graphql"
 import { useGetClaimsByAtomQuery }from "~src/graphql/src"
 import AtomDisplay from "~src/components/ui/AtomDisplay"
+import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 
 const AtomDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -29,6 +30,9 @@ const AtomDetailPage = () => {
     )
   if (!data?.atom) return <div className="p-4">No identity found</div>
 
+  console.log("claimsData", claimsData?.claims_aggregate?.nodes)
+
+
   return (
     <div className="p-4 space-y-6">
       <AtomDisplay atom={data.atom} />
@@ -48,26 +52,16 @@ const AtomDetailPage = () => {
         ) : isClaimsError ? (
           <p className="mt-2 text-sm text-red-500">Error loading claims</p>
         ) : (
-          <ul className="mt-3 space-y-2">
-            {claimsData?.claims_aggregate?.nodes.map((claim, index) => {
-              const subject = claim.triple?.subject?.label ?? "?"
-              const predicate = claim.triple?.predicate?.label ?? "?"
-              const object = claim.triple?.object?.label ?? "?"
-              const account = claim.account?.label ?? "Unknown"
-
-              return (
-                <li
-                  key={index}
-                  className="p-3 border border-border rounded-md text-sm text-muted-foreground bg-background/40"
-                >
-                  <strong>{account}</strong> claims that{" "}
-                  <span className="text-white font-medium">{subject}</span>{" "}
-                  <span className="text-pink-400">{predicate}</span>{" "}
-                  <span className="text-blue-400">{object}</span>
-                </li>
-              )
-            })}
-          </ul>
+          <div className="mt-3 space-y-2">
+            {claimsData?.claims_aggregate?.nodes
+              .filter(claim => claim?.triple && claim.triple.id)
+              .map((claim, index) => (
+                <ClaimRowLite
+                  key={`${claim.triple.id}-${index}`}
+                  claim={claim}
+                />
+            ))}
+          </div>
         )}
       </div>
     </div>
