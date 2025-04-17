@@ -29,7 +29,6 @@ const WalletConnectionButton = () => {
         <Button variant="successOutline" onClick={handleConnect}>Connect to Metamask</Button>
       ) : (
         <div>
-          <p>Connected account : {sliceAddress(account)}</p>
           <Button variant="destructiveOutline" onClick={handleDisconnect}>Disconnect</Button>
         </div>
       )}
