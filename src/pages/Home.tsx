@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 import { useTheme } from "~/src/components/ThemeProvider"
 import TabSystem from '../components/TabSystem';
@@ -68,7 +69,18 @@ function Home() {
           
             ))
         ) : (
-          <p>No claims found for this URL.</p>
+          <div className="p-4 rounded text-center space-y-2">
+            <p className="text-sm text-foreground">No claims found for this URL.</p>
+            <p className="text-sm text-foreground">
+              
+
+              <Link to="/page-form"
+                className="text-blue-600 hover:underline font-medium">
+                Be the first
+              </Link>
+              
+            </p>
+          </div>
         )}
       </div>
     },
@@ -83,7 +95,18 @@ function Home() {
             );
           })):
           (
-          <p>No atoms found for this URL.</p>
+          <div className="p-4 rounded text-center space-y-2">
+            <p className="text-sm text-foreground">No atoms found for this URL.</p>
+            <p className="text-sm text-foreground">
+              
+
+              <Link to="/page-form"
+                className="text-blue-600 hover:underline font-medium">
+                Be the first
+              </Link>
+              
+            </p>
+          </div>
           )
 
         }
