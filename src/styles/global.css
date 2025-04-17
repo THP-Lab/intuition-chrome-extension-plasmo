@@ -30,7 +30,7 @@
     --border-atom: 0 0% 76%;
     --hover-atom-bg: 0 0% 85%;
     --focus-atom-border: 0 0% 0%;
-    
+    --btn-atom-form-bg: 0 0% 70%;
     --container-background: 0.96 0.004 286.32;
     --triple-background: 0.99 0.004 286.32;
   }
@@ -63,7 +63,7 @@
     --border-atom: 0 0% 24%;  
     --hover-atom-bg: 0 0% 15%; 
     --focus-atom-border: 0 0% 100%; 
-    
+    --btn-atom-form-bg: 0 0% 20%;
     --container-background: 0.05 0.002 0; 
     --triple-background: 0.05 0.002 0;
   }
@@ -220,6 +220,16 @@ html body nav .animate-fade-bg:hover {
   
   .claims-hover-effect:hover {
     @apply opacity-100 transform-gpu scale-[1.1] z-[3];;
+  }
+}
+
+@layer utilities {
+  .btn-atom-form-hover-effect {
+    @apply opacity-70 transition-all duration-100 ease-in-out relative z-[1];
+  }
+  
+  .btn-atom-form-hover-effect:hover {
+    @apply opacity-100 transform-gpu z-[3];;
   }
 }
 
