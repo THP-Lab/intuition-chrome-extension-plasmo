@@ -17,7 +17,7 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
   onSearch,
   className,
   size = 50,
-  position = { x: "150px", y: "0px" }
+  position = { x: "0px", y: "0px" }
 }) => {
   const [isInputVisible, setIsInputVisible] = useState(true)
   const [isAppeared, setIsAppeared] = useState(false)
@@ -78,18 +78,12 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
               className="middle-circle"
               cx="50"
               cy="50"
-              r="36"
-              strokeWidth="4"
+              r="34"
+              strokeWidth="6"
               fill="none"
               stroke={theme === "dark" ? "white" : "black"}
             />
-            <circle
-              className="inner-circle"
-              cx="50"
-              cy="50"
-              r="32"
-              fill={theme === "dark" ? "black" : "white"}
-            />
+
           </svg>
         </div>
 
@@ -139,14 +133,14 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
         .outer-circle {
           transform-origin: 50% 50%;
           stroke-linecap: round;
-          stroke-dasharray: 68.1 4.4 12.6 4.4 68.1 4.4 12.6 4.4 68.1 4.4;
+          stroke-dasharray: 64 8 12.6 8 64 8 12.6 8 64 8;
           animation: spinCW 12s linear infinite;
         }
 
         .middle-circle {
           transform-origin: 50% 50%;
           stroke-linecap: round;
-          stroke-dasharray: 68.1 4.4 12.6 4.4 68.1 4.4 12.6 4.4 68.1 4.4;
+          stroke-dasharray: 55 10 12 10 55 10 12 10 55 10;
           animation: spinCCW 12s linear infinite;
         }
 
