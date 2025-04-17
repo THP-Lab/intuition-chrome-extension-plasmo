@@ -1,11 +1,10 @@
 name: Build And Upload Extension Zip Via Artifact
 
 on:
-  # Run on PRs to dev, but only when they're opened, synchronized, or reopened
-  # (not when they're closed/merged, as that's handled by release.yml)
+  # Run on all pushes to PRs targeting dev
+  # This ensures the workflow runs even when the workflow file itself is modified
   pull_request:
     branches: [dev]
-    types: [opened, synchronize, reopened]
 
 jobs:
   build:
