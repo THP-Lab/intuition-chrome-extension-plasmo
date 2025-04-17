@@ -25,11 +25,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: chrome-extension
-          path: build/chrome-mv3-prod.zip
+          path: build/chrome-mv3-prod
 
       - run: pnpm build:firefox
       - name: Upload Firefox artifact
         uses: actions/upload-artifact@v4
         with:
           name: firefox-extension
-          path: build/firefox-mv2-prod.zip
+          path: build/firefox-mv2-prod
