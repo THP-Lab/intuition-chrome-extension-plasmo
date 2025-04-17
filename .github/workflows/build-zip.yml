@@ -1,9 +1,11 @@
 name: Build And Upload Extension Zip Via Artifact
 
 on:
-  push:
-    branches: [dev]
+  # Run on PRs to dev, but only when they're opened, synchronized, or reopened
+  # (not when they're closed/merged, as that's handled by release.yml)
   pull_request:
+    branches: [dev]
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
