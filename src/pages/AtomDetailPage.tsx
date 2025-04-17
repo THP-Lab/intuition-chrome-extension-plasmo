@@ -23,15 +23,20 @@ const AtomDetailPage = () => {
     { enabled: !!atomId }
   )
 
+  const claims = claimsData?.claims_aggregate?.nodes.map((claim) => ({
+    ...claim,
+    ...claim.triple
+  }))
+
+  console.log("ClaimsData", claimsData?.claims_aggregate?.nodes)
+  console.log("Claims:", claims)
+
   if (isLoading) return <div className="p-4">Loading identity...</div>
   if (isError)
     return (
       <div className="p-4 text-red-500">Error: {(error as any)?.message}</div>
     )
   if (!data?.atom) return <div className="p-4">No identity found</div>
-
-  console.log("claimsData", claimsData?.claims_aggregate?.nodes)
-
 
   return (
     <div className="p-4 space-y-6">
@@ -53,11 +58,9 @@ const AtomDetailPage = () => {
           <p className="mt-2 text-sm text-red-500">Error loading claims</p>
         ) : (
           <div className="mt-3 space-y-2">
-            {claimsData?.claims_aggregate?.nodes
-              .filter(claim => claim?.triple && claim.triple.id)
-              .map((claim, index) => (
+            {claims.map((claim, index) => (
                 <ClaimRowLite
-                  key={`${claim.triple.id}-${index}`}
+                  key={`${claim.id}-${index}`}
                   claim={claim}
                 />
             ))}
