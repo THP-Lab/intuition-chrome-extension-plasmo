@@ -182,7 +182,7 @@ query GetClaimsByUri($uri: String, $address: String) {
   }
 }
 
-query GetClaimsByAtom($id: numeric) {
+query GetClaimsByAtom($id: numeric, $address: String) {
   claims_aggregate(
     where: {
       _or: [
@@ -219,7 +219,7 @@ query GetClaimsByAtom($id: numeric) {
         }
         vault {
           id
-          positions {
+          positions(where: { account_id: { _eq: $address } }) {
             shares
             account {
               id
@@ -233,7 +233,7 @@ query GetClaimsByAtom($id: numeric) {
         }
         counter_vault {
           id
-          positions {
+          positions(where: { account_id: { _eq: $address } }) {
             shares
             account {
               id
@@ -249,4 +249,3 @@ query GetClaimsByAtom($id: numeric) {
     }
   }
 }
-       

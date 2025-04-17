@@ -17,6 +17,7 @@ interface PopupAtomProps {
 }
 
 export const PopupAtom = ({ atom }: PopupAtomProps) => {
+  if (!atom) return null
   const { id, label, image } = atom;
   const atomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
