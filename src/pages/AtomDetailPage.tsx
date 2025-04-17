@@ -34,9 +34,12 @@ const AtomDetailPage = () => {
       <AtomDisplay atom={data.atom} />
 
       <div>
-        <h2 className="text-xl font-semibold mt-4">
-          Claims ({claimsData?.claims_aggregate?.aggregate?.count ?? 0})
-        </h2>
+        <div className="flex items-center mt-2 mb-1">
+          <span className="text-sm text-gray-400">Claims</span>
+          <span className="px-2 py-0.5 text-xs font semi-bold text-white bg-gray-700 rounded-full ml-2">
+          {claimsData?.claims_aggregate?.aggregate?.count ?? 0}
+          </span>
+        </div>
 
         {isLoadingClaims ? (
           <p className="mt-2 text-sm text-muted-foreground">
