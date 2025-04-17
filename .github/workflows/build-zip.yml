@@ -21,15 +21,19 @@ jobs:
       - run: pnpm install --frozen-lockfile --prefer-offline
 
       - run: pnpm build
+      - name: Zip Chrome artifact
+        run: cd build && zip -r chrome-extension.zip chrome-mv3-prod/
       - name: Upload Chrome artifact
         uses: actions/upload-artifact@v4
         with:
           name: chrome-extension
-          path: build/chrome-mv3-prod
+          path: build/chrome-extension.zip
 
       - run: pnpm build:firefox
+      - name: Zip Firefox artifact
+        run: cd build && zip -r firefox-extension.zip firefox-mv2-prod/
       - name: Upload Firefox artifact
         uses: actions/upload-artifact@v4
         with:
           name: firefox-extension
-          path: build/firefox-mv2-prod
+          path: build/firefox-extension.zip
