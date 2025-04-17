@@ -135,7 +135,7 @@ const AtomForm: React.FC = () => {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 bg-[hsl(var(--claims-bg))] rounded"
+          className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10 relative z-10"
           required
         />
       </div>
@@ -148,7 +148,7 @@ const AtomForm: React.FC = () => {
           id="description"
           value={description}
           onChange={handleDescriptionChange}
-          className="w-full p-2 bg-[hsl(var(--claims-bg))] rounded resize-none overflow-hidden"
+          className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10 resize-none overflow-hidden relative z-10"
           rows={1}
         />
       </div>
@@ -161,7 +161,7 @@ const AtomForm: React.FC = () => {
           type="url"
           value={image}
           onChange={(e) => setImage(e.target.value)}
-          className="w-full p-2 bg-[hsl(var(--claims-bg))] rounded"
+          className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10 relative z-10"
         />
         {image && (
           <div className="mt-2">
@@ -180,13 +180,13 @@ const AtomForm: React.FC = () => {
         type="text"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
-        className="w-full p-2 bg-[hsl(var(--claims-bg))] rounded"
+        className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10 relative z-10"
       />
-
+      
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full px-4 py-2 bg-background text-foreground hover:bg-accent hover:text-accent-foreground rounded">
+        className="w-full px-4 py-2 text-foreground btn-atom-form-hover-effect rounded bg-[hsl(var(--btn-atom-form-bg))]">
         {isSubmitting ? "Submitting..." : "Create Atom"}
       </button>
       {progressMessage && (

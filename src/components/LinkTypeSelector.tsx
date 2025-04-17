@@ -8,7 +8,7 @@ export const LinkTypeSelector = ({
   setLinkType: (type: "url" | "domain") => void
 }) => (
   <div className="relative max-w-sm flex w-full flex-col rounded-xl shadow mx-auto">
-    <div className="flex flex-row gap-8 p-2 bg-[hsl(var(--claims-bg))] justify-center rounded-xl">
+    <div className="flex flex-row gap-8 p-2 bg-[hsl(var(--btn-atom-form-bg))] justify-center rounded-xl btn-atom-form-hover-effect">
       <div
         role="button"
         className="w-full px-4 py-1 bg-background text-foreground rounded hover:bg-[hsl(var(--accent))] text-center"

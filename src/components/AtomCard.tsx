@@ -43,7 +43,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
   const thing = atom.value?.thing
 
   return (
-    <div className="border border-border-atom rounded-xl p-4 my-2 claims-hover-effect transition-all duration-200">
+    <div className="border border-border-atom rounded-xl p-4 my-2 claims-hover-effect transition-all duration-200 bg-[hsl(var(--claims-bg))]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           {atom.image ? (
