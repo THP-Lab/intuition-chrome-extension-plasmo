@@ -10,7 +10,7 @@ function PageForm() {
   return (
     <div className="p-2 space-y-4">
       <div className="flex items-center gap-4">
-        <label htmlFor="form-switch" className="text-sm text-white">
+        <label htmlFor="form-switch" className="text-sm text-foreground">
           {showTripleForm ? "Claim" : "Atom"}
         </label>
         <Switch.Root
