@@ -1,0 +1,35 @@
+name: Build And Upload Extension Zip Via Artifact
+
+on:
+  # Run on all pushes to PRs targeting dev
+  # This ensures the workflow runs even when the workflow file itself is modified
+  pull_request:
+    branches: [dev]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile --prefer-offline
+
+      - run: pnpm build
+      - name: Upload Chrome artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension
+          path: build/chrome-mv3-prod
+
+      - run: pnpm build:firefox
+      - name: Upload Firefox artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-extension
+          path: build/firefox-mv2-prod

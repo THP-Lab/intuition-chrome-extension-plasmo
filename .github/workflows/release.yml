@@ -1,0 +1,58 @@
+name: Create Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [dev]
+
+jobs:
+  release:
+    # Only run if the PR was merged (not just closed)
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Get version from package.json
+        id: package-version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Build Chrome extension
+        run: pnpm build
+
+      - name: Rename Chrome artifact
+        run: cp build/chrome-mv3-prod.zip build/intuition-chrome-v${{ steps.package-version.outputs.version }}.zip
+
+      - name: Build Firefox extension
+        run: pnpm build:firefox
+
+      - name: Rename Firefox artifact
+        run: cp build/firefox-mv2-prod.zip build/intuition-firefox-v${{ steps.package-version.outputs.version }}.zip
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.package-version.outputs.version }}
+          name: Release v${{ steps.package-version.outputs.version }}
+          draft: false
+          prerelease: false
+          files: |
+            build/intuition-chrome-v${{ steps.package-version.outputs.version }}.zip
+            build/intuition-firefox-v${{ steps.package-version.outputs.version }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
