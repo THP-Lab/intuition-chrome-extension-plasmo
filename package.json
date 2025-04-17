@@ -1,9 +1,9 @@
 {
-  "name": "intuition",
-  "displayName": "Intuition",
-  "version": "0.0.1",
-  "description": "A basic Plasmo extension.",
-  "author": "THP",
+  "name": "intuition-chrome-extension",
+  "displayName": "Intuition Chrome Extension",
+  "version": "0.1.1",
+  "description": "",
+  "author": "THP-Lab.org",
   "scripts": {
     "dev": "plasmo dev",
     "build": "cross-env PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3",
