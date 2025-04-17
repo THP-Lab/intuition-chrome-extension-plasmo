@@ -10962,6 +10962,45 @@ export type GetClaimsByAtomQuery = {
           image?: string | null
           type: any
         }
+        object: {
+          __typename?: "atoms"
+          id: any
+          label?: string | null
+          image?: string | null
+          type: any
+        }
+        vault?: {
+          __typename?: "vaults"
+          id: any
+          positions: Array<{
+            __typename?: "positions"
+            shares: any
+            account?: { __typename?: "accounts"; id: string } | null
+          }>
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
+        } | null
+        counter_vault?: {
+          __typename?: "vaults"
+          id: any
+          positions: Array<{
+            __typename?: "positions"
+            shares: any
+            account?: { __typename?: "accounts"; id: string } | null
+          }>
+          positions_aggregate: {
+            __typename?: "positions_aggregate"
+            aggregate?: {
+              __typename?: "positions_aggregate_fields"
+              count: number
+            } | null
+          }
+        } | null
       }
     }>
   }
@@ -14305,7 +14344,7 @@ useGetClaimsByUriQuery.fetcher = (
 export const GetClaimsByAtomDocument = `
     query GetClaimsByAtom($id: numeric) {
   claims_aggregate(
-    where: {_or: [{object_id: {_eq: $id}}, {subject_id: {_eq: $id}}]}
+    where: {_or: [{object_id: {_eq: $id}}, {subject_id: {_eq: $id}}, {predicate_id: {_eq: $id}}]}
   ) {
     aggregate {
       count
@@ -14325,6 +14364,40 @@ export const GetClaimsByAtomDocument = `
           label
           image
           type
+        }
+        object {
+          id
+          label
+          image
+          type
+        }
+        vault {
+          id
+          positions {
+            shares
+            account {
+              id
+            }
+          }
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          id
+          positions {
+            shares
+            account {
+              id
+            }
+          }
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
         }
       }
     }
@@ -23676,6 +23749,28 @@ export const GetClaimsByAtom = {
                                 }
                               }
                             ]
+                          },
+                          {
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "predicate_id" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "_eq" },
+                                      value: {
+                                        kind: "Variable",
+                                        name: { kind: "Name", value: "id" }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
                           }
                         ]
                       }
@@ -23764,6 +23859,189 @@ export const GetClaimsByAtom = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "object" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "positions" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "shares"
+                                          }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "account"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "id"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "counter_vault" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "positions" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "shares"
+                                          }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "account"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "id"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "positions_aggregate"
+                                    },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "aggregate"
+                                          },
+                                          selectionSet: {
+                                            kind: "SelectionSet",
+                                            selections: [
+                                              {
+                                                kind: "Field",
+                                                name: {
+                                                  kind: "Name",
+                                                  value: "count"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
                                   }
                                 ]
                               }
