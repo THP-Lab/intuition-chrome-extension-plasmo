@@ -1,9 +1,10 @@
 import { usePinThingMutation } from "@0xintuition/graphql"
 import { Multivault } from "@0xintuition/protocol"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { parseEther } from "viem"
 
 import { getClients } from "../lib/viemClient"
+import { LinkTypeSelector } from "./LinkTypeSelector"
 
 const AtomForm: React.FC = () => {
   const { mutateAsync: pinThing } = usePinThingMutation()
@@ -16,6 +17,69 @@ const AtomForm: React.FC = () => {
   const [progressMessage, setProgressMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const [linkType, setLinkType] = useState<"url" | "domain">("url")
+  const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value)
+    e.target.style.height = "auto"
+    e.target.style.height = e.target.scrollHeight + "px"
+  }
+  
+
+  useEffect(() => {
+    const fetchPageDetails = async () => {
+      const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
+      if (!tab?.id || !tab.url) return
+
+      const pageUrl = tab.url
+      const finalUrl = linkType === "url" ? pageUrl : new URL(pageUrl).hostname
+      setUrl(finalUrl)
+
+      chrome.scripting.executeScript(
+        {
+          target: { tabId: tab.id },
+          func: () => {
+            const getMeta = (name: string) =>
+              document.querySelector(`meta[name="${name}"]`)?.getAttribute("content")
+
+            return {
+              title: document.title,
+              description: getMeta("description") || "",
+              favicon: [...document.querySelectorAll("link[rel~='icon']")]
+                .map((el) => (el as HTMLLinkElement).href)[0] || ""
+            }
+          }
+        },
+        (results) => {
+          const result = results?.[0]?.result
+          if (result) {
+            setName(result.title || "")
+            setDescription(result.description || "")
+            setImage(result.favicon || "")
+          
+            setTimeout(() => {
+              if (descriptionRef.current) {
+                descriptionRef.current.style.height = "auto"
+                descriptionRef.current.style.height = descriptionRef.current.scrollHeight + "px"
+              }
+            }, 0)
+          }
+        }
+      )
+    }
+
+    fetchPageDetails()
+
+    chrome.tabs.onUpdated.addListener(fetchPageDetails)
+    chrome.tabs.onActivated.addListener(fetchPageDetails)
+  
+    return () => {
+      chrome.tabs.onUpdated.removeListener(fetchPageDetails)
+      chrome.tabs.onActivated.removeListener(fetchPageDetails)
+    }
+  }, [linkType])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -42,8 +106,7 @@ const AtomForm: React.FC = () => {
 
       const ipfsUri = result.pinThing.uri
 
-      const atomCost = await multivault.getAtomCost()
-      const deposit = parseEther("0.000025")
+      const deposit = await multivault.getAtomCost()
 
       const { vaultId, hash } = await multivault.createAtom({
         uri: ipfsUri,
@@ -72,7 +135,7 @@ const AtomForm: React.FC = () => {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10 relative z-10"
           required
         />
       </div>
@@ -81,10 +144,12 @@ const AtomForm: React.FC = () => {
           Description
         </label>
         <textarea
+          ref={descriptionRef}
           id="description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 border rounded"
+          onChange={handleDescriptionChange}
+          className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10 resize-none overflow-hidden relative z-10"
+          rows={1}
         />
       </div>
       <div>
@@ -96,25 +161,32 @@ const AtomForm: React.FC = () => {
           type="url"
           value={image}
           onChange={(e) => setImage(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10 relative z-10"
         />
+        {image && (
+          <div className="mt-2">
+            <img
+              src={image}
+              alt="Favicon preview"
+              className="w-10 h-10 rounded shadow"
+            />
+          </div>
+        )}
       </div>
-      <div>
-        <label htmlFor="url" className="block font-bold mb-1">
-          URL
-        </label>
-        <input
-          id="url"
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-      </div>
+
+      <LinkTypeSelector linkType={linkType} setLinkType={setLinkType} />
+      <input
+        id="url"
+        type="text"
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+        className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10 relative z-10"
+      />
+      
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full px-4 py-2 bg-background text-foreground hover:bg-accent hover:text-accent-foreground rounded">
+        className="w-full px-4 py-2 text-foreground btn-atom-form-hover-effect rounded bg-[hsl(var(--btn-atom-form-bg))]">
         {isSubmitting ? "Submitting..." : "Create Atom"}
       </button>
       {progressMessage && (

@@ -1,71 +1,74 @@
 import React from "react"
-import { cn } from "~src/lib/utils"
-import VoteButtons from "~src/components/VoteButtons"
 
-export const ClaimRowLite = ({
-  subjectLabel,
-  subjectImage,
-  predicateLabel,
-  predicateImage,
-  objectLabel,
-  objectImage,
-  numPositionsFor,
-  numPositionsAgainst,
-  userStake,
-  userCounterStake,
-  isFirst = true,
-  isLast = true,
-  vaultId,
-  counterVaultId
-}: {
-  subjectLabel: string
-  subjectImage?: string
-  predicateLabel: string
-  predicateImage?: string
-  objectLabel: string
-  objectImage?: string
-  numPositionsFor: number
-  numPositionsAgainst: number
-  userStake: number
-  userCounterStake: number
-  isFirst?: boolean
-  isLast?: boolean
-  vaultId: string
-  counterVaultId: string
-}) => {
+import VoteButtons from "~src/components/VoteButtons"
+import { cn } from "~src/lib/utils"
+
+import { PopupAtom } from "./PopupAtom"
+
+interface ClaimRowLiteProps {
+  claim: {
+    id: string
+    subject: any
+    predicate: any
+    object: any
+    vault?: {
+      id?: string
+      positions?: any[]
+      positions_aggregate?: {
+        aggregate?: {
+          count?: number
+        } | null
+      }
+    } | null
+    counter_vault?: {
+      id?: string
+      positions?: any[]
+      positions_aggregate?: {
+        aggregate?: {
+          count?: number
+        } | null
+      }
+    } | null
+  }
+}
+
+const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
+  const {
+    subject,
+    predicate,
+    object,
+    id,
+    vault: maybeVault,
+    counter_vault: maybeCounterVault
+  } = claim
+
+  const vault = maybeVault || {}
+  const counterVault = maybeCounterVault || {}
+
+  const numPositionsFor =
+    vault.positions_aggregate?.aggregate?.count ?? vault.positions?.length ?? 0
+
+  const numPositionsAgainst =
+    counterVault.positions_aggregate?.aggregate?.count ??
+    counterVault.positions?.length ??
+    0
+
+  const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
+  const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
+
+  const vaultId = vault.id
+  const counterVaultId = counterVault.id
+
   return (
     <div
       className={cn(
-          'flex justify-between items-center p-4 border border-border/10 gap-3 bg-[oklch(var(--container-background))]',
-          isFirst && 'rounded-t-xl',
-          isLast && 'rounded-b-xl'
-        )}
-    >
-      <div className="flex gap-2 items-center flex-wrap flex-1 min-w-0">
-        {[{ label: subjectLabel, img: subjectImage },
-          { label: predicateLabel, img: predicateImage },
-          { label: objectLabel, img: objectImage }]
-          .map(({ label, img }, index) => (
-            <div key={`${index}-${label}`}
-              className="flex items-center gap-1 border border-border rounded-full px-2 py-1 text-sm text-foreground bg-[oklch(var(--triple-background))]"
-            >
-              {img && (
-                <img
-                  src={img}
-                  alt={label}
-                  className="w-5 h-5 rounded-full"
-                />
-              )}
-              <span
-                className="truncate max-w-[200px] overflow-hidden whitespace-nowrap block"
-                title={label}
-              >
-                {label}
-              </span>
-            </div>
-          ))}
+        "flex justify-between items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-3 claims-hover-effect"
+      )}>
+      <div className="flex gap-1 items-center flex-wrap flex-1 min-w-0">
+        <PopupAtom key={`${id}-subject`} atom={subject} />
+        <PopupAtom key={`${id}-predicate`} atom={predicate} />
+        <PopupAtom key={`${id}-object`} atom={object} />
       </div>
-
 
       {vaultId && counterVaultId ? (
         <div className="flex flex-col items-end gap-1">
@@ -75,17 +78,16 @@ export const ClaimRowLite = ({
             numPositionsFor={numPositionsFor}
             numPositionsAgainst={numPositionsAgainst}
           />
-          {(userStake) > 0 ? (
+          {userStake > 0 ? (
             <div className="text-sm text-green-600">You have voting FOR</div>
-          ) : (userCounterStake) > 0 ? (
+          ) : userCounterStake > 0 ? (
             <div className="text-sm text-red-600">You have voting AGAINST</div>
           ) : null}
         </div>
       ) : (
         <div className="text-xs text-gray-500">Missing ID</div>
       )}
-    
-    </div> 
+    </div>
   )
 }
 

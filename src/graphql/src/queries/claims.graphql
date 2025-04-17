@@ -10,16 +10,19 @@ query GetClaimsByAddress($address: String) {
       triple {
         id
         subject {
+          id
           label
           image
           type
         }
         predicate {
+          id
           label
           image
           type
         }
         object {
+          id
           label
           image
           type
@@ -72,16 +75,19 @@ query GetClaimsByUri($uri: String, $address: String) {
           label
           image
           type
+          id
         }
         subject {
           image
           label
           type
+          id
         }
         object {
           label
           image
           type
+          id
         }
         vault {
           id
@@ -120,16 +126,19 @@ query GetClaimsByUri($uri: String, $address: String) {
           label
           image
           type
+          id
         }
         object {
           label
           image
           type
+          id  
         }
         subject {
           label
           image
           type
+          id
         }
         vault {
           id
@@ -173,9 +182,15 @@ query GetClaimsByUri($uri: String, $address: String) {
   }
 }
 
-query GetClaimsByAtom($id: numeric) {
+query GetClaimsByAtom($id: numeric, $address: String) {
   claims_aggregate(
-    where: { _or: [{ object_id: { _eq: $id } }, { subject_id: { _eq: $id } }] }
+    where: {
+      _or: [
+        { object_id: { _eq: $id } }
+        { subject_id: { _eq: $id } }
+        { predicate_id: { _eq: $id } }
+      ]
+    }
   ) {
     aggregate {
       count
@@ -195,6 +210,40 @@ query GetClaimsByAtom($id: numeric) {
           label
           image
           type
+        }
+        object {
+          id
+          label
+          image
+          type
+        }
+        vault {
+          id
+          positions(where: { account_id: { _eq: $address } }) {
+            shares
+            account {
+              id
+            }
+          }
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+        }
+        counter_vault {
+          id
+          positions(where: { account_id: { _eq: $address } }) {
+            shares
+            account {
+              id
+            }
+          }
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
         }
       }
     }

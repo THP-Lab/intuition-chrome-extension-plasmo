@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 import { useTheme } from "~/src/components/ThemeProvider"
 import TabSystem from '../components/TabSystem';
@@ -58,29 +59,28 @@ function Home() {
       <div>        
         {isLoading ? "Chargement..." : (typeof data !== "undefined" && claims.length !== 0)? 
         ( claims.map((claim, index) => (
-        
+          console.log(claim),
         
         <ClaimRowLite
-              key={`${claim.id}-${index}`} 
-              subjectLabel={claim.subject.label ?? "No subject"}
-              subjectImage={claim.subject?.image ?? undefined}
-              predicateLabel={claim.predicate?.label ?? "No predicate"}
-              predicateImage={claim.predicate?.image ?? undefined}
-              objectLabel={claim.object?.label ?? "No object"}
-              objectImage={claim.object?.image ?? undefined}
-              numPositionsFor={claim.vault.positions_aggregate.aggregate?.count ?? 0}
-              numPositionsAgainst={claim.counter_vault.positions_aggregate.aggregate?.count ?? 0}
-              userStake={Number(claim.vault.positions?.[0]?.shares ?? 0)}
-              userCounterStake={Number(claim.counter_vault.positions?.[0]?.shares ?? 0)}
-              isFirst={index === 0}
-              isLast={index === claims.length - 1}
-              vaultId={claim.vault?.id}
-              counterVaultId={claim.counter_vault?.id}
-            />
+          key={`${claim.id}-${index}`}
+          claim={claim}
+        />
+
           
             ))
         ) : (
-          <p>No claims found for this URL.</p>
+          <div className="p-4 rounded text-center space-y-2">
+            <p className="text-sm text-foreground">No claims found for this URL.</p>
+            <p className="text-sm text-foreground">
+              
+
+              <Link to="/page-form"
+                className="text-blue-600 hover:underline font-medium">
+                Be the first
+              </Link>
+              
+            </p>
+          </div>
         )}
       </div>
     },
@@ -95,7 +95,18 @@ function Home() {
             );
           })):
           (
-          <p>No atoms found for this URL.</p>
+          <div className="p-4 rounded text-center space-y-2">
+            <p className="text-sm text-foreground">No atoms found for this URL.</p>
+            <p className="text-sm text-foreground">
+              
+
+              <Link to="/page-form"
+                className="text-blue-600 hover:underline font-medium">
+                Be the first
+              </Link>
+              
+            </p>
+          </div>
           )
 
         }
@@ -117,7 +128,6 @@ function Home() {
         </p>
       </div>
 
-
         <div className="p-4">
         {error && <p className="text-red-500">An error occurred while requesting this page.</p>}
 
@@ -126,8 +136,6 @@ function Home() {
           activeTab={activeTab}
           onTabChange={setActiveTab}
         />
-
-
         
       </div>
     </div>

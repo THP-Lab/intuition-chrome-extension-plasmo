@@ -1,13 +1,10 @@
-
 import React from "react";
 import { useStorage } from "@plasmohq/storage/hook";
 import { useGetTriplesByCreatorQuery } from "~src/graphql/src"
 import ClaimRowLite from "../ui/ClaimRowLite"
 
-
 const YourClaimsTab = () => {
-  // const [account] = useStorage<string>("metamask-account")  
-  const account = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
+  const [account] = useStorage<string>("metamask-account")  
 
   const { data, isLoading, isError, error } = useGetTriplesByCreatorQuery(
     { address: account ?? "" },
@@ -21,26 +18,19 @@ const YourClaimsTab = () => {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Your Claims</h2>
-      {data.triples.map((triple, i) => {
-        const numPositionsFor =
-          triple.vault?.positions_aggregate?.aggregate?.count ?? 0
-        const numPositionsAgainst =
-          triple.counter_vault?.positions_aggregate?.aggregate?.count ?? 0
+      <p className="text-xs text-gray-400 font-medium mt-2 mb-1 flex justify-start items-center gap-2">
+        Claims
+        <span className="bg-gray-700 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+          {data.triples.length}
+        </span>
+      </p>
+      {data.triples.map((triple, index) => {
 
         return (
-          <ClaimRowLite
-          key={triple.id}
-          subjectLabel={triple.subject?.label}
-          predicateLabel={triple.predicate?.label}
-          objectLabel={triple.object?.label}
-          numPositionsFor={numPositionsFor}
-          numPositionsAgainst={numPositionsAgainst}
-          isFirst={i === 0}
-          isLast={i === data.triples.length - 1}
-          vaultId={triple.vault?.id}
-          counterVaultId={triple.counter_vault?.id}
-        />        
+        <ClaimRowLite
+          key={`${triple.id}-${index}`}
+          claim={triple}
+        />     
         )
       })}
     </div>

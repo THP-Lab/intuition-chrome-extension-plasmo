@@ -23,8 +23,14 @@ const MyPositionsTab = () => {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Your Positions</h2>
-      {filteredClaims.map((claim, i) => {
+      <p className="text-xs text-gray-400 font-medium mt-2 mb-1 flex justify-start items-center gap-2">
+        Claims
+        <span className="bg-gray-700 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+          {filteredClaims.length}
+        </span>
+      </p>
+
+      {filteredClaims.map((claim, index) => {
 
         console.log("CLAIM DEBUG", {
           shares: claim.shares,
@@ -34,35 +40,13 @@ const MyPositionsTab = () => {
         })
 
         const triple = claim.triple
-
-        const vault = triple?.vault
-        const counterVault = triple?.counter_vault
-
-        const numVotesFor = vault?.positions_aggregate?.aggregate?.count ?? 0
-        const numVotesAgainst = counterVault?.positions_aggregate?.aggregate?.count ?? 0
-
-        const userPosition = Number(claim.shares) > 0 ? "FOR" : "AGAINST"
-
         
         
           return (
             <ClaimRowLite
-              key={claim.id}
-              subjectLabel={triple?.subject?.label ?? "No subject"}
-              subjectImage={triple?.subject?.image ?? undefined}
-              predicateLabel={triple?.predicate?.label ?? "No predicate"}
-              predicateImage={triple?.predicate?.image ?? undefined}
-              objectLabel={triple?.object?.label ?? "No object"}
-              objectImage={triple?.object?.image ?? undefined}
-              numPositionsFor={numVotesFor}
-              numPositionsAgainst={numVotesAgainst}
-              userStake={Number(claim.shares ?? 0)}
-              userCounterStake={Number(claim.counter_shares ?? 0)}
-              isFirst={i === 0}
-              isLast={i === filteredClaims.length - 1}
-              vaultId={triple.vault?.id}
-              counterVaultId={triple.counter_vault?.id}
-            />
+              key={`${triple.id}-${index}`}
+              claim={triple}
+            />  
           )
       })}
     </div>

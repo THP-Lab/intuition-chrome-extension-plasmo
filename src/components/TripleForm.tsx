@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import AtomAutocompleteInput from './AtomAutocompleteInput'
 import { useCreateTriples } from '~src/hooks/useCreateTriples'
 
@@ -127,19 +127,20 @@ const TripleForm: React.FC = () => {
         <AtomAutocompleteInput label="Predicate" onSelect={setPredicate} selected={predicate} />
         <AtomAutocompleteInput label="Object" onSelect={setObject} selected={object} />
 
-        <div className="flex gap-4">
+        <div className="flex gap-8 justify-center">
           <button
             type="button"
             onClick={handleAddTriple}
-            className="px-4 py-2 bg-accent hover:bg-accent-foreground rounded"
+            className="w-20 px-4 py-2 btn-atom-form-hover-effect text-foreground bg-[hsl(var(--btn-atom-form-bg))] text-center rounded-xl"
           >
-            Add</button>
-
+            Add
+          </button>
+            
           <button
             type="button"
             onClick={handleSubmitAll}
             disabled={isLoading}
-            className="px-4 py-2 bg-primary hover:bg-primary/80 rounded"
+            className="w-20 px-4 py-2 btn-atom-form-hover-effect text-foreground bg-[hsl(var(--btn-atom-form-bg))] text-center rounded-xl"
           >
             {isLoading ? "Send..." : triples.length > 1 ? "Submit all triples" : "Submit"}
           </button>

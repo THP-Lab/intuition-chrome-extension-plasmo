@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react"
 import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
 import TabSystem from "../components/TabSystem"
-import { useGetTriplesQuery } from "@0xintuition/graphql"
+import { useGetTriplesWithPositionsQuery } from "@0xintuition/graphql"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
+import { useStorage } from "@plasmohq/storage/dist/hook"
 
 
 const Search: React.FC = () => {
   const [isSidePanel, setIsSidePanel] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("All")
+  const [walletAddress] = useStorage<string>("metamask-account")
 
   useEffect(() => {
     const checkWidth = () => {
@@ -29,16 +31,17 @@ const Search: React.FC = () => {
     data: triplesData,
     isLoading,
     error
-  } = useGetTriplesQuery({
+  } = useGetTriplesWithPositionsQuery({
     where: {
       _or: [
         { subject: { label: { _ilike: `%${searchTerm}%` } } },
         { predicate: { label: { _ilike: `%${searchTerm}%` } } },
         { object: { label: { _ilike: `%${searchTerm}%` } } }
       ]
-    }
+    },
+    address: walletAddress
   }, {
-    enabled: !!searchTerm
+    enabled: !!searchTerm && !!walletAddress
   })
 
   
@@ -65,27 +68,15 @@ const Search: React.FC = () => {
       
     
       console.log("Filtered triples:", filteredTriples)
+
     
       return (
         <div className="space-y-2">
           {filteredTriples.length === 0 && <p>No results found.</p>}
           {filteredTriples.map((triple, index) => (
             <ClaimRowLite
-              key={triple.id}
-              subjectLabel={triple.subject?.label ?? "No subject"}
-              subjectImage={triple.subject?.image ?? undefined}
-              predicateLabel={triple.predicate?.label ?? "No predicate"}
-              predicateImage={triple.predicate?.image ?? undefined}
-              objectLabel={triple.object?.label ?? "No object"}
-              objectImage={triple.object?.image ?? undefined}
-              numPositionsFor={triple.vault?.positions?.length ?? 0}
-              numPositionsAgainst={triple.counter_vault?.positions?.length ?? 0}
-              userStake={0}
-              userCounterStake={0}
-              isFirst={index === 0}
-              isLast={index === filteredTriples.length - 1}
-              vaultId={triple.vault_id ? BigInt(triple.vault_id) : undefined}
-              counterVaultId={triple.counter_vault_id ? BigInt(triple.counter_vault_id) : undefined}
+              key={`${triple.id}-${index}`}
+              claim={triple}
             />
           ))}
         </div>

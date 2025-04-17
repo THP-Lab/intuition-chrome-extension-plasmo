@@ -89,20 +89,20 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
           setSelectedAtom(null);
           setIsOpen(true);
         }}
-        className="w-full border p-2 rounded"
+        className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10"
         onFocus={() => setIsOpen(true)}
       />
       {isOpen && atoms.length > 0 && (
-        <ul className="absolute z-10 bg-white border rounded w-full max-h-60 overflow-y-auto">
+        <ul className="absolute z-10 bg-[hsl(var(--navbar-bg))] text-foreground border border-border rounded w-full max-h-60 overflow-y-auto shadow-md">
           {atoms.map((atom) => (
             <li
               key={atom.id}
-              className="p-2 hover:bg-blue-100 cursor-pointer"
+              className="p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer"
               onClick={() => handleSelect(atom)}
             >
               {atom.emoji && <span className="mr-2">{atom.emoji}</span>}
               <span>{atom.label}</span>
-              <span className="text-xs text-gray-500 ml-2">({atom.id})</span>
+              <span className="text-xs text-muted-foreground ml-2">({atom.id})</span>
             </li>
           ))}
         </ul>
