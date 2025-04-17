@@ -29,7 +29,7 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
       setTimeout(() => {
         wrapper.classList.add("appear")
         setIsAppeared(true)
-      }, 1000)
+      }, 200)
     }
   }, [])
 
@@ -100,7 +100,7 @@ const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
             <input
               className="input-bar"
               type="text"
-              placeholder="Rechercher..."
+              placeholder="Search..."
               onChange={handleInputChange}
               onFocus={() =>
                 document
