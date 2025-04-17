@@ -13,7 +13,6 @@ interface ClaimRowLiteProps {
     object: any
     vault?: {
       id?: string
-      position_count?: number // ← ajouté ici
       positions?: any[]
       positions_aggregate?: {
         aggregate?: {
@@ -23,7 +22,6 @@ interface ClaimRowLiteProps {
     }
     counter_vault?: {
       id?: string
-      position_count?: number // ← ajouté ici aussi
       positions?: any[]
       positions_aggregate?: {
         aggregate?: {
@@ -46,13 +44,11 @@ const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
   const numPositionsFor =
     vault.positions_aggregate?.aggregate?.count ??
-    vault.position_count ??
     vault.positions?.length ??
     0
 
   const numPositionsAgainst =
     counterVault.positions_aggregate?.aggregate?.count ??
-    counterVault.position_count ??
     counterVault.positions?.length ??
     0
 

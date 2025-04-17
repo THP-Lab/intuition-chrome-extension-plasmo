@@ -4,10 +4,14 @@ import { useGetAtomQuery } from "@0xintuition/graphql"
 import { useGetClaimsByAtomQuery }from "~src/graphql/src"
 import AtomDisplay from "~src/components/ui/AtomDisplay"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
+import { useStorage } from "@plasmohq/storage/hook"
 
 const AtomDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const atomId = id ?? ""
+  const [walletAddress] = useStorage<string>("metamask-account")
+  console.log("wallet address :", walletAddress)
+
 
   const { data, isLoading, isError, error } = useGetAtomQuery(
     { id: atomId },
@@ -19,14 +23,14 @@ const AtomDetailPage = () => {
     isLoading: isLoadingClaims,
     isError: isClaimsError
   } = useGetClaimsByAtomQuery(
-    { id: Number(atomId) },
-    { enabled: !!atomId }
+    { id: Number(atomId), address: walletAddress },
+    { enabled: !!atomId && !!walletAddress }
   )
 
   const claims = claimsData?.claims_aggregate?.nodes.map((claim) => ({
     ...claim,
     ...claim.triple
-  }))
+  })) ?? []
 
   console.log("ClaimsData", claimsData?.claims_aggregate?.nodes)
   console.log("Claims:", claims)

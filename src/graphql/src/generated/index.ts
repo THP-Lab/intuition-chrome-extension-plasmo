@@ -10937,6 +10937,7 @@ export type GetClaimsByUriQuery = {
 
 export type GetClaimsByAtomQueryVariables = Exact<{
   id?: InputMaybe<Scalars["numeric"]["input"]>
+  address?: InputMaybe<Scalars["String"]["input"]>
 }>
 
 export type GetClaimsByAtomQuery = {
@@ -14416,7 +14417,7 @@ useGetClaimsByUriQuery.fetcher = (
   )
 
 export const GetClaimsByAtomDocument = `
-    query GetClaimsByAtom($id: numeric) {
+    query GetClaimsByAtom($id: numeric, $address: String) {
   claims_aggregate(
     where: {_or: [{object_id: {_eq: $id}}, {subject_id: {_eq: $id}}, {predicate_id: {_eq: $id}}]}
   ) {
@@ -14447,7 +14448,7 @@ export const GetClaimsByAtomDocument = `
         }
         vault {
           id
-          positions {
+          positions(where: {account_id: {_eq: $address}}) {
             shares
             account {
               id
@@ -14461,7 +14462,7 @@ export const GetClaimsByAtomDocument = `
         }
         counter_vault {
           id
-          positions {
+          positions(where: {account_id: {_eq: $address}}) {
             shares
             account {
               id
@@ -23827,6 +23828,14 @@ export const GetClaimsByAtom = {
           kind: "VariableDefinition",
           variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
           type: { kind: "NamedType", name: { kind: "Name", value: "numeric" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
         }
       ],
       selectionSet: {
@@ -24043,6 +24052,43 @@ export const GetClaimsByAtom = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "positions" },
+                                    arguments: [
+                                      {
+                                        kind: "Argument",
+                                        name: { kind: "Name", value: "where" },
+                                        value: {
+                                          kind: "ObjectValue",
+                                          fields: [
+                                            {
+                                              kind: "ObjectField",
+                                              name: {
+                                                kind: "Name",
+                                                value: "account_id"
+                                              },
+                                              value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                  {
+                                                    kind: "ObjectField",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "_eq"
+                                                    },
+                                                    value: {
+                                                      kind: "Variable",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "address"
+                                                      }
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ],
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
@@ -24122,6 +24168,43 @@ export const GetClaimsByAtom = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "positions" },
+                                    arguments: [
+                                      {
+                                        kind: "Argument",
+                                        name: { kind: "Name", value: "where" },
+                                        value: {
+                                          kind: "ObjectValue",
+                                          fields: [
+                                            {
+                                              kind: "ObjectField",
+                                              name: {
+                                                kind: "Name",
+                                                value: "account_id"
+                                              },
+                                              value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                  {
+                                                    kind: "ObjectField",
+                                                    name: {
+                                                      kind: "Name",
+                                                      value: "_eq"
+                                                    },
+                                                    value: {
+                                                      kind: "Variable",
+                                                      name: {
+                                                        kind: "Name",
+                                                        value: "address"
+                                                      }
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ],
                                     selectionSet: {
                                       kind: "SelectionSet",
                                       selections: [
