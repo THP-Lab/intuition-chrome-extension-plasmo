@@ -1,63 +1,37 @@
 import React from "react"
-
-import VoteButtons from "~src/components/VoteButtons"
 import { cn } from "~src/lib/utils"
-
 import { PopupAtom } from "./PopupAtom"
+import VoteButtons from "~src/components/VoteButtons"
 
 interface ClaimRowLiteProps {
-  claim: {
-    id: string
-    subject: any
-    predicate: any
-    object: any
-    vault?: {
-      id?: string
-      positions?: any[]
-      positions_aggregate?: {
-        aggregate?: {
-          count?: number
-        } | null
-      }
-    } | null
-    counter_vault?: {
-      id?: string
-      positions?: any[]
-      positions_aggregate?: {
-        aggregate?: {
-          count?: number
-        } | null
-      }
-    } | null
-  }
+  claim: any
 }
 
-const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
-  const {
-    subject,
-    predicate,
-    object,
-    id,
-    vault: maybeVault,
-    counter_vault: maybeCounterVault
-  } = claim
+export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
+  const triple = claim.triple ?? claim
 
-  const vault = maybeVault || {}
-  const counterVault = maybeCounterVault || {}
+  const vault = triple.vault ?? {}
+  const counterVault = triple.counter_vault ?? {}
+
+  const subject = triple.subject ?? claim.subject
+  const predicate = triple.predicate ?? claim.predicate
+  const object = triple.object ?? claim.object
+
+  const vaultId = vault.id ?? claim.vault_id
+  const counterVaultId = counterVault.id ?? claim.counter_vault_id
 
   const numPositionsFor =
-    vault.positions_aggregate?.aggregate?.count ?? vault.positions?.length ?? 0
+    vault.positions_aggregate?.aggregate?.count ??
+    vault.position_count ??
+    vault.positions?.length ?? 0
 
   const numPositionsAgainst =
     counterVault.positions_aggregate?.aggregate?.count ??
-    counterVault.positions?.length ??
-    0
+    counterVault.position_count ??
+    counterVault.positions?.length ?? 0
 
   const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
   const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
-
-  const vaultId = vault.id
-  const counterVaultId = counterVault.id
 
   return (
     <div
@@ -65,9 +39,9 @@ const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
         "flex justify-between items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-3 claims-hover-effect"
       )}>
       <div className="flex gap-1 items-center flex-wrap flex-1 min-w-0">
-        <PopupAtom key={`${id}-subject`} atom={subject} />
-        <PopupAtom key={`${id}-predicate`} atom={predicate} />
-        <PopupAtom key={`${id}-object`} atom={object} />
+        <PopupAtom key={`${claim.id}-subject`} atom={subject} />
+        <PopupAtom key={`${claim.id}-predicate`} atom={predicate} />
+        <PopupAtom key={`${claim.id}-object`} atom={object} />
       </div>
 
       {vaultId && counterVaultId ? (
