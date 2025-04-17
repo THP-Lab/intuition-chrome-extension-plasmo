@@ -1,20 +1,40 @@
 import React from "react"
-import { cn } from "~src/lib/utils"
-import { PopupAtom } from "./PopupAtom"
+
 import VoteButtons from "~src/components/VoteButtons"
+import { cn } from "~src/lib/utils"
+
+import { PopupAtom } from "./PopupAtom"
 
 interface ClaimRowLiteProps {
   claim: {
     id: string
-    subject?: any
-    predicate?: any
-    object?: any
-    vault?: any
-    counter_vault?: any
+    subject: any
+    predicate: any
+    object: any
+    vault?: {
+      id?: string
+      position_count?: number // ← ajouté ici
+      positions?: any[]
+      positions_aggregate?: {
+        aggregate?: {
+          count?: number
+        }
+      }
+    }
+    counter_vault?: {
+      id?: string
+      position_count?: number // ← ajouté ici aussi
+      positions?: any[]
+      positions_aggregate?: {
+        aggregate?: {
+          count?: number
+        }
+      }
+    }
   }
 }
 
-export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
+const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   const {
     vault = {},
     counter_vault: counterVault = {},
@@ -27,18 +47,20 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   const numPositionsFor =
     vault.positions_aggregate?.aggregate?.count ??
     vault.position_count ??
-    vault.positions?.length ?? 0
+    vault.positions?.length ??
+    0
 
   const numPositionsAgainst =
     counterVault.positions_aggregate?.aggregate?.count ??
     counterVault.position_count ??
-    counterVault.positions?.length ?? 0
+    counterVault.positions?.length ??
+    0
 
   const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
   const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
 
-  const vaultId = vault.id ?? claim.vault_id
-  const counterVaultId = counterVault.id ?? claim.counter_vault_id
+  const vaultId = vault.id
+  const counterVaultId = counterVault.id
 
   return (
     <div
