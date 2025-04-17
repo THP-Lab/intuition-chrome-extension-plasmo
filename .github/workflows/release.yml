@@ -27,15 +27,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
 
+      - name: Get version from package.json
+        id: package-version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
       - name: Build Chrome extension
         run: pnpm build
+
+      - name: Rename Chrome artifact
+        run: cp build/chrome-mv3-prod.zip build/intuition-chrome-v${{ steps.package-version.outputs.version }}.zip
 
       - name: Build Firefox extension
         run: pnpm build:firefox
 
-      - name: Get version from package.json
-        id: package-version
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+      - name: Rename Firefox artifact
+        run: cp build/firefox-mv2-prod.zip build/intuition-firefox-v${{ steps.package-version.outputs.version }}.zip
 
       - name: Create Release
         id: create_release
@@ -46,7 +52,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            build/chrome-mv3-prod.zip
-            build/firefox-mv2-prod.zip
+            build/intuition-chrome-v${{ steps.package-version.outputs.version }}.zip
+            build/intuition-firefox-v${{ steps.package-version.outputs.version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
