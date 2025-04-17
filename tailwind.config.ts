@@ -60,6 +60,14 @@ const config: Config = {
       },
       borderColor: {
         DEFAULT: "hsl(var(--border))"
+      },
+      animation: {
+        border: "border 4s linear infinite"
+      },
+      keyframes: {
+        border: {
+          to: { "--border-angle": "360deg" }
+        }
       }
     }
   },
