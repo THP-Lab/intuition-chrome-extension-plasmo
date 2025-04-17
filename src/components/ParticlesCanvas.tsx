@@ -20,7 +20,7 @@ const ParticlesCanvas: React.FC = () => {
   
   // Configuration - reduced number of particles
   const particleCount = 70 // Réduit de 100 à 50
-  const connectionDistance = 200
+  const connectionDistance = 100
   // adapted colors to the theme
   const lightThemeColor = "rgba(0, 0, 0, 0.3)" // Couleur plus subtile pour thème clair
   const darkThemeColor = "rgba(255, 255, 255, 0.5)" // Couleur plus visible pour thème sombre
@@ -70,19 +70,6 @@ const ParticlesCanvas: React.FC = () => {
       });
     }
     
-    // Add 4 particles on click
-    const handleClick = () => {
-      for (let i = 0; i < 4; i++) {
-        particles.current.push({
-          x: mouse.current.x,
-          y: mouse.current.y,
-          size: Math.random() * 2 + 1,
-          speedX: Math.random() * 1 - 0.5,
-          speedY: Math.random() * 1 - 0.5,
-          color: theme === "dark" ? darkThemeColor : lightThemeColor
-        })
-      }
-    }
     
     // Animation of the canvas
     const animate = () => {
@@ -157,7 +144,6 @@ const ParticlesCanvas: React.FC = () => {
     // Configure the events
     window.addEventListener("resize", handleResize)
     window.addEventListener("mousemove", handleMouseMove)
-    window.addEventListener("click", handleClick)
     
     // Initialize and start the animation
     handleResize()
@@ -167,7 +153,6 @@ const ParticlesCanvas: React.FC = () => {
     return () => {
         window.removeEventListener("resize", handleResize)
         window.removeEventListener("mousemove", handleMouseMove)
-        window.removeEventListener("click", handleClick)
         if (animationFrameId.current) {
           cancelAnimationFrame(animationFrameId.current)
         }

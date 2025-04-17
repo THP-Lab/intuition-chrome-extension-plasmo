@@ -19,17 +19,12 @@ const WalletConnectionButton = () => {
     setAccount("");
   }
 
-  const sliceAddress = (address: string) => {
-    return `${address.slice(0, 4)}...${address.slice(-4)}`
-  }
-
   return (
     <div>
       {!account ? (
         <Button variant="successOutline" onClick={handleConnect}>Connect to Metamask</Button>
       ) : (
         <div>
-          <p>Connected account : {sliceAddress(account)}</p>
           <Button variant="destructiveOutline" onClick={handleDisconnect}>Disconnect</Button>
         </div>
       )}
