@@ -1,41 +1,42 @@
 import { Fingerprint, UserRound } from "lucide-react"
-
 import React from "react"
 import { Link } from "react-router-dom"
 
 import { useAtomPosition } from "../hooks/useAtomPosition"
 
-
-interface Atom {
+interface AtomProps {
   id: string
-  data: string
+  data?: string | null
   type: string
-  label: string
-  image?: string
-  emoji?: string
+  label?: string | null
+  image?: string | null
+  emoji?: string | null
   value?: {
     thing?: {
       name?: string | null
       image?: string | null
       description?: string | null
       url?: string | null
-    }
-  }
-  vault: {
+    } | null
+  } | null
+  vault?: {
+    position_count?: number
     total_shares?: string
     current_share_price?: string
-    myPostion?: Array<{
-      shares: string
-      account_id: string
-    }>
-    position_count?: string
-    positions?: string
-  }
+    total?: {
+      aggregate?: {
+        count?: number
+        sum?: {
+          shares?: string | number
+        } | null
+      } | null
+    }
+  } | null
   vault_id?: string
 }
 
 interface AtomCardProps {
-  atom: Atom
+  atom: AtomProps
 }
 
 export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
@@ -49,13 +50,13 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
           {atom.image ? (
             <img
               src={atom.image}
-              alt={atom.label}
+              alt={(atom.label ?? "") as string}
               className="w-12 h-12 object-cover rounded-md"
             />
           ) : (
             <div className="w-12 h-12 flex items-center justify-center rounded-md bg-muted text-muted-foreground">
-            <Fingerprint className="w-6 h-6" />
-          </div>
+              <Fingerprint className="w-6 h-6" />
+            </div>
           )}
           <div>
             <h2 className="text-base font-semibold">{atom.label}</h2>
@@ -74,8 +75,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
             onClick={() => atomPosition(BigInt(atom.id))}
             disabled={isVoting}
             className="text-for border border-for rounded-md px-2 py-0.5 hover:bg-for hover:text-white text-xs"
-            title="Vote for this atom"
-          >
+            title="Vote for this atom">
             ↑
           </button>
         </div>
@@ -92,15 +92,12 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
           to={thing.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-blue-400 underline mt-1 inline-block"
-        >
+          className="text-xs text-blue-400 underline mt-1 inline-block">
           {thing.url}
         </Link>
       )}
 
-      {txHash && (
-        <p className="text-green-500 text-xs mt-2">Tx: {txHash}</p>
-      )}
+      {txHash && <p className="text-green-500 text-xs mt-2">Tx: {txHash}</p>}
     </div>
   )
 }

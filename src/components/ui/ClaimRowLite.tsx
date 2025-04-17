@@ -17,35 +17,36 @@ interface ClaimRowLiteProps {
       positions_aggregate?: {
         aggregate?: {
           count?: number
-        }
+        } | null
       }
-    }
+    } | null
     counter_vault?: {
       id?: string
       positions?: any[]
       positions_aggregate?: {
         aggregate?: {
           count?: number
-        }
+        } | null
       }
-    }
+    } | null
   }
 }
 
 const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   const {
-    vault = {},
-    counter_vault: counterVault = {},
     subject,
     predicate,
     object,
-    id
+    id,
+    vault: maybeVault,
+    counter_vault: maybeCounterVault
   } = claim
 
+  const vault = maybeVault || {}
+  const counterVault = maybeCounterVault || {}
+
   const numPositionsFor =
-    vault.positions_aggregate?.aggregate?.count ??
-    vault.positions?.length ??
-    0
+    vault.positions_aggregate?.aggregate?.count ?? vault.positions?.length ?? 0
 
   const numPositionsAgainst =
     counterVault.positions_aggregate?.aggregate?.count ??

@@ -1,5 +1,6 @@
 import { useGetAtomsWithPositionsQuery } from "@0xintuition/graphql"
 import React from "react"
+
 import { useStorage } from "@plasmohq/storage/hook"
 
 import AtomCard from "../AtomCard"
@@ -41,12 +42,11 @@ const IdentitiesVotedTab = () => {
           {atoms.length}
         </span>
       </div>
-      
-      {atoms.map((atom) => 
+
+      {atoms.map((atom) =>
         atom?.id ? <AtomCard key={atom.id} atom={atom} /> : null
       )}
-  </div>
-
+    </div>
   )
 }
 

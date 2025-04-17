@@ -1,17 +1,18 @@
+import { useGetAtomQuery } from "@0xintuition/graphql"
 import React from "react"
 import { useParams } from "react-router-dom"
-import { useGetAtomQuery } from "@0xintuition/graphql"
-import { useGetClaimsByAtomQuery }from "~src/graphql/src"
+
+import { useStorage } from "@plasmohq/storage/hook"
+
 import AtomDisplay from "~src/components/ui/AtomDisplay"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
-import { useStorage } from "@plasmohq/storage/hook"
+import { useGetClaimsByAtomQuery } from "~src/graphql/src"
 
 const AtomDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const atomId = id ?? ""
   const [walletAddress] = useStorage<string>("metamask-account")
   console.log("wallet address :", walletAddress)
-
 
   const { data, isLoading, isError, error } = useGetAtomQuery(
     { id: atomId },
@@ -27,10 +28,11 @@ const AtomDetailPage = () => {
     { enabled: !!atomId && !!walletAddress }
   )
 
-  const claims = claimsData?.claims_aggregate?.nodes.map((claim) => ({
-    ...claim,
-    ...claim.triple
-  })) ?? []
+  const claims =
+    claimsData?.claims_aggregate?.nodes.map((claim) => ({
+      ...claim,
+      ...claim.triple
+    })) ?? []
 
   console.log("ClaimsData", claimsData?.claims_aggregate?.nodes)
   console.log("Claims:", claims)
@@ -50,7 +52,7 @@ const AtomDetailPage = () => {
         <div className="flex items-center mt-2 mb-1">
           <span className="text-sm text-gray-400">Claims</span>
           <span className="px-2 py-0.5 text-xs font semi-bold text-white bg-gray-700 rounded-full ml-2">
-          {claimsData?.claims_aggregate?.aggregate?.count ?? 0}
+            {claimsData?.claims_aggregate?.aggregate?.count ?? 0}
           </span>
         </div>
 
@@ -63,10 +65,7 @@ const AtomDetailPage = () => {
         ) : (
           <div className="mt-3 space-y-2">
             {claims.map((claim, index) => (
-                <ClaimRowLite
-                  key={`${claim.id}-${index}`}
-                  claim={claim}
-                />
+              <ClaimRowLite key={`${claim.id}-${index}`} claim={claim} />
             ))}
           </div>
         )}
