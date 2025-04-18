@@ -33,13 +33,13 @@ jobs:
         run: pnpm build
 
       - name: Zip Chrome artifact
-        run: cd build && zip -r intuition-chrome-v${{ steps.package-version.outputs.version }}.zip chrome-mv3-prod/
+        run: cd build/chrome-mv3-prod && zip -r ../intuition-chrome-v${{ steps.package-version.outputs.version }}.zip *
 
       - name: Build Firefox extension
         run: pnpm build:firefox
 
       - name: Zip Firefox artifact
-        run: cd build && zip -r intuition-firefox-v${{ steps.package-version.outputs.version }}.zip firefox-mv2-prod/
+        run: cd build/firefox-mv2-prod && zip -r ../intuition-firefox-v${{ steps.package-version.outputs.version }}.zip *
 
       - name: Create Release
         id: create_release
