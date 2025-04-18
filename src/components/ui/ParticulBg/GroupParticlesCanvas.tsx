@@ -34,10 +34,10 @@ const GroupParticlesCanvas: React.FC = () => {
   const minGroups = 2
 
   const MOUSE_INFLUENCE = {
-    MIN_DISTANCE: 50, // Distance minimum pour éviter que les particules ne touchent la souris
-    MAX_DISTANCE: 200, // Distance maximum d'influence de la souris
-    ORBITAL_FORCE: 0.000000004, // Force de l'orbite (plus petit = orbite plus douce)
-    REPULSION_FORCE: 0.00000008 // Force de répulsion si trop proche
+    MIN_DISTANCE: 50, // Distance minimum to avoid that the particles touch the mouse
+    MAX_DISTANCE: 200, // Maximum distance of influence of the mouse
+    ORBITAL_FORCE: 0.000000004, // Force of the orbit (smaller = orbit smoother)
+    REPULSION_FORCE: 0.00000008 // Repulsion force if too close
   }
 
   const createGroup = (canvas: HTMLCanvasElement) => {
@@ -47,10 +47,10 @@ const GroupParticlesCanvas: React.FC = () => {
     const endX = startX < 0 ? canvas.width + 50 : -50
     const endY = Math.random() * canvas.height
 
-    // Ne pas créer de groupe si on a atteint le maximum
+    // Do not create a group if you have reached the maximum
     if (activeGroupsRef.current >= maxGroups) return
 
-    // Déterminer la taille du groupe
+    // Determine the size of the group
     const groupType = Math.random()
     let size
     if (groupType < 0.5) size = GROUP_SIZES.SMALL
@@ -60,7 +60,7 @@ const GroupParticlesCanvas: React.FC = () => {
     const groupSize = Math.floor(size.base + (Math.random() * 2 - 1) * size.variation)
     const dispersion = size.base * 20
 
-    // Créer les particules du groupe
+    // Create the particles of the group
     for (let i = 0; i < groupSize; i++) {
       const particle: GroupParticle = {
         x: startX + Math.random() * dispersion - dispersion/2,
@@ -89,23 +89,23 @@ const GroupParticlesCanvas: React.FC = () => {
       canvas.height = window.innerHeight
     }
 
-    // Ajouter la gestion de la souris
+    // Add mouse management
     const handleMouseMove = (e: MouseEvent) => {
         mouse.current.x = e.x
         mouse.current.y = e.y
       }
 
-    // Animation du canvas
+    // Animation of the canvas
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Mettre à jour et dessiner chaque particule
+      // Update and draw each particle
       particles.current.forEach((particle, i) => {
-        // Mise à jour de la position
+        // Update the position
         particle.x += particle.speedX
         particle.y += particle.speedY
 
-        // Attraction vers la souris
+        // Attraction towards the mouse
         const dxMouse = mouse.current.x - particle.x
         const dyMouse = mouse.current.y - particle.y
         const distanceMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse)
@@ -114,36 +114,36 @@ const GroupParticlesCanvas: React.FC = () => {
           const angle = Math.atan2(dyMouse, dxMouse)
           
           if (distanceMouse < MOUSE_INFLUENCE.MIN_DISTANCE) {
-            // Répulsion si trop proche
+            // Repulsion if too close
             particle.speedX -= Math.cos(angle) * MOUSE_INFLUENCE.REPULSION_FORCE
             particle.speedY -= Math.sin(angle) * MOUSE_INFLUENCE.REPULSION_FORCE
           } else {
-            // Force orbitale perpendiculaire à la direction de la souris
+            // Orbital force perpendicular to the direction of the mouse
             particle.speedX += Math.cos(angle + Math.PI/2) * MOUSE_INFLUENCE.ORBITAL_FORCE
             particle.speedY += Math.sin(angle + Math.PI/2) * MOUSE_INFLUENCE.ORBITAL_FORCE
             
-            // Légère attraction pour maintenir dans la zone d'influence
+            // Slight attraction to maintain in the influence zone
             const attractionForce = 0.01 * (distanceMouse - MOUSE_INFLUENCE.MIN_DISTANCE) / 
               (MOUSE_INFLUENCE.MAX_DISTANCE - MOUSE_INFLUENCE.MIN_DISTANCE)
             particle.speedX += Math.cos(angle) * attractionForce
             particle.speedY += Math.sin(angle) * attractionForce
           }
           
-          // Ajouter une chance de "s'échapper" de l'influence
+          // Add a chance to "escape" the influence
           if (Math.random() < 0.02) {
             particle.speedX += (Math.random() - 0.5) * 0.5
             particle.speedY += (Math.random() - 0.5) * 0.5
           }
         }
         
-        // Limiter la vitesse maximale
+        // Limit the maximum speed
         const speed = Math.sqrt(particle.speedX * particle.speedX + particle.speedY * particle.speedY)
         if (speed > 2) {
           particle.speedX = (particle.speedX / speed) * 0.0000000005
           particle.speedY = (particle.speedY / speed) * 0.0000000005
         }
 
-        // Dessiner la particule
+        // Draw the particle
         const finalColor = theme === "dark" 
           ? `rgba(255, 255, 255, ${0.5 * particle.opacity})`
           : `rgba(0, 0, 0, ${0.3 * particle.opacity})`
@@ -153,7 +153,7 @@ const GroupParticlesCanvas: React.FC = () => {
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fill()
 
-        // Connexions entre particules du même groupe
+        // Connections between particles of the same group
         for (let j = i + 1; j < particles.current.length; j++) {
           const p2 = particles.current[j]
           if (particle.groupId === p2.groupId) {
@@ -182,20 +182,20 @@ const GroupParticlesCanvas: React.FC = () => {
       })
 
 
-      // Supprimer les groupes qui sont sortis de l'écran
+      // Delete groups that are outside the screen
       const previousLength = particles.current.length
       particles.current = particles.current.filter(p => 
         !(p.x < -100 || p.x > canvas.width + 100 || 
           p.y < -100 || p.y > canvas.height + 100)
       )
       
-      // Si des particules ont été supprimées, mettre à jour le compteur de groupes
+      // If particles have been deleted, update the group counter
       if (particles.current.length < previousLength) {
         const remainingGroupIds = new Set(particles.current.map(p => p.groupId))
         activeGroupsRef.current = remainingGroupIds.size
       }
 
-      // Créer occasionnellement un nouveau groupe si on n'a pas atteint le minimum
+      // Create a new group occasionally if you have not reached the minimum
       if (activeGroupsRef.current < minGroups || 
          (activeGroupsRef.current < maxGroups && Math.random() < 0.002)) {
         createGroup(canvas)
@@ -203,13 +203,13 @@ const GroupParticlesCanvas: React.FC = () => {
 
       window.addEventListener("mousemove", handleMouseMove)
 
-      // Supprimer les groupes qui sont sortis de l'écran
+      // Delete groups that are outside the screen
       particles.current = particles.current.filter(p => 
         !(p.x < -100 || p.x > canvas.width + 100 || 
           p.y < -100 || p.y > canvas.height + 100)
       )
 
-      // Créer occasionnellement un nouveau groupe
+      // Create a new group occasionally
       if (Math.random() < 0.0005) {
         createGroup(canvas)
       }

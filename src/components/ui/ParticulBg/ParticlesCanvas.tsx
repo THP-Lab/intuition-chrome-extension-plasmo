@@ -27,8 +27,8 @@ const ParticlesCanvas: React.FC = () => {
   const animationFrameId = useRef<number>()
 
   const ATTRACTION = {
-    FORCE: 0.0005, // Force d'attraction générale
-    DISTANCE: 150, // Distance d'attraction
+    FORCE: 0.0005, // force of attraction
+    DISTANCE: 150, // distance of attraction
   }
 
   // Configuration
@@ -39,12 +39,12 @@ const ParticlesCanvas: React.FC = () => {
   const maxConnectionsPerParticle = 60
   const mouseAreaConnectionLimit = 60
 
-  // Couleurs adaptées au thème
+  // colors adapted to the theme
   const lightThemeColor = "rgba(0, 0, 0, 0.3)"
   const darkThemeColor = "rgba(255, 255, 255, 0.5)"
   const backgroundColor = "transparent"
 
-  // Fonction de création d'une particule
+  // function to create a particle
   const createParticle = (canvas: HTMLCanvasElement, fadeIn = true) => {
     const baseX = Math.random() * canvas.width
     const baseY = Math.random() * canvas.height
@@ -73,14 +73,14 @@ const ParticlesCanvas: React.FC = () => {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    // Ajustement de la taille du canvas
+    // Adjustment of the size of the canvas
     const handleResize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
       initParticles()
     }
 
-    // Initialisation des particules
+    // Initialization of the particles
     const initParticles = () => {
       particles.current = []
       for (let i = 0; i < particleCount; i++) {
@@ -88,7 +88,7 @@ const ParticlesCanvas: React.FC = () => {
       }
     }
 
-    // Gestion du mouvement de la souris
+    // Mouse movement management
     const handleMouseMove = (e: MouseEvent) => {
       const prevX = mouse.current.x
       const prevY = mouse.current.y
@@ -96,7 +96,7 @@ const ParticlesCanvas: React.FC = () => {
       mouse.current.x = e.x
       mouse.current.y = e.y
 
-      // Effet de parallaxe léger
+      // Light parallax effect
       particles.current.forEach((p) => {
         p.x += (mouse.current.x - prevX) * 0.005
         p.y += (mouse.current.y - prevY) * 0.005
@@ -107,27 +107,27 @@ const ParticlesCanvas: React.FC = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Gérer le cycle de vie des particules
+      // Manage the life cycle of the particles
       particles.current = particles.current.filter((particle) => {
-        // Mettre à jour l'opacité
+        // Update the opacity
         particle.opacity += particle.fadeSpeed * particle.fadeDirection
 
-        // Si la particule disparaît complètement
+        // If the particle disappears completely
         if (particle.opacity <= 0) {
-          // Si on a assez de particules, on la supprime
+          // If there are enough particles, delete it
           if (particles.current.length > minParticles) {
             return false
           }
-          // Sinon on la fait réapparaître ailleurs
+          // Otherwise, make it reappear somewhere else
           const newParticle = createParticle(canvas, true)
           Object.assign(particle, newParticle)
           return true
         }
 
-        // Si la particule est complètement apparue
+        // If the particle is completely reappeared
         if (particle.opacity >= 1) {
           particle.opacity = 1
-          // Chance aléatoire de commencer à disparaître
+          // Random chance to start disappearing
           if (Math.random() < 0.001) {
             particle.fadeDirection = -1
           }
@@ -136,7 +136,7 @@ const ParticlesCanvas: React.FC = () => {
         return true
       })
 
-      // Ajouter occasionnellement de nouvelles particules
+      // Add occasional new particles
       if (
         Math.random() < 0.05 &&
         particles.current.length < particleCount + 20
@@ -144,9 +144,9 @@ const ParticlesCanvas: React.FC = () => {
         particles.current.push(createParticle(canvas, true))
       }
 
-      // Mettre à jour et dessiner chaque particule
+      // Update and draw each particle
       particles.current.forEach((particle, i) => {
-        // Force d'attraction vers le point d'ancrage
+        // Attraction force towards the anchor point
         const dxBase = particle.baseX - particle.x
         const dyBase = particle.baseY - particle.y
         const distanceBase = Math.sqrt(dxBase * dxBase + dyBase * dyBase)
@@ -162,7 +162,7 @@ const ParticlesCanvas: React.FC = () => {
                 ATTRACTION.FORCE * (1 - distance / ATTRACTION.DISTANCE)
               const angle = Math.atan2(dy, dx)
 
-              // Force d'attraction de base
+              // Base attraction force
               particle.speedX += Math.cos(angle) * force
               particle.speedY += Math.sin(angle) * force
             }
@@ -176,7 +176,7 @@ const ParticlesCanvas: React.FC = () => {
           particle.speedY += Math.sin(angle) * forceBase
         }
 
-        // Attraction vers la souris
+        // Attraction towards the mouse
         const dxMouse = mouse.current.x - particle.x
         const dyMouse = mouse.current.y - particle.y
         const distanceMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse)
@@ -187,15 +187,15 @@ const ParticlesCanvas: React.FC = () => {
           particle.speedY += Math.sin(angle) * 0.1
         }
 
-        // Mise à jour de la position
+        // Update the position
         particle.x += particle.speedX
         particle.y += particle.speedY
 
-        // Friction pour un mouvement plus doux
+        // Friction for a smoother movement
         particle.speedX *= 0.95
         particle.speedY *= 0.95
 
-        // Limite de vitesse
+        // Speed limit
         const maxSpeed = 2
         if (Math.abs(particle.speedX) > maxSpeed) {
           particle.speedX = Math.sign(particle.speedX) * maxSpeed
@@ -204,7 +204,7 @@ const ParticlesCanvas: React.FC = () => {
           particle.speedY = Math.sign(particle.speedY) * maxSpeed
         }
 
-        // Dessiner la particule avec son opacité
+        // Draw the particle with its opacity
         const finalColor =
           theme === "dark"
             ? `rgba(255, 255, 255, ${0.5 * particle.opacity})`
@@ -215,7 +215,7 @@ const ParticlesCanvas: React.FC = () => {
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fill()
 
-        // Connexions entre particules
+        // Connections between particles
         let connectionCount = 0
         for (let j = i + 1; j < particles.current.length; j++) {
           if (connectionCount >= maxConnectionsPerParticle) break
