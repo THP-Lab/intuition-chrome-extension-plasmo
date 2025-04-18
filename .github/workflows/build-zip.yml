@@ -22,7 +22,7 @@ jobs:
 
       - run: pnpm build
       - name: Zip Chrome artifact
-        run: cd build && zip -r chrome-extension.zip chrome-mv3-prod/
+        run: cd build/chrome-mv3-prod && zip -r ../chrome-extension.zip *
       - name: Upload Chrome artifact
         uses: actions/upload-artifact@v4
         with:
@@ -31,7 +31,7 @@ jobs:
 
       - run: pnpm build:firefox
       - name: Zip Firefox artifact
-        run: cd build && zip -r firefox-extension.zip firefox-mv2-prod/
+        run: cd build/firefox-mv2-prod && zip -r ../firefox-extension.zip *
       - name: Upload Firefox artifact
         uses: actions/upload-artifact@v4
         with:
