@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import AtomAutocompleteInput from './AtomAutocompleteInput'
 import { useCreateTriples } from '~src/hooks/useCreateTriples'
+import { useCreatePosition } from '~src/hooks/useCreatePosition'
 
 interface Atom {
   id: string
@@ -21,6 +22,7 @@ const TripleForm: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [progressMessage, setProgressMessage] = useState<string | null>(null)
   const [labeledTriples, setLabeledTriples] = useState<TripleWithVote[]>([])
+  const { createPosition } = useCreatePosition()
 
   const updateVote = (index: number, newVote: "for" | "against") => {
     setLabeledTriples(prev =>
@@ -29,7 +31,7 @@ const TripleForm: React.FC = () => {
       )
     )
   }
-  
+
   const canSubmit = labeledTriples.length > 0 && labeledTriples.every(t => t.vote !== null)
 
   const {
@@ -78,46 +80,52 @@ const TripleForm: React.FC = () => {
   }
 
   const handleSubmitAll = async () => {
-    if (triples.length === 0) {
-      if (!subject || !predicate || !object) {
-        setErrorMessage("All three atoms must be selected.")
+    setErrorMessage(null)
+
+    try {
+      if (triples.length === 0) {
+        setErrorMessage("Please add at least one triple to submit.")
         return
       }
 
-      try {
-        setProgressMessage("Submitting triple...")
+      setProgressMessage("Transaction 1/2: Creating triples...")
 
-        const oneTriple: [bigint, bigint, bigint] = [
-          BigInt(subject.vault_id),
-          BigInt(predicate.vault_id),
-          BigInt(object.vault_id)
-        ]
+      const { vaultIds: createdVaultIds } = await createTriples()
 
-        addTriple(oneTriple)
-        setTimeout(async () => {
-          await createTriples()
-        }, 0)
-        
-
-        setProgressMessage("Triple submitted successfully!")
-        setSubject(null)
-        setPredicate(null)
-        setObject(null)
-        clearTriples()
-        setLabeledTriples([])
-      } catch (err: any) {
-        setErrorMessage(err.message || "An unknown error occurred.")
+      if (!createdVaultIds || createdVaultIds.length !== labeledTriples.length) {
+        throw new Error("Mismatch between created triples and local list")
       }
-    } else {
-      try {
-        setProgressMessage("Submitting all triples...")
-        await createTriples()
-        setProgressMessage("Triples submitted successfully!")
-        clearTriples()
-        setLabeledTriples([])
-      } catch (err: any) {
-        setErrorMessage(err.message || "An unknown error occurred.")
+
+      setProgressMessage("Triples created! Waiting for confirmation...")
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      setProgressMessage("Transaction 2/2: Voting on your claims...")
+
+      for (let i = 0; i < createdVaultIds.length; i++) {
+        const vote = labeledTriples[i].vote
+        const vaultId = createdVaultIds[i]
+
+        let targetVaultId = vaultId
+
+        if (vote === "against") {
+          const { walletClient, publicClient } = await getClients()
+          const multivault = new Multivault({ walletClient, publicClient })
+          const counterId = await multivault.getCounterIdFromTriple(vaultId)
+          if (!counterId) throw new Error("No counter vault for triple")
+          targetVaultId = counterId
+        }
+
+        await createPosition({ vaultId: targetVaultId })
       }
+
+      setProgressMessage("All votes successfully submitted!")
+      setLabeledTriples([])
+      clearTriples()
+      setSubject(null)
+      setPredicate(null)
+      setObject(null)
+    } catch (err: any) {
+      setErrorMessage(err.message || "An unknown error occurred.")
     }
   }
 
@@ -168,8 +176,6 @@ const TripleForm: React.FC = () => {
           </li>
         )
       })}
-
-
 
       <form
         className="space-y-4 p-4 bg-background rounded"

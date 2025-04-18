@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react'
 import { Multivault } from '@0xintuition/protocol'
 import { getClients } from '../lib/viemClient'
+import { parseEventLogs } from 'viem'
+import { abi } from '@0xintuition/protocol'
 
-
-type TripleInput = [bigint, bigint, bigint]
+export type TripleInput = [bigint, bigint, bigint]
 
 export const useCreateTriples = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -15,7 +16,7 @@ export const useCreateTriples = () => {
 
   const addTriple = (triple: TripleInput) => {
     setTriples((prev) => [...prev, triple])
-  } 
+  }
 
   const removeTriple = (index: number) => {
     setTriples((prev) => prev.filter((_, i) => i !== index))
@@ -31,47 +32,45 @@ export const useCreateTriples = () => {
     setTxHash(null)
     setReceipt(null)
     setVaultIds(null)
-  
+
     try {
       const { walletClient, publicClient } = await getClients()
       const multivault = new Multivault({ walletClient, publicClient })
-  
+
+      if (triples.length === 0) throw new Error("No triples to create")
+
       const costPerTriple = await multivault.getTripleCost()
       const totalCost = costPerTriple * BigInt(triples.length)
-  
+
       const subjectIds = triples.map(([s]) => s)
       const predicateIds = triples.map(([, p]) => p)
       const objectIds = triples.map(([, , o]) => o)
-  
-      await multivault.contract.simulate.batchCreateTriple(
+
+      // Première transaction : création des triples
+      const hash = await multivault.contract.write.batchCreateTriple(
         [subjectIds, predicateIds, objectIds],
         {
           value: totalCost,
           account: walletClient.account.address,
         }
       )
-  
-      const { hash } = await multivault.contract.write.batchCreateTriple(
-        [subjectIds, predicateIds, objectIds],
-        {
-          value: totalCost,
-        }
-      )
-  
+
       const { logs, status } = await publicClient.waitForTransactionReceipt({ hash })
-      if (status === 'reverted') {
-        throw new Error('Transaction reverted')
+      if (status === 'reverted') throw new Error('Triple creation tx reverted')
+
+      const parsed = parseEventLogs({ abi, logs, eventName: 'TripleCreated' })
+
+      const createdVaultIds = parsed.map((e) => e.args.vaultID)
+
+      if (createdVaultIds.length !== triples.length) {
+        throw new Error("Mismatch between created triples and local list")
       }
-  
-      const vaultIds = logs
-        .filter((log) => log.eventName === 'TripleCreated')
-        .map((log) => log.args.vaultID)
-  
+
+      setVaultIds(createdVaultIds)
       setTxHash(hash)
-      setVaultIds(vaultIds)
-      setReceipt(logs)
-  
-      return { hash, vaultIds }
+      setReceipt(parsed)
+
+      return { hash, vaultIds: createdVaultIds }
     } catch (err: any) {
       console.error(err)
       setError(err.message || 'Unknown error')
@@ -80,7 +79,6 @@ export const useCreateTriples = () => {
       setIsLoading(false)
     }
   }, [triples])
-  
 
   return {
     addTriple,
@@ -95,3 +93,4 @@ export const useCreateTriples = () => {
     vaultIds,
   }
 }
+
