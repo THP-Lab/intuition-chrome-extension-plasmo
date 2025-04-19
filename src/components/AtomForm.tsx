@@ -5,8 +5,9 @@ import { parseEther } from "viem"
 
 import { getClients } from "../lib/viemClient"
 import { LinkTypeSelector } from "./LinkTypeSelector"
+import React, { forwardRef, useEffect, useState, useRef, useImperativeHandle } from "react"
 
-const AtomForm: React.FC = () => {
+const AtomForm = forwardRef((_, ref) => {
   const { mutateAsync: pinThing } = usePinThingMutation()
 
   const [name, setName] = useState("")
@@ -20,6 +21,19 @@ const AtomForm: React.FC = () => {
 
   const [linkType, setLinkType] = useState<"url" | "domain">("url")
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
+  const [initialUrlCaptured, setInitialUrlCaptured] = useState(false)
+
+  useImperativeHandle(ref, () => ({
+    resetForm() {
+      setName("")
+      setDescription("")
+      setImage("")
+      setUrl("")
+      setProgressMessage(null)
+      setErrorMessage(null)
+      setIsSubmitting(false)
+    }
+  }))
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(e.target.value)
@@ -30,13 +44,17 @@ const AtomForm: React.FC = () => {
 
   useEffect(() => {
     const fetchPageDetails = async () => {
+      if (initialUrlCaptured) return
+
       const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
       if (!tab?.id || !tab.url) return
+      if (tab.url.startsWith("chrome-extension://")) return
 
       const pageUrl = tab.url
       const finalUrl = linkType === "url" ? pageUrl : new URL(pageUrl).hostname
       setUrl(finalUrl)
-
+      setInitialUrlCaptured(true)
+      
       chrome.scripting.executeScript(
         {
           target: { tabId: tab.id },
@@ -195,6 +213,6 @@ const AtomForm: React.FC = () => {
       {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
     </form>
   )
-}
+})
 
 export default AtomForm
