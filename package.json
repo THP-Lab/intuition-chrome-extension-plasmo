@@ -1,7 +1,7 @@
 {
   "name": "intuition-chrome-extension",
   "displayName": "Intuition Chrome Extension",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "author": "THP-Lab.org",
   "scripts": {
