@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import AtomAutocompleteInput from './AtomAutocompleteInput'
 import { useCreateTriples } from '~src/hooks/useCreateTriples'
 import { useCreatePosition } from '~src/hooks/useCreatePosition'
+import { getClients } from "~src/lib/viemClient"
+import { Multivault } from "@0xintuition/protocol"
 
 interface Atom {
   id: string
@@ -56,7 +58,7 @@ const TripleForm: React.FC = () => {
       setErrorMessage("All three atoms must be selected.")
       return
     }
-
+  
     try {
       addTriple([
         BigInt(subject.vault_id),
@@ -79,46 +81,46 @@ const TripleForm: React.FC = () => {
     }
   }
 
+
   const handleSubmitAll = async () => {
     setErrorMessage(null)
-
+  
     try {
       if (triples.length === 0) {
         setErrorMessage("Please add at least one triple to submit.")
         return
       }
-
+  
       setProgressMessage("Transaction 1/2: Creating triples...")
-
       const { vaultIds: createdVaultIds } = await createTriples()
-
+  
       if (!createdVaultIds || createdVaultIds.length !== labeledTriples.length) {
         throw new Error("Mismatch between created triples and local list")
       }
-
-      setProgressMessage("Triples created! Waiting for confirmation...")
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+  
+      setProgressMessage("Triples created. Preparing to vote...")
+  
+      const { walletClient, publicClient } = await getClients()
+      const multivault = new Multivault({ walletClient, publicClient })
 
       setProgressMessage("Transaction 2/2: Voting on your claims...")
-
+  
       for (let i = 0; i < createdVaultIds.length; i++) {
         const vote = labeledTriples[i].vote
         const vaultId = createdVaultIds[i]
-
+  
         let targetVaultId = vaultId
-
+  
         if (vote === "against") {
-          const { walletClient, publicClient } = await getClients()
-          const multivault = new Multivault({ walletClient, publicClient })
           const counterId = await multivault.getCounterIdFromTriple(vaultId)
           if (!counterId) throw new Error("No counter vault for triple")
           targetVaultId = counterId
         }
-
+  
         await createPosition({ vaultId: targetVaultId })
       }
-
-      setProgressMessage("All votes successfully submitted!")
+  
+      setProgressMessage("✅ All votes submitted!")
       setLabeledTriples([])
       clearTriples()
       setSubject(null)
@@ -128,6 +130,7 @@ const TripleForm: React.FC = () => {
       setErrorMessage(err.message || "An unknown error occurred.")
     }
   }
+  
 
   return (
     <div className="space-y-6">
