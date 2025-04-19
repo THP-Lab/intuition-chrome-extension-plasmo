@@ -90,8 +90,9 @@ const TripleForm: React.FC = () => {
         setErrorMessage("Please add at least one triple to submit.")
         return
       }
+      const totalTxCount = 1 + labeledTriples.length
   
-      setProgressMessage("Transaction 1/2: Creating triples...")
+      setProgressMessage(`Transaction 1/${totalTxCount}: Creating triples...`)
       const { vaultIds: createdVaultIds } = await createTriples()
   
       if (!createdVaultIds || createdVaultIds.length !== labeledTriples.length) {
@@ -102,13 +103,16 @@ const TripleForm: React.FC = () => {
   
       const { walletClient, publicClient } = await getClients()
       const multivault = new Multivault({ walletClient, publicClient })
-
-      setProgressMessage("Transaction 2/2: Voting on your claims...")
   
       for (let i = 0; i < createdVaultIds.length; i++) {
         const vote = labeledTriples[i].vote
         const vaultId = createdVaultIds[i]
   
+        setProgressMessage(
+          `Transaction ${i + 2}/${totalTxCount}: Voting ${vote?.toUpperCase()} for "${s.label} → ${p.label} → ${o.label}"`
+        )
+        
+        
         let targetVaultId = vaultId
   
         if (vote === "against") {
@@ -201,15 +205,29 @@ const TripleForm: React.FC = () => {
             type="button"
             onClick={handleSubmitAll}
             disabled={isLoading || !canSubmit}
-            className="w-20 px-4 py-2 btn-atom-form-hover-effect text-foreground bg-[hsl(var(--btn-atom-form-bg))] text-center rounded-xl"
+            className={`
+              w-20 px-4 py-2 text-foreground text-center rounded-xl
+              btn-atom-form-hover-effect bg-[hsl(var(--btn-atom-form-bg))]
+              ${!canSubmit || isLoading ? 'cursor-not-allowed opacity-50' : ''}
+            `}
           >
-            {isLoading ? "Send..." : triples.length > 1 ? "Submit all" : "Submit"}
+            {isLoading ? "Send..." : "Submit"}
           </button>
         </div>
 
         {txHash && <p className="text-green-600 text-sm">Tx: {txHash}</p>}
         {vaultIds && <p className="text-green-600 text-sm">Vaults: {vaultIds.join(', ')}</p>}
-        {progressMessage && <p className="text-green-600 text-sm">{progressMessage}</p>}
+        {progressMessage && (
+          <p
+            className={`text-sm ${
+              progressMessage.startsWith("Transaction")
+                ? "text-blue-500"
+                : "text-green-600"
+            }`}
+          >
+            {progressMessage}
+          </p>
+        )}
         {(errorMessage || error) && (
           <p className="text-red-600 text-sm">{errorMessage || error}</p>
         )}
