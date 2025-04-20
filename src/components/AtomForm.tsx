@@ -1,6 +1,5 @@
 import { usePinThingMutation } from "@0xintuition/graphql"
 import { Multivault } from "@0xintuition/protocol"
-import React, { useEffect, useState } from "react"
 import { parseEther } from "viem"
 
 import { getClients } from "../lib/viemClient"
