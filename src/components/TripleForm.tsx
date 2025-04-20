@@ -1,4 +1,9 @@
-import React, { useState } from 'react'
+import React, {
+  useState,
+  useImperativeHandle,
+  forwardRef,
+  ForwardRefRenderFunction,
+} from "react"
 import AtomAutocompleteInput from './AtomAutocompleteInput'
 import { useCreateTriples } from '~src/hooks/useCreateTriples'
 import { useCreatePosition } from '~src/hooks/useCreatePosition'
@@ -16,7 +21,12 @@ type TripleWithVote = {
   vote: "for" | "against" | null
 }
 
-const TripleForm: React.FC = () => {
+
+export type TripleFormRef = {
+  resetForm: () => void
+}
+
+const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
   const [subject, setSubject] = useState<Atom | null>(null)
   const [predicate, setPredicate] = useState<Atom | null>(null)
   const [object, setObject] = useState<Atom | null>(null)
@@ -47,6 +57,18 @@ const TripleForm: React.FC = () => {
     txHash,
     vaultIds
   } = useCreateTriples()
+
+  useImperativeHandle(ref, () => ({
+    resetForm: () => {
+      setSubject(null)
+      setPredicate(null)
+      setObject(null)
+      setLabeledTriples([])
+      clearTriples()
+      setErrorMessage(null)
+      setProgressMessage(null)
+    }
+  }))
 
   const handleRemoveTriple = (index: number) => {
     setLabeledTriples((prev) => prev.filter((_, i) => i !== index))
@@ -236,4 +258,4 @@ const TripleForm: React.FC = () => {
   )
 }
 
-export default TripleForm
+export default forwardRef(TripleForm)
