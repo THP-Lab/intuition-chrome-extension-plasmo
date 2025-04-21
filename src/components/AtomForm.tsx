@@ -31,6 +31,8 @@ const AtomForm = forwardRef((_, ref) => {
       setProgressMessage(null)
       setErrorMessage(null)
       setIsSubmitting(false)
+
+      descriptionRef.current?.style.setProperty("height", "auto")
     }
   }))
 
