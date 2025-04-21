@@ -51,7 +51,7 @@ function Navbar() {
           asChild
           className={cn(
             "navbar-button",
-            isActive("/") && "animate-fade-bg"
+            isActive("/search") && "animate-fade-bg"
           )}>
           <Link to="/search" className="flex flex-col items-center">
             <div className="text-foreground" title="Search">
@@ -66,7 +66,7 @@ function Navbar() {
           asChild
           className={cn(
             "navbar-button",
-            isActive("/") && "animate-fade-bg"
+            isActive("/profile") && "animate-fade-bg"
           )}>
           <Link to="/profile" className="flex flex-col items-center">
             <div className="text-foreground" title="Profile">
@@ -81,7 +81,7 @@ function Navbar() {
           asChild
           className={cn(
             "navbar-button",
-            isActive("/") && "animate-fade-bg"
+            isActive("/feed") && "animate-fade-bg"
           )}>
           <Link to="/feed" className="flex flex-col items-center">
             <div className="text-foreground" title="Feed">
@@ -96,7 +96,7 @@ function Navbar() {
           asChild
           className={cn(
             "navbar-button",
-            isActive("/") && "animate-fade-bg"
+            isActive("/recent-activity") && "animate-fade-bg"
           )}>
           <Link to="/recent-activity" className="flex flex-col items-center">
             <div className="text-foreground" title="Recent Activity">
