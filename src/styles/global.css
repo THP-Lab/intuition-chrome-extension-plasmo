@@ -332,8 +332,8 @@ html.dark body .hover-card-content[data-state="open"] {
 @layer components {
   .navbar-container {
     @apply fixed bottom-0 left-0 right-0 z-50 border-t border-opacity-20;
-    @apply bg-[hsl(var(--navbar-bg))] backdrop-blur-[8px];
-    @apply hover:backdrop-blur-[12px];
+    @apply bg-[hsl(var(--navbar-bg))] backdrop-blur-[2px];
+    @apply hover:backdrop-blur-[4px];
     @apply transition-all duration-300 ease-in-out;
     background: rgba(255, 255, 255, 0.04);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
@@ -342,8 +342,11 @@ html.dark body .hover-card-content[data-state="open"] {
   .navbar-button {
     @apply flex min-w-[4.3rem] flex-col items-center gap-1;
     @apply pt-[24px] pb-[22px] px-[0.7rem];
-    @apply opacity-60 hover:opacity-100;
     @apply transition-all duration-200 ease-in-out;
+  }
+
+  .navbar-button:not(.active):hover {
+    @apply opacity-100;
   }
 
   .navbar-icon {
