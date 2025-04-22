@@ -1,7 +1,6 @@
 import { useGetAtomQuery } from "@0xintuition/graphql"
 import React from "react"
 import { useParams } from "react-router-dom"
-
 import { useStorage } from "@plasmohq/storage/hook"
 
 import AtomDisplay from "~src/components/ui/AtomDisplay"
@@ -10,22 +9,36 @@ import { useGetClaimsByAtomQuery } from "~src/graphql/src"
 
 const AtomDetailPage = () => {
   const { id } = useParams<{ id: string }>()
-  const atomId = id ?? ""
+  const parsedAtomId = Number(id)
+
+  const shouldEnabledClaimsQuery = typeof id === "string" && id.trim() !== "" && !isNaN(parsedAtomId)
+
   const [walletAddress] = useStorage<string>("metamask-account")
   console.log("wallet address :", walletAddress)
 
   const { data, isLoading, isError, error } = useGetAtomQuery(
-    { id: atomId },
-    { enabled: !!atomId }
+    { id: id ?? "" },
+    { enabled: typeof id === "string" && id.trim().length > 0 }
   )
+
+  console.log("atomId", id)
+
+  React.useEffect(() => {
+    console.log("▶️ useEffect - id:", id)
+    console.log("▶️ useEffect - parsedAtomId:", parsedAtomId)
+    console.log("▶️ useEffect - walletAddress:", walletAddress)
+  }, [id, parsedAtomId, walletAddress])
+  
 
   const {
     data: claimsData,
     isLoading: isLoadingClaims,
     isError: isClaimsError
   } = useGetClaimsByAtomQuery(
-    { id: Number(atomId), address: walletAddress },
-    { enabled: !!atomId && !!walletAddress }
+    parsedAtomId && walletAddress
+    ? { id: parsedAtomId, address: walletAddress }
+    : { id: 0, address: "" },
+    { enabled: shouldEnabledClaimsQuery && !!walletAddress && !isNaN(parsedAtomId) }
   )
 
   const claims =
