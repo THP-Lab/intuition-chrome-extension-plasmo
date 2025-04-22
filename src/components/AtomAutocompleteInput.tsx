@@ -12,16 +12,20 @@ interface Atom {
 interface AtomAutocompleteInputProps {
   label: string;
   onSelect: (atom: Atom) => void;
+  selected: Atom | null;  
 }
 
-const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, onSelect }) => {
+const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, onSelect, selected }) => {
   const [search, setSearch] = useState('');
-  const [selectedAtom, setSelectedAtom] = useState<Atom | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   const [debouncedSearch] = useDebounce(search, 300);
+
+  useEffect(() => {
+    setSearch(selected?.label ?? '');
+  }, [selected]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -35,7 +39,7 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
     };
   }, []);
 
-  const { data, isLoading } = useGetAtomsQuery(
+  const { data } = useGetAtomsQuery(
     {
       where: {
         label: {
@@ -62,11 +66,9 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
   })) || []
 
   const handleSelect = (atom: Atom) => {
-    console.log('Atom sélectionné :', atom); 
-    setSelectedAtom(atom);
-    onSelect(atom);
+    onSelect(atom);         
     setIsOpen(false);
-
+  
     setTimeout(() => {
       const form = inputRef.current?.form;
       if (!form || !inputRef.current) return;
@@ -83,7 +85,7 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
       <input
         ref={inputRef}
         type="text"
-        value={selectedAtom?.label ?? search}
+        value={search}
         onChange={(e) => {
           setSearch(e.target.value);
           setSelectedAtom(null);

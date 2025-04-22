@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react'
 import { Multivault } from '@0xintuition/protocol'
 import { getClients } from '../lib/viemClient'
+import { parseEventLogs } from 'viem'
+import { abi } from '@0xintuition/protocol'
 
-
-type TripleInput = [bigint, bigint, bigint]
+export type TripleInput = [bigint, bigint, bigint]
 
 export const useCreateTriples = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -36,6 +37,8 @@ export const useCreateTriples = () => {
       const { walletClient, publicClient } = await getClients()
       const multivault = new Multivault({ walletClient, publicClient })
 
+      if (triples.length === 0) throw new Error("No triples to create")
+
       const costPerTriple = await multivault.getTripleCost()
       const totalCost = costPerTriple * BigInt(triples.length)
 
@@ -43,13 +46,8 @@ export const useCreateTriples = () => {
       const predicateIds = triples.map(([, p]) => p)
       const objectIds = triples.map(([, , o]) => o)
 
-
-      console.log(" subjects:", subjectIds)
-      console.log(" predicates:", predicateIds)
-      console.log(" objects:", objectIds)
-
-
-      const { hash, vaultIds, events } = await multivault.contract.write.batchCreateTriple(
+      // Première transaction : création des triples
+      const hash = await multivault.contract.write.batchCreateTriple(
         [subjectIds, predicateIds, objectIds],
         {
           value: totalCost,
@@ -57,12 +55,22 @@ export const useCreateTriples = () => {
         }
       )
 
-      
-      setTxHash(hash)
-      setVaultIds(vaultIds)
-      setReceipt(events)
+      const { logs, status } = await publicClient.waitForTransactionReceipt({ hash })
+      if (status === 'reverted') throw new Error('Triple creation tx reverted')
 
-      return { hash, vaultIds }
+      const parsed = parseEventLogs({ abi, logs, eventName: 'TripleCreated' })
+
+      const createdVaultIds = parsed.map((e) => e.args.vaultID)
+
+      if (createdVaultIds.length !== triples.length) {
+        throw new Error("Mismatch between created triples and local list")
+      }
+
+      setVaultIds(createdVaultIds)
+      setTxHash(hash)
+      setReceipt(parsed)
+
+      return { hash, vaultIds: createdVaultIds }
     } catch (err: any) {
       console.error(err)
       setError(err.message || 'Unknown error')
@@ -85,3 +93,4 @@ export const useCreateTriples = () => {
     vaultIds,
   }
 }
+
