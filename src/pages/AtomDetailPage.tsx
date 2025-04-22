@@ -11,35 +11,37 @@ const AtomDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const parsedAtomId = Number(id)
 
-  const shouldEnabledClaimsQuery = typeof id === "string" && id.trim() !== "" && !isNaN(parsedAtomId)
-
   const [walletAddress] = useStorage<string>("metamask-account")
-  console.log("wallet address :", walletAddress)
+  const [hasRefetched, setHasRefetched] = React.useState(false)
+
+  const shouldRender = id && !isNaN(parsedAtomId) && walletAddress
 
   const { data, isLoading, isError, error } = useGetAtomQuery(
     { id: id ?? "" },
-    { enabled: typeof id === "string" && id.trim().length > 0 }
+    { enabled: !!id && id.trim().length > 0 }
   )
-
-  console.log("atomId", id)
-
-  React.useEffect(() => {
-    console.log("▶️ useEffect - id:", id)
-    console.log("▶️ useEffect - parsedAtomId:", parsedAtomId)
-    console.log("▶️ useEffect - walletAddress:", walletAddress)
-  }, [id, parsedAtomId, walletAddress])
-  
 
   const {
     data: claimsData,
     isLoading: isLoadingClaims,
-    isError: isClaimsError
+    isError: isClaimsError,
+    refetch: refetchClaims
   } = useGetClaimsByAtomQuery(
-    parsedAtomId && walletAddress
-    ? { id: parsedAtomId, address: walletAddress }
-    : { id: 0, address: "" },
-    { enabled: shouldEnabledClaimsQuery && !!walletAddress && !isNaN(parsedAtomId) }
+    { id: parsedAtomId, address: walletAddress },
+    { enabled: false }
   )
+
+  React.useEffect(() => {
+    setHasRefetched(false)
+  }, [id])
+
+  React.useEffect(() => {
+    if (shouldRender && !hasRefetched) {
+      console.log("🔁 Refetch claims triggered")
+      refetchClaims()
+      setHasRefetched(true)
+    }
+  }, [shouldRender, hasRefetched, refetchClaims])
 
   const claims =
     claimsData?.claims_aggregate?.nodes.map((claim) => ({
@@ -47,8 +49,14 @@ const AtomDetailPage = () => {
       ...claim.triple
     })) ?? []
 
+  console.log("walletAddress:", walletAddress)
+  console.log("atomId:", id)
   console.log("ClaimsData", claimsData?.claims_aggregate?.nodes)
   console.log("Claims:", claims)
+
+  if (!shouldRender) {
+    return <div className="p-4">Loading identity...</div>
+  }
 
   if (isLoading) return <div className="p-4">Loading identity...</div>
   if (isError)
@@ -60,7 +68,6 @@ const AtomDetailPage = () => {
   return (
     <div className="p-4 space-y-6">
       <AtomDisplay atom={data.atom} />
-
       <div>
         <div className="flex items-center mt-2 mb-1">
           <span className="text-sm text-gray-400">Claims</span>
@@ -70,9 +77,7 @@ const AtomDetailPage = () => {
         </div>
 
         {isLoadingClaims ? (
-          <p className="mt-2 text-sm text-muted-foreground">
-            Loading related claims...
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground">Loading related claims...</p>
         ) : isClaimsError ? (
           <p className="mt-2 text-sm text-red-500">Error loading claims</p>
         ) : (
@@ -87,4 +92,4 @@ const AtomDetailPage = () => {
   )
 }
 
-export default AtomDetailPage
+export default AtomDetailPage;
