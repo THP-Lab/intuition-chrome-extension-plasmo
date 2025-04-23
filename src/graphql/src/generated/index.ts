@@ -10953,12 +10953,14 @@ export type GetClaimsByAtomQuery = {
         id: any
         subject: {
           __typename?: "atoms"
+          id: any
           label?: string | null
           image?: string | null
           type: any
         }
         predicate: {
           __typename?: "atoms"
+          id: any
           label?: string | null
           image?: string | null
           type: any
@@ -14453,11 +14455,13 @@ export const GetClaimsByAtomDocument = `
       triple {
         id
         subject {
+          id
           label
           image
           type
         }
         predicate {
+          id
           label
           image
           type
@@ -24024,6 +24028,10 @@ export const GetClaimsByAtom = {
                                 selections: [
                                   {
                                     kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
                                     name: { kind: "Name", value: "label" }
                                   },
                                   {
@@ -24043,6 +24051,10 @@ export const GetClaimsByAtom = {
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "label" }

@@ -202,11 +202,13 @@ query GetClaimsByAtom($id: numeric, $address: String) {
       triple {
         id
         subject {
+          id
           label
           image
           type
         }
         predicate {
+          id
           label
           image
           type
