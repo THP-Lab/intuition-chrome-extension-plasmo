@@ -11,8 +11,8 @@ export const ImageWithFallback = ({
 }: ImageWithFallbackProps) => {
   const [error, setError] = React.useState(false)
 
-  if (error) {
-    return <Fingerprint className={className} />
+  if (error || !src) {
+    return null
   }
 
   return (
