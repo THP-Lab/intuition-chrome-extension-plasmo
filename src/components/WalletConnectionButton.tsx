@@ -1,6 +1,6 @@
-import React, from "react"
+import React from "react"
 import { Button } from "~src/components/ui/button"
-import { connectWallet } from "../lib/metamask"
+import { connectWallet, disconnectWallet } from "../lib/metamask"
 import { useStorage } from "@plasmohq/storage/hook"
 
 const WalletConnectionButton = () => {
@@ -17,6 +17,7 @@ const WalletConnectionButton = () => {
 
   const handleDisconnect = () => {
     setAccount("");
+    disconnectWallet()
   }
 
   return (
