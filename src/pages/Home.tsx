@@ -11,7 +11,7 @@ import AtomCard from "~src/components/AtomCard";
 function Home() {
   const { theme } = useTheme()
   const [currentUrl, setCurrentUrl] = useState<string>("")
-  const [walletAddress] = useStorage<string>("metamask-account")
+  const [walletAddress] = useStorage<string>("metamask-account", "")
   const [activeTab, setActiveTab] = useState("Claims")
 
   useQueryClient() 
@@ -28,7 +28,6 @@ function Home() {
     getCurrentUrl().then((url) => setCurrentUrl(url || ""))
   }
   useEffect(() => {
-    console.log("current wallet address:", walletAddress);
     refreshUrl()
     chrome.tabs.onUpdated.addListener(() => {
       refreshUrl()
@@ -41,6 +40,7 @@ function Home() {
 
   const { data, isLoading, error } = useGetClaimsByUriQuery({uri: currentUrl, address: walletAddress })
   const atoms = data?.atoms ?? []
+  console.log("current wallet address:", walletAddress);
 
   const claims = Array.from(
     new Map(
