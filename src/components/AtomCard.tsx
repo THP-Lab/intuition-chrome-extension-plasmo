@@ -4,6 +4,8 @@ import { Link } from "react-router-dom"
 
 import { useAtomPosition } from "../hooks/useAtomPosition"
 
+import { useNavigate } from 'react-router-dom'
+
 interface AtomProps {
   id: string
   data?: string | null
@@ -42,9 +44,16 @@ interface AtomCardProps {
 export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
   const { atomPosition, isVoting, txHash } = useAtomPosition()
   const thing = atom.value?.thing
+  const navigate = useNavigate();
+  const goToAtomPage = () => {
+    navigate(`/atoms/${atom.id}`)
+  };
 
   return (
-    <div className="border border-border-atom rounded-lg p-3 my-1 claims-hover-effect transition-all duration-200 bg-[hsl(var(--claims-bg))]">
+    <div 
+      className="border border-border-atom rounded-lg p-3 my-1 claims-hover-effect transition-all duration-200 bg-[hsl(var(--claims-bg))]cursor-pointer hover:bg-muted/30"
+      onClick={goToAtomPage}
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           {atom.image ? (
@@ -73,7 +82,10 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
             {atom.vault?.position_count ?? 0}
           </p>
           <button
-            onClick={() => atomPosition(BigInt(atom.id))}
+            onClick={(e) => {
+              e.stopPropagation()
+              atomPosition(BigInt(atom.id))
+            }}
             disabled={isVoting}
             className="border border-gray-400 text-white rounded-md px-2 py-1 text-sm
              hover:bg-gray-400 hover:text-black hover:scale-110
