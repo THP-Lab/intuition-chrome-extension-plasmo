@@ -29,13 +29,22 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
     navigate(`/atoms/${id}`)
   };
 
-  const renderAtomImage = () => (
-    <ImageWithFallback
-      src={image}
-      alt={label}
-      className="w-5 h-5 rounded-full object-cover"
-    />
-  )  
+  const renderAtomImage = () => {
+    if (image) {
+      return (
+        <ImageWithFallback
+          src={image}
+          alt={label}
+          className="w-5 h-5 rounded-full object-cover"
+        />
+      )
+    }
+    return (
+      <div className="w-5 h-5 flex items-center justify-center rounded-md bg-muted text-muted-foreground">
+        <Fingerprint size={14} />
+      </div>
+    )
+  }
 
   const renderAtomDetail = () =>
     data?.atom?.image ? (
@@ -44,7 +53,11 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
         alt={data.atom.label || ""}
         className="w-12 h-12 rounded-full object-cover"
       />
-    ) : null
+    ) : (
+      <div className="w-12 h-12 flex items-center justify-center rounded-md bg-muted text-muted-foreground">
+        <Fingerprint className="w-6 h-6" />
+      </div>
+    )
 
     const renderAtomDescription = () =>
       data?.atom?.value?.thing?.description ? (
