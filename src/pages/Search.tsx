@@ -41,7 +41,7 @@ const Search: React.FC = () => {
     },
     address: walletAddress
   }, {
-    enabled: !!searchTerm && !!walletAddress
+    enabled: !!searchTerm 
   })
 
   
