@@ -27,6 +27,7 @@
     --radius: 0.5rem;
     --navbar-bg: 0 0% 95%; 
     --navbar-bg-transparent: 0 0% 100% / 0.4%;
+    --navbar-bg: 0 0% 95%;
     --claims-bg: 0 0% 80%;
     --border-atom: 0 0% 76%;
     --hover-atom-bg: 0 0% 85%;
@@ -38,7 +39,7 @@
 
   :root.dark,
   :host(.dark) {
-    --background: 0 0% 0%; 
+    --background: 0 0% 0%;
     --foreground: 213 31% 91%;
     --muted: 223 47% 11%;
     --muted-foreground: 215.4 16.3% 56.9%;
@@ -47,8 +48,7 @@
     --popover: 224 71% 4%;
     --popover-foreground: 215 20.2% 65.1%;
     --border: 216 34% 17%;
-    --borderAtom: oklch(98.5% 0 0)
-    --input: 216 34% 17%;
+    --borderAtom: oklch(98.5% 0 0) --input: 216 34% 17%;
     --card: 224 71% 4%;
     --card-foreground: 213 31% 91%;
     --primary: 210 40% 98%;
@@ -65,8 +65,13 @@
     --border-atom: 0 0% 24%;  
     --hover-atom-bg: 0 0% 15%; 
     --focus-atom-border: 0 0% 100%; 
+    --navbar-bg: 0 0% 5%;
+    --claims-bg: 0 0% 10%;
+    --border-atom: 0 0% 24%;
+    --hover-atom-bg: 0 0% 15%;
+    --focus-atom-border: 0 0% 100%;
     --btn-atom-form-bg: 0 0% 20%;
-    --container-background: 0.05 0.002 0; 
+    --container-background: 0.05 0.002 0;
     --triple-background: 0.05 0.002 0;
   }
 }
@@ -75,74 +80,6 @@
   @apply text-center text-5xl md:text-6xl lg:text-7xl font-bold text-foreground;
   position: relative;
 }
-/* 
-@keyframes light-sweep-alternate {
-  0% {
-    background-position: -95% 0;  
-    text-shadow: -100px 5px 5px rgba(0, 0, 0, 0.3); 
-  }
-  40% {
-    background-position: 195% 0;    
-    text-shadow: 100px 5px 5px rgba(0, 0, 0, 0.3);  
-  }
-  45% {
-    background-position: 195% 0;
-    text-shadow: 100px 5px 5px rgba(0, 0, 0, 0.3);
-  }
-  85% {
-    background-position: -95% 0;
-    text-shadow: -100px 5px 5px rgba(0, 0, 0, 0.3);
-  }
-  90% {
-    background-position: -95% 0;
-    text-shadow: -100px 5px 5px rgba(0, 0, 0, 0.3);
-  }
-  100% {
-    background-position: -95% 0;
-    text-shadow: -100px 5px 5px rgba(0, 0, 0, 0.3);
-  }
-}
-
-@layer components {
-  
-  .light-sweep-heading {
-    @apply text-center text-5xl md:text-6xl lg:text-7xl font-extrabold;
-    position: relative;
-    color: transparent;
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    animation: light-sweep-alternate 9s ease-in-out infinite; 
-  }
-
-
-  html:not(.dark) .light-sweep-heading {
-    background-image: linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 0.9) 0%,
-      rgba(0, 0, 0, 0.9) 35%,
-      rgba(255, 138, 0, 1) 45%,
-      rgba(229, 46, 113, 1) 50%,
-      rgba(33, 147, 176, 1) 55%,
-      rgba(0, 0, 0, 0.9) 65%,
-      rgba(0, 0, 0, 0.9) 100%
-    );
-  }
-
-
-  html.dark .light-sweep-heading {
-    background-image: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.9) 0%,
-      rgba(255, 255, 255, 0.9) 35%,
-      rgba(0, 245, 160, 1) 45%,
-      rgba(0, 217, 245, 1) 50%,
-      rgba(161, 0, 242, 1) 55%,
-      rgba(255, 255, 255, 0.9) 65%,
-      rgba(255, 255, 255, 0.9) 100%
-    );
-  }
-} */
 
 @layer base {
   * {
@@ -202,10 +139,9 @@ html body nav .animate-fade-bg:hover {
     opacity: 1;
   }
   100% {
-    opacity: 0.6; 
+    opacity: 0.6;
   }
 }
-
 
 @layer utilities {
   .step {
@@ -224,9 +160,9 @@ html body nav .animate-fade-bg:hover {
   .claims-hover-effect {
     @apply opacity-70 transition-all duration-100 ease-in-out relative z-[1];
   }
-  
+
   .claims-hover-effect:hover {
-    @apply opacity-100 transform-gpu scale-[1.1] z-[3];;
+    @apply opacity-100 transform-gpu scale-[1.1] z-[3];
   }
 }
 
@@ -234,9 +170,9 @@ html body nav .animate-fade-bg:hover {
   .btn-atom-form-hover-effect {
     @apply opacity-70 transition-all duration-100 ease-in-out relative z-[1];
   }
-  
+
   .btn-atom-form-hover-effect:hover {
-    @apply opacity-100 transform-gpu z-[3];;
+    @apply opacity-100 transform-gpu z-[3];
   }
 }
 
@@ -255,7 +191,9 @@ html body nav .animate-fade-bg:hover {
 html body .hover-card-content {
   opacity: 0;
   transform: translateY(10px) scale(0.98);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
   visibility: hidden;
 }
 
@@ -269,7 +207,9 @@ html body .hover-card-content[data-state="open"] {
   border: 1px solid rgba(0, 0, 0, 0.1);
   max-height: 80vh;
   overflow-y: auto;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 html.dark body .hover-card-content[data-state="open"] {
@@ -287,46 +227,242 @@ html.dark body .hover-card-content[data-state="open"] {
 }
 
 @keyframes pulseOpacity {
-  0% { 
-    opacity: 0.6; 
+  0% {
+    opacity: 0.6;
   }
-  50% { 
-    opacity: 1; 
+  50% {
+    opacity: 1;
   }
-  100% { 
-    opacity: 0.6; 
+  100% {
+    opacity: 0.6;
   }
 }
 
-
-/* @layer components {
-  .navbar-container {
-    @apply fixed bottom-0 left-0 right-0 z-40 border-t border-opacity-20;
-    @apply backdrop-blur-[8px] hover:backdrop-blur-[12px];
-    @apply translate-y-[80%] hover:translate-y-0;
-    @apply transition-all duration-500 ease-in-out;
-    background: rgba(255, 255, 255, 0.04);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+@layer components {
+  .video-banner-container {
+    @apply fixed bottom-0 left-0 right-2;
+    @apply h-[50vh];
+    @apply overflow-hidden;
+    @apply z-30;
+    background: transparent;
+    transition: transform 0.5s ease;
+    transform: translateY(85vh);
+    --video-show-y: 0vh;
+  }
+  
+  .video-banner-container.show {
+    transform: translateY(var(--video-show-y));
+    z-index: 900;
   }
 
-  .navbar-container:hover .navbar-button {
-    transform: translateY(0);
+  .video-banner {
+    @apply w-full h-full;
+    @apply object-cover;
+    opacity: 1;
+    background: transparent;
   }
 
-  .navbar-button {
-    @apply flex min-w-[4.3rem] flex-col items-center gap-1;
-    @apply pt-[24px] pb-[22px] px-[0.7rem];
-    @apply -translate-y-[50%] hover:translate-y-0;
-    @apply transition-all duration-200 ease-in-out;
-    @apply z-50;
-    transform-origin: bottom;
+
+  .arc-menu-container {
+    position: fixed;
+    bottom: calc(-30vh - 50px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(400px, 90vw);
+    height: min(520px, 90vh);
+    z-index: 1000;
+    pointer-events: none;
+    border-radius: 50%;
   }
 
-  .navbar-icon {
-    @apply transform transition-all duration-200;
-    @apply scale-[0.891] hover:scale-[1];
+  .arc-menu-container.is-open {
+    pointer-events: auto;
   }
-} */
+
+
+.arc-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 850; /* Entre le contenu normal et la vidéo */
+  pointer-events: none; /* Pour ne pas bloquer les interactions */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(2px); /* Effet de flou à la Apple */
+  background-color: rgba(0, 0, 0, 0.15); /* Légère teinte sombre */
+}
+
+/* Afficher l'overlay quand le menu arc est ouvert */
+.arc-menu-container.is-open ~ .arc-overlay {
+  opacity: 1;
+}
+
+
+  .arc-interaction-zone {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Style de base pour tous les boutons */
+  .arc-menu-button {
+    position: absolute;
+    border-radius: 50%;
+    background-color: hsl(var(--navbar-bg), 0.9);
+    color: var(--text-accent, currentColor);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(1px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 52px;
+    height: 52px;
+    pointer-events: none;
+  }
+
+  /* Le bouton central est toujours interactif */
+  .central-button {
+    pointer-events: auto;
+    z-index: 10;
+    opacity: 0.95;
+  }
+
+  /* Effet de survol pour tous les boutons */
+  .arc-menu-button:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Boutons secondaires - cachés par défaut */
+  .arc-menu-button.secondary-button {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.8);
+    transition: all 0.3s ease-out;
+    z-index: 5;
+  }
+
+  /* Boutons secondaires - visibles quand ouverts */
+  .arc-menu-button.secondary-button.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+    animation: droplet 0.5s forwards;
+  }
+
+  .arc-menu-button svg {
+    width: 44px;
+    height: 44px;
+  }
+
+  @media (max-width: 640px) {
+    .arc-menu-button {
+      width: 46px;
+      height: 46px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .arc-menu-container {
+      bottom: min(-250px, -25vh);
+    }
+  }
+
+  /* Animation goutte d'eau */
+  @keyframes droplet {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.6);
+    }
+    60% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+    80% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  /* Animation de pulsation pour le bouton central */
+@keyframes pulseButton {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.95;
+  }
+  /* Première pulsation */
+  3%, 5% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 1;
+  }
+  7%, 9% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  /* Deuxième pulsation */
+  13%, 15% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 1;
+  }
+  17%, 19% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  /* Troisième pulsation */
+  23%, 25% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 1;
+  }
+  27%, 29% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  30% {
+    opacity: 0.95;
+  }
+}
+
+/* Applique l'animation au bouton central */
+.arc-menu-button.central-button {
+  pointer-events: auto;
+  z-index: 10;
+  opacity: 0.95;
+  animation: pulseButton 6s infinite;
+  animation-play-state: running;
+  /* Style plus foncé pour le thème clair */
+  background-color: hsl(0, 0%, 60%); /* Gris très foncé */
+  color: black; /* Texte blanc pour contraste */
+}
+
+/* Version pour le thème sombre */
+:root.dark .arc-menu-button.central-button {
+  background-color: hsl(0, 0%, 0%); /* Presque noir */
+  color: white;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Arrête l'animation quand le menu est ouvert */
+.arc-menu-button.central-button.is-open {
+  animation-play-state: paused;
+}
+
+
+.arc-menu-button.central-button:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  animation-play-state: paused;
+}
+}
 
 
 @layer components {

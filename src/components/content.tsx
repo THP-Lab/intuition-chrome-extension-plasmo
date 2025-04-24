@@ -17,8 +17,7 @@ import Search from "~src/pages/Search"
 import { AtomSelectionProvider } from "./ui/AtomSelectionContext"
 import AtomDetailPage from "~src/pages/AtomDetailPage"
 
-import Navbar from "./layout/Navbar"
-import NavbarUp from "./layout/NavbarUp"
+import NavArc from "./layout/NavArc"
 
 import FollowersTab from "./profile/FollowersTab"
 import FollowingTab from "./profile/FollowingTab"
@@ -30,6 +29,7 @@ import ProfileLayout from "./profile/ProfileLayout"
 
 import "../styles/global.css"
 import { ThemeProvider } from "./ThemeProvider"
+import VideoBanner from "./HomeBanner/VideoBanner"
 
 const API_URL = "https://prod.base.intuition-api.com/v1/graphql"
 configureClient({ apiUrl: API_URL })
@@ -60,7 +60,6 @@ const Content = ({ children }: ContentProps) => {
     <QueryClientProvider client={queryClient}>
       <AtomSelectionProvider>
         <Router>
-          <NavbarUp />
           <main className="flex-1 overflow-auto pb-24 pt-14">
             {children}
             <div className="container mx-auto space-y-8 p-2">
@@ -94,7 +93,8 @@ const Content = ({ children }: ContentProps) => {
               </Routes>
             </div>
           </main>
-          <Navbar />
+          <VideoBanner />
+          <NavArc />
         </Router>
       </AtomSelectionProvider>
     </QueryClientProvider>
