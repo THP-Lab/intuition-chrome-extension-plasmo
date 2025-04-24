@@ -10,7 +10,7 @@ const Search: React.FC = () => {
   const [isSidePanel, setIsSidePanel] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("All")
-  const [walletAddress] = useStorage<string>("metamask-account")
+  const [walletAddress] = useStorage<string>("metamask-account", "")
 
   useEffect(() => {
     const checkWidth = () => {
@@ -41,7 +41,7 @@ const Search: React.FC = () => {
     },
     address: walletAddress
   }, {
-    enabled: !!searchTerm && !!walletAddress
+    enabled: !!searchTerm 
   })
 
   
