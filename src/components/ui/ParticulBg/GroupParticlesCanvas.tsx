@@ -25,19 +25,65 @@ const GroupParticlesCanvas: React.FC = () => {
   const particles = useRef<GroupParticle[]>([])
   const animationFrameId = useRef<number>()
   const mouse = useRef({ x: 0, y: 0 })
+  
   // Configuration
   const connectionDistance = 150
   const lightThemeColor = "rgba(0, 0, 0, 0.3)"
   const darkThemeColor = "rgba(255, 255, 255, 0.5)"
   const activeGroupsRef = useRef<number>(0)
-  const maxGroups = 4
-  const minGroups = 2
+  
+  // dynamic references for the groups
+  const maxGroupsRef = useRef<number>(4) // default value
+  const minGroupsRef = useRef<number>(2) // default value
+  
+  // probabilities for the different group sizes
+  const groupProbabilitiesRef = useRef({
+    SMALL: 0.5,  // default: 50% chance for SMALL
+    MEDIUM: 0.3, // 30% chance for MEDIUM
+    LARGE: 0.2   // 20% chance for LARGE
+  })
 
   const MOUSE_INFLUENCE = {
-    MIN_DISTANCE: 50, // Distance minimum to avoid that the particles touch the mouse
-    MAX_DISTANCE: 200, // Maximum distance of influence of the mouse
-    ORBITAL_FORCE: 0.000000004, // Force of the orbit (smaller = orbit smoother)
-    REPULSION_FORCE: 0.00000008 // Repulsion force if too close
+    MIN_DISTANCE: 50, 
+    MAX_DISTANCE: 200, 
+    ORBITAL_FORCE: 0.000000004, 
+    REPULSION_FORCE: 0.00000008 
+  }
+
+  // function to adjust the groups based on the width
+  const updateGroupsConfiguration = (width: number) => {
+    // reference widths
+    const SMALL_WIDTH = 400
+    const LARGE_WIDTH = 669
+    
+    if (width <= SMALL_WIDTH) {
+      // small screen: less groups and preference for small groups
+      maxGroupsRef.current = Math.max(3, 4 - 1)
+      minGroupsRef.current = Math.max(1, 2 - 1)
+      groupProbabilitiesRef.current = {
+        SMALL: 0.7,  // 70% chance for SMALL
+        MEDIUM: 0.25, // 25% chance for MEDIUM 
+        LARGE: 0.05   // 5% chance for LARGE
+      }
+    } else if (width >= LARGE_WIDTH) {
+      // large screen: more groups and preference for large groups
+      maxGroupsRef.current = 4 + 2
+      minGroupsRef.current = 2 + 1
+      groupProbabilitiesRef.current = {
+        SMALL: 0.3,  // 30% chance for SMALL
+        MEDIUM: 0.3, // 30% chance for MEDIUM
+        LARGE: 0.4   // 40% chance for LARGE
+      }
+    } else {
+      // medium screen: default values
+      maxGroupsRef.current = 4
+      minGroupsRef.current = 2
+      groupProbabilitiesRef.current = {
+        SMALL: 0.5,
+        MEDIUM: 0.3,
+        LARGE: 0.2
+      }
+    }
   }
 
   const createGroup = (canvas: HTMLCanvasElement) => {
@@ -47,20 +93,29 @@ const GroupParticlesCanvas: React.FC = () => {
     const endX = startX < 0 ? canvas.width + 50 : -50
     const endY = Math.random() * canvas.height
 
-    // Do not create a group if you have reached the maximum
-    if (activeGroupsRef.current >= maxGroups) return
+    // do not create a group if you have reached the maximum
+    if (activeGroupsRef.current >= maxGroupsRef.current) return
 
-    // Determine the size of the group
-    const groupType = Math.random()
-    let size
-    if (groupType < 0.5) size = GROUP_SIZES.SMALL
-    else if (groupType < 0.8) size = GROUP_SIZES.MEDIUM
-    else size = GROUP_SIZES.LARGE
+    // determine the size of the group with the new probabilities
+    const random = Math.random()
+    let groupSize;
+    let dispersion;
+    
+    if (random < groupProbabilitiesRef.current.SMALL) {
+      // use SMALL
+      groupSize = Math.floor(GROUP_SIZES.SMALL.base + (Math.random() * 2 - 1) * GROUP_SIZES.SMALL.variation)
+      dispersion = GROUP_SIZES.SMALL.base * 20
+    } else if (random < groupProbabilitiesRef.current.SMALL + groupProbabilitiesRef.current.MEDIUM) {
+      // use MEDIUM
+      groupSize = Math.floor(GROUP_SIZES.MEDIUM.base + (Math.random() * 2 - 1) * GROUP_SIZES.MEDIUM.variation)
+      dispersion = GROUP_SIZES.MEDIUM.base * 20
+    } else {
+      // use LARGE
+      groupSize = Math.floor(GROUP_SIZES.LARGE.base + (Math.random() * 2 - 1) * GROUP_SIZES.LARGE.variation)
+      dispersion = GROUP_SIZES.LARGE.base * 20
+    }
 
-    const groupSize = Math.floor(size.base + (Math.random() * 2 - 1) * size.variation)
-    const dispersion = size.base * 20
-
-    // Create the particles of the group
+    // create the particles of the group
     for (let i = 0; i < groupSize; i++) {
       const particle: GroupParticle = {
         x: startX + Math.random() * dispersion - dispersion/2,
@@ -87,6 +142,7 @@ const GroupParticlesCanvas: React.FC = () => {
     const handleResize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
+      updateGroupsConfiguration(window.innerWidth)
     }
 
     // Add mouse management
@@ -196,10 +252,10 @@ const GroupParticlesCanvas: React.FC = () => {
       }
 
       // Create a new group occasionally if you have not reached the minimum
-      if (activeGroupsRef.current < minGroups || 
-         (activeGroupsRef.current < maxGroups && Math.random() < 0.002)) {
-        createGroup(canvas)
-      }
+      if (activeGroupsRef.current < minGroupsRef.current || 
+        (activeGroupsRef.current < maxGroupsRef.current && Math.random() < 0.002)) {
+       createGroup(canvas)
+     }
 
       window.addEventListener("mousemove", handleMouseMove)
 

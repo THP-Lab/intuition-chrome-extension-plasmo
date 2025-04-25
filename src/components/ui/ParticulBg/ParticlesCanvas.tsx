@@ -25,24 +25,56 @@ const ParticlesCanvas: React.FC = () => {
   const particles = useRef<Particle[]>([])
   const mouse = useRef({ x: 0, y: 0 })
   const animationFrameId = useRef<number>()
+  
+  // references for the dynamic particle count and min particles
+  const dynamicParticleCount = useRef<number>(120)
+  const dynamicMinParticles = useRef<number>(90)
 
   const ATTRACTION = {
     FORCE: 0.0005, // force of attraction
     DISTANCE: 150, // distance of attraction
   }
 
-  // Configuration
-  const particleCount = 120
-  const minParticles = 90
+  // other configurations remain unchanged
   const fadeSpeed = 0.005
   const connectionDistance = 80
   const maxConnectionsPerParticle = 60
   const mouseAreaConnectionLimit = 60
 
-  // colors adapted to the theme
+  // adapted colors to the theme
   const lightThemeColor = "rgba(0, 0, 0, 0.3)"
   const darkThemeColor = "rgba(255, 255, 255, 0.5)"
   const backgroundColor = "transparent"
+
+  // function to calculate the number of particles based on the width
+  const calculateParticleCount = (width: number) => {
+    // reference widths
+    const MIN_WIDTH = 400 // -30% of particles
+    const BASE_WIDTH = 550 // base number of particles
+    const MAX_WIDTH = 669 // +35% of particles
+    
+    const BASE_VALUE = 120 // original value
+    
+    // calculation based on the width
+    if (width <= MIN_WIDTH) {
+      return Math.round(BASE_VALUE * 0.6) // -30%
+    } else if (width >= MAX_WIDTH) {
+      return Math.round(BASE_VALUE * 1.45) // +35%
+    } else {
+      // proportional calculation between MIN_WIDTH and MAX_WIDTH
+      const ratio = (width - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)
+      const factor = 0.6 + (ratio * 0.85) // between 0.7 and 1.35
+      return Math.round(BASE_VALUE * factor)
+    }
+  }
+  
+  // update the number of particles based on the width
+  const updateParticleCount = () => {
+    const width = window.innerWidth
+    const newParticleCount = calculateParticleCount(width)
+    dynamicParticleCount.current = newParticleCount
+  dynamicMinParticles.current = Math.round(newParticleCount * 0.75)
+  }
 
   // function to create a particle
   const createParticle = (canvas: HTMLCanvasElement, fadeIn = true) => {
@@ -73,17 +105,26 @@ const ParticlesCanvas: React.FC = () => {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
+    // update the counters based on the size
+    const updateParticleCounts = () => {
+      const width = window.innerWidth
+      const newCount = calculateParticleCount(width)
+      dynamicParticleCount.current = newCount
+      dynamicMinParticles.current = Math.round(newCount * 0.75)
+    }
+
     // Adjustment of the size of the canvas
     const handleResize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
+      updateParticleCount() // update before initializing the particles
       initParticles()
     }
 
     // Initialization of the particles
     const initParticles = () => {
       particles.current = []
-      for (let i = 0; i < particleCount; i++) {
+      for (let i = 0; i < dynamicParticleCount.current; i++) {
         particles.current.push(createParticle(canvas, false))
       }
     }
@@ -115,7 +156,7 @@ const ParticlesCanvas: React.FC = () => {
         // If the particle disappears completely
         if (particle.opacity <= 0) {
           // If there are enough particles, delete it
-          if (particles.current.length > minParticles) {
+          if (particles.current.length > dynamicMinParticles.current) {
             return false
           }
           // Otherwise, make it reappear somewhere else
@@ -139,7 +180,7 @@ const ParticlesCanvas: React.FC = () => {
       // Add occasional new particles
       if (
         Math.random() < 0.05 &&
-        particles.current.length < particleCount + 20
+        particles.current.length < dynamicParticleCount.current + 20
       ) {
         particles.current.push(createParticle(canvas, true))
       }
