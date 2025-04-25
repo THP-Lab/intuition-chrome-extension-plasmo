@@ -1,4 +1,3 @@
-import { List } from "lucide-react"
 import * as React from "react"
 import { Link, useLocation } from "react-router-dom"
 
@@ -7,7 +6,6 @@ import IntuitionHistory from "~/src/components/icons/IntuitionHistory"
 import IntuitionIcon from "~/src/components/icons/IntuitionIcon"
 import IntuitionProfil from "~/src/components/icons/IntuitionProfil"
 import IntuitionSearchIcon from "~/src/components/icons/IntuitionSearchIcon"
-import IntuitionThemeAvatar from "~/src/components/icons/IntuitionThemeAvatar"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { cn } from "~src/lib/utils"

@@ -4,7 +4,6 @@ import { Link } from "react-router-dom"
 import IntuitionThemeAvatar from "~/src/components/icons/IntuitionThemeAvatar"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
-import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
 import { cn } from "~src/lib/utils"
 import IntuitionIconPlus from "~src/components/icons/intuition_icon_plus"
 
