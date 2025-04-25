@@ -244,7 +244,7 @@ html.dark body .hover-card-content[data-state="open"] {
     top: var(--video-initial-y);
     left: var(--video-initial-x);
     transition: top 0.5s ease, left 0.5s ease;
-    @apply h-[50vh] w-auto z-30; /* ou la taille que vous voulez */
+    @apply h-[50vh] w-auto z-30;
     background: transparent;
     transition: transform 0.5s ease;
     transform: translateY(85vh);
@@ -265,7 +265,6 @@ html.dark body .hover-card-content[data-state="open"] {
     background: transparent;
   }
 
-
   .arc-menu-container {
     position: fixed;
     bottom: calc(-30vh - 50px);
@@ -282,25 +281,23 @@ html.dark body .hover-card-content[data-state="open"] {
     pointer-events: auto;
   }
 
+  .arc-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 850;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px);
+    background-color: rgba(0, 0, 0, 0.15);
+  }
 
-.arc-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 850; /* Entre le contenu normal et la vidéo */
-  pointer-events: none; /* Pour ne pas bloquer les interactions */
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  backdrop-filter: blur(2px); /* Effet de flou à la Apple */
-  background-color: rgba(0, 0, 0, 0.15); /* Légère teinte sombre */
-}
-
-/* Afficher l'overlay quand le menu arc est ouvert */
-.arc-menu-container.is-open ~ .arc-overlay {
-  opacity: 1;
-}
+  .arc-menu-container.is-open ~ .arc-overlay {
+    opacity: 1;
+  }
 
 
   .arc-interaction-zone {
@@ -309,7 +306,6 @@ html.dark body .hover-card-content[data-state="open"] {
     height: 100%;
   }
 
-  /* Style de base pour tous les boutons */
   .arc-menu-button {
     position: absolute;
     border-radius: 50%;
@@ -328,20 +324,17 @@ html.dark body .hover-card-content[data-state="open"] {
     pointer-events: none;
   }
 
-  /* Le bouton central est toujours interactif */
   .central-button {
     pointer-events: auto;
     z-index: 10;
     opacity: 0.95;
   }
 
-  /* Effet de survol pour tous les boutons */
   .arc-menu-button:hover {
     transform: translate(-50%, -50%) scale(1.1);
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
   }
 
-  /* Boutons secondaires - cachés par défaut */
   .arc-menu-button.secondary-button {
     opacity: 0;
     pointer-events: none;
@@ -350,7 +343,6 @@ html.dark body .hover-card-content[data-state="open"] {
     z-index: 5;
   }
 
-  /* Boutons secondaires - visibles quand ouverts */
   .arc-menu-button.secondary-button.is-open {
     opacity: 1;
     pointer-events: auto;
@@ -376,7 +368,6 @@ html.dark body .hover-card-content[data-state="open"] {
     }
   }
 
-  /* Animation goutte d'eau */
   @keyframes droplet {
     0% {
       opacity: 0;
@@ -396,85 +387,74 @@ html.dark body .hover-card-content[data-state="open"] {
     }
   }
 
-  /* Animation de pulsation pour le bouton central */
-@keyframes pulseButton {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
+  @keyframes pulseButton {
+    0%, 100% {
+      transform: translate(-50%, -50%) scale(1);
     opacity: 0.95;
-  }
-  /* Première pulsation */
-  3%, 5% {
-    transform: translate(-50%, -50%) scale(1.15);
-    opacity: 1;
-  }
-  7%, 9% {
+    }
+    3%, 5% {
+      transform: translate(-50%, -50%) scale(1.15);
+      opacity: 1;
+    }
+    7%, 9% {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
-  }
-  /* Deuxième pulsation */
-  13%, 15% {
-    transform: translate(-50%, -50%) scale(1.15);
-    opacity: 1;
-  }
-  17%, 19% {
+    }
+    13%, 15% {
+      transform: translate(-50%, -50%) scale(1.15);
+      opacity: 1;
+    }
+    17%, 19% {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
+    }
+    23%, 25% {
+      transform: translate(-50%, -50%) scale(1.15);
+      opacity: 1;
+    }
+    27%, 29% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+    30% {
+      opacity: 0.95;
+    }
   }
-  /* Troisième pulsation */
-  23%, 25% {
-    transform: translate(-50%, -50%) scale(1.15);
-    opacity: 1;
-  }
-  27%, 29% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-  30% {
+
+  .arc-menu-button.central-button {
+    pointer-events: auto;
+    z-index: 10;
     opacity: 0.95;
+    animation: pulseButton 6s infinite;
+    animation-play-state: running;
+    background-color: hsl(0, 0%, 60%);
+    color: black;
+  }
+
+  :root.dark .arc-menu-button.central-button {
+    background-color: hsl(0, 0%, 0%);
+    color: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+
+  .arc-menu-button.central-button.is-open {
+    animation-play-state: paused;
+  }
+
+  .arc-menu-button.central-button:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+    animation-play-state: paused;
   }
 }
 
-/* Applique l'animation au bouton central */
-.arc-menu-button.central-button {
-  pointer-events: auto;
-  z-index: 10;
-  opacity: 0.95;
-  animation: pulseButton 6s infinite;
-  animation-play-state: running;
-  /* Style plus foncé pour le thème clair */
-  background-color: hsl(0, 0%, 60%); /* Gris très foncé */
-  color: black; /* Texte blanc pour contraste */
-}
-
-/* Version pour le thème sombre */
-:root.dark .arc-menu-button.central-button {
-  background-color: hsl(0, 0%, 0%); /* Presque noir */
-  color: white;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-}
-
-/* Arrête l'animation quand le menu est ouvert */
-.arc-menu-button.central-button.is-open {
-  animation-play-state: paused;
-}
-
-
-.arc-menu-button.central-button:hover {
-  transform: translate(-50%, -50%) scale(1.1);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-  opacity: 1;
-  animation-play-state: paused;
-}
-}
-
-/* Animation de pulsation pour le bouton de switch nav */
 @keyframes pulseNavSwitch {
   0%, 100% {
     transform: scale(1);
     opacity: 0.95;
     filter: drop-shadow(0 0 0 currentColor);
   }
-  /* Première pulsation */
   3%, 5% {
     transform: scale(1.15);
     opacity: 1;
@@ -485,7 +465,6 @@ html.dark body .hover-card-content[data-state="open"] {
     opacity: 1;
     filter: drop-shadow(0 0 1px currentColor);
   }
-  /* Deuxième pulsation */
   13%, 15% {
     transform: scale(1.15);
     opacity: 1;
@@ -496,7 +475,6 @@ html.dark body .hover-card-content[data-state="open"] {
     opacity: 1;
     filter: drop-shadow(0 0 1px currentColor);
   }
-  /* Troisième pulsation */
   23%, 25% {
     transform: scale(1.15);
     opacity: 1;
