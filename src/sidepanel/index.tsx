@@ -15,20 +15,14 @@ function IndexSidepanel() {
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="intuition-theme">
+      <NavigationProvider>
         <div className="flex min-h-screen flex-col bg-background text-foreground">
           <ParticlesCanvas />
           <GroupParticlesCanvas />
           <Content />
         </div>
-      </ThemeProvider>
-    <ThemeProvider defaultTheme="dark" storageKey="intuition-theme">
-      <NavigationProvider>
-      <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <ParticlesCanvas />
-        <Content />
-      </div>
       </NavigationProvider>
-    </ThemeProvider>
+      </ThemeProvider>
     </>
   )
 }

@@ -23,6 +23,7 @@ function IndexPopup() {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="intuition-theme">
+      <NavigationProvider>
       <div className="min-w-[600px] min-h-[600px] p-4 bg-background text-foreground relative">
         <ParticlesCanvas />
         <GroupParticlesCanvas />
@@ -37,20 +38,6 @@ function IndexPopup() {
 
         <Content></Content>
       </div>
-      <NavigationProvider>
-        <div className="min-w-[600px] min-h-[600px] p-4 bg-background text-foreground relative">
-        <ParticlesCanvas />
-          <div style={{ position: 'absolute', left: `${portalX}px`, top: `${portalY}px` }}>
-            <IntuitionPortalPanel 
-              onClick={handleSidePanel}
-              size={50}
-            />
-          </div>
-          
-          <Content>
-            
-          </Content>
-        </div>
       </NavigationProvider>
     </ThemeProvider>
   )
