@@ -1,7 +1,16 @@
 import React from "react"
+import { useNavigation } from "./NavigationProvider"
 
-const IntuitionNavSwitch = ({ size = 15, className = "" }) => (
-    <svg
+const IntuitionNavSwitch = ({ size = 15, className = "" }) => {
+  const { navType, setNavType } = useNavigation()
+
+  const toggleNav = () => {
+    setNavType(navType === "classic" ? "arc" : "classic")
+  }
+
+  return (
+    <button onClick={toggleNav} className={className}>
+      <svg
       width={size}
       height={size}
       viewBox="0 0 15 15"
@@ -15,6 +24,8 @@ const IntuitionNavSwitch = ({ size = 15, className = "" }) => (
         clipRule="evenodd"
       />
     </svg>
+    </button>
   )
+}
   
   export default IntuitionNavSwitch

@@ -467,6 +467,62 @@ html.dark body .hover-card-content[data-state="open"] {
 }
 }
 
+/* Animation de pulsation pour le bouton de switch nav */
+@keyframes pulseNavSwitch {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.95;
+    filter: drop-shadow(0 0 0 currentColor);
+  }
+  /* Première pulsation */
+  3%, 5% {
+    transform: scale(1.15);
+    opacity: 1;
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+  7%, 9% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 1px currentColor);
+  }
+  /* Deuxième pulsation */
+  13%, 15% {
+    transform: scale(1.15);
+    opacity: 1;
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+  17%, 19% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 1px currentColor);
+  }
+  /* Troisième pulsation */
+  23%, 25% {
+    transform: scale(1.15);
+    opacity: 1;
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+  27%, 29% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 1px currentColor);
+  }
+  30% {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 0 currentColor);
+  }
+}
+
+.nav-switch-button svg {
+  filter: drop-shadow(0 0 0 currentColor);
+  transition: filter 0.3s ease;
+}
+
+.nav-switch-button {
+  animation: pulseNavSwitch 4s infinite;
+  animation-play-state: running;
+}
+
 
 @layer components {
   .navbar-container {

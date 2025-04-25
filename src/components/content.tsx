@@ -17,7 +17,10 @@ import Search from "~src/pages/Search"
 import { AtomSelectionProvider } from "./ui/AtomSelectionContext"
 import AtomDetailPage from "~src/pages/AtomDetailPage"
 
+import { NavigationProvider, useNavigation } from "./layout/NavigationProvider"
 import NavArc from "./layout/NavArc"
+import Navbar from "./layout/Navbar"
+import NavbarUp from "./layout/NavbarUp"
 
 import FollowersTab from "./profile/FollowersTab"
 import FollowingTab from "./profile/FollowingTab"
@@ -41,45 +44,54 @@ type ContentProps = {
 }
 
 const Content = ({ children }: ContentProps) => {
+  const { navType } = useNavigation()
+
   return (
     <QueryClientProvider client={queryClient}>
       <AtomSelectionProvider>
         <Router>
-          <main className="flex-1 overflow-auto pb-24 pt-14">
-            {children}
-            <div className="container mx-auto space-y-8 p-2">
-              <Routes>
-                <Route path="*" element={<Home />} />
-                <Route path="/" element={<Home />} />
+          {navType === "classic" && <NavbarUp />}
+            <main className="flex-1 overflow-auto pb-24 pt-14">
+              {children}
+              <div className="container mx-auto space-y-8 p-2">
+                <Routes>
+                  <Route path="*" element={<Home />} />
+                  <Route path="/" element={<Home />} />
 
-                <Route path="/profile" element={<Profile />}>
-                  <Route index element={<Navigate to="/profile/claims/all" />} />
-                  <Route element={<ProfileLayout />}>
-                    <Route path="claims">
-                      <Route path="all" element={<MyPositionsTab />} />
-                      <Route path="created" element={<YourClaimsTab />} />
+                  <Route path="/profile" element={<Profile />}>
+                    <Route index element={<Navigate to="/profile/claims/all" />} />
+                    <Route element={<ProfileLayout />}>
+                      <Route path="claims">
+                        <Route path="all" element={<MyPositionsTab />} />
+                        <Route path="created" element={<YourClaimsTab />} />
+                      </Route>
+
+                      <Route path="identities">
+                        <Route path="all" element={<IdentitiesVotedTab />} />
+                        <Route path="created" element={<IdentityTab />} />
+                      </Route>
+
+                      <Route path="followers" element={<FollowersTab />} />
+                      <Route path="following" element={<FollowingTab />} />
                     </Route>
-
-                    <Route path="identities">
-                      <Route path="all" element={<IdentitiesVotedTab />} />
-                      <Route path="created" element={<IdentityTab />} />
-                    </Route>
-
-                    <Route path="followers" element={<FollowersTab />} />
-                    <Route path="following" element={<FollowingTab />} />
                   </Route>
-                </Route>
-                
-                <Route path="/feed" element={<Feed />} />
-                <Route path="/page-form" element={<PageForm />} />
-                <Route path="/recent-activity" element={<RecentActivity />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/atoms/:id" element={<AtomDetailPage />} />
-              </Routes>
-            </div>
-          </main>
-          <VideoBanner />
-          <NavArc />
+
+                  <Route path="/feed" element={<Feed />} />
+                  <Route path="/page-form" element={<PageForm />} />
+                  <Route path="/recent-activity" element={<RecentActivity />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/atoms/:id" element={<AtomDetailPage />} />
+                </Routes>
+              </div>
+            </main>
+            {navType === "classic" ? (
+              <Navbar />
+            ) : (
+              <>
+                <VideoBanner />
+                <NavArc />
+              </>
+            )}
         </Router>
       </AtomSelectionProvider>
     </QueryClientProvider>
