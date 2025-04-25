@@ -57,10 +57,14 @@ const AtomDetailPage = () => {
     ...claim.triple
   })) ?? []
 
+  const allTags = claims.filter((claim) => claim.predicate.label === "has tag").map((claim) => claim.object.label)
+  const tags = [...new Set(allTags)]
+
   console.log("walletAddress:", walletAddress)
   console.log("atomId:", stableId)
   console.log("ClaimsData", claimsData?.claims_aggregate?.nodes)
   console.log("Claims:", claims)
+  console.log("Tags :", tags);
 
 
   if (!stableId || isNaN(parsedAtomId)) {
@@ -73,7 +77,7 @@ const AtomDetailPage = () => {
 
   return (
     <div className="p-4 space-y-6">
-      <AtomDisplay atom={data.atom} />
+      <AtomDisplay atom={data.atom} tags={tags}/>
       <div>
         <div className="flex items-center mt-2 mb-1">
           <span className="text-sm text-gray-400">Claims</span>

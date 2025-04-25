@@ -18,9 +18,10 @@ interface AtomDisplayProps {
       position_count?: number | string | null
     } | null
   }
-}
+  tags?: string[]
+  }
 
-const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom }) => {
+const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom, tags }) => {
   const thing = atom.value?.thing
 
   return (
@@ -71,16 +72,20 @@ const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom }) => {
         </Link>
       )}
 
-      <div className="mt-6 flex flex-wrap gap-2">
-        <span className="bg-gray-700 text-white text-xs px-2 py-1 rounded-full">
-          #tag-1
-        </span>
-        <span className="bg-gray-700 text-white text-xs px-2 py-1 rounded-full">
-          #tag-2
-        </span>
+      {tags && tags.length > 0 && (
+        <div className="mt-6 flex flex-wrap gap-2">
+          {tags.map((tag, index) =>  (
+            <span 
+              key={index}
+              className="bg-gray-700 text-white text-xs px-2 py-1 rounded-full" 
+            >
+              {tag}
+          </span>
+      ))}
       </div>
+      )}
     </div>
-  )
-}
+    )
+  }
 
 export default AtomDisplay
