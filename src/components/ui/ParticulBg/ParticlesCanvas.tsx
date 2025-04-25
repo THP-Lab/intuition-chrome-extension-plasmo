@@ -26,7 +26,7 @@ const ParticlesCanvas: React.FC = () => {
   const mouse = useRef({ x: 0, y: 0 })
   const animationFrameId = useRef<number>()
   
-  // Références pour les valeurs dynamiques des particules
+  // references for the dynamic particle count and min particles
   const dynamicParticleCount = useRef<number>(120)
   const dynamicMinParticles = useRef<number>(90)
 
@@ -35,40 +35,40 @@ const ParticlesCanvas: React.FC = () => {
     DISTANCE: 150, // distance of attraction
   }
 
-  // Les autres configurations restent inchangées
+  // other configurations remain unchanged
   const fadeSpeed = 0.005
   const connectionDistance = 80
   const maxConnectionsPerParticle = 60
   const mouseAreaConnectionLimit = 60
 
-  // Couleurs adaptées au thème
+  // adapted colors to the theme
   const lightThemeColor = "rgba(0, 0, 0, 0.3)"
   const darkThemeColor = "rgba(255, 255, 255, 0.5)"
   const backgroundColor = "transparent"
 
-  // Fonction pour calculer le nombre de particules en fonction de la largeur
+  // function to calculate the number of particles based on the width
   const calculateParticleCount = (width: number) => {
-    // Largeurs de référence
-    const MIN_WIDTH = 400 // -30% de particules
-    const BASE_WIDTH = 550 // nombre de base
-    const MAX_WIDTH = 669 // +35% de particules
+    // reference widths
+    const MIN_WIDTH = 400 // -30% of particles
+    const BASE_WIDTH = 550 // base number of particles
+    const MAX_WIDTH = 669 // +35% of particles
     
-    const BASE_VALUE = 120 // Valeur originale
+    const BASE_VALUE = 120 // original value
     
-    // Calcul selon la largeur
+    // calculation based on the width
     if (width <= MIN_WIDTH) {
       return Math.round(BASE_VALUE * 0.6) // -30%
     } else if (width >= MAX_WIDTH) {
       return Math.round(BASE_VALUE * 1.45) // +35%
     } else {
-      // Calcul proportionnel entre MIN_WIDTH et MAX_WIDTH
+      // proportional calculation between MIN_WIDTH and MAX_WIDTH
       const ratio = (width - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)
-      const factor = 0.6 + (ratio * 0.85) // entre 0.7 et 1.35
+      const factor = 0.6 + (ratio * 0.85) // between 0.7 and 1.35
       return Math.round(BASE_VALUE * factor)
     }
   }
   
-  // Mettre à jour le nombre de particules en fonction de la largeur
+  // update the number of particles based on the width
   const updateParticleCount = () => {
     const width = window.innerWidth
     const newParticleCount = calculateParticleCount(width)
@@ -105,7 +105,7 @@ const ParticlesCanvas: React.FC = () => {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    // Mettre à jour les compteurs en fonction de la taille
+    // update the counters based on the size
     const updateParticleCounts = () => {
       const width = window.innerWidth
       const newCount = calculateParticleCount(width)
@@ -117,7 +117,7 @@ const ParticlesCanvas: React.FC = () => {
     const handleResize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
-      updateParticleCount() // Mettre à jour avant d'initialiser les particules
+      updateParticleCount() // update before initializing the particles
       initParticles()
     }
 
