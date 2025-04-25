@@ -11,6 +11,9 @@ import { Outlet } from "react-router-dom"
 import { useStorage } from "@plasmohq/storage/hook"
 import AccountSection from "~src/components/profile/AccountSection"
 import AtomProfileSection from "~src/components/profile/AtomProfileSection"
+import IntuitionNavSwitch from "~src/components/layout/IntuitionNavSwitch"
+import { Button } from "~src/components/ui/button"
+import { cn } from "~src/lib/utils"
 
 const ProfileLayout = () => {
   const [position, setPosition] = useState({ x: 0, y: -3 })
@@ -27,6 +30,12 @@ const ProfileLayout = () => {
   const { data: claimsData } = useGetClaimsByAddressQuery({ address: address || "" })
 
   const account = accountData?.account
+
+  const [navType, setNavType] = useStorage<"classic" | "arc">("navbar-type", "classic")
+  
+  const toggleNavType = () => {
+    setNavType(navType === "classic" ? "arc" : "classic")
+  }
 
   if (!address) {
     return (
@@ -46,6 +55,18 @@ const ProfileLayout = () => {
         <p>{address}</p>
         <WalletConnectionButton />
       </div>
+      <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleNavType}
+            className={cn(
+              "flex items-center justify-center p-2",
+              "hover:bg-accent hover:text-accent-foreground",
+              "transition-colors"
+            )}
+            title={`Switch to ${navType === "classic" ? "Arc" : "Classic"} Navigation`}>
+            <IntuitionNavSwitch size={20} />
+      </Button>
 
 
       <AccountSection

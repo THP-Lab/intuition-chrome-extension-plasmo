@@ -42,21 +42,74 @@ const getVideoBannerPosition = () => {
   if (typeof window === "undefined") return { initialY: "100vh", showY: "30vh" }
 
   const screenHeight = window.innerHeight
-  
+
   // Calcul du positionnement responsive
   let showY = "30vh"
-  
+
   if (screenHeight < 600) {
     showY = "20vh" // Écrans très petits
   } else if (screenHeight > 900) {
     showY = "40vh" // Grands écrans
   } else {
     // Calcul proportionnel pour les tailles intermédiaires
-    const percentage = Math.min(40, Math.max(20, (screenHeight - 600) / 10 + 20))
+    const percentage = Math.min(
+      40,
+      Math.max(20, (screenHeight - 600) / 10 + 20)
+    )
     showY = `${percentage}vh`
   }
-  
+
   return { initialY: "100vh", showY }
+}
+
+const updateVideoPosition = () => {
+  if (typeof window === "undefined") return
+  // 1. Trouver le bouton central
+  const centralBtn = document.querySelector(".central-button") as HTMLElement
+  if (!centralBtn) return
+
+  const btnRect = centralBtn.getBoundingClientRect()
+  const btnCenterX = btnRect.left + btnRect.width / 2
+  const btnCenterY = btnRect.top + btnRect.height / 2
+
+  // 2. Récupérer la bannière vidéo (même cachée, elle existe dans le DOM)
+  const banner = document.querySelector(
+    ".video-banner-container"
+  ) as HTMLElement
+  if (!banner) return
+
+  const bannerRect = banner.getBoundingClientRect()
+  const bannerW = bannerRect.width
+  const bannerH = bannerRect.height
+
+  // 3. Offsets RELATIFS au bouton
+  //    - offsetDefaultY > 0 → en dessous du bouton
+  //    - offsetDefaultY < 0 → au-dessus du bouton
+  //    - offsetHoverY = 0 pour être centré exactement
+  const offsetDefaultY = 150 // ajustez (+ ou –) jusqu’à ce que la vidéo apparaisse à la distance désirée
+  const offsetHoverY = 0
+  const offsetX = -4
+
+  // 4. Calculer la position du coin haut-gauche de la bannière
+  const initialX = btnCenterX - bannerW / 2 + offsetX
+  const initialY = btnCenterY + offsetDefaultY - bannerH / 2
+  const hoverX = btnCenterX - bannerW / 2 + offsetX
+  const hoverY = btnCenterY + offsetHoverY - bannerH / 2
+
+  // 5. Injecter dans les variables CSS
+  const root = document.documentElement
+  root.style.setProperty("--video-initial-x", `${initialX}px`)
+  root.style.setProperty("--video-initial-y", `${initialY}px`)
+  root.style.setProperty("--video-hover-x", `${hoverX}px`)
+  root.style.setProperty("--video-hover-y", `${hoverY}px`)
+
+  // → debug : vérifiez dans la console que les valeurs sont raisonnables
+  console.log("Video pos calc:", {
+    btnCenter: { x: btnCenterX, y: btnCenterY },
+    bannerSize: { w: bannerW, h: bannerH },
+    initial: { x: initialX, y: initialY },
+    hover: { x: hoverX, y: hoverY }
+  })
 }
 
 // Position fixe des items dans l'arc (l'ordre ne change jamais)
@@ -79,16 +132,18 @@ const NavArc = () => {
   const [responsiveValues, setResponsiveValues] = useState(
     getResponsiveValues()
   )
-  const [videoBannerPosition, setVideoBannerPosition] = useState(
-    getVideoBannerPosition()
-  )
 
   useEffect(() => {
     const handleResize = () => {
+      console.log("Redimensionnement détecté")
       setResponsiveValues(getResponsiveValues())
-      setVideoBannerPosition(getVideoBannerPosition())
+      updateVideoPosition()
     }
-  
+
+    // Appel initial
+    console.log("Premier appel de updateVideoPosition")
+    updateVideoPosition()
+
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
   }, [])
@@ -123,22 +178,14 @@ const NavArc = () => {
   }
 
   const onHoverEnter = () => {
+    updateVideoPosition() // ← recalcul en live
     setIsOpen(true)
-    // Afficher la vidéo avec la position calculée
-    const videoBanner = document.querySelector(".video-banner-container") as HTMLElement
-    if (videoBanner) {
-      videoBanner.classList.add("show")
-      videoBanner.style.setProperty("--video-show-y", videoBannerPosition.showY)
-    }
+    document.querySelector(".video-banner-container")?.classList.add("show")
   }
 
   const onHoverLeave = () => {
     setIsOpen(false)
-    // Cacher la vidéo
-    const videoBanner = document.querySelector(".video-banner-container")
-    if (videoBanner) {
-      videoBanner.classList.remove("show")
-    }
+    document.querySelector(".video-banner-container")?.classList.remove("show")
   }
 
   const handleClick = (idx: number) => {
@@ -231,52 +278,72 @@ const NavArc = () => {
         transform: "translate(-50%, -50%)"
       }
     }
-  
+
     // Pour les positions fixes sur l'arc
     // Nous associons un index de position fixe à chaque bouton
     const fixedPositions = [
       { top: "36%", radius: responsiveValues.radius - 26, angle: -Math.PI }, // Position Search
-      { top: "31%", radius: responsiveValues.radius - 25, angle: -Math.PI * 0.8 }, // Position Profile
-      { top: "36%", radius: responsiveValues.radius + 35, angle: -Math.PI * 0.58 }, // Position Feed
-      { top: "36%", radius: responsiveValues.radius + 35, angle: -Math.PI * 0.42 }, // Position Recent
-      { top: "31%", radius: responsiveValues.radius - 25, angle: -Math.PI * 0.2 }, // Position Create
+      {
+        top: "31%",
+        radius: responsiveValues.radius - 25,
+        angle: -Math.PI * 0.8
+      }, // Position Profile
+      {
+        top: "36%",
+        radius: responsiveValues.radius + 35,
+        angle: -Math.PI * 0.58
+      }, // Position Feed
+      {
+        top: "36%",
+        radius: responsiveValues.radius + 35,
+        angle: -Math.PI * 0.42
+      }, // Position Recent
+      {
+        top: "31%",
+        radius: responsiveValues.radius - 25,
+        angle: -Math.PI * 0.2
+      }, // Position Create
       { top: "36%", radius: responsiveValues.radius - 26, angle: 0 } // Position Theme
-    ];
-  
+    ]
+
     // Trouver l'index de l'item actif parmi les items originaux
-    const activeItemOriginalIndex = items.findIndex(item => item.label === centralItem.label);
-    
+    const activeItemOriginalIndex = items.findIndex(
+      (item) => item.label === centralItem.label
+    )
+
     // On trouve l'index original du bouton secondaire actuel
-    const secondaryItems = getSecondaryItems();
-    const currentItem = secondaryItems[idx];
-    const originalIndex = items.findIndex(item => item.label === currentItem.label);
-  
+    const secondaryItems = getSecondaryItems()
+    const currentItem = secondaryItems[idx]
+    const originalIndex = items.findIndex(
+      (item) => item.label === currentItem.label
+    )
+
     // Déterminer la position fixe à attribuer à ce bouton
     // Si l'item original est avant l'item actif, on garde la même position
     // Si l'item original est après l'item actif, on décale de -1
-    let positionIndex = originalIndex;
+    let positionIndex = originalIndex
     if (originalIndex > activeItemOriginalIndex) {
-      positionIndex = originalIndex - 1;
+      positionIndex = originalIndex - 1
     } else if (originalIndex < activeItemOriginalIndex) {
-      positionIndex = originalIndex;
+      positionIndex = originalIndex
     } else {
       // Cas où l'originalIndex est égal à activeItemOriginalIndex
       // Ce cas ne devrait pas arriver puisque l'item actif est au centre
-      positionIndex = activeItemOriginalIndex;
+      positionIndex = activeItemOriginalIndex
     }
-  
+
     // S'assurer que positionIndex reste dans les limites
     if (positionIndex >= fixedPositions.length) {
-      positionIndex = fixedPositions.length - 1;
+      positionIndex = fixedPositions.length - 1
     }
-  
+
     // Utiliser la position fixe correspondante
-    const position = fixedPositions[positionIndex];
-    
+    const position = fixedPositions[positionIndex]
+
     // Calculer les coordonnées x et y basées sur l'angle et le rayon
-    const x = position.radius * Math.cos(position.angle);
-    const y = position.radius * Math.sin(position.angle) * 0.7; // Facteur d'aplatissement
-  
+    const x = position.radius * Math.cos(position.angle)
+    const y = position.radius * Math.sin(position.angle) * 0.7 // Facteur d'aplatissement
+
     return {
       left: `calc(50% + ${x}px)`,
       top: `calc(${position.top} + ${y}px)`,
