@@ -26,6 +26,7 @@
     --ring: 215 20.2% 65.1%;
     --radius: 0.5rem;
     --navbar-bg: 0 0% 95%; 
+    --navbar-bg-transparent: 0 0% 100% / 0.4%;
     --claims-bg: 0 0% 80%;
     --border-atom: 0 0% 76%;
     --hover-atom-bg: 0 0% 85%;
@@ -59,6 +60,7 @@
     --ring: 216 34% 17%;
     --radius: 0.5rem;
     --navbar-bg: 0 0% 5%; 
+    --navbar-bg-transparent: 0 0% 0% / 0.4%;
     --claims-bg: 0 0% 10%;  
     --border-atom: 0 0% 24%;  
     --hover-atom-bg: 0 0% 15%; 
@@ -293,5 +295,85 @@ html.dark body .hover-card-content[data-state="open"] {
   }
   100% { 
     opacity: 0.6; 
+  }
+}
+
+
+/* @layer components {
+  .navbar-container {
+    @apply fixed bottom-0 left-0 right-0 z-40 border-t border-opacity-20;
+    @apply backdrop-blur-[8px] hover:backdrop-blur-[12px];
+    @apply translate-y-[80%] hover:translate-y-0;
+    @apply transition-all duration-500 ease-in-out;
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .navbar-container:hover .navbar-button {
+    transform: translateY(0);
+  }
+
+  .navbar-button {
+    @apply flex min-w-[4.3rem] flex-col items-center gap-1;
+    @apply pt-[24px] pb-[22px] px-[0.7rem];
+    @apply -translate-y-[50%] hover:translate-y-0;
+    @apply transition-all duration-200 ease-in-out;
+    @apply z-50;
+    transform-origin: bottom;
+  }
+
+  .navbar-icon {
+    @apply transform transition-all duration-200;
+    @apply scale-[0.891] hover:scale-[1];
+  }
+} */
+
+
+@layer components {
+  .navbar-container {
+    @apply fixed bottom-0 left-0 right-0 z-50 border-t border-opacity-20;
+    @apply bg-[hsl(var(--navbar-bg))] backdrop-blur-[2px];
+    @apply hover:backdrop-blur-[4px];
+    @apply transition-all duration-300 ease-in-out;
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .navbar-button {
+    @apply flex min-w-[4.3rem] flex-col items-center gap-1;
+    @apply pt-[24px] pb-[22px] px-[0.7rem];
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .navbar-button:not(.active):hover {
+    @apply opacity-100;
+  }
+
+  .navbar-icon {
+    @apply transform transition-all duration-200;
+    @apply scale-[0.891] hover:scale-[1];
+  }
+}
+
+@layer components {
+  .navbar-up-container {
+    @apply fixed top-0 left-0 right-0 z-40 border-b border-opacity-20;
+    @apply backdrop-blur-[8px] hover:backdrop-blur-[12px];
+    @apply transition-all duration-500 ease-in-out;
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .navbar-up-button {
+    @apply flex min-w-[4.3rem] items-center gap-2;
+    @apply pt-[22px] pb-[22px] px-[0.7rem];
+    @apply transition-all duration-500 ease-in-out;
+    @apply z-50;
+    transform-origin: top;
+  }
+
+  .navbar-up-icon {
+    @apply transform transition-all duration-200;
+    @apply scale-[0.891] hover:scale-[1];
   }
 }
