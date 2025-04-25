@@ -7,6 +7,7 @@ import ParticlesCanvas from "~src/components/ui/ParticulBg/ParticlesCanvas"
 import GroupParticlesCanvas from "~src/components/ui/ParticulBg/GroupParticlesCanvas"
 
 import { ThemeProvider } from "../components/ThemeProvider"
+import { NavigationProvider } from "~src/components/layout/NavigationProvider"
 
 function IndexPopup() {
   const handleSidePanel = () => {
@@ -36,6 +37,21 @@ function IndexPopup() {
 
         <Content></Content>
       </div>
+      <NavigationProvider>
+        <div className="min-w-[600px] min-h-[600px] p-4 bg-background text-foreground relative">
+        <ParticlesCanvas />
+          <div style={{ position: 'absolute', left: `${portalX}px`, top: `${portalY}px` }}>
+            <IntuitionPortalPanel 
+              onClick={handleSidePanel}
+              size={50}
+            />
+          </div>
+          
+          <Content>
+            
+          </Content>
+        </div>
+      </NavigationProvider>
     </ThemeProvider>
   )
 }

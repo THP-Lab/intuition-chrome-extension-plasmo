@@ -51,22 +51,24 @@ const ProfileLayout = () => {
   return (
     <div className="p-4 space-y-2">
       <div className="flex items-center justify-between w-full">
-        <h1 className="text-2xl font-bold text-foreground">My Profile</h1>
-        <WalletConnectionButton />
-      </div>
-      <Button
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground">My Profile</h1>
+          <Button
             variant="ghost"
             size="sm"
             onClick={toggleNavType}
             className={cn(
-              "flex items-center justify-center p-2",
+              "flex items-center justify-center p-1 nav-switch-button",
               "hover:bg-accent hover:text-accent-foreground",
               "transition-colors"
             )}
             title={`Switch to ${navType === "classic" ? "Arc" : "Classic"} Navigation`}>
-            <IntuitionNavSwitch size={20} />
-      </Button>
-      <p>{address}</p>
+            <IntuitionNavSwitch size={18} />
+          </Button>
+        </div>
+        <p>{address}</p>
+        <WalletConnectionButton />
+      </div>
 
 
       <AccountSection
