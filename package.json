@@ -69,7 +69,13 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "https://*/*",
+      "https://cloud.umami.is/*",
+      "https://prod.base.intuition-api.com/*",
+      "chrome-extension://*/*",
+      "ws://localhost:*",
+      "wws://localhost:*"
+
     ],
     "web_accessible_resources": [
       {
@@ -87,8 +93,12 @@
       "tabs",
       "activeTab",
       "sidePanel"
-    ]
+    ],
+    "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com/ https://cloud.umami.is/ ws://localhost:* wss://localhost:*;"
+    }
   },
+
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",
