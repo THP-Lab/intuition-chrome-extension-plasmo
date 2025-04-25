@@ -48,7 +48,7 @@ const Content = ({ children }: ContentProps) => {
           <NavbarUp />
           <main className="flex-1 overflow-auto pb-24 pt-14">
             {children}
-            <div className="container mx-auto space-y-8 p-4">
+            <div className="container mx-auto space-y-8 p-2">
               <Routes>
                 <Route path="*" element={<Home />} />
                 <Route path="/" element={<Home />} />

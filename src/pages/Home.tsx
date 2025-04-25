@@ -128,7 +128,7 @@ function Home() {
         </p>
       </div>
 
-        <div className="p-4">
+      <div>
         {error && <p className="text-red-500">An error occurred while requesting this page.</p>}
 
         <TabSystem

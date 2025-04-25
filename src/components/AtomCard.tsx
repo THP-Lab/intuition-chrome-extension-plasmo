@@ -4,6 +4,8 @@ import { Link } from "react-router-dom"
 
 import { useAtomPosition } from "../hooks/useAtomPosition"
 
+import { useNavigate } from 'react-router-dom'
+
 interface AtomProps {
   id: string
   data?: string | null
@@ -42,9 +44,16 @@ interface AtomCardProps {
 export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
   const { atomPosition, isVoting, txHash } = useAtomPosition()
   const thing = atom.value?.thing
+  const navigate = useNavigate();
+  const goToAtomPage = () => {
+    navigate(`/atoms/${atom.id}`)
+  };
 
   return (
-    <div className="border border-border-atom rounded-xl p-4 my-2 claims-hover-effect transition-all duration-200 bg-[hsl(var(--claims-bg))]">
+    <div 
+      className="border border-border-atom rounded-lg p-3 my-1 claims-hover-effect transition-all duration-200 bg-[hsl(var(--claims-bg))]cursor-pointer hover:bg-muted/30"
+      onClick={goToAtomPage}
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           {atom.image ? (
@@ -58,23 +67,29 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
               <Fingerprint className="w-6 h-6" />
             </div>
           )}
-          <div>
-            <h2 className="text-base font-semibold">{atom.label}</h2>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-base font-semibold leading-snug line-clamp-2 break-words">{atom.label}
+            </h2>
             {thing?.name && (
               <p className="text-sm text-muted-foreground">{thing.name}</p>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4 ml-2">
           <p className="flex items-center text-sm text-muted-foreground">
             <UserRound className="w-4 h-4 mr-1" />
             {atom.vault?.position_count ?? 0}
           </p>
           <button
-            onClick={() => atomPosition(BigInt(atom.id))}
+            onClick={(e) => {
+              e.stopPropagation()
+              atomPosition(BigInt(atom.id))
+            }}
             disabled={isVoting}
-            className="text-for border border-for rounded-md px-2 py-0.5 hover:bg-for hover:text-white text-xs"
+            className="border border-gray-400 text-white rounded-md px-2 py-1 text-sm
+             hover:bg-gray-400 hover:text-black hover:scale-110
+             transition-all duration-200 ease-in-out"
             title="Vote for this atom">
             ↑
           </button>
