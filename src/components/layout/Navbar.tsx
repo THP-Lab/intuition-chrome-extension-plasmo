@@ -11,7 +11,7 @@ import IntuitionThemeAvatar from "~/src/components/icons/IntuitionThemeAvatar"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { cn } from "~src/lib/utils"
-import { umamiCollect } from "~src/lib/umami" 
+import { umamiCollect } from "~src/lib/umami"
 
 function Navbar() {
   const { theme, setTheme } = useTheme()

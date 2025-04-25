@@ -9,6 +9,7 @@ import { useCreateTriples } from '~src/hooks/useCreateTriples'
 import { useCreatePosition } from '~src/hooks/useCreatePosition'
 import { getClients } from "~src/lib/viemClient"
 import { Multivault } from "@0xintuition/protocol"
+import { umamiCollect } from "~src/lib/umami"
 
 interface Atom {
   id: string
@@ -117,6 +118,10 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
       setProgressMessage(`Transaction 1/${totalTxCount}: Creating triples...`)
       const { vaultIds: createdVaultIds } = await createTriples()
   
+      umamiCollect("triples_created", "/sidepanel", {
+        vaultIds: createdVaultIds.join(",")
+      }).catch(console.error)
+
       if (!createdVaultIds || createdVaultIds.length !== labeledTriples.length) {
         throw new Error("Mismatch between created triples and local list")
       }
