@@ -21,7 +21,7 @@ export default defineConfig({
     })
   ],
   build: {
-    assetsInlineLimit: 0, // Empêche l'inlining des fichiers
+    assetsInlineLimit: 0,
     rollupOptions: {
       output: {
         assetFileNames: 'assets/[name].[hash].[ext]'
