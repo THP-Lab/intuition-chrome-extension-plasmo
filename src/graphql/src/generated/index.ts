@@ -10745,6 +10745,12 @@ export type GetClaimsByAddressQuery = {
       triple: {
         __typename?: "triples"
         id: any
+        creator?: {
+          __typename?: "accounts"
+          label: string
+          id: string
+          type: any
+        } | null
         subject: {
           __typename?: "atoms"
           id: any
@@ -11086,6 +11092,12 @@ export type GetFollowingsFromAddressQuery = {
       id: any
       vault_id: any
       counter_vault_id: any
+      creator?: {
+        __typename?: "accounts"
+        label: string
+        id: string
+        type: any
+      } | null
       subject: {
         __typename?: "atoms"
         id: any
@@ -13045,6 +13057,83 @@ export type GetTriplesWithPositionsThpQuery = {
   }>
 }
 
+export type GetTriplesWithPositionsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
+  where?: InputMaybe<Triples_Bool_Exp>
+  address?: InputMaybe<Scalars["String"]["input"]>
+}>
+
+export type GetTriplesWithPositionsQuery = {
+  __typename?: "query_root"
+  total: {
+    __typename?: "triples_aggregate"
+    aggregate?: {
+      __typename?: "triples_aggregate_fields"
+      count: number
+    } | null
+  }
+  triples: Array<{
+    __typename?: "triples"
+    id: any
+    vault_id: any
+    counter_vault_id: any
+    creator?: { __typename?: "accounts"; label: string; id: string } | null
+    subject: {
+      __typename?: "atoms"
+      id: any
+      vault_id: any
+      label?: string | null
+      image?: string | null
+    }
+    predicate: {
+      __typename?: "atoms"
+      id: any
+      vault_id: any
+      label?: string | null
+      image?: string | null
+    }
+    object: {
+      __typename?: "atoms"
+      id: any
+      vault_id: any
+      label?: string | null
+      image?: string | null
+    }
+    vault?: {
+      __typename?: "vaults"
+      total_shares: any
+      position_count: number
+      positions: Array<{
+        __typename?: "positions"
+        shares: any
+        account?: {
+          __typename?: "accounts"
+          id: string
+          label: string
+          image?: string | null
+        } | null
+      }>
+    } | null
+    counter_vault?: {
+      __typename?: "vaults"
+      total_shares: any
+      position_count: number
+      positions: Array<{
+        __typename?: "positions"
+        shares: any
+        account?: {
+          __typename?: "accounts"
+          id: string
+          label: string
+          image?: string | null
+        } | null
+      }>
+    } | null
+  }>
+}
+
 export type GetVaultsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars["Int"]["input"]>
   offset?: InputMaybe<Scalars["Int"]["input"]>
@@ -14118,6 +14207,11 @@ export const GetClaimsByAddressDocument = `
       }
       triple {
         id
+        creator {
+          label
+          id
+          type
+        }
         subject {
           id
           label
@@ -14751,6 +14845,11 @@ export const GetFollowingsFromAddressDocument = `
     type
     triples(order_by: {id: desc}) {
       id
+      creator {
+        label
+        id
+        type
+      }
       subject {
         id
         label
@@ -16939,6 +17038,160 @@ useGetTriplesWithPositionsThpQuery.fetcher = (
     GetTriplesWithPositionsThpQuery,
     GetTriplesWithPositionsThpQueryVariables
   >(GetTriplesWithPositionsThpDocument, variables, options)
+
+export const GetTriplesWithPositionsDocument = `
+    query GetTriplesWithPositions($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp, $address: String) {
+  total: triples_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    id
+    creator {
+      label
+      id
+    }
+    vault_id
+    counter_vault_id
+    subject {
+      id
+      vault_id
+      label
+      image
+    }
+    predicate {
+      id
+      vault_id
+      label
+      image
+    }
+    object {
+      id
+      vault_id
+      label
+      image
+    }
+    vault {
+      total_shares
+      position_count
+      positions(where: {account_id: {_eq: $address}}) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
+    }
+    counter_vault {
+      total_shares
+      position_count
+      positions(where: {account_id: {_eq: $address}}) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
+    }
+  }
+}
+    `
+
+export const useGetTriplesWithPositionsQuery = <
+  TData = GetTriplesWithPositionsQuery,
+  TError = unknown
+>(
+  variables?: GetTriplesWithPositionsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetTriplesWithPositionsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<
+      GetTriplesWithPositionsQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useQuery<GetTriplesWithPositionsQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ["GetTriplesWithPositions"]
+        : ["GetTriplesWithPositions", variables],
+    queryFn: fetcher<
+      GetTriplesWithPositionsQuery,
+      GetTriplesWithPositionsQueryVariables
+    >(GetTriplesWithPositionsDocument, variables),
+    ...options
+  })
+}
+
+useGetTriplesWithPositionsQuery.document = GetTriplesWithPositionsDocument
+
+useGetTriplesWithPositionsQuery.getKey = (
+  variables?: GetTriplesWithPositionsQueryVariables
+) =>
+  variables === undefined
+    ? ["GetTriplesWithPositions"]
+    : ["GetTriplesWithPositions", variables]
+
+export const useInfiniteGetTriplesWithPositionsQuery = <
+  TData = InfiniteData<GetTriplesWithPositionsQuery>,
+  TError = unknown
+>(
+  variables: GetTriplesWithPositionsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetTriplesWithPositionsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetTriplesWithPositionsQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetTriplesWithPositionsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ["GetTriplesWithPositions.infinite"]
+            : ["GetTriplesWithPositions.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<
+            GetTriplesWithPositionsQuery,
+            GetTriplesWithPositionsQueryVariables
+          >(GetTriplesWithPositionsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {})
+          })(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetTriplesWithPositionsQuery.getKey = (
+  variables?: GetTriplesWithPositionsQueryVariables
+) =>
+  variables === undefined
+    ? ["GetTriplesWithPositions.infinite"]
+    : ["GetTriplesWithPositions.infinite", variables]
+
+useGetTriplesWithPositionsQuery.fetcher = (
+  variables?: GetTriplesWithPositionsQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetTriplesWithPositionsQuery, GetTriplesWithPositionsQueryVariables>(
+    GetTriplesWithPositionsDocument,
+    variables,
+    options
+  )
 
 export const GetVaultsDocument = `
     query GetVaults($limit: Int, $offset: Int, $orderBy: [vaults_order_by!], $where: vaults_bool_exp) {
@@ -22750,6 +23003,27 @@ export const GetClaimsByAddress = {
                             },
                             {
                               kind: "Field",
+                              name: { kind: "Name", value: "creator" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "type" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
                               name: { kind: "Name", value: "subject" },
                               selectionSet: {
                                 kind: "SelectionSet",
@@ -24730,6 +25004,27 @@ export const GetFollowingsFromAddress = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "creator" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "type" }
+                            }
+                          ]
+                        }
+                      },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "subject" },
@@ -31234,6 +31529,377 @@ export const GetTriplesWithPositionsThp = {
                     kind: "SelectionSet",
                     selections: [
                       { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "vault" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "total_shares" }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "position_count" }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "positions" },
+                        arguments: [
+                          {
+                            kind: "Argument",
+                            name: { kind: "Name", value: "where" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "account_id" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: { kind: "Name", value: "_eq" },
+                                        value: {
+                                          kind: "Variable",
+                                          name: {
+                                            kind: "Name",
+                                            value: "address"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "account" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "counter_vault" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "total_shares" }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "position_count" }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "positions" },
+                        arguments: [
+                          {
+                            kind: "Argument",
+                            name: { kind: "Name", value: "where" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "account_id" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: { kind: "Name", value: "_eq" },
+                                        value: {
+                                          kind: "Variable",
+                                          name: {
+                                            kind: "Name",
+                                            value: "address"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "account" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "image" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetTriplesWithPositions = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetTriplesWithPositions" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "limit" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "offset" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "orderBy" }
+          },
+          type: {
+            kind: "ListType",
+            type: {
+              kind: "NonNullType",
+              type: {
+                kind: "NamedType",
+                name: { kind: "Name", value: "triples_order_by" }
+              }
+            }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "where" }
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "triples_bool_exp" }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            alias: { kind: "Name", value: "total" },
+            name: { kind: "Name", value: "triples_aggregate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "where" }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "count" } }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "triples" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "limit" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "limit" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "offset" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "offset" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "order_by" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "orderBy" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "where" }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "creator" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                    ]
+                  }
+                },
+                { kind: "Field", name: { kind: "Name", value: "vault_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "counter_vault_id" }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "subject" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "vault_id" }
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "predicate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "vault_id" }
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "object" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "vault_id" }
+                      },
                       { kind: "Field", name: { kind: "Name", value: "label" } },
                       { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]

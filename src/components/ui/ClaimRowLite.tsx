@@ -8,10 +8,9 @@ interface ClaimRowLiteProps {
 }
 
 export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
-  const triple = claim ?? claim.triple
+  const triple = (claim.triple as any) ?? claim
 
-  // Extraction sécurisée du créateur
-  const creator = (claim as any)?.triple.creator
+  const creator = (triple as any)?.creator ?? (claim as any)?.creator
 
   const vault = triple.vault ?? {}
   const counterVault = triple.counter_vault ?? {}
@@ -44,10 +43,18 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
       className={cn(
         "flex justify-between items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-3 claims-hover-effect"
       )}>
-      <div className="flex gap-1 items-center flex-wrap flex-1 min-w-0">
-        <PopupAtom key={`${claim.id}-subject`} atom={subject} />
-        <PopupAtom key={`${claim.id}-predicate`} atom={predicate} />
-        <PopupAtom key={`${claim.id}-object`} atom={object} />
+
+      <div className="flex flex-col flex-1 min-w-0">
+        <div className="flex gap-1 items-center flex-wrap">
+          <PopupAtom key={`${claim.id}-subject`} atom={subject} />
+          <PopupAtom key={`${claim.id}-predicate`} atom={predicate} />
+          <PopupAtom key={`${claim.id}-object`} atom={object} />
+        </div>
+        {creator && (
+          <p className="mt-2 text-xs text-gray-500">
+            Created by {creator.label}
+          </p>
+        )}
       </div>
 
       {vaultId && counterVaultId ? (
@@ -67,9 +74,6 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
       ) : (
         <div className="text-xs text-gray-500">Missing ID</div>
       )}
-      <div>
-        <p>create by {creator.label}</p>
-      </div>
     </div>
   )
 }

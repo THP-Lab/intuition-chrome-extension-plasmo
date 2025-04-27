@@ -9,6 +9,11 @@ query GetClaimsByAddress($address: String) {
       }
       triple {
         id
+        creator {
+          label
+          id
+          type
+        }
         subject {
           id
           label
