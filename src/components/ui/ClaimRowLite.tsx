@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom"
 import { cn } from "~src/lib/utils"
 import { PopupAtom } from "./PopupAtom"
 import VoteButtons from "~src/components/VoteButtons"
@@ -50,8 +51,16 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
         </div>
         {creator && (
           <p className="mt-2 text-xs text-gray-500">
-            Created by {creator.label}
-          </p>
+          Created by{' '}
+          <a
+            href={`https://beta.portal.intuition.systems/app/profile/${creator.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline"
+          >
+            {creator.label}
+          </a>
+        </p>
         )}
       </div>
 
