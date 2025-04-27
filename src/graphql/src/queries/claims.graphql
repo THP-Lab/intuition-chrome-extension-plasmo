@@ -112,6 +112,13 @@ query GetClaimsByUri($uri: String, $address: String) {
           }
         }
         triple_id
+        triple {
+          creator {
+            label
+            id
+            type
+          }
+        }
         shares
         counter_shares
       }
@@ -163,6 +170,13 @@ query GetClaimsByUri($uri: String, $address: String) {
           }
         }
         triple_id
+        triple {
+          creator {
+            label
+            id
+            type
+          }
+        }
         shares
         counter_shares
       }

@@ -8,7 +8,10 @@ interface ClaimRowLiteProps {
 }
 
 export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
-  const triple = claim.triple ?? claim
+  const triple = claim ?? claim.triple
+
+  // Extraction sécurisée du créateur
+  const creator = (claim as any)?.triple.creator
 
   const vault = triple.vault ?? {}
   const counterVault = triple.counter_vault ?? {}
@@ -32,6 +35,9 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
   const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
   const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
+
+
+  console.log("LE CREATOOOOOOOOOOOOOOOOOOOORR",creator)
 
   return (
     <div
@@ -61,6 +67,9 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
       ) : (
         <div className="text-xs text-gray-500">Missing ID</div>
       )}
+      <div>
+        <p>create by {creator.label}</p>
+      </div>
     </div>
   )
 }

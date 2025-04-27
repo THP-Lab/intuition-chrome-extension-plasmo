@@ -10862,6 +10862,15 @@ export type GetClaimsByUriQuery = {
           }
           positions: Array<{ __typename?: "positions"; shares: any }>
         }
+        triple: {
+          __typename?: "triples"
+          creator?: {
+            __typename?: "accounts"
+            label: string
+            id: string
+            type: any
+          } | null
+        }
       }>
     }
     as_subject_claims_aggregate: {
@@ -10920,6 +10929,15 @@ export type GetClaimsByUriQuery = {
             } | null
           }
           positions: Array<{ __typename?: "positions"; shares: any }>
+        }
+        triple: {
+          __typename?: "triples"
+          creator?: {
+            __typename?: "accounts"
+            label: string
+            id: string
+            type: any
+          } | null
         }
       }>
     }
@@ -14287,6 +14305,13 @@ export const GetClaimsByUriDocument = `
           }
         }
         triple_id
+        triple {
+          creator {
+            label
+            id
+            type
+          }
+        }
         shares
         counter_shares
       }
@@ -14338,6 +14363,13 @@ export const GetClaimsByUriDocument = `
           }
         }
         triple_id
+        triple {
+          creator {
+            label
+            id
+            type
+          }
+        }
         shares
         counter_shares
       }
@@ -23486,6 +23518,36 @@ export const GetClaimsByUri = {
                             },
                             {
                               kind: "Field",
+                              name: { kind: "Name", value: "triple" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "creator" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "label" }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "id" }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "type" }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
                               name: { kind: "Name", value: "shares" }
                             },
                             {
@@ -23799,6 +23861,36 @@ export const GetClaimsByUri = {
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "triple_id" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "triple" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "creator" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "label" }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "id" }
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "type" }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
                             },
                             {
                               kind: "Field",
