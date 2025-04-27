@@ -12,15 +12,15 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
   const creator = (triple as any)?.creator ?? (claim as any)?.creator
 
-  const vault = triple.vault ?? {}
-  const counterVault = triple.counter_vault ?? {}
-
   const subject = triple.subject ?? claim.subject
   const predicate = triple.predicate ?? claim.predicate
   const object = triple.object ?? claim.object
 
-  const vaultId = vault.id ?? claim.vault_id
-  const counterVaultId = counterVault.id ?? claim.counter_vault_id
+  const vault = claim.vault ?? (claim.triple as any)?.vault ?? {}
+  const counterVault = claim.counter_vault ?? (claim.triple as any)?.counter_vault ?? {}
+
+  const vaultId = vault.id ?? (claim as any).vault_id
+  const counterVaultId = counterVault.id ?? (claim as any).counter_vault_id
 
   const numPositionsFor =
     vault.positions_aggregate?.aggregate?.count ??
@@ -35,8 +35,6 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
   const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
 
-
-  console.log("LE CREATOOOOOOOOOOOOOOOOOOOORR",creator)
 
   return (
     <div
