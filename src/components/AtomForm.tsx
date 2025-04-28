@@ -5,6 +5,7 @@ import { parseEther } from "viem"
 import { getClients } from "../lib/viemClient"
 import { LinkTypeSelector } from "./LinkTypeSelector"
 import React, { forwardRef, useEffect, useState, useRef, useImperativeHandle } from "react"
+import { umamiCollect } from "~src/lib/umami"
 
 const AtomForm = forwardRef((_, ref) => {
   const { mutateAsync: pinThing } = usePinThingMutation()
@@ -13,6 +14,7 @@ const AtomForm = forwardRef((_, ref) => {
   const [description, setDescription] = useState("")
   const [image, setImage] = useState("")
   const [url, setUrl] = useState("")
+  const [rawUrl, setRawUrl] = useState("")
 
   const [progressMessage, setProgressMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -21,12 +23,14 @@ const AtomForm = forwardRef((_, ref) => {
   const [linkType, setLinkType] = useState<"url" | "domain">("url")
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
   const [initialUrlCaptured, setInitialUrlCaptured] = useState(false)
+  
 
   useImperativeHandle(ref, () => ({
     resetForm() {
       setName("")
       setDescription("")
       setImage("")
+      setRawUrl("")
       setUrl("")
       setProgressMessage(null)
       setErrorMessage(null)
@@ -52,8 +56,9 @@ const AtomForm = forwardRef((_, ref) => {
       if (tab.url.startsWith("chrome-extension://")) return
 
       const pageUrl = tab.url
-      const finalUrl = linkType === "url" ? pageUrl : new URL(pageUrl).hostname
-      setUrl(finalUrl)
+      setRawUrl(pageUrl)
+      setUrl(linkType === "url" ? pageUrl : new URL(pageUrl).hostname)
+
       setInitialUrlCaptured(true)
       
       chrome.scripting.executeScript(
@@ -100,6 +105,11 @@ const AtomForm = forwardRef((_, ref) => {
     }
   }, [linkType])
 
+  useEffect(() => {
+    if (!rawUrl) return
+    setUrl(linkType === "url" ? rawUrl : new URL(rawUrl).hostname)
+  }, [linkType, rawUrl])
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setIsSubmitting(true)
@@ -133,6 +143,12 @@ const AtomForm = forwardRef((_, ref) => {
         wait: true
       })
       setProgressMessage(` Atom créé ! Vault ID: ${vaultId} | Tx: ${hash}`)
+      
+      umamiCollect("atom_created", "/sidepanel", {
+        vaultId,
+        txHash: hash
+      }).catch(console.error)
+
     } catch (error: any) {
       console.error(error)
       setErrorMessage(error.message || "An error occurred.")
