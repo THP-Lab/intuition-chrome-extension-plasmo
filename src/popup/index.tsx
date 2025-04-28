@@ -1,4 +1,5 @@
-import React from "react"
+import React, { useEffect } from "react"
+import { umamiCollect } from "../lib/umami"
 
 import Content from "~src/components/content"
 import IntuitionPortalPanel from "~src/components/icons/intuition_portal_panel"
@@ -11,6 +12,10 @@ function IndexPopup() {
   const handleSidePanel = () => {
     chrome.runtime.sendMessage({ type: "open_sidepanel" })
   }
+
+  useEffect(() => {
+    umamiCollect("pageview", "/popup")
+  }, [])
 
   const portalX = 545
   const portalY = 55

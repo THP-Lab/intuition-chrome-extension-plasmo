@@ -5,6 +5,7 @@ import { parseEther } from "viem"
 import { getClients } from "../lib/viemClient"
 import { LinkTypeSelector } from "./LinkTypeSelector"
 import React, { forwardRef, useEffect, useState, useRef, useImperativeHandle } from "react"
+import { umamiCollect } from "~src/lib/umami"
 
 const AtomForm = forwardRef((_, ref) => {
   const { mutateAsync: pinThing } = usePinThingMutation()
@@ -22,6 +23,7 @@ const AtomForm = forwardRef((_, ref) => {
   const [linkType, setLinkType] = useState<"url" | "domain">("url")
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
   const [initialUrlCaptured, setInitialUrlCaptured] = useState(false)
+  
 
   useImperativeHandle(ref, () => ({
     resetForm() {
@@ -141,6 +143,12 @@ const AtomForm = forwardRef((_, ref) => {
         wait: true
       })
       setProgressMessage(` Atom créé ! Vault ID: ${vaultId} | Tx: ${hash}`)
+      
+      umamiCollect("atom_created", "/sidepanel", {
+        vaultId,
+        txHash: hash
+      }).catch(console.error)
+
     } catch (error: any) {
       console.error(error)
       setErrorMessage(error.message || "An error occurred.")
