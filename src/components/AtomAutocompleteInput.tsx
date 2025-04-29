@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useGetAtomsQuery } from '@0xintuition/graphql';
+import { usePageMetadata } from "../hooks/usePageMetadata"
 import AtomForm from './AtomForm'
+import { Plus } from "lucide-react"
+
 
 interface Atom {
   id: string;
@@ -23,6 +26,8 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
   const [newAtomLabel, setNewAtomLabel] = useState('');
   const inputRef = useRef<HTMLInputElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [creationMode, setCreationMode] = useState<"input" | "page" | null>(null)
+  const pageMeta = usePageMetadata()
 
   const [debouncedSearch] = useDebounce(search, 300);
 
@@ -103,27 +108,41 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
       />
       {isOpen && (
         <ul className="absolute z-10 bg-[hsl(var(--navbar-bg))] text-foreground border border-border rounded w-full max-h-60 overflow-y-auto shadow-md">
-          {atoms.length > 0 && !creatingAtom &&
-            atoms.map((atom) => (
-              <li
-                key={atom.id}
-                className="p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                onClick={() => handleSelect(atom)}
-              >
-                {atom.emoji && <span className="mr-2">{atom.emoji}</span>}
-                <span>{atom.label}</span>
-                <span className="text-xs text-muted-foreground ml-2">({atom.id})</span>
-              </li>
-            ))
-          }
-
-          {atoms.length === 0 && !creatingAtom && (
+          {atoms.map((atom) => (
             <li
-              className="p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer text-sm italic"
-              onClick={() => setCreatingAtom(true)}
+              key={atom.id}
+              className="p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              onClick={() => handleSelect(atom)}
             >
-              Create « {search} »
+              {atom.emoji && <span className="mr-2">{atom.emoji}</span>}
+              <span>{atom.label}</span>
+              <span className="text-xs text-muted-foreground ml-2">({atom.id})</span>
             </li>
+          ))}
+
+          { !creatingAtom && (
+            <>
+              <li
+                className="flex items-center gap-2 p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer italic"
+                onClick={() => {
+                  setCreatingAtom(true)
+                  setCreationMode("input")
+                }}
+              >
+                <Plus size={12} />
+                Create new atom « {search} »
+              </li>
+              <li
+                className="flex items-center gap-2 p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer italic"
+                onClick={() => {
+                  setCreatingAtom(true)
+                  setCreationMode("page")
+                }}
+              >
+                <Plus size={12} />
+                Create from current page {pageMeta.title ? `: “${pageMeta.title}”` : ""}
+              </li>
+            </>
           )}
 
           {creatingAtom && (
@@ -132,12 +151,18 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
                 onCreated={(atom) => {
                   handleSelect(atom)
                   setCreatingAtom(false)
+                  setCreationMode(null)
                 }}
-                initialName={newAtomLabel}
+                initialName={
+                  creationMode === "input" ? search :
+                  creationMode === "page" ? pageMeta.title : ""
+                }
+                initialDescription={creationMode === "page" ? pageMeta.description : ""}
+                initialImage={creationMode === "page" ? pageMeta.favicon : ""}
+                initialUrl={creationMode === "page" ? pageMeta.url : ""}
               />
             </li>
           )}
-
         </ul>
       )}
     </div>

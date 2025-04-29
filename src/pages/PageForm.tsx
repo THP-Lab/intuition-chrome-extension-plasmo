@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef } from "react"
 import * as Switch from "@radix-ui/react-switch"
 import { RefreshCw } from 'lucide-react';
 
