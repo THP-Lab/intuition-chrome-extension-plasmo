@@ -7,10 +7,15 @@ import { LinkTypeSelector } from "./LinkTypeSelector"
 import React, { forwardRef, useEffect, useState, useRef, useImperativeHandle } from "react"
 import { umamiCollect } from "~src/lib/umami"
 
-const AtomForm = forwardRef((_, ref) => {
+interface AtomFormProps {
+  onCreated: (atom: Atom) => void;
+  initialName?: string;
+}
+
+const AtomForm = forwardRef<HTMLFormElement, AtomFormProps>(({ onCreated, initialName = "" }, ref) => {
   const { mutateAsync: pinThing } = usePinThingMutation()
 
-  const [name, setName] = useState("")
+  const [name, setName] = useState(initialName)
   const [description, setDescription] = useState("")
   const [image, setImage] = useState("")
   const [url, setUrl] = useState("")
@@ -35,7 +40,6 @@ const AtomForm = forwardRef((_, ref) => {
       setProgressMessage(null)
       setErrorMessage(null)
       setIsSubmitting(false)
-
       descriptionRef.current?.style.setProperty("height", "auto")
     }
   }))
@@ -144,6 +148,14 @@ const AtomForm = forwardRef((_, ref) => {
       })
       setProgressMessage(` Atom créé ! Vault ID: ${vaultId} | Tx: ${hash}`)
       
+      const atom = {
+        id: hash, // ou autre identifiant temporaire si hash ≠ id
+        label: name,
+        emoji: null,
+        vault_id: vaultId.toString(),
+      }
+      onCreated(atom)
+
       umamiCollect("atom_created", "/sidepanel", {
         vaultId,
         txHash: hash
@@ -219,7 +231,7 @@ const AtomForm = forwardRef((_, ref) => {
       />
       
       <button
-        type="submit"
+        onClick={handleSubmit}
         disabled={isSubmitting}
         className="w-full px-4 py-2 text-foreground btn-atom-form-hover-effect rounded bg-[hsl(var(--btn-atom-form-bg))]">
         {isSubmitting ? "Submitting..." : "Create Atom"}
