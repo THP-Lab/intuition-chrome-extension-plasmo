@@ -57,6 +57,13 @@ const AtomDetailPage = () => {
     ...claim.triple
   })) ?? []
 
+  const claimsWithoutDuplicates = claims.filter((claim, index, self) => index === self.findIndex((c) => 
+    c.subject?.id === claim.subject?.id &&
+    c.predicate?.id === claim.predicate?.id &&
+    c.object?.id === claim.object?.id
+  )
+ )
+
   const allTags = claims.filter((claim) => claim.predicate.label === "has tag").map((claim) => claim.object.label)
   const tags = [...new Set(allTags)]
 
@@ -64,6 +71,7 @@ const AtomDetailPage = () => {
   console.log("atomId:", stableId)
   console.log("ClaimsData", claimsData?.claims_aggregate?.nodes)
   console.log("Claims:", claims)
+  console.log("claimsWithoutDuplicates:", claimsWithoutDuplicates)
   console.log("Tags :", tags);
 
 
@@ -91,7 +99,7 @@ const AtomDetailPage = () => {
           <p className="mt-2 text-sm text-red-500">Error loading claims</p>
         ) : (
           <div className="mt-3 space-y-2">
-            {claims.map((claim, index) => (
+            {claimsWithoutDuplicates.map((claim, index) => (
               <ClaimRowLite key={`${claim.id}-${index}`} claim={claim} />
             ))}
           </div>
