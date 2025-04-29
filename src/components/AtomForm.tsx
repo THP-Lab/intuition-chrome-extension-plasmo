@@ -10,16 +10,20 @@ import { umamiCollect } from "~src/lib/umami"
 interface AtomFormProps {
   onCreated: (atom: Atom) => void;
   initialName?: string;
+  initialDescription?: string;
+  initialImage?: string;
+  initialUrl?: string;
 }
 
-const AtomForm = forwardRef<HTMLFormElement, AtomFormProps>(({ onCreated, initialName = "" }, ref) => {
+const AtomForm = forwardRef<HTMLFormElement, AtomFormProps>(({ onCreated, initialName = "", initialDescription = "", initialImage = "", initialUrl = "" }, ref) => {
   const { mutateAsync: pinThing } = usePinThingMutation()
 
-  const [name, setName] = useState(initialName)
-  const [description, setDescription] = useState("")
-  const [image, setImage] = useState("")
-  const [url, setUrl] = useState("")
-  const [rawUrl, setRawUrl] = useState("")
+  const [name, setName] = useState(initialName ?? "")
+  const [description, setDescription] = useState(initialDescription ?? "")
+  const [image, setImage] = useState(initialImage ?? "")
+  const [url, setUrl] = useState(initialUrl ?? "")
+  
+  const [rawUrl] = useState(initialUrl ?? "")
 
   const [progressMessage, setProgressMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -50,68 +54,22 @@ const AtomForm = forwardRef<HTMLFormElement, AtomFormProps>(({ onCreated, initia
     e.target.style.height = e.target.scrollHeight + "px"
   }
   
-
   useEffect(() => {
-    const fetchPageDetails = async () => {
-      if (initialUrlCaptured) return
-
-      const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
-      if (!tab?.id || !tab.url) return
-      if (tab.url.startsWith("chrome-extension://")) return
-
-      const pageUrl = tab.url
-      setRawUrl(pageUrl)
-      setUrl(linkType === "url" ? pageUrl : new URL(pageUrl).hostname)
-
-      setInitialUrlCaptured(true)
-      
-      chrome.scripting.executeScript(
-        {
-          target: { tabId: tab.id },
-          func: () => {
-            const getMeta = (name: string) =>
-              document.querySelector(`meta[name="${name}"]`)?.getAttribute("content")
-
-            return {
-              title: document.title,
-              description: getMeta("description") || "",
-              favicon: [...document.querySelectorAll("link[rel~='icon']")]
-                .map((el) => (el as HTMLLinkElement).href)[0] || ""
-            }
-          }
-        },
-        (results) => {
-          const result = results?.[0]?.result
-          if (result) {
-            setName(result.title || "")
-            setDescription(result.description || "")
-            setImage(result.favicon || "")
-          
-            setTimeout(() => {
-              if (descriptionRef.current) {
-                descriptionRef.current.style.height = "auto"
-                descriptionRef.current.style.height = descriptionRef.current.scrollHeight + "px"
-              }
-            }, 0)
-          }
-        }
-      )
+    if (descriptionRef.current) {
+      descriptionRef.current.style.height = "auto"
+      descriptionRef.current.style.height = `${descriptionRef.current.scrollHeight}px`
     }
-
-    fetchPageDetails()
-
-    chrome.tabs.onUpdated.addListener(fetchPageDetails)
-    chrome.tabs.onActivated.addListener(fetchPageDetails)
+  }, [description])
   
-    return () => {
-      chrome.tabs.onUpdated.removeListener(fetchPageDetails)
-      chrome.tabs.onActivated.removeListener(fetchPageDetails)
-    }
-  }, [linkType])
-
   useEffect(() => {
     if (!rawUrl) return
-    setUrl(linkType === "url" ? rawUrl : new URL(rawUrl).hostname)
+    try {
+      const parsed = new URL(rawUrl)
+      const formatted = linkType === "url" ? parsed.href : parsed.hostname
+      setUrl(formatted)
+    } catch (err) {
+      setUrl(rawUrl) 
+    }
   }, [linkType, rawUrl])
 
   async function handleSubmit(e: React.FormEvent) {

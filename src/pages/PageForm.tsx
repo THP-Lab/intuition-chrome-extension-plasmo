@@ -1,15 +1,17 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import * as Switch from "@radix-ui/react-switch"
 import { RefreshCw } from 'lucide-react';
 
 import AtomForm from "../components/AtomForm"
 import TripleForm from "../components/TripleForm"
+import { usePageMetadata } from "../hooks/usePageMetadata"
 
 function PageForm() {
   const [showTripleForm, setShowTripleForm] = useState(false)
 
   const atomFormRef = useRef(null)
   const tripleFormRef = useRef(null)
+  const meta = usePageMetadata()
 
   const handleResetForms = () => {
     if (showTripleForm && tripleFormRef.current?.resetForm) {
@@ -53,7 +55,14 @@ function PageForm() {
   {showTripleForm ? (
     <TripleForm ref={tripleFormRef} />
   ) : (
-    <AtomForm ref={atomFormRef} />
+    <AtomForm
+      key={meta.url || "default"}
+      ref={atomFormRef}
+      initialName={meta.title}
+      initialDescription={meta.description}
+      initialImage={meta.favicon}
+      initialUrl={meta.url}
+    />
   )}
 </div>
   )
