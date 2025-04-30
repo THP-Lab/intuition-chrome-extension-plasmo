@@ -1,5 +1,5 @@
 import createMetaMaskProvider from 'metamask-extension-provider'
-import { createWalletClient, custom, createPublicClient, http } from 'viem'
+import { createWalletClient, custom, createPublicClient } from 'viem'
 import { SELECTED_CHAIN } from './config'
 
 export const getClients = async () => {
@@ -28,7 +28,7 @@ export const getClients = async () => {
 
   const publicClient = createPublicClient({
     chain: SELECTED_CHAIN,
-    transport: http(),
+    transport: custom(provider),
   })
 
   console.log("Clients ready.")
