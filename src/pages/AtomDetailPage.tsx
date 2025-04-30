@@ -6,6 +6,7 @@ import { useStorage } from "@plasmohq/storage/hook"
 import AtomDisplay from "~src/components/ui/AtomDisplay"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import { useGetClaimsByAtomQuery } from "~src/graphql/src"
+import Tags from "~src/components/ui/Tags";
 
 const AtomDetailPage = () => {
   const params = useParams<{ id: string }>()
