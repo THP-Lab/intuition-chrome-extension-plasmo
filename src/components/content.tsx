@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import React, { type ReactNode } from "react"
+import React, { useEffect, type ReactNode } from "react"
 import {
   Route,
   BrowserRouter as Router,
   Routes,
-  Navigate
+  Navigate  
 } from "react-router-dom"
 
 import { configureClient } from "~src/graphql/src"
@@ -41,6 +41,21 @@ type ContentProps = {
 }
 
 const Content = ({ children }: ContentProps) => {
+  const UMAMI_ORIGIN    = process.env.PLASMO_PUBLIC_UMAMI_ORIGIN!
+  const UMAMI_WEBSITE_ID = process.env.PLASMO_PUBLIC_UMAMI_WEBSITE_ID!
+
+  useEffect(() => {
+    const s = document.createElement("script")
+    s.setAttribute("defer", "")
+    s.src = `${UMAMI_ORIGIN}/script.js`
+    s.setAttribute("data-website-id", UMAMI_WEBSITE_ID)
+  
+    document.head.appendChild(s)
+    return () => {
+      document.head.removeChild(s)
+    }
+  }, [])
+
   return (
     <QueryClientProvider client={queryClient}>
       <AtomSelectionProvider>
