@@ -10722,6 +10722,14 @@ export type GetAtomsByCreatorQuery = {
       total_shares: any
       current_share_price: any
     } | null
+    as_subject_claims_aggregate: {
+      __typename?: "claims_aggregate"
+      nodes: Array<{
+        __typename?: "claims"
+        predicate: { __typename?: "atoms"; label?: string | null }
+        object: { __typename?: "atoms"; label?: string | null }
+      }>
+    }
   }>
 }
 
@@ -14112,6 +14120,16 @@ export const GetAtomsByCreatorDocument = `
       position_count
       total_shares
       current_share_price
+    }
+    as_subject_claims_aggregate {
+      nodes {
+        predicate {
+          label
+        }
+        object {
+          label
+        }
+      }
     }
   }
 }
@@ -22896,6 +22914,50 @@ export const GetAtomsByCreator = {
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "current_share_price" }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "as_subject_claims_aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "nodes" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "predicate" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "object" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
                       }
                     ]
                   }

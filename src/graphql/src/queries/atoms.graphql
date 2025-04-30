@@ -23,6 +23,17 @@ query GetAtomsByCreator($address: String!) {
       total_shares
       current_share_price
     }
+
+    as_subject_claims_aggregate {
+      nodes {
+        predicate {
+          label
+        }
+        object {
+          label
+        }
+      }
+    }
   }
 }
 
