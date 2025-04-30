@@ -50,8 +50,8 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
   };
 
   return (
-    <div 
-      className="border border-border-atom rounded-lg p-3 my-1 claims-hover-effect transition-all duration-200 bg-[hsl(var(--claims-bg))]cursor-pointer hover:bg-muted/30"
+    <div
+      className="border border-border/10 rounded-xl p-3 my-1 cursor-pointer bg-[hsl(var(--claims-bg))] claims-hover-effect transition-all duration-200"
       onClick={goToAtomPage}
     >
       <div className="flex items-center justify-between">

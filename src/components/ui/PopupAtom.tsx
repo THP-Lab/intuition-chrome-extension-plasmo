@@ -111,7 +111,7 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
             >
               {renderAtomImage()}
               <span
-                className="truncate max-w-[200px] overflow-hidden whitespace-nowrap block"
+                className="truncate max-w-[120px] overflow-hidden whitespace-nowrap block"
                 title={label}
               >
                 {label}
