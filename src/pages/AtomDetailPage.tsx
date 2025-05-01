@@ -2,7 +2,6 @@ import { useGetAtomQuery } from "@0xintuition/graphql"
 import React from "react"
 import { useParams } from "react-router-dom"
 import { useStorage } from "@plasmohq/storage/hook"
-
 import AtomDisplay from "~src/components/ui/AtomDisplay"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import { useGetClaimsByAtomQuery } from "~src/graphql/src"
@@ -65,6 +64,7 @@ const AtomDetailPage = () => {
  )
 
   const allTags = claims.filter((claim) => claim.predicate.label === "has tag").map((claim) => claim.object.label)
+
   const tags = [...new Set(allTags)]
 
   console.log("walletAddress:", walletAddress)
