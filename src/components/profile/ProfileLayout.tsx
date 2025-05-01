@@ -43,9 +43,9 @@ const ProfileLayout = () => {
     <div className="p-4 space-y-2">
       <div className="flex items-center justify-between w-full">
         <h1 className="text-2xl font-bold text-foreground">My Profile</h1>
-        <p>{address}</p>
         <WalletConnectionButton />
       </div>
+      <p>{address}</p>
 
 
       <AccountSection
