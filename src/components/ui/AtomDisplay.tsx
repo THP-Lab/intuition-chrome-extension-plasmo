@@ -1,6 +1,7 @@
 import { Fingerprint, UserRound } from "lucide-react"
 import React from "react"
 import { Link } from "react-router-dom"
+import Tags from "./Tags"
 
 interface AtomDisplayProps {
   atom: {
@@ -72,18 +73,7 @@ const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom, tags }) => {
         </Link>
       )}
 
-      {tags && tags.length > 0 && (
-        <div className="mt-6 flex flex-wrap gap-2">
-          {tags.map((tag, index) =>  (
-            <span 
-              key={index}
-              className="bg-gray-700 text-white text-xs px-2 py-1 rounded-full" 
-            >
-              {tag}
-          </span>
-      ))}
-      </div>
-      )}
+      <Tags tags={tags} />
     </div>
     )
   }

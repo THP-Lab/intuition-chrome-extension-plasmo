@@ -41,6 +41,7 @@ function Home() {
   const { data, isLoading, error } = useGetClaimsByUriQuery({uri: currentUrl, address: walletAddress })
   const atoms = data?.atoms ?? []
   console.log("current wallet address:", walletAddress);
+  console.log("Data :", data)
 
   const claims = Array.from(
     new Map(
@@ -50,7 +51,23 @@ function Home() {
     ).values()
   )
  
-  console.log(claims);
+  console.log("Claims :", claims);
+  
+  const atomsWithTags = atoms.map(atom => {
+    const tags = atom.as_subject_claims_aggregate.nodes
+    .filter(claim => claim.predicate.label === "has tag")
+      .map(claim => claim.object?.label)
+      .filter(Boolean)
+
+    const uniqueTags = [ ...new Set(tags)]
+
+    return {
+      ...atom,
+      tags: uniqueTags
+    }
+  })
+      
+  console.log("Tags :", atomsWithTags)
 
   const tabs = [
     {
@@ -89,9 +106,9 @@ function Home() {
       content: 
       <div>
         {isLoading ? "Chargement...": (typeof data !== "undefined" &&  atoms.length != 0)?
-          (atoms.map((atom) => {
+          (atomsWithTags.map((atom) => {
             return (
-              <AtomCard key={atom.id} atom={atom} />
+              <AtomCard key={atom.id} atom={atom} tags={atom.tags} />
             );
           })):
           (

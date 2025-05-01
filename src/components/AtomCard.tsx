@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"
 import { useAtomPosition } from "../hooks/useAtomPosition"
 
 import { useNavigate } from 'react-router-dom'
+import Tags from "./ui/Tags"
 
 interface AtomProps {
   id: string
@@ -39,9 +40,10 @@ interface AtomProps {
 
 interface AtomCardProps {
   atom: AtomProps
+  tags?: string[] 
 }
 
-export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
+export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
   const { atomPosition, isVoting, txHash } = useAtomPosition()
   const thing = atom.value?.thing
   const navigate = useNavigate();
@@ -111,6 +113,8 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom }) => {
           {thing.url}
         </Link>
       )}
+
+      {tags && <Tags tags={tags} />}
 
       {txHash && <p className="text-green-500 text-xs mt-2">Tx: {txHash}</p>}
     </div>
