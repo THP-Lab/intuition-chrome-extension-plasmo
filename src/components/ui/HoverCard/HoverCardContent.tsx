@@ -56,7 +56,7 @@ export const HoverCardContent = forwardRef<HTMLDivElement, HoverCardContentProps
           className={cn(
             "hover-card-content",
             "z-[20000] rounded-lg shadow-lg",
-            "w-80 p-4",
+            "w-80",
             className
           )}
           style={getPositionStyles()}
