@@ -32,7 +32,6 @@ import ProfileLayout from "./profile/ProfileLayout"
 
 import "../styles/global.css"
 import { ThemeProvider } from "./ThemeProvider"
-import VideoBanner from "./HomeBanner/VideoBanner"
 
 const API_URL = "https://prod.base.intuition-api.com/v1/graphql"
 configureClient({ apiUrl: API_URL })
@@ -103,7 +102,6 @@ const Content = ({ children }: ContentProps) => {
               <Navbar />
             ) : (
               <>
-                <VideoBanner />
                 <NavArc />
               </>
             )}
