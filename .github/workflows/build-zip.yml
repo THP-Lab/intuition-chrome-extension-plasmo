@@ -21,6 +21,10 @@ jobs:
       - run: pnpm install --frozen-lockfile --prefer-offline
 
       - run: pnpm build
+        env:
+          PLASMO_PUBLIC_UMAMI_API_KEY: ${{ secrets.PLASMO_PUBLIC_UMAMI_API_KEY }}
+          PLASMO_PUBLIC_UMAMI_WEBSITE_ID: ${{ vars.PLASMO_PUBLIC_UMAMI_WEBSITE_ID }}
+          PLASMO_PUBLIC_UMAMI_ORIGIN: ${{ vars.PLASMO_PUBLIC_UMAMI_ORIGIN }}
       - name: Zip Chrome artifact
         run: cd build/chrome-mv3-prod && zip -r ../chrome-extension.zip *
       - name: Upload Chrome artifact
