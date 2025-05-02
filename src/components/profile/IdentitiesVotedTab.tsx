@@ -1,7 +1,8 @@
-import { useGetAtomsWithPositionsQuery } from "@0xintuition/graphql"
 import React from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
+
+import { useGetAtomsWithPositionsQuery } from "~src/graphql/src"
 
 import AtomCard from "../AtomCard"
 
@@ -22,8 +23,23 @@ const IdentitiesVotedTab = () => {
     { enabled: !!account }
   )
 
+  const atomsWithTags = data?.atoms.map((atom) => {
+    const tags = atom.as_subject_claims_aggregate?.nodes
+      ?.filter((claim) => claim.predicate.label === "has tag")
+      .map((claim) => claim.object?.label)
+      .filter(Boolean)
+
+    const uniqueTags = [...new Set(tags)]
+
+    return {
+      ...atom,
+      tags: uniqueTags
+    }
+  })
+
   console.log("Wallet:", account)
   console.log("Data:", data)
+  console.log("Atoms with Claims:", data?.atoms)
 
   if (!account) return <div>No connected wallet</div>
   if (isLoading) return <div>Loading your voted identities...</div>
@@ -43,8 +59,10 @@ const IdentitiesVotedTab = () => {
         </span>
       </div>
 
-      {atoms.map((atom) =>
-        atom?.id ? <AtomCard key={atom.id} atom={atom} /> : null
+      {atomsWithTags.map((atom) =>
+        atom?.id ? (
+          <AtomCard key={atom.id} atom={atom} tags={atom.tags} />
+        ) : null
       )}
     </div>
   )

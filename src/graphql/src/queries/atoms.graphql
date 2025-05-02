@@ -23,6 +23,70 @@ query GetAtomsByCreator($address: String!) {
       total_shares
       current_share_price
     }
+
+    as_subject_claims_aggregate {
+      nodes {
+        predicate {
+          label
+        }
+        object {
+          label
+        }
+      }
+    }
+  }
+}
+
+
+query GetAtomsWithPositions(
+  $limit: Int
+  $offset: Int
+  $orderBy: [atoms_order_by!]
+  $where: atoms_bool_exp
+  $address: String
+) {
+  total: atoms_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...AtomMetadata
+    ...AtomTxn
+    vault {
+      position_count
+      total_shares
+      current_share_price
+      total: positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions(where: { account_id: { _eq: $address } }) {
+        id
+        account {
+          label
+          id
+        }
+        shares
+      }
+    }
+    creator {
+      ...AccountMetadata
+    }
+    as_subject_claims_aggregate {
+      nodes {
+        predicate {
+          label
+        }
+        object {
+          label
+        }
+      }
+    }
   }
 }
 
