@@ -1,13 +1,15 @@
 {
   "name": "intuition-chrome-extension",
   "displayName": "Intuition Chrome Extension",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "description": "",
   "author": "THP-Lab.org",
   "scripts": {
-    "dev": "plasmo dev",
-    "build": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3",
-    "build:firefox": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2",
+    "dev": "plasmo dev && cd build/chrome-mv3-dev && pnpm cp-umami-script",
+    "build": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3 && pnpm cp-umami-script",
+    "cp-umami-script": "cd build/chrome-mv3-prod && curl -o umami.js https://cloud.umami.is/script.js",
+    "build:firefox": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2 && pnpm cp-umami-script:firefox",
+    "cp-umami-script:firefox": "cd build/firefox-mv2-prod && curl -o umami.js https://cloud.umami.is/script.js",
     "package": "plasmo package",
     "graphql:build": " cd src/graphql && NODE_ENV=production graphql-codegen --config codegen.ts"
   },
@@ -71,11 +73,11 @@
     "host_permissions": [
       "https://*/*",
       "https://cloud.umami.is/*",
+      "https://api-gateway.umami.dev/*",
       "https://prod.base.intuition-api.com/*",
       "chrome-extension://*/*",
       "ws://localhost:*",
       "wws://localhost:*"
-
     ],
     "web_accessible_resources": [
       {
@@ -95,10 +97,9 @@
       "sidePanel"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com/ https://cloud.umami.is/ ws://localhost:* wss://localhost:*;"
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com/ https://cloud.umami.is/  https://api-gateway.umami.dev/ ws://localhost:* wss://localhost:*;"
     }
   },
-
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",
