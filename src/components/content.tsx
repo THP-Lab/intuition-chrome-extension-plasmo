@@ -1,4 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ApolloProvider } from '@apollo/client'
+import { apolloClient } from '~src/lib/apolo-client'
 import React, { type ReactNode, useEffect } from "react"
 import {
   Route,
@@ -60,53 +62,55 @@ const Content = ({ children }: ContentProps) => {
   const { navType } = useNavigation()
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AtomSelectionProvider>
-        <Router>
-          {navType === "classic" && <NavbarUp />}
-            <main className="flex-1 overflow-auto pb-24 pt-14">
-              {children}
-              <div className="container mx-auto space-y-8 p-2">
-                <Routes>
-                  <Route path="*" element={<Home />} />
-                  <Route path="/" element={<Home />} />
+    <ApolloProvider client={apolloClient}>
+      <QueryClientProvider client={queryClient}>
+        <AtomSelectionProvider>
+          <Router>
+            {navType === "classic" && <NavbarUp />}
+              <main className="flex-1 overflow-auto pb-24 pt-14">
+                {children}
+                <div className="container mx-auto space-y-8 p-2">
+                  <Routes>
+                    <Route path="*" element={<Home />} />
+                    <Route path="/" element={<Home />} />
 
-                  <Route path="/profile" element={<Profile />}>
-                    <Route index element={<Navigate to="/profile/claims/all" />} />
-                    <Route element={<ProfileLayout />}>
-                      <Route path="claims">
-                        <Route path="all" element={<MyPositionsTab />} />
-                        <Route path="created" element={<YourClaimsTab />} />
+                    <Route path="/profile" element={<Profile />}>
+                      <Route index element={<Navigate to="/profile/claims/all" />} />
+                      <Route element={<ProfileLayout />}>
+                        <Route path="claims">
+                          <Route path="all" element={<MyPositionsTab />} />
+                          <Route path="created" element={<YourClaimsTab />} />
+                        </Route>
+
+                        <Route path="identities">
+                          <Route path="all" element={<IdentitiesVotedTab />} />
+                          <Route path="created" element={<IdentityTab />} />
+                        </Route>
+
+                        <Route path="followers" element={<FollowersTab />} />
+                        <Route path="following" element={<FollowingTab />} />
                       </Route>
-
-                      <Route path="identities">
-                        <Route path="all" element={<IdentitiesVotedTab />} />
-                        <Route path="created" element={<IdentityTab />} />
-                      </Route>
-
-                      <Route path="followers" element={<FollowersTab />} />
-                      <Route path="following" element={<FollowingTab />} />
                     </Route>
-                  </Route>
 
-                  <Route path="/feed" element={<Feed />} />
-                  <Route path="/page-form" element={<PageForm />} />
-                  <Route path="/recent-activity" element={<RecentActivity />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/atoms/:id" element={<AtomDetailPage />} />
-                </Routes>
-              </div>
-            </main>
-            {navType === "classic" ? (
+                    <Route path="/feed" element={<Feed />} />
+                    <Route path="/page-form" element={<PageForm />} />
+                    <Route path="/recent-activity" element={<RecentActivity />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/atoms/:id" element={<AtomDetailPage />} />
+                  </Routes>
+                </div>
+              </main>
+              {navType === "classic" ? (
               <Navbar />
-            ) : (
+              ) : (
               <>
                 <NavArc />
               </>
             )}
         </Router>
-      </AtomSelectionProvider>
-    </QueryClientProvider>
+        </AtomSelectionProvider>
+      </QueryClientProvider>
+    </ApolloProvider>
   )
 }
 

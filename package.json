@@ -19,6 +19,7 @@
     "@0xintuition/1ui": "^0.3.6",
     "@0xintuition/graphql": "^0.6.0",
     "@0xintuition/protocol": "^0.1.4",
+    "@apollo/client": "^3.13.8",
     "@floating-ui/react-dom": "^2.1.2",
     "@graphql-codegen/typescript-document-nodes": "^4.0.11",
     "@plasmohq/storage": "^1.15.0",
@@ -31,6 +32,7 @@
     "clsx": "^2.1.1",
     "graphql": "^16.9.0",
     "graphql-request": "^7.1.2",
+    "graphql-ws": "^6.0.4",
     "lucide-react": "^0.483.0",
     "metamask-extension-provider": "^5.0.0",
     "react": "18.2.0",
@@ -102,7 +104,7 @@
       "sidePanel"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com/ https://cloud.umami.is/  https://api-gateway.umami.dev/ ws://localhost:* wss://localhost:*;"
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com/ https://cloud.umami.is/  https://api-gateway.umami.dev/ wss://dev.base.intuition-api.com/v1/graphql ws://localhost:* wss://localhost:*;"
     }
   },
   "pnpm": {
