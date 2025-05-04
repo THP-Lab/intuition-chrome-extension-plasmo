@@ -9374,6 +9374,8 @@ export type DepositEventFragmentFragment = {
   deposit?: {
     __typename?: "deposits"
     vault_id: any
+    is_atom_wallet: boolean
+    is_triple: boolean
     sender_assets_after_total_fees: any
     shares_for_receiver: any
     receiver: { __typename?: "accounts"; id: string }
@@ -9450,6 +9452,7 @@ export type EventDetailsFragment = {
   triple?: {
     __typename?: "triples"
     id: any
+    creator_id: string
     subject_id: any
     predicate_id: any
     object_id: any
@@ -9648,6 +9651,8 @@ export type EventDetailsFragment = {
   deposit?: {
     __typename?: "deposits"
     vault_id: any
+    is_atom_wallet: boolean
+    is_triple: boolean
     sender_assets_after_total_fees: any
     shares_for_receiver: any
     receiver: { __typename?: "accounts"; id: string }
@@ -9923,6 +9928,7 @@ export type StatDetailsFragment = {
 export type TripleMetadataFragment = {
   __typename?: "triples"
   id: any
+  creator_id: string
   subject_id: any
   predicate_id: any
   object_id: any
@@ -12655,6 +12661,7 @@ export type GetTagsQuery = {
   triples: Array<{
     __typename?: "triples"
     id: any
+    creator_id: string
     subject_id: any
     predicate_id: any
     object_id: any
@@ -12847,6 +12854,7 @@ export type GetTagsCustomQuery = {
   triples: Array<{
     __typename?: "triples"
     id: any
+    creator_id: string
     subject_id: any
     predicate_id: any
     object_id: any
@@ -13371,6 +13379,7 @@ export type EventsSubscription = {
     triple?: {
       __typename?: "triples"
       id: any
+      creator_id: string
       subject_id: any
       predicate_id: any
       object_id: any
@@ -13569,6 +13578,8 @@ export type EventsSubscription = {
     deposit?: {
       __typename?: "deposits"
       vault_id: any
+      is_atom_wallet: boolean
+      is_triple: boolean
       sender_assets_after_total_fees: any
       shares_for_receiver: any
       receiver: { __typename?: "accounts"; id: string }
@@ -13930,6 +13941,8 @@ export const DepositEventFragmentFragmentDoc = `
     fragment DepositEventFragment on events {
   deposit {
     vault_id
+    is_atom_wallet
+    is_triple
     sender_assets_after_total_fees
     shares_for_receiver
     receiver {
@@ -14019,6 +14032,7 @@ export const PositionFieldsFragmentDoc = `
 export const TripleMetadataFragmentDoc = `
     fragment TripleMetadata on triples {
   id
+  creator_id
   subject_id
   predicate_id
   object_id
@@ -19472,6 +19486,11 @@ export const DepositEventFragment = {
                 { kind: "Field", name: { kind: "Name", value: "vault_id" } },
                 {
                   kind: "Field",
+                  name: { kind: "Name", value: "is_atom_wallet" }
+                },
+                { kind: "Field", name: { kind: "Name", value: "is_triple" } },
+                {
+                  kind: "Field",
                   name: {
                     kind: "Name",
                     value: "sender_assets_after_total_fees"
@@ -19829,6 +19848,7 @@ export const TripleMetadata = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "creator_id" } },
           { kind: "Field", name: { kind: "Name", value: "subject_id" } },
           { kind: "Field", name: { kind: "Name", value: "predicate_id" } },
           { kind: "Field", name: { kind: "Name", value: "object_id" } },
@@ -20548,6 +20568,11 @@ export const EventDetails = {
                 { kind: "Field", name: { kind: "Name", value: "vault_id" } },
                 {
                   kind: "Field",
+                  name: { kind: "Name", value: "is_atom_wallet" }
+                },
+                { kind: "Field", name: { kind: "Name", value: "is_triple" } },
+                {
+                  kind: "Field",
                   name: {
                     kind: "Name",
                     value: "sender_assets_after_total_fees"
@@ -20702,6 +20727,7 @@ export const EventDetails = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "creator_id" } },
           { kind: "Field", name: { kind: "Name", value: "subject_id" } },
           { kind: "Field", name: { kind: "Name", value: "predicate_id" } },
           { kind: "Field", name: { kind: "Name", value: "object_id" } },
@@ -31654,6 +31680,7 @@ export const GetTags = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "creator_id" } },
           { kind: "Field", name: { kind: "Name", value: "subject_id" } },
           { kind: "Field", name: { kind: "Name", value: "predicate_id" } },
           { kind: "Field", name: { kind: "Name", value: "object_id" } },
@@ -32070,6 +32097,7 @@ export const GetTagsCustom = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "creator_id" } },
           { kind: "Field", name: { kind: "Name", value: "subject_id" } },
           { kind: "Field", name: { kind: "Name", value: "predicate_id" } },
           { kind: "Field", name: { kind: "Name", value: "object_id" } },
@@ -33730,6 +33758,11 @@ export const Events = {
                 { kind: "Field", name: { kind: "Name", value: "vault_id" } },
                 {
                   kind: "Field",
+                  name: { kind: "Name", value: "is_atom_wallet" }
+                },
+                { kind: "Field", name: { kind: "Name", value: "is_triple" } },
+                {
+                  kind: "Field",
                   name: {
                     kind: "Name",
                     value: "sender_assets_after_total_fees"
@@ -34104,6 +34137,7 @@ export const Events = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "creator_id" } },
           { kind: "Field", name: { kind: "Name", value: "subject_id" } },
           { kind: "Field", name: { kind: "Name", value: "predicate_id" } },
           { kind: "Field", name: { kind: "Name", value: "object_id" } },

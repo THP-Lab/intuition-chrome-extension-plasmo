@@ -5,43 +5,73 @@ import AtomCard from "~src/components/AtomCard"
 const RecentActivity: React.FC = () => {
   const { data, loading, error } = useEventsSubscription()
 
-  if (error) return <div className="text-red-600">Erreur : {error.message}</div>
+  if (error) return <div>Erreur : {error.message}</div>
   if (loading || !data) return <div>Chargement…</div>
 
-  // Ne garder que les événements relatifs aux atoms ou triples
-  const relevantEvents = data.events.filter(
-    (e) => Boolean(e.deposit_id) || Boolean(e.atom_id) || Boolean(e.triple_id)
-  )
-
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Activité Récente</h1>
-      <div className="space-y-4">
-        {relevantEvents.map((e, idx) => {
-          const isDepositOnAtom = Boolean(e.deposit_id) && Boolean(e.atom)
-          const isAtomCreated   = Boolean(e.atom_id) && !e.deposit_id
+    <div className="p-4">
+      <h2>Activité Récente (Brut)</h2>
+      {data.events.map((e, idx) => {
 
-          if (isDepositOnAtom || isAtomCreated) {
-            const atom = e.atom!
-            // Déterminer l'action et l'adresse de l'exécutant
-            const actionLabel = isDepositOnAtom ? 'Adresse a déposé sur' : 'Adresse a créé sur'
-            const executor    = isDepositOnAtom ? e.deposit?.sender.id! : e.atom!.creator.id
+        const isDeposit = Boolean(e.deposit_id)
+        const isAtomCreate = !e.deposit_id && Boolean(e.atom_id)
+        const isTripleCreate = !e.deposit_id && Boolean(e.triple_id)
 
-            return (
-              <div key={idx}>
-                <p className="mb-2">
-                  <strong>{actionLabel} :</strong> {executor}
-                </p>
-                {/* Affichage de la carte Atom */}
-                <AtomCard key={atom.id} atom={atom} tags={atom.tags} />
-              </div>
-            )
-          }
+        // Deposit Atom
+        if (isDeposit && e.deposit && !e.deposit.is_triple) {
+          return (
+            <div key={idx} className="mb-1">
+              <p>{e.deposit.sender?.id} deposit on :</p>
 
-          // Placeholder pour futurs triples
-          return null
-        })}
-      </div>
+              <AtomCard key={e.atom?.id} atom={e.atom} />
+<br />
+            </div>
+          )
+        }
+
+        // Deposit Triple
+        if (isDeposit && e.deposit && e.deposit.is_triple) {
+          return (
+            <div key={idx} style={{ marginBottom: '1rem' }}>
+              <p><strong>Type:</strong> {e.type}</p>
+              <p><strong>Triple ID:</strong> {e.triple_id}</p>
+              <p><strong>is_atom_wallet:</strong> {String(e.deposit.is_atom_wallet)}</p>
+              <p><strong>is_triple:</strong> {String(e.deposit.is_triple)}</p>
+              <pre>
+                {JSON.stringify(e.deposit, null, 2)}
+              </pre>
+            </div>
+          )
+        }
+
+        // Created Atom
+        if (isAtomCreate) {
+          return (
+            <div key={idx} style={{ marginBottom: '1rem' }}>
+              <p><strong>Type:</strong> {e.type}</p>
+              <p><strong>Atom ID:</strong> {e.atom_id}</p>
+              <pre>
+                {JSON.stringify(e.atom, null, 2)}
+              </pre>
+            </div>
+          )
+        }
+
+        // Created Triple
+        if (isTripleCreate) {
+          return (
+            <div key={idx} style={{ marginBottom: '1rem' }}>
+              <p><strong>Type:</strong> {e.type}</p>
+              <p><strong>Triple ID:</strong> {e.triple_id}</p>
+              <pre>
+                {JSON.stringify(e.triple, null, 2)}
+              </pre>
+            </div>
+          )
+        }
+
+        return null
+      })}
     </div>
   )
 }

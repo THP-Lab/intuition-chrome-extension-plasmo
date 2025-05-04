@@ -47,7 +47,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
   const thing = atom.value?.thing
   const navigate = useNavigate()
   const goToAtomPage = () => {
-    navigate(`/atoms/${atom.id}`)
+    navigate(`/atoms/${atom.id || ''}`)
   }
 
   return (

@@ -1,6 +1,8 @@
 fragment DepositEventFragment on events {
   deposit {
     vault_id
+    is_atom_wallet
+    is_triple
     sender_assets_after_total_fees
     shares_for_receiver
     receiver {
