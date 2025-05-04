@@ -19,7 +19,7 @@ const RecentActivity: React.FC = () => {
 
   return (
     <div className="p-4">
-      <h2>Activité Récente (Brut)</h2>
+      <h1 className="text-xl font-bold mb-4">Live Feed</h1>
       {data.events.map((e, idx) => {
 
         const isDeposit = Boolean(e.deposit_id)
@@ -31,7 +31,7 @@ const RecentActivity: React.FC = () => {
           return (
             <div key={idx} className="mb-2">
               <p>{e.deposit.sender?.id} deposit on :</p>
-              <AtomCard key={e.atom?.id} atom={e.atom} />
+              <AtomCard key={e.atom?.id} atom={e.atom!} />
             </div>
           )
         }
@@ -49,12 +49,9 @@ const RecentActivity: React.FC = () => {
         // Created Atom
         if (isAtomCreate) {
           return (
-            <div key={idx} style={{ marginBottom: '1rem' }}>
-              <p><strong>Type:</strong> {e.type}</p>
-              <p><strong>Atom ID:</strong> {e.atom_id}</p>
-              <pre>
-                {JSON.stringify(e.atom, null, 2)}
-              </pre>
+            <div key={idx} className="mb-2">
+              <p>{e.deposit?.sender?.id} create :</p>
+              <AtomCard key={e.atom?.id} atom={e.atom!} />
             </div>
           )
         }
@@ -62,12 +59,9 @@ const RecentActivity: React.FC = () => {
         // Created Triple
         if (isTripleCreate) {
           return (
-            <div key={idx} style={{ marginBottom: '1rem' }}>
-              <p><strong>Type:</strong> {e.type}</p>
-              <p><strong>Triple ID:</strong> {e.triple_id}</p>
-              <pre>
-                {JSON.stringify(e.triple, null, 2)}
-              </pre>
+            <div key={idx} className="mb-2">
+              <p>{e.deposit?.sender?.id} create on :</p>
+              <ClaimRowLite key={e.triple_id} claim={e.triple} />
             </div>
           )
         }
