@@ -11,11 +11,12 @@ interface ClaimRowLiteProps {
 export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   const triple = (claim.triple as any) ?? claim
 
-  const creator = (triple as any)?.creator ?? (claim as any)?.creator
 
   const subject = triple.subject ?? claim.subject
   const predicate = triple.predicate ?? claim.predicate
   const object = triple.object ?? claim.object
+
+  const creator = (triple as any)?.creator ?? (claim as any)?.creator
 
   const vault = claim.vault ?? (claim.triple as any)?.vault ?? {}
   const counterVault = claim.counter_vault ?? (claim.triple as any)?.counter_vault ?? {}

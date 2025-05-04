@@ -9544,6 +9544,7 @@ export type EventDetailsFragment = {
         } | null
       }
     } | null
+    creator?: { __typename?: "accounts"; label: string; id: string } | null
     subject: {
       __typename?: "atoms"
       data?: string | null
@@ -9952,6 +9953,7 @@ export type TripleMetadataFragment = {
   subject_id: any
   predicate_id: any
   object_id: any
+  creator?: { __typename?: "accounts"; label: string; id: string } | null
   subject: {
     __typename?: "atoms"
     data?: string | null
@@ -12584,6 +12586,7 @@ export type GetTagsQuery = {
     subject_id: any
     predicate_id: any
     object_id: any
+    creator?: { __typename?: "accounts"; label: string; id: string } | null
     subject: {
       __typename?: "atoms"
       data?: string | null
@@ -12777,6 +12780,7 @@ export type GetTagsCustomQuery = {
     subject_id: any
     predicate_id: any
     object_id: any
+    creator?: { __typename?: "accounts"; label: string; id: string } | null
     subject: {
       __typename?: "atoms"
       data?: string | null
@@ -13370,6 +13374,7 @@ export type EventsSubscription = {
           } | null
         }
       } | null
+      creator?: { __typename?: "accounts"; label: string; id: string } | null
       subject: {
         __typename?: "atoms"
         data?: string | null
@@ -15404,6 +15409,17 @@ export const TripleMetadataFragmentDoc = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "creator" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "id" } }
+              ]
+            }
+          },
           { kind: "Field", name: { kind: "Name", value: "creator_id" } },
           { kind: "Field", name: { kind: "Name", value: "subject_id" } },
           { kind: "Field", name: { kind: "Name", value: "predicate_id" } },
@@ -16283,6 +16299,17 @@ export const EventDetailsFragmentDoc = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "creator" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "id" } }
+              ]
+            }
+          },
           { kind: "Field", name: { kind: "Name", value: "creator_id" } },
           { kind: "Field", name: { kind: "Name", value: "subject_id" } },
           { kind: "Field", name: { kind: "Name", value: "predicate_id" } },
@@ -28047,6 +28074,17 @@ export const GetTagsDocument = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "creator" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "id" } }
+              ]
+            }
+          },
           { kind: "Field", name: { kind: "Name", value: "creator_id" } },
           { kind: "Field", name: { kind: "Name", value: "subject_id" } },
           { kind: "Field", name: { kind: "Name", value: "predicate_id" } },
@@ -28524,6 +28562,17 @@ export const GetTagsCustomDocument = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "creator" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "id" } }
+              ]
+            }
+          },
           { kind: "Field", name: { kind: "Name", value: "creator_id" } },
           { kind: "Field", name: { kind: "Name", value: "subject_id" } },
           { kind: "Field", name: { kind: "Name", value: "predicate_id" } },
@@ -30986,6 +31035,17 @@ export const EventsDocument = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "creator" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "id" } }
+              ]
+            }
+          },
           { kind: "Field", name: { kind: "Name", value: "creator_id" } },
           { kind: "Field", name: { kind: "Name", value: "subject_id" } },
           { kind: "Field", name: { kind: "Name", value: "predicate_id" } },

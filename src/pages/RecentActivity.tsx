@@ -1,6 +1,7 @@
 import React from "react"
 import { useEventsSubscription } from "~src/graphql/src/generated/subscriptions"
 import AtomCard from "~src/components/AtomCard"
+import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 
 const RecentActivity: React.FC = () => {
   const { data, loading, error } = useEventsSubscription()
@@ -20,11 +21,9 @@ const RecentActivity: React.FC = () => {
         // Deposit Atom
         if (isDeposit && e.deposit && !e.deposit.is_triple) {
           return (
-            <div key={idx} className="mb-1">
+            <div key={idx} className="mb-2">
               <p>{e.deposit.sender?.id} deposit on :</p>
-
               <AtomCard key={e.atom?.id} atom={e.atom} />
-<br />
             </div>
           )
         }
@@ -32,14 +31,9 @@ const RecentActivity: React.FC = () => {
         // Deposit Triple
         if (isDeposit && e.deposit && e.deposit.is_triple) {
           return (
-            <div key={idx} style={{ marginBottom: '1rem' }}>
-              <p><strong>Type:</strong> {e.type}</p>
-              <p><strong>Triple ID:</strong> {e.triple_id}</p>
-              <p><strong>is_atom_wallet:</strong> {String(e.deposit.is_atom_wallet)}</p>
-              <p><strong>is_triple:</strong> {String(e.deposit.is_triple)}</p>
-              <pre>
-                {JSON.stringify(e.deposit, null, 2)}
-              </pre>
+            <div key={idx} className="mb-2">
+              <p>{e.deposit.sender?.id} deposit on :</p>
+              <ClaimRowLite key={e.triple_id} claim={e.triple} />
             </div>
           )
         }

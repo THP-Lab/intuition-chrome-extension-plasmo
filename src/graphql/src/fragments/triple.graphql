@@ -1,5 +1,9 @@
 fragment TripleMetadata on triples {
   id
+  creator {
+    label
+    id
+  }
   creator_id
   subject_id
   predicate_id
