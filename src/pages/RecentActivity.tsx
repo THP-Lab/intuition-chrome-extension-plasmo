@@ -1,36 +1,49 @@
 import React from "react"
 import { useEventsSubscription } from "~src/graphql/src/generated/subscriptions"
+import AtomCard from "~src/components/AtomCard"
 
 const RecentActivity: React.FC = () => {
+  const { data, loading, error } = useEventsSubscription()
 
-  let { data, loading, error, restart } = useEventsSubscription();
+  if (error) return <div className="text-red-600">Erreur : {error.message}</div>
+  if (loading || !data) return <div>Chargement…</div>
 
-
-
-  if (error) return (
-    <p>error : {error.message}</p>
+  // Ne garder que les événements relatifs aux atoms ou triples
+  const relevantEvents = data.events.filter(
+    (e) => Boolean(e.deposit_id) || Boolean(e.atom_id) || Boolean(e.triple_id)
   )
 
-  if (loading) return (
-    <p>Loading ...</p>
-  )
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Activité Récente</h1>
+      <div className="space-y-4">
+        {relevantEvents.map((e, idx) => {
+          const isDepositOnAtom = Boolean(e.deposit_id) && Boolean(e.atom)
+          const isAtomCreated   = Boolean(e.atom_id) && !e.deposit_id
 
-  console.log(data);
+          if (isDepositOnAtom || isAtomCreated) {
+            const atom = e.atom!
+            // Déterminer l'action et l'adresse de l'exécutant
+            const actionLabel = isDepositOnAtom ? 'Adresse a déposé sur' : 'Adresse a créé sur'
+            const executor    = isDepositOnAtom ? e.deposit?.sender.id! : e.atom!.creator.id
 
+            return (
+              <div key={idx}>
+                <p className="mb-2">
+                  <strong>{actionLabel} :</strong> {executor}
+                </p>
+                {/* Affichage de la carte Atom */}
+                <AtomCard key={atom.id} atom={atom} tags={atom.tags} />
+              </div>
+            )
+          }
 
-  if (data)
-    return (
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Live Feed</h1>
-        <div className="space-y-4">
-          {data.events.map(e => {
-            return `
-             <p>${e.type}</p>
-            `
-          })}
-        </div>
+          // Placeholder pour futurs triples
+          return null
+        })}
       </div>
-    )
+    </div>
+  )
 }
 
 export default RecentActivity

@@ -1,5 +1,5 @@
 subscription Events {
   events(order_by: [{ block_number: desc }]) {
-    type
+    ...EventDetails
   }
 }
