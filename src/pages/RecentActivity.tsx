@@ -2,12 +2,20 @@ import React from "react"
 import { useEventsSubscription } from "~src/graphql/src/generated/subscriptions"
 import AtomCard from "~src/components/AtomCard"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
+import IntuitionIcon from "~src/components/icons/IntuitionIcon"
 
 const RecentActivity: React.FC = () => {
   const { data, loading, error } = useEventsSubscription()
 
   if (error) return <div>Erreur : {error.message}</div>
-  if (loading || !data) return <div>Chargement…</div>
+  if (loading || !data) {
+    return (
+      <div className="flex items-center justify-center w-full pt-15">
+        <IntuitionIcon size={54}/>
+      </div>
+    )
+  }
+  
 
   return (
     <div className="p-4">
