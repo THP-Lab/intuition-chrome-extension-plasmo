@@ -7,61 +7,93 @@ import IntuitionIcon from "~src/components/icons/IntuitionIcon"
 const RecentActivity: React.FC = () => {
   const { data, loading, error } = useEventsSubscription()
 
+  const shortAddress = (addr?: string) =>
+    addr ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : ""
+
+  const renderSenderLink = (rawAddress: string) => {
+    const addr = shortAddress(rawAddress)
+    return (
+      <a
+        href={`https://portal.intuition.systems/app/profile/${rawAddress}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-semibold hover:underline"
+      >
+        {addr}
+      </a>
+    )
+  }
+
   if (error) return <div>Erreur : {error.message}</div>
   if (loading || !data) {
     return (
-      <div className="flex items-center justify-center w-full pt-15">
-        <IntuitionIcon size={54}/>
+      <div className="flex items-center justify-center w-full">
+        <IntuitionIcon size={54} />
       </div>
     )
   }
-  
 
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Live Feed</h1>
       {data.events.map((e, idx) => {
-
         const isDeposit = Boolean(e.deposit_id)
         const isAtomCreate = !e.deposit_id && Boolean(e.atom_id)
         const isTripleCreate = !e.deposit_id && Boolean(e.triple_id)
 
-        // Deposit Atom
-        if (isDeposit && e.deposit && !e.deposit.is_triple) {
+        // ------ DEPOSIT ATOM ------
+        if (isDeposit && e.deposit && !e.deposit.is_triple && e.atom) {
+          const senderId = e.deposit.sender.id
           return (
-            <div key={idx} className="mb-2">
-              <p>{e.deposit.sender?.id} deposit on :</p>
-              <AtomCard key={e.atom?.id} atom={e.atom!} />
+            <div key={idx} className="pt-2 pb-3 border-b">
+              <p>
+                {renderSenderLink(senderId)}{" "}
+                <strong>deposit</strong> :
+              </p>
+              <AtomCard atom={e.atom} />
             </div>
           )
         }
 
-        // Deposit Triple
-        if (isDeposit && e.deposit && e.deposit.is_triple) {
+        // ------ DEPOSIT TRIPLE ------
+        if (isDeposit && e.deposit && e.deposit.is_triple && e.triple) {
+          const senderId = e.deposit.sender.id
           return (
-            <div key={idx} className="mb-2">
-              <p>{e.deposit.sender?.id} deposit on :</p>
-              <ClaimRowLite key={e.triple_id} claim={e.triple} />
+            <div key={idx} className="pt-2 pb-2 border-b">
+              <p>
+                {renderSenderLink(senderId)}{" "}
+                <strong>deposit</strong> :
+              </p>
+              <ClaimRowLite claim={e.triple} />
             </div>
           )
         }
 
-        // Created Atom
-        if (isAtomCreate) {
+        // ------ CREATE ATOM ------
+        if (isAtomCreate && e.atom) {
+          //)e.atom.creator.id est renseigné par ton fragment AtomMetadata
+          const creatorId = e.atom.creator.id
           return (
-            <div key={idx} className="mb-2">
-              <p>{e.deposit?.sender?.id} create :</p>
-              <AtomCard key={e.atom?.id} atom={e.atom!} />
+            <div key={idx} className="pt-2 pb-3 border-b">
+              <p>
+                {renderSenderLink(creatorId)}{" "}
+                <strong>create</strong> atom:
+              </p>
+              <AtomCard atom={e.atom} />
             </div>
           )
         }
 
-        // Created Triple
-        if (isTripleCreate) {
+        // ------ CREATE TRIPLE ------
+        if (isTripleCreate && e.triple) {
+          const creatorId = e.triple.creator_id
           return (
-            <div key={idx} className="mb-2">
-              <p>{e.deposit?.sender?.id} create on :</p>
-              <ClaimRowLite key={e.triple_id} claim={e.triple} />
+            <div key={idx} className="pt-2 pb-2 border-b">
+              <p>
+                {renderSenderLink(creatorId)}{" "}
+                <strong>create</strong> triple:
+              </p>
+              <ClaimRowLite claim={e.triple} />
             </div>
           )
         }

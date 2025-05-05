@@ -68,7 +68,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
             <p className="mt-2 text-xs text-gray-500">
             Created by{' '}
             <a
-              href={`https://beta.portal.intuition.systems/app/profile/${creator.id}`}
+              href={`https://portal.intuition.systems/app/profile/${creator.id}`}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline"
