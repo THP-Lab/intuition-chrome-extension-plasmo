@@ -132,7 +132,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
       const multivault = new Multivault({ walletClient, publicClient })
   
       for (let i = 0; i < createdVaultIds.length; i++) {
-        const vote = labeledTriples[i].vote
+        const { triple: [s, p, o], vote } = labeledTriples[i]
         const vaultId = createdVaultIds[i]
   
         setProgressMessage(
