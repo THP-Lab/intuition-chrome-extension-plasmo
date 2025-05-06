@@ -26,7 +26,7 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
   const { createPosition } = useCreatePosition()
 
   return (
-    <div className="mt-'4 space-y-2">
+    <div className="mt-4 space-y-2">
       {!isOpen ? (
       <button
         onClick={() => setIsOpen(true)}
@@ -36,7 +36,38 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
       </button>
       ) : (
         <div className="space-y-2">
+          <AtomAutocompleteInput
+            label="Tag"
+            onSelect={setSelectedTag}
+            selected={selectedTag}
+          />
         </div>  
+      )}
+
+      {selectedTag && (
+        <div className="flex gap-4 items-center">
+          <label className="flex gap-2 items-center text-sm">
+            <input
+              type="radio"
+              name="vote"
+              value="for"
+              checked={vote === "for"}
+              onChange={() => setVote("for")}
+            />
+            FOR
+          </label>
+
+          <label className="flex gap-2 items-center text-sm">
+            <input
+              type="radio"
+              name="vote"
+              value="against"
+              checked={vote === "against"}
+              onChange={() => setVote("against")}
+              />
+              AGAINST
+          </label>
+        </div>
       )}
     </div>
   )
