@@ -21,9 +21,51 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-
   const { addTriple, createTriples, clearTriples } = useCreateTriples()
   const { createPosition } = useCreatePosition()
+
+  const handleSubmit = async () => {
+    if (!selectedTag || !vote) return 
+
+    setIsSubmitting(true)
+    setError(null)
+
+    try {
+      addTriple([
+        BigInt(subjectAtom.vault_id),
+        BigInt(4),
+        BigInt(selectedTag.vault_id)
+      ])
+
+      const { vaultIds } = await createTriples()
+
+      const { walletClient, publicClient } = await getClients()
+      const multivault = new Multivault({ walletClient, publicClient })
+
+      let targetVaultId = vaultIds[0]
+      if (vote === "against") {
+        const counterId = await multivault.getCounterIdFromTriple(vaultIds[0])
+        if (!counterId) throw new Error("No counter vault for triple")
+        targetVaultId = counterId
+      }
+      
+      await createPosition({ vaultId: targetVaultId })
+
+      // Reset local state
+      setIsOpen(false)
+      setSelectedTag(null)
+      setVote(null)
+      clearTriples()
+      onTagCreated?.()
+
+    } catch (err: any) {
+      setError(err.message || "An error occurred")
+    }
+    
+    finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className="mt-4 space-y-2">
@@ -69,9 +111,18 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
           </label>
         </div>
       )}
+
+      {vote && (
+        <button
+          className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Sending..." : "Submit"}
+        </button>
+      )}
     </div>
   )
-
 }
 
 
