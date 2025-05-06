@@ -1,5 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
 
+declare global {
+  interface Window {
+    __theme?: "light" | "dark"
+  }
+}
+
 type Theme = "light" | "dark"
 
 type ThemeProviderProps = {
@@ -28,6 +34,10 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme)
   const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    window.__theme = theme
+  }, [theme])
 
   useEffect(() => {
     const loadTheme = async () => {
