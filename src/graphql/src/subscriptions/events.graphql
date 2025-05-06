@@ -1,5 +1,5 @@
-subscription Events {
+subscription Events($addresses: [String!]!) {
   events(order_by: [{ block_number: desc }]) {
-    ...EventDetails
+    ...EventDetailsSubscription
   }
 }

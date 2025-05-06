@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useTheme } from "~/src/components/ThemeProvider"
 import TabSystem from '../components/TabSystem';
 import { useStorage } from "@plasmohq/storage/dist/hook"
-import {  useGetClaimsByUriQuery } from "~src/graphql/src"
+import { useGetClaimsByUriQuery } from "~src/graphql/src"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
 import AtomCard from "~src/components/AtomCard";
 

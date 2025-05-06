@@ -3,9 +3,16 @@ import { useEventsSubscription } from "~src/graphql/src/generated/subscriptions"
 import AtomCard from "~src/components/AtomCard"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import IntuitionIcon from "~src/components/icons/IntuitionIcon"
+import { useStorage } from "@plasmohq/storage/dist/hook"
 
 const RecentActivity: React.FC = () => {
-  const { data, loading, error } = useEventsSubscription()
+  const [walletAddress] = useStorage<string>("metamask-account", "")
+
+  const { data, loading, error } = useEventsSubscription({
+    variables: {
+      addresses: walletAddress
+    }
+  })
 
   const shortAddress = (addr?: string) =>
     addr ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : ""
@@ -23,6 +30,7 @@ const RecentActivity: React.FC = () => {
       </a>
     )
   }
+  
 
   if (error) return <div>Erreur : {error.message}</div>
   if (loading || !data) {
@@ -64,7 +72,9 @@ const RecentActivity: React.FC = () => {
                 {renderSenderLink(senderId)}{" "}
                 <strong>deposit</strong> :
               </p>
-              <ClaimRowLite claim={e.triple} />
+              
+                <ClaimRowLite claim={e.triple} />
+              
             </div>
           )
         }
