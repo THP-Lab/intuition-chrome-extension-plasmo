@@ -25,6 +25,22 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
   const { addTriple, createTriples, clearTriples } = useCreateTriples()
   const { createPosition } = useCreatePosition()
 
+  return (
+    <div className="mt-'4 space-y-2">
+      {!isOpen ? (
+      <button
+        onClick={() => setIsOpen(true)}
+        className="text-xs text-blue-400 hover:underline"
+      >
+        + Add a tag
+      </button>
+      ) : (
+        <div className="space-y-2">
+        </div>  
+      )}
+    </div>
+  )
+
 }
 
 
