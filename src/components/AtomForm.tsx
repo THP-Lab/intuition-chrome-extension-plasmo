@@ -7,15 +7,22 @@ import { LinkTypeSelector } from "./LinkTypeSelector"
 import React, { forwardRef, useEffect, useState, useRef, useImperativeHandle } from "react"
 import { umamiCollect } from "~src/lib/umami"
 
+export interface AtomFormHandle {
+  resetForm(): void
+}
+
 interface AtomFormProps {
-  onCreated: (atom: Atom) => void;
+  onCreated?: (atom: Atom) => void;
   initialName?: string;
   initialDescription?: string;
   initialImage?: string;
   initialUrl?: string;
 }
 
-const AtomForm = forwardRef<HTMLFormElement, AtomFormProps>(({ onCreated, initialName = "", initialDescription = "", initialImage = "", initialUrl = "" }, ref) => {
+const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
+  { onCreated, initialName = "", initialDescription = "", initialImage = "", initialUrl = "" }, 
+  ref
+) {
   const { mutateAsync: pinThing } = usePinThingMutation()
 
   const [name, setName] = useState(initialName ?? "")
@@ -23,7 +30,7 @@ const AtomForm = forwardRef<HTMLFormElement, AtomFormProps>(({ onCreated, initia
   const [image, setImage] = useState(initialImage ?? "")
   const [url, setUrl] = useState(initialUrl ?? "")
   
-  const [rawUrl] = useState(initialUrl ?? "")
+  const [rawUrl, setRawUrl] = useState(initialUrl ?? "")
 
   const [progressMessage, setProgressMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -107,12 +114,15 @@ const AtomForm = forwardRef<HTMLFormElement, AtomFormProps>(({ onCreated, initia
       setProgressMessage(` Atom créé ! Vault ID: ${vaultId} | Tx: ${hash}`)
       
       const atom = {
-        id: hash, // ou autre identifiant temporaire si hash ≠ id
+        id: hash,
         label: name,
         emoji: null,
         vault_id: vaultId.toString(),
       }
-      onCreated(atom)
+
+      if (onCreated) {
+        onCreated(atom)
+      }
 
       umamiCollect("atom_created", "/sidepanel", {
         vaultId,
