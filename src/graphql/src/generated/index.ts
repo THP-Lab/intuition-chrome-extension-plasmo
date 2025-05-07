@@ -13727,6 +13727,7 @@ export type GetVaultQuery = {
 
 export type EventsSubscriptionVariables = Exact<{
   addresses: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
+  limit: Scalars["Int"]["input"]
 }>
 
 export type EventsSubscription = {
@@ -18467,8 +18468,8 @@ useGetVaultQuery.fetcher = (
   )
 
 export const EventsDocument = `
-    subscription Events($addresses: [String!]!) {
-  events(order_by: [{block_number: desc}]) {
+    subscription Events($addresses: [String!]!, $limit: Int!) {
+  events(order_by: [{block_number: desc}], limit: $limit) {
     ...EventDetailsSubscription
   }
 }
@@ -35131,6 +35132,17 @@ export const Events = {
               }
             }
           }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "limit" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
+          }
         }
       ],
       selectionSet: {
@@ -35157,6 +35169,14 @@ export const Events = {
                       ]
                     }
                   ]
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "limit" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "limit" }
                 }
               }
             ],

@@ -5,12 +5,15 @@ import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import IntuitionIcon from "~src/components/icons/IntuitionIcon"
 import { useStorage } from "@plasmohq/storage/dist/hook"
 
+const INITIAL_LIMIT = 20;
+
 const RecentActivity: React.FC = () => {
   const [walletAddress] = useStorage<string>("metamask-account", "")
 
   const { data, loading, error } = useEventsSubscription({
     variables: {
-      addresses: walletAddress
+      addresses: walletAddress,
+      limit: INITIAL_LIMIT
     }
   })
 

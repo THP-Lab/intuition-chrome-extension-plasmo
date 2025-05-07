@@ -1,5 +1,5 @@
-subscription Events($addresses: [String!]!) {
-  events(order_by: [{ block_number: desc }]) {
+subscription Events($addresses: [String!]!, $limit: Int!) {
+  events(order_by: [{ block_number: desc }] limit: $limit) {
     ...EventDetailsSubscription
   }
 }

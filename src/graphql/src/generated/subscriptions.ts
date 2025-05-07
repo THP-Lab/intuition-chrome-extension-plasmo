@@ -13646,6 +13646,7 @@ export type GetVaultQuery = {
 
 export type EventsSubscriptionVariables = Exact<{
   addresses: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
+  limit: Scalars["Int"]["input"]
 }>
 
 export type EventsSubscription = {
@@ -31879,6 +31880,17 @@ export const EventsDocument = {
               }
             }
           }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "limit" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
+          }
         }
       ],
       selectionSet: {
@@ -31905,6 +31917,14 @@ export const EventsDocument = {
                       ]
                     }
                   ]
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "limit" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "limit" }
                 }
               }
             ],
@@ -32669,6 +32689,7 @@ export const EventsDocument = {
  * const { data, loading, error } = useEventsSubscription({
  *   variables: {
  *      addresses: // value for 'addresses'
+ *      limit: // value for 'limit'
  *   },
  * });
  */
