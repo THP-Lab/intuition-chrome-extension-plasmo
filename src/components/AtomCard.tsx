@@ -81,14 +81,14 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
           </div>
 
           <div className="flex items-center gap-4 ml-2">
-            <p className="flex items-center text-sm text-muted-foreground">
+            <p className="flex items-center text-sm text-white text-muted-foreground">
               <UserRound className="w-4 h-4 mr-1" />
               {atom.vault?.position_count ?? 0}
             </p>
             <button
               onClick={(e) => {
-                e.stopPropagation()
-                atomPosition(BigInt(atom.id))
+                e.stopPropagation();
+                atomPosition(BigInt(atom.id));
               }}
               disabled={isVoting}
               className="border border-gray-400 text-white rounded-md px-2 py-1 text-sm

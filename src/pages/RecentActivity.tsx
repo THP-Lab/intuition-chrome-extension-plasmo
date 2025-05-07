@@ -66,6 +66,8 @@ const RecentActivity: React.FC = () => {
         // ------ DEPOSIT TRIPLE ------
         if (isDeposit && e.deposit && e.deposit.is_triple && e.triple) {
           const senderId = e.deposit.sender.id
+        console.log("ID DU PREDICATE:", e.triple.predicate.id)
+
           return (
             <div key={idx} className="pt-2 pb-2 border-b">
               <p>

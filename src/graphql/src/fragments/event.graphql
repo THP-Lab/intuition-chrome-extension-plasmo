@@ -70,7 +70,9 @@ fragment EventDetailsSubscription on events {
   ...RedemptionEventFragment
   atom {
     ...AtomMetadata
+    vault_id
     vault {
+      id
       total_shares
       position_count
       positions {

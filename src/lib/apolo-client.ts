@@ -4,13 +4,13 @@ import { getMainDefinition } from "@apollo/client/utilities"
 import { createClient } from "graphql-ws"
 
 const httpLink = new HttpLink({
-  uri: "https://dev.base.intuition-api.com/v1/graphql" // replace with your API URL
+  uri: "https://prod.base.intuition-api.com/v1/graphql" // replace with your API URL
 })
 
 const wsLink =
   typeof window !== "undefined"
     ? new GraphQLWsLink(
-        createClient({ url: "wss://dev.base.intuition-api.com/v1/graphql" })
+        createClient({ url: "wss://prod.base.intuition-api.com/v1/graphql" })
       ) // replace with your WS endpoint
     : null
 

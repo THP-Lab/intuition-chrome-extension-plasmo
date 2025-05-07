@@ -9680,6 +9680,7 @@ export type EventDetailsSubscriptionFragment = {
   redemption_id?: string | null
   atom?: {
     __typename?: "atoms"
+    vault_id: any
     id: any
     data?: string | null
     image?: string | null
@@ -9689,6 +9690,7 @@ export type EventDetailsSubscriptionFragment = {
     wallet_id: string
     vault?: {
       __typename?: "vaults"
+      id: any
       total_shares: any
       position_count: number
       positions: Array<{
@@ -13741,6 +13743,7 @@ export type EventsSubscription = {
     redemption_id?: string | null
     atom?: {
       __typename?: "atoms"
+      vault_id: any
       id: any
       data?: string | null
       image?: string | null
@@ -13750,6 +13753,7 @@ export type EventsSubscription = {
       wallet_id: string
       vault?: {
         __typename?: "vaults"
+        id: any
         total_shares: any
         position_count: number
         positions: Array<{
@@ -14694,7 +14698,9 @@ export const EventDetailsSubscriptionFragmentDoc = `
   ...RedemptionEventFragment
   atom {
     ...AtomMetadata
+    vault_id
     vault {
+      id
       total_shares
       position_count
       positions {
@@ -22349,12 +22355,14 @@ export const EventDetailsSubscription = {
                   kind: "FragmentSpread",
                   name: { kind: "Name", value: "AtomMetadata" }
                 },
+                { kind: "Field", name: { kind: "Name", value: "vault_id" } },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "vault" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "total_shares" }
@@ -35381,12 +35389,14 @@ export const Events = {
                   kind: "FragmentSpread",
                   name: { kind: "Name", value: "AtomMetadata" }
                 },
+                { kind: "Field", name: { kind: "Name", value: "vault_id" } },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "vault" },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "total_shares" }

@@ -51,6 +51,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
         ? "against"
         : undefined
         
+        console.log("ID DE L'TRIPLECARD PREDICATE :", predicate.id)
 
     return (
       <div
@@ -60,6 +61,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
         <div className="flex flex-col flex-1 min-w-0">
           <div className="flex gap-1 items-center flex-wrap">
+            
             <PopupAtom key={`${claim.id}-subject`} atom={subject} />
             <PopupAtom key={`${claim.id}-predicate`} atom={predicate} />
             <PopupAtom key={`${claim.id}-object`} atom={object} />
