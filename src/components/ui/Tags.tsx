@@ -12,16 +12,16 @@ const Tags: React.FC<TagsProps> = ({ tags, addButton }) => {
 
   return (
       <div className="mt-6 flex flex-wrap gap-2 items-center">
-        {tags.map((tag, index) => (
-          <span
-            key={index}
-            className="bg-gray-700 text-white text-xs px-2 py-1 rounded-full"
-          >
-            {tag}
-          </span>
-        ))}
+      {tags.map((tag, index) => (
+        <span
+          key={index}
+          className="bg-gray-700 text-white text-xs px-2 py-1 rounded-full"
+        >
+          {tag}
+        </span>
+      ))}
 
-        {addButton && addButton}
+      {addButton && addButton}
       </div>
   )
 }
