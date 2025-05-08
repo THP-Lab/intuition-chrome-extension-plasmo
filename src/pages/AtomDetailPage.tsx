@@ -5,6 +5,8 @@ import { useStorage } from "@plasmohq/storage/hook"
 import AtomDisplay from "~src/components/ui/AtomDisplay"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import { useGetClaimsByAtomQuery } from "~src/graphql/src"
+import TagCreator from "~src/components/TagCreator"
+import Tags from "~src/components/ui/Tags"
 
 const AtomDetailPage = () => {
   const params = useParams<{ id: string }>()
@@ -85,7 +87,25 @@ const AtomDetailPage = () => {
 
   return (
     <div className="p-4 space-y-6">
-      <AtomDisplay atom={data.atom} tags={tags}/>
+      <AtomDisplay
+        atom={data.atom}
+        tagsSection={
+          <Tags
+            tags={tags}
+            addButton={
+              <TagCreator 
+                subjectAtom={{
+                  id: data.atom.id,
+                  label: data.atom.label || "",
+                  vault_id: data.atom.vault_id || ""
+                }}
+                onTagCreated={() => refetchClaims()}
+              />
+            }
+          />
+        }
+      />
+      
       <div>
         <div className="flex items-center mt-2 mb-1">
           <span className="text-sm text-gray-400">Claims</span>

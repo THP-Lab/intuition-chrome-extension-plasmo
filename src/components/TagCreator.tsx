@@ -1,0 +1,133 @@
+import React, { useState } from "react"
+import AtomAutocompleteInput from "./AtomAutocompleteInput"
+import { useCreateTriples } from "~src/hooks/useCreateTriples"
+import { useCreatePosition } from "~src/hooks/useCreatePosition"
+import { Multivault } from "@0xintuition/protocol"
+import { getClients } from "~src/lib/viemClient"
+
+interface TagCreatorProps {
+  subjectAtom: {
+    id: string
+    label: string
+    vault_id: string
+  }
+  onTagCreated?: () => void
+}
+
+const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedTag, setSelectedTag] = useState<any | null>(null)
+  const [vote, setVote] = useState<"for" | "against" | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const { addTriple, createTriples, clearTriples } = useCreateTriples()
+  const { createPosition } = useCreatePosition()
+
+  const handleSubmit = async () => {
+    if (!selectedTag || !vote) return 
+
+    setIsSubmitting(true)
+    setError(null)
+
+    try {
+      addTriple([
+        BigInt(subjectAtom.vault_id),
+        BigInt(4),
+        BigInt(selectedTag.vault_id)
+      ])
+
+      const { vaultIds } = await createTriples()
+
+      const { walletClient, publicClient } = await getClients()
+      const multivault = new Multivault({ walletClient, publicClient })
+
+      let targetVaultId = vaultIds[0]
+      if (vote === "against") {
+        const counterId = await multivault.getCounterIdFromTriple(vaultIds[0])
+        if (!counterId) throw new Error("No counter vault for triple")
+        targetVaultId = counterId
+      }
+      
+      await createPosition({ vaultId: targetVaultId })
+
+      // Reset local state
+      setIsOpen(false)
+      setSelectedTag(null)
+      setVote(null)
+      clearTriples()
+      onTagCreated?.()
+
+    } catch (err: any) {
+      setError(err.message || "An error occurred")
+    }
+    
+    finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <>
+      {!isOpen ? (
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            setIsOpen(true)
+          }}
+          className="bg-gray-700 text-white text-xs px-3 py-1 rounded-full border border-gray-600
+                    hover:bg-gray-400 hover:text-black hover:scale-110
+                    transition-all duration-200 ease-in-out"
+        >
+          +
+        </button>
+      ) : (
+        <div className="w-full mt-4">
+          <AtomAutocompleteInput
+            label="Tag"
+            onSelect={setSelectedTag}
+            selected={selectedTag}
+          />
+          {selectedTag && (
+            <div className="mt-3 flex gap-4 items-center mt-2">
+              <label className="flex gap-2 items-center text-sm">
+                <input
+                  type="radio"
+                  name="vote"
+                  value="for"
+                  checked={vote === "for"}
+                  onChange={() => setVote("for")}
+                />
+                FOR
+              </label>
+
+              <label className="flex gap-2 items-center text-sm">
+                <input
+                  type="radio"
+                  name="vote"
+                  value="against"
+                  checked={vote === "against"}
+                  onChange={() => setVote("against")}
+                />
+                AGAINST
+              </label>
+            </div>
+          )}
+          {vote && (
+            <button
+              className="mt-3 w-20 px-4 py-2 btn-atom-form-hover-effect text-foreground bg-[hsl(var(--btn-atom-form-bg))] text-center rounded-xl"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Sending..." : "Submit"}
+            </button>
+          )}
+        </div>
+      )}
+    </>
+
+  )
+}
+
+
+export default TagCreator; 
