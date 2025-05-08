@@ -7,7 +7,8 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/sidepanel/**/*.{js,ts,jsx,tsx}",
-    "./src/popup/**/*.{js,ts,jsx,tsx}"
+    "./src/popup/**/*.{js,ts,jsx,tsx}",
+    "./src/styles/**/*.{css}"
   ],
   theme: {
     container: {

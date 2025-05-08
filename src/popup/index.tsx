@@ -9,6 +9,8 @@ import GroupParticlesCanvas from "~src/components/ui/ParticulBg/GroupParticlesCa
 import { ThemeProvider } from "../components/ThemeProvider"
 import { NavigationProvider } from "~src/components/layout/NavigationProvider"
 
+import "../styles/global.css"
+
 function IndexPopup() {
   const handleSidePanel = () => {
     chrome.runtime.sendMessage({ type: "open_sidepanel" })
