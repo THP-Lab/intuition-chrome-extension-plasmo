@@ -27,7 +27,7 @@ const RecentActivity: React.FC = () => {
     const addr = shortAddress(rawAddress)
     return (
       <a
-        href={`https://portal.intuition.systems/app/profile/${rawAddress}`}
+        href={`https://portal.intuition.systems/app/atom/${rawAddress}?tab=portfolio`}
         target="_blank"
         rel="noopener noreferrer"
         className="font-semibold hover:underline"
@@ -54,12 +54,11 @@ const RecentActivity: React.FC = () => {
         const isDeposit = Boolean(e.deposit_id)
         const isAtomCreate = !e.deposit_id && Boolean(e.atom?.id)
         const isTripleCreate = !e.deposit_id && Boolean(e.triple?.id)
-        
+
         // ------ DEPOSIT ATOM ------
         if (isDeposit && e.deposit && !e.deposit.is_triple && e.atom) {
           const senderImg = e.deposit.sender.image
           const senderLabel = e.deposit.sender.label
-
 
           return (
             <div key={idx} className="pt-2 pb-3 border-b">

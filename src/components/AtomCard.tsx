@@ -111,7 +111,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
             to={thing.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-blue-400 underline mt-1 inline-block">
+            className="block text-xs text-blue-400 underline mt-1 inline-block max-w-[200px] overflow-hidden whitespace-nowrap truncate">
             {thing.url}
           </Link>
         )}
