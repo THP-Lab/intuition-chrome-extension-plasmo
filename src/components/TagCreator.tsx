@@ -89,7 +89,7 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
             selected={selectedTag}
           />
           {selectedTag && (
-            <div className="flex gap-4 items-center mt-2">
+            <div className="mt-3 flex gap-4 items-center mt-2">
               <label className="flex gap-2 items-center text-sm">
                 <input
                   type="radio"
@@ -115,7 +115,7 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
           )}
           {vote && (
             <button
-              className="mt-2 text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+              className="mt-3 w-20 px-4 py-2 btn-atom-form-hover-effect text-foreground bg-[hsl(var(--btn-atom-form-bg))] text-center rounded-xl"
               onClick={handleSubmit}
               disabled={isSubmitting}
             >
