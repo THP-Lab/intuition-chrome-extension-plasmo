@@ -113,13 +113,20 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
         </Link>
       )}
 
-      {tags && <Tags tags={tags} />}
-      <TagCreator subjectAtom={{
-          id: atom.id,
-          label: atom.label || "",
-          vault_id: atom.vault_id || ""
-        }}
-      />
+      {tags && (
+        <Tags
+          tags={tags}
+          addButton={
+            <TagCreator
+              subjectAtom={{
+                id: atom.id,
+                label: atom.label || "",
+                vault_id: atom.vault_id || ""
+              }}
+            />
+          }
+        />
+      )}
 
       {txHash && <p className="text-green-500 text-xs mt-2">Tx: {txHash}</p>}
     </div>

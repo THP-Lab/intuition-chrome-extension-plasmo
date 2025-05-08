@@ -114,6 +114,7 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
             <li
               key={atom.id}
               className="p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              onMouseDown={(e) => e.stopPropagation()}
               onClick={() => handleSelect(atom)}
             >
               {atom.emoji && <span className="mr-2">{atom.emoji}</span>}
@@ -126,6 +127,7 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
             <>
               <li
                 className="flex items-center gap-2 p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer italic"
+                onMouseDown={(e) => e.stopPropagation()}
                 onClick={() => {
                   setCreatingAtom(true)
                   setCreationMode("input")
@@ -136,6 +138,7 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
               </li>
               <li
                 className="flex items-center gap-2 p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer italic"
+                onMouseDown={(e) => e.stopPropagation()}
                 onClick={() => {
                   setCreatingAtom(true)
                   setCreationMode("page")

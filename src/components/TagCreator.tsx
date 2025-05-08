@@ -68,69 +68,64 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
   }
 
   return (
-    <div className="space-y-2">
-      <div className="flex flex-wrap gap-2 items-center">
-        {!isOpen && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              setIsOpen(true)
-            }}
-            className="bg-gray-700 text-white text-xs px-3 py-1 rounded-full border border-gray-600
+    <>
+      {!isOpen ? (
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            setIsOpen(true)
+          }}
+          className="bg-gray-700 text-white text-xs px-3 py-1 rounded-full border border-gray-600
                     hover:bg-gray-400 hover:text-black hover:scale-110
                     transition-all duration-200 ease-in-out"
-          >
-            +
-          </button>
-        )}
-      </div>
-
-      {isOpen && (
-        <div className="space-y-2">
+        >
+          +
+        </button>
+      ) : (
+        <div className="w-full mt-4">
           <AtomAutocompleteInput
             label="Tag"
             onSelect={setSelectedTag}
             selected={selectedTag}
           />
+          {selectedTag && (
+            <div className="flex gap-4 items-center mt-2">
+              <label className="flex gap-2 items-center text-sm">
+                <input
+                  type="radio"
+                  name="vote"
+                  value="for"
+                  checked={vote === "for"}
+                  onChange={() => setVote("for")}
+                />
+                FOR
+              </label>
 
-      {selectedTag && (
-        <div className="flex gap-4 items-center">
-          <label className="flex gap-2 items-center text-sm">
-            <input
-              type="radio"
-              name="vote"
-              value="for"
-              checked={vote === "for"}
-              onChange={() => setVote("for")}
-            />
-            FOR
-          </label>
-
-          <label className="flex gap-2 items-center text-sm">
-            <input
-              type="radio"
-              name="vote"
-              value="against"
-              checked={vote === "against"}
-              onChange={() => setVote("against")}
-              />
-              AGAINST
-          </label>
+              <label className="flex gap-2 items-center text-sm">
+                <input
+                  type="radio"
+                  name="vote"
+                  value="against"
+                  checked={vote === "against"}
+                  onChange={() => setVote("against")}
+                />
+                AGAINST
+              </label>
+            </div>
+          )}
+          {vote && (
+            <button
+              className="mt-2 text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Sending..." : "Submit"}
+            </button>
+          )}
         </div>
       )}
+    </>
 
-      {vote && (
-        <button
-          className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Sending..." : "Submit"}
-        </button>
-      )}
-    </div>
-  )}
-   </div>
   )
 }
 
