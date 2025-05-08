@@ -103,8 +103,10 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
           setIsOpen(true);
           setCreatingAtom(false);
         }}
-        className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10"
+        onClick={(e) => e.stopPropagation()}
         onFocus={() => setIsOpen(true)}
+        className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10"
+        
       />
       {isOpen && (
         <ul className="absolute z-10 bg-[hsl(var(--navbar-bg))] text-foreground border border-border rounded w-full max-h-60 overflow-y-auto shadow-md">

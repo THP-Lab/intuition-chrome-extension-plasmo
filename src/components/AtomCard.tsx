@@ -1,10 +1,9 @@
 import { Fingerprint, UserRound } from "lucide-react"
 import React from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 import { useAtomPosition } from "../hooks/useAtomPosition"
-
-import { useNavigate } from 'react-router-dom'
+import TagCreator from "./TagCreator"
 import Tags from "./ui/Tags"
 
 interface AtomProps {
@@ -40,22 +39,21 @@ interface AtomProps {
 
 interface AtomCardProps {
   atom: AtomProps
-  tags?: string[] 
+  tags?: string[]
 }
 
 export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
   const { atomPosition, isVoting, txHash } = useAtomPosition()
   const thing = atom.value?.thing
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const goToAtomPage = () => {
     navigate(`/atoms/${atom.id}`)
-  };
+  }
 
   return (
     <div
       className="border border-border/10 rounded-xl p-3 mt-3 cursor-pointer bg-[hsl(var(--claims-bg))] claims-hover-effect transition-all duration-200"
-      onClick={goToAtomPage}
-    >
+      onClick={goToAtomPage}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           {atom.image ? (
@@ -70,7 +68,8 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <h2 className="text-base font-semibold leading-snug line-clamp-2 break-words">{atom.label}
+            <h2 className="text-base font-semibold leading-snug line-clamp-2 break-words">
+              {atom.label}
             </h2>
             {thing?.name && (
               <p className="text-sm text-muted-foreground">{thing.name}</p>
@@ -115,6 +114,12 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
       )}
 
       {tags && <Tags tags={tags} />}
+      <TagCreator subjectAtom={{
+          id: atom.id,
+          label: atom.label || "",
+          vault_id: atom.vault_id || ""
+        }}
+      />
 
       {txHash && <p className="text-green-500 text-xs mt-2">Tx: {txHash}</p>}
     </div>

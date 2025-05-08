@@ -71,7 +71,10 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
     <div className="mt-4 space-y-2">
       {!isOpen ? (
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={(e) => {
+          e.stopPropagation()
+          setIsOpen(true)
+        }}
         className="text-xs text-blue-400 hover:underline"
       >
         + Add a tag
