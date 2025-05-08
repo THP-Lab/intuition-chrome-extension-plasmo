@@ -87,7 +87,7 @@ function PlasmoInline() {
       >
         <IntuitionSearchIcon
           onSearch={handleSearch}
-          size={50}
+          size={35}
           position={{ x: 0, y: 0 }}
           className="hover:opacity-80 transition-opacity"
         />
