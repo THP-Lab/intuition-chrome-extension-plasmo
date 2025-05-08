@@ -20,9 +20,10 @@ interface AtomDisplayProps {
     } | null
   }
   tags?: string[]
+  tagsSection?: React.ReactNode
   }
 
-const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom, tags }) => {
+const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom, tags, tagsSection }) => {
   const thing = atom.value?.thing
 
   return (
@@ -73,7 +74,11 @@ const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom, tags }) => {
         </Link>
       )}
 
-      <Tags tags={tags} />
+      {tagsSection && (
+        <div className="mt-6">
+          {tagsSection}
+        </div>
+      )}
     </div>
     )
   }

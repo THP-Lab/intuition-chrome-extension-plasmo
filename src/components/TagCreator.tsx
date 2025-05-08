@@ -68,26 +68,30 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
   }
 
   return (
-    <div className="mt-4 space-y-2">
-      {!isOpen ? (
-      <button
-        onClick={(e) => {
-          e.stopPropagation()
-          setIsOpen(true)
-        }}
-        className="text-xs text-blue-400 hover:underline"
-      >
-        + Add a tag
-      </button>
-      ) : (
+    <div className="space-y-2">
+      <div className="flex flex-wrap gap-2 items-center">
+        {!isOpen && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              setIsOpen(true)
+            }}
+            className="bg-gray-700 text-white text-xs px-3 py-1 rounded-full border border-gray-600
+                    hover:bg-gray-400 hover:text-black hover:scale-110
+                    transition-all duration-200 ease-in-out"
+          >
+            +
+          </button>
+        )}
+      </div>
+
+      {isOpen && (
         <div className="space-y-2">
           <AtomAutocompleteInput
             label="Tag"
             onSelect={setSelectedTag}
             selected={selectedTag}
           />
-        </div>  
-      )}
 
       {selectedTag && (
         <div className="flex gap-4 items-center">
@@ -125,6 +129,8 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
         </button>
       )}
     </div>
+  )}
+   </div>
   )
 }
 
