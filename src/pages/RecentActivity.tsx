@@ -10,6 +10,9 @@ const INITIAL_LIMIT = 20;
 const RecentActivity: React.FC = () => {
   const [walletAddress] = useStorage<string>("metamask-account", "")
 
+  const default_img =
+      "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000"
+
   const { data, loading, error } = useEventsSubscription({
     variables: {
       addresses: walletAddress,
@@ -49,17 +52,25 @@ const RecentActivity: React.FC = () => {
       <h1 className="text-xl font-bold mb-4">Live Feed</h1>
       {data.events.map((e, idx) => {
         const isDeposit = Boolean(e.deposit_id)
-        const isAtomCreate = !e.deposit_id && Boolean(e.atom_id)
-        const isTripleCreate = !e.deposit_id && Boolean(e.triple_id)
-
+        const isAtomCreate = !e.deposit_id && Boolean(e.atom?.id)
+        const isTripleCreate = !e.deposit_id && Boolean(e.triple?.id)
+        
         // ------ DEPOSIT ATOM ------
         if (isDeposit && e.deposit && !e.deposit.is_triple && e.atom) {
-          const senderId = e.deposit.sender.id
+          const senderImg = e.deposit.sender.image
+          const senderLabel = e.deposit.sender.label
+
+
           return (
             <div key={idx} className="pt-2 pb-3 border-b">
-              <p>
-                {renderSenderLink(senderId)}{" "}
-                <strong>deposit</strong> :
+              <p className="flex items-center gap-2">
+                <img
+                  src={senderImg ?? default_img} 
+                  alt={senderLabel}
+                  className="w-6 h-6 rounded-full"
+                />
+                <span className="text-sm font-medium">{renderSenderLink(senderLabel)}<strong> deposit</strong> :</span>
+                
               </p>
               <AtomCard atom={e.atom} />
             </div>
@@ -68,14 +79,19 @@ const RecentActivity: React.FC = () => {
 
         // ------ DEPOSIT TRIPLE ------
         if (isDeposit && e.deposit && e.deposit.is_triple && e.triple) {
-          const senderId = e.deposit.sender.id
+          const senderImg = e.deposit.sender.image
+          const senderLabel = e.deposit.sender.label
         console.log("ID DU PREDICATE:", e.triple.predicate.id)
 
           return (
             <div key={idx} className="pt-2 pb-2 border-b">
-              <p>
-                {renderSenderLink(senderId)}{" "}
-                <strong>deposit</strong> :
+              <p className="flex items-center gap-2">
+                <img
+                  src={senderImg ?? default_img} 
+                  alt={senderLabel}
+                  className="w-6 h-6 rounded-full"
+                />
+                <span className="text-sm font-medium">{renderSenderLink(senderLabel)}<strong> deposit</strong> :</span>
               </p>
               
                 <ClaimRowLite claim={e.triple} />
@@ -87,12 +103,18 @@ const RecentActivity: React.FC = () => {
         // ------ CREATE ATOM ------
         if (isAtomCreate && e.atom) {
           //)e.atom.creator.id est renseigné par ton fragment AtomMetadata
-          const creatorId = e.atom.creator.id
+          const creatorLabel = e.atom.creator.label
+          const creatorImg = e.atom.creator.image
+
           return (
             <div key={idx} className="pt-2 pb-3 border-b">
-              <p>
-                {renderSenderLink(creatorId)}{" "}
-                <strong>create</strong> atom:
+              <p className="flex items-center gap-2">
+                <img
+                  src={creatorImg ?? default_img} 
+                  alt={creatorLabel}
+                  className="w-6 h-6 rounded-full"
+                />
+                <span className="text-sm font-medium">{renderSenderLink(creatorLabel)}<strong> deposit</strong> :</span>
               </p>
               <AtomCard atom={e.atom} />
             </div>
@@ -101,12 +123,18 @@ const RecentActivity: React.FC = () => {
 
         // ------ CREATE TRIPLE ------
         if (isTripleCreate && e.triple) {
-          const creatorId = e.triple.creator_id
+          const creatorLabel = e.triple.creator.label
+          const creatorImg = e.triple.creator.image
+
           return (
             <div key={idx} className="pt-2 pb-2 border-b">
-              <p>
-                {renderSenderLink(creatorId)}{" "}
-                <strong>create</strong> triple:
+              <p className="flex items-center gap-2">
+                <img
+                  src={creatorImg ?? default_img} 
+                  alt={creatorLabel}
+                  className="w-6 h-6 rounded-full"
+                />
+                <span className="text-sm font-medium">{renderSenderLink(creatorLabel)}<strong> deposit</strong> :</span>
               </p>
               <ClaimRowLite claim={e.triple} />
             </div>

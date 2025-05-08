@@ -1,5 +1,14 @@
 subscription Events($addresses: [String!]!, $limit: Int!) {
-  events(order_by: [{ block_number: desc }] limit: $limit) {
+  events(    
+    where: {
+      _or: [
+        { deposit_id: { _is_null: false } }
+        { atom_id:    { _is_null: false } }
+        { triple_id:  { _is_null: false } }
+      ]
+    }
+    order_by: [{ block_number: desc }] 
+    limit: $limit) {
     ...EventDetailsSubscription
   }
 }

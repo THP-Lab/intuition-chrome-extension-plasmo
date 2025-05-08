@@ -51,8 +51,6 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
         ? "against"
         : undefined
         
-        console.log("ID DE L'TRIPLECARD PREDICATE :", predicate.id)
-
     return (
       <div
         className={cn(

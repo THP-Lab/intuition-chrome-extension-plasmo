@@ -10,6 +10,8 @@ fragment DepositEventFragment on events {
     }
     sender {
       id
+      label
+      image
     }
   }
 }

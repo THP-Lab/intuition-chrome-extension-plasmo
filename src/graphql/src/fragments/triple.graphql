@@ -105,6 +105,7 @@ fragment TripleVaultCouterVaultDetailsWithPositions on triples {
 fragment TripleMetadataSubscription on triples {
   id
   creator {
+    image
     label
     id
   }
@@ -119,7 +120,6 @@ fragment TripleMetadataSubscription on triples {
     label
     emoji
     type
-    ...AtomValue
     creator {
       ...AccountMetadata
     }
@@ -131,7 +131,6 @@ fragment TripleMetadataSubscription on triples {
     label
     emoji
     type
-    ...AtomValue
     creator {
       ...AccountMetadata
     }
@@ -143,7 +142,6 @@ fragment TripleMetadataSubscription on triples {
     label
     emoji
     type
-    ...AtomValue
     creator {
       ...AccountMetadata
     }

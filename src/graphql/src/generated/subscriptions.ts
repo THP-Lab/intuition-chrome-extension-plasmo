@@ -9399,7 +9399,12 @@ export type DepositEventFragmentFragment = {
     sender_assets_after_total_fees: any
     shares_for_receiver: any
     receiver: { __typename?: "accounts"; id: string }
-    sender?: { __typename?: "accounts"; id: string } | null
+    sender?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
 }
 
@@ -9677,7 +9682,12 @@ export type EventDetailsFragment = {
     sender_assets_after_total_fees: any
     shares_for_receiver: any
     receiver: { __typename?: "accounts"; id: string }
-    sender?: { __typename?: "accounts"; id: string } | null
+    sender?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
   redemption?: {
     __typename?: "redemptions"
@@ -9772,7 +9782,12 @@ export type EventDetailsSubscriptionFragment = {
         count: number
       } | null
     }
-    creator?: { __typename?: "accounts"; label: string; id: string } | null
+    creator?: {
+      __typename?: "accounts"
+      image?: string | null
+      label: string
+      id: string
+    } | null
     subject: {
       __typename?: "atoms"
       data?: string | null
@@ -9788,30 +9803,6 @@ export type EventDetailsSubscriptionFragment = {
         id: string
         atom_id?: any | null
         type: any
-      } | null
-      value?: {
-        __typename?: "atom_values"
-        person?: {
-          __typename?: "persons"
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        thing?: {
-          __typename?: "things"
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        organization?: {
-          __typename?: "organizations"
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
       } | null
     }
     predicate: {
@@ -9830,30 +9821,6 @@ export type EventDetailsSubscriptionFragment = {
         atom_id?: any | null
         type: any
       } | null
-      value?: {
-        __typename?: "atom_values"
-        person?: {
-          __typename?: "persons"
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        thing?: {
-          __typename?: "things"
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        organization?: {
-          __typename?: "organizations"
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-      } | null
     }
     object: {
       __typename?: "atoms"
@@ -9870,30 +9837,6 @@ export type EventDetailsSubscriptionFragment = {
         id: string
         atom_id?: any | null
         type: any
-      } | null
-      value?: {
-        __typename?: "atom_values"
-        person?: {
-          __typename?: "persons"
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        thing?: {
-          __typename?: "things"
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        organization?: {
-          __typename?: "organizations"
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
       } | null
     }
     vault?: {
@@ -9957,7 +9900,12 @@ export type EventDetailsSubscriptionFragment = {
     sender_assets_after_total_fees: any
     shares_for_receiver: any
     receiver: { __typename?: "accounts"; id: string }
-    sender?: { __typename?: "accounts"; id: string } | null
+    sender?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
   redemption?: {
     __typename?: "redemptions"
@@ -10856,7 +10804,12 @@ export type TripleMetadataSubscriptionFragment = {
   subject_id: any
   predicate_id: any
   object_id: any
-  creator?: { __typename?: "accounts"; label: string; id: string } | null
+  creator?: {
+    __typename?: "accounts"
+    image?: string | null
+    label: string
+    id: string
+  } | null
   subject: {
     __typename?: "atoms"
     data?: string | null
@@ -10872,30 +10825,6 @@ export type TripleMetadataSubscriptionFragment = {
       id: string
       atom_id?: any | null
       type: any
-    } | null
-    value?: {
-      __typename?: "atom_values"
-      person?: {
-        __typename?: "persons"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-      thing?: {
-        __typename?: "things"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-      organization?: {
-        __typename?: "organizations"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
     } | null
   }
   predicate: {
@@ -10914,30 +10843,6 @@ export type TripleMetadataSubscriptionFragment = {
       atom_id?: any | null
       type: any
     } | null
-    value?: {
-      __typename?: "atom_values"
-      person?: {
-        __typename?: "persons"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-      thing?: {
-        __typename?: "things"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-      organization?: {
-        __typename?: "organizations"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-    } | null
   }
   object: {
     __typename?: "atoms"
@@ -10954,30 +10859,6 @@ export type TripleMetadataSubscriptionFragment = {
       id: string
       atom_id?: any | null
       type: any
-    } | null
-    value?: {
-      __typename?: "atom_values"
-      person?: {
-        __typename?: "persons"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-      thing?: {
-        __typename?: "things"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-      organization?: {
-        __typename?: "organizations"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
     } | null
   }
 }
@@ -13735,7 +13616,12 @@ export type EventsSubscription = {
           count: number
         } | null
       }
-      creator?: { __typename?: "accounts"; label: string; id: string } | null
+      creator?: {
+        __typename?: "accounts"
+        image?: string | null
+        label: string
+        id: string
+      } | null
       subject: {
         __typename?: "atoms"
         data?: string | null
@@ -13751,30 +13637,6 @@ export type EventsSubscription = {
           id: string
           atom_id?: any | null
           type: any
-        } | null
-        value?: {
-          __typename?: "atom_values"
-          person?: {
-            __typename?: "persons"
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: "things"
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: "organizations"
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
         } | null
       }
       predicate: {
@@ -13793,30 +13655,6 @@ export type EventsSubscription = {
           atom_id?: any | null
           type: any
         } | null
-        value?: {
-          __typename?: "atom_values"
-          person?: {
-            __typename?: "persons"
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: "things"
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: "organizations"
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-        } | null
       }
       object: {
         __typename?: "atoms"
@@ -13833,30 +13671,6 @@ export type EventsSubscription = {
           id: string
           atom_id?: any | null
           type: any
-        } | null
-        value?: {
-          __typename?: "atom_values"
-          person?: {
-            __typename?: "persons"
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          thing?: {
-            __typename?: "things"
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
-          organization?: {
-            __typename?: "organizations"
-            name?: string | null
-            image?: string | null
-            description?: string | null
-            url?: string | null
-          } | null
         } | null
       }
       vault?: {
@@ -13928,7 +13742,12 @@ export type EventsSubscription = {
       sender_assets_after_total_fees: any
       shares_for_receiver: any
       receiver: { __typename?: "accounts"; id: string }
-      sender?: { __typename?: "accounts"; id: string } | null
+      sender?: {
+        __typename?: "accounts"
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
     redemption?: {
       __typename?: "redemptions"
@@ -15498,7 +15317,9 @@ export const DepositEventFragmentFragmentDoc = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -16591,7 +16412,9 @@ export const EventDetailsFragmentDoc = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -16944,6 +16767,7 @@ export const TripleMetadataSubscriptionFragmentDoc = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
+                { kind: "Field", name: { kind: "Name", value: "image" } },
                 { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "id" } }
               ]
@@ -16965,10 +16789,6 @@ export const TripleMetadataSubscriptionFragmentDoc = {
                 { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "emoji" } },
                 { kind: "Field", name: { kind: "Name", value: "type" } },
-                {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "AtomValue" }
-                },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "creator" },
@@ -16998,10 +16818,6 @@ export const TripleMetadataSubscriptionFragmentDoc = {
                 { kind: "Field", name: { kind: "Name", value: "emoji" } },
                 { kind: "Field", name: { kind: "Name", value: "type" } },
                 {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "AtomValue" }
-                },
-                {
                   kind: "Field",
                   name: { kind: "Name", value: "creator" },
                   selectionSet: {
@@ -17029,10 +16845,6 @@ export const TripleMetadataSubscriptionFragmentDoc = {
                 { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "emoji" } },
                 { kind: "Field", name: { kind: "Name", value: "type" } },
-                {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "AtomValue" }
-                },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "creator" },
@@ -17067,76 +16879,6 @@ export const TripleMetadataSubscriptionFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "atom_id" } },
           { kind: "Field", name: { kind: "Name", value: "type" } }
-        ]
-      }
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "AtomValue" },
-      typeCondition: {
-        kind: "NamedType",
-        name: { kind: "Name", value: "atoms" }
-      },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "value" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "person" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                      { kind: "Field", name: { kind: "Name", value: "image" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" }
-                      },
-                      { kind: "Field", name: { kind: "Name", value: "url" } }
-                    ]
-                  }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "thing" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                      { kind: "Field", name: { kind: "Name", value: "image" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" }
-                      },
-                      { kind: "Field", name: { kind: "Name", value: "url" } }
-                    ]
-                  }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "organization" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                      { kind: "Field", name: { kind: "Name", value: "image" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" }
-                      },
-                      { kind: "Field", name: { kind: "Name", value: "url" } }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
         ]
       }
     }
@@ -18091,7 +17833,9 @@ export const EventDetailsSubscriptionFragmentDoc = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -18251,6 +17995,7 @@ export const EventDetailsSubscriptionFragmentDoc = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
+                { kind: "Field", name: { kind: "Name", value: "image" } },
                 { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "id" } }
               ]
@@ -18272,10 +18017,6 @@ export const EventDetailsSubscriptionFragmentDoc = {
                 { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "emoji" } },
                 { kind: "Field", name: { kind: "Name", value: "type" } },
-                {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "AtomValue" }
-                },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "creator" },
@@ -18305,10 +18046,6 @@ export const EventDetailsSubscriptionFragmentDoc = {
                 { kind: "Field", name: { kind: "Name", value: "emoji" } },
                 { kind: "Field", name: { kind: "Name", value: "type" } },
                 {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "AtomValue" }
-                },
-                {
                   kind: "Field",
                   name: { kind: "Name", value: "creator" },
                   selectionSet: {
@@ -18336,10 +18073,6 @@ export const EventDetailsSubscriptionFragmentDoc = {
                 { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "emoji" } },
                 { kind: "Field", name: { kind: "Name", value: "type" } },
-                {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "AtomValue" }
-                },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "creator" },
@@ -31902,6 +31635,90 @@ export const EventsDocument = {
             arguments: [
               {
                 kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "_or" },
+                      value: {
+                        kind: "ListValue",
+                        values: [
+                          {
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "deposit_id" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "_is_null" },
+                                      value: {
+                                        kind: "BooleanValue",
+                                        value: false
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "atom_id" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "_is_null" },
+                                      value: {
+                                        kind: "BooleanValue",
+                                        value: false
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "triple_id" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "_is_null" },
+                                      value: {
+                                        kind: "BooleanValue",
+                                        value: false
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                kind: "Argument",
                 name: { kind: "Name", value: "order_by" },
                 value: {
                   kind: "ListValue",
@@ -32111,7 +31928,9 @@ export const EventsDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -32417,6 +32236,7 @@ export const EventsDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
+                { kind: "Field", name: { kind: "Name", value: "image" } },
                 { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "id" } }
               ]
@@ -32438,10 +32258,6 @@ export const EventsDocument = {
                 { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "emoji" } },
                 { kind: "Field", name: { kind: "Name", value: "type" } },
-                {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "AtomValue" }
-                },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "creator" },
@@ -32471,10 +32287,6 @@ export const EventsDocument = {
                 { kind: "Field", name: { kind: "Name", value: "emoji" } },
                 { kind: "Field", name: { kind: "Name", value: "type" } },
                 {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "AtomValue" }
-                },
-                {
                   kind: "Field",
                   name: { kind: "Name", value: "creator" },
                   selectionSet: {
@@ -32502,10 +32314,6 @@ export const EventsDocument = {
                 { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "emoji" } },
                 { kind: "Field", name: { kind: "Name", value: "type" } },
-                {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "AtomValue" }
-                },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "creator" },
