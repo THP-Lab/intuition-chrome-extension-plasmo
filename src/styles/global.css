@@ -77,7 +77,7 @@
 }
 
 .light-sweep-heading {
-  @apply text-center text-5xl md:text-6xl lg:text-7xl font-bold text-foreground;
+  @apply text-center text-5xl md:text-6xl lg:text-7xl font-bold text-[hsl(var(--foreground))];
   position: relative;
 }
 
