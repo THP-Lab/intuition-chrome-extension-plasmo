@@ -83,7 +83,7 @@ function PlasmoInline() {
           opacity: sidePanelOpen ? 0.2 : 1,
           transition: "opacity 0.3s ease"
         }}
-        onMouseEnter={() => sidePanelOpen && setSidePanelOpen(false)}
+        // onMouseEnter={() => sidePanelOpen && setSidePanelOpen(false)}
       >
         <IntuitionSearchIcon
           onSearch={handleSearch}
