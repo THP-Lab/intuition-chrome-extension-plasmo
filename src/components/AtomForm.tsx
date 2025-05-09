@@ -69,15 +69,22 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
   }, [description])
   
   useEffect(() => {
-    if (!rawUrl) return
+    if (!rawUrl) return;
+
     try {
-      const parsed = new URL(rawUrl)
-      const formatted = linkType === "url" ? parsed.href : parsed.hostname
-      setUrl(formatted)
-    } catch (err) {
-      setUrl(rawUrl) 
+      const input = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+      const parsed = new URL(input);
+
+      if (linkType === "domain") {
+        setUrl(`https://${parsed.hostname}/`);
+      } else {
+        setUrl(parsed.href);
+      }
+    } catch {
+      setUrl(rawUrl);
     }
-  }, [linkType, rawUrl])
+  }, [rawUrl, linkType]);
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
