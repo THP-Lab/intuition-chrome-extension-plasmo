@@ -116,7 +116,20 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
           </Link>
         )}
 
-      {tags && <Tags tags={tags} />}
+        {tags && (
+          <>
+            <Tags tags={tags} />
+            <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+              <TagCreator
+                subjectAtom={{
+                  id: atom.id,
+                  label: atom.label || "",
+                  vault_id: atom.vault_id || ""
+                }}
+              />
+            </div>
+          </>
+        )}
 
         {txHash && <p className="text-green-500 text-xs mt-2">Tx: {txHash}</p>}
       </div>
