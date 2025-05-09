@@ -17,15 +17,14 @@ function PlasmoInline() {
 
   useEffect(() => {
     const listener = (msg: any) => {
-      if (msg.type === "sidepanel_closed") {
-        setSidePanelOpen(false)
+      if (msg.type === "sidepanel_state") {
+        setSidePanelOpen(msg.open)
       }
     }
-
+  
     chrome.runtime.onMessage.addListener(listener)
     return () => chrome.runtime.onMessage.removeListener(listener)
   }, [])
-
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const startY = e.clientY
@@ -47,8 +46,7 @@ function PlasmoInline() {
   }
 
   const handleSidePanel = () => {
-    chrome.runtime.sendMessage({ type: "open_sidepanel" })
-    setSidePanelOpen(true) 
+    chrome.runtime.sendMessage({ type: "open_sidepanel" }) 
   }
 
   return (
