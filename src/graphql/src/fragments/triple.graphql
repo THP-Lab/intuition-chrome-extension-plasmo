@@ -1,5 +1,10 @@
 fragment TripleMetadata on triples {
   id
+  creator {
+    label
+    id
+  }
+  creator_id
   subject_id
   predicate_id
   object_id
@@ -87,9 +92,58 @@ fragment TripleVaultCouterVaultDetailsWithPositions on triples {
   vault_id
   counter_vault_id
   vault {
+    position_count
     ...VaultDetailsWithFilteredPositions
   }
   counter_vault {
+    position_count
     ...VaultDetailsWithFilteredPositions
+  }
+}
+
+
+fragment TripleMetadataSubscription on triples {
+  id
+  creator {
+    image
+    label
+    id
+  }
+  creator_id
+  subject_id
+  predicate_id
+  object_id
+  subject {
+    data
+    id
+    image
+    label
+    emoji
+    type
+    creator {
+      ...AccountMetadata
+    }
+  }
+  predicate {
+    data
+    id
+    image
+    label
+    emoji
+    type
+    creator {
+      ...AccountMetadata
+    }
+  }
+  object {
+    data
+    id
+    image
+    label
+    emoji
+    type
+    creator {
+      ...AccountMetadata
+    }
   }
 }
