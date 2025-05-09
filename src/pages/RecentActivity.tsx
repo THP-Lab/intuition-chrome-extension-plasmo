@@ -113,7 +113,7 @@ const RecentActivity: React.FC = () => {
                   alt={creatorLabel}
                   className="w-6 h-6 rounded-full"
                 />
-                <span className="text-sm font-medium">{renderSenderLink(creatorLabel)}<strong> deposit</strong> :</span>
+                <span className="text-sm font-medium">{renderSenderLink(creatorLabel)}<strong> create</strong> :</span>
               </p>
               <AtomCard atom={e.atom} />
             </div>
@@ -133,7 +133,7 @@ const RecentActivity: React.FC = () => {
                   alt={creatorLabel}
                   className="w-6 h-6 rounded-full"
                 />
-                <span className="text-sm font-medium">{renderSenderLink(creatorLabel)}<strong> deposit</strong> :</span>
+                <span className="text-sm font-medium">{renderSenderLink(creatorLabel)}<strong> create</strong> :</span>
               </p>
               <ClaimRowLite claim={e.triple} />
             </div>
