@@ -1,5 +1,5 @@
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
 
 export const config: PlasmoCSConfig = {
@@ -14,6 +14,7 @@ export const getShadowHostId = () => "plasmo-inline-example-unique-id"
 function PlasmoInline() {
   const [positionY, setPositionY] = useState<number>(50)
   const [sidePanelOpen, setSidePanelOpen] = useState(false)
+  const draggingRef = useRef(false)
 
   useEffect(() => {
     const listener = (msg: any) => {
@@ -21,7 +22,7 @@ function PlasmoInline() {
         setSidePanelOpen(msg.open)
       }
     }
-  
+
     chrome.runtime.onMessage.addListener(listener)
     return () => chrome.runtime.onMessage.removeListener(listener)
   }, [])
@@ -29,30 +30,41 @@ function PlasmoInline() {
   const handleMouseDown = (e: React.MouseEvent) => {
     const startY = e.clientY
     const startPositionY = positionY
-
+    draggingRef.current = false
+  
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaY = moveEvent.clientY - startY
-      const newY = startPositionY + (deltaY / window.innerHeight) * 100
-      setPositionY(Math.min(90, Math.max(0, newY)))
+      if (Math.abs(deltaY) > 5) {
+        draggingRef.current = true
+      }
+      if (draggingRef.current) {
+        const newY = startPositionY + (deltaY / window.innerHeight) * 100
+        setPositionY(Math.min(90, Math.max(0, newY)))
+      }
     }
-
+  
     const handleMouseUp = () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("mouseup", handleMouseUp)
+  
+      if (!draggingRef.current) {
+        handleSidePanel()
+      }
     }
-
+  
     window.addEventListener("mousemove", handleMouseMove)
     window.addEventListener("mouseup", handleMouseUp)
   }
 
+
   const handleSidePanel = () => {
-    chrome.runtime.sendMessage({ type: "open_sidepanel" }) 
+    chrome.runtime.sendMessage({ type: "open_sidepanel" })
   }
 
   return (
     <div>
       <div
-        onClick={handleSidePanel}
+        
         onMouseDown={handleMouseDown}
         style={{
           position: "fixed",
