@@ -10,6 +10,10 @@ function IndexSidepanel() {
 
   useEffect(() => {
     umamiCollect("pageview", "/sidepanel").catch(console.error)
+
+    return () => {
+      chrome.runtime.sendMessage({ type: "sidepanel_closed" })
+    }
   }, [])
 
   return (

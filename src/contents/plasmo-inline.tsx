@@ -12,28 +12,21 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
 export const getShadowHostId = () => "plasmo-inline-example-unique-id"
 
 function PlasmoInline() {
-  const [currentUrl, setCurrentUrl] = useState<string>("")
   const [positionY, setPositionY] = useState<number>(50)
-  const [sidePanelOpen, setSidePanelOpen] = useState<boolean>(false)
+  const [sidePanelOpen, setSidePanelOpen] = useState(false)
 
   useEffect(() => {
-    if ("navigation" in window) {
-      window.navigation.addEventListener("navigate", (event) => {
-        const url = new URL(event.destination.url)
-        setCurrentUrl(url.href)
-      })
+    const listener = (msg: any) => {
+      if (msg.type === "sidepanel_closed") {
+        setSidePanelOpen(false)
+      }
     }
 
-    const onLoad = () => {
-      const url = new URL(window.location.href)
-      setCurrentUrl(url.href)
-    }
-
-    window.addEventListener("load", onLoad)
-    return () => window.removeEventListener("load", onLoad)
+    chrome.runtime.onMessage.addListener(listener)
+    return () => chrome.runtime.onMessage.removeListener(listener)
   }, [])
 
-  // Handle vertical drag
+
   const handleMouseDown = (e: React.MouseEvent) => {
     const startY = e.clientY
     const startPositionY = positionY
@@ -53,15 +46,9 @@ function PlasmoInline() {
     window.addEventListener("mouseup", handleMouseUp)
   }
 
-  // Open side panel
   const handleSidePanel = () => {
     chrome.runtime.sendMessage({ type: "open_sidepanel" })
-    setSidePanelOpen(true)
-  }
-
-  // Optional search icon logic
-  const handleSearch = () => {
-    // chrome.runtime.sendMessage({ type: "open_sidepanel" })
+    setSidePanelOpen(true) 
   }
 
   return (
@@ -81,12 +68,11 @@ function PlasmoInline() {
           cursor: "grab",
           zIndex: 9999,
           opacity: sidePanelOpen ? 0.2 : 1,
-          transition: "opacity 0.3s ease"
+          transition: "opacity 0.3s ease",
         }}
-        // onMouseEnter={() => sidePanelOpen && setSidePanelOpen(false)}
       >
         <IntuitionSearchIcon
-          onSearch={handleSearch}
+          onSearch={() => {}}
           size={35}
           position={{ x: 0, y: 0 }}
           className="hover:opacity-80 transition-opacity"
