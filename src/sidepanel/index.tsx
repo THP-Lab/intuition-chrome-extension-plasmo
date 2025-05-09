@@ -10,6 +10,19 @@ function IndexSidepanel() {
 
   useEffect(() => {
     umamiCollect("pageview", "/sidepanel").catch(console.error)
+    const port = chrome.runtime.connect({ name: "sidepanel" })
+
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        port.postMessage({ type: "init", tabId: tabs[0].id })
+        console.log("[SIDEPANEL] Envoi tabId:", tabs[0].id)
+      }
+    })
+    
+
+    return () => {
+      port.disconnect()
+    }
   }, [])
 
   return (

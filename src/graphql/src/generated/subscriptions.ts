@@ -1,15 +1,5 @@
-import {
-  InfiniteData,
-  useInfiniteQuery,
-  UseInfiniteQueryOptions,
-  useMutation,
-  UseMutationOptions,
-  useQuery,
-  UseQueryOptions
-} from "@tanstack/react-query"
+import * as Apollo from "@apollo/client"
 import { DocumentNode } from "graphql"
-
-import { fetcher } from "../client"
 
 export type Maybe<T> = T | null
 export type InputMaybe<T> = Maybe<T>
@@ -31,6 +21,7 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never
     }
+const defaultOptions = {} as const
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string }
@@ -541,17 +532,18 @@ export type Accounts_Order_By = {
 }
 
 /** select columns of table "account" */
-export type Accounts_Select_Column =
+export enum Accounts_Select_Column {
   /** column name */
-  | "atom_id"
+  AtomId = "atom_id",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "image"
+  Image = "image",
   /** column name */
-  | "label"
+  Label = "label",
   /** column name */
-  | "type"
+  Type = "type"
+}
 
 /** aggregate stddev on columns */
 export type Accounts_Stddev_Fields = {
@@ -820,25 +812,26 @@ export type Atom_Values_Order_By = {
 }
 
 /** select columns of table "atom_value" */
-export type Atom_Values_Select_Column =
+export enum Atom_Values_Select_Column {
   /** column name */
-  | "account_id"
+  AccountId = "account_id",
   /** column name */
-  | "book_id"
+  BookId = "book_id",
   /** column name */
-  | "byte_object_id"
+  ByteObjectId = "byte_object_id",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "json_object_id"
+  JsonObjectId = "json_object_id",
   /** column name */
-  | "organization_id"
+  OrganizationId = "organization_id",
   /** column name */
-  | "person_id"
+  PersonId = "person_id",
   /** column name */
-  | "text_object_id"
+  TextObjectId = "text_object_id",
   /** column name */
-  | "thing_id"
+  ThingId = "thing_id"
+}
 
 /** aggregate stddev on columns */
 export type Atom_Values_Stddev_Fields = {
@@ -1369,33 +1362,34 @@ export type Atoms_Order_By = {
 }
 
 /** select columns of table "atom" */
-export type Atoms_Select_Column =
+export enum Atoms_Select_Column {
   /** column name */
-  | "block_number"
+  BlockNumber = "block_number",
   /** column name */
-  | "block_timestamp"
+  BlockTimestamp = "block_timestamp",
   /** column name */
-  | "creator_id"
+  CreatorId = "creator_id",
   /** column name */
-  | "data"
+  Data = "data",
   /** column name */
-  | "emoji"
+  Emoji = "emoji",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "image"
+  Image = "image",
   /** column name */
-  | "label"
+  Label = "label",
   /** column name */
-  | "transaction_hash"
+  TransactionHash = "transaction_hash",
   /** column name */
-  | "type"
+  Type = "type",
   /** column name */
-  | "value_id"
+  ValueId = "value_id",
   /** column name */
-  | "vault_id"
+  VaultId = "vault_id",
   /** column name */
-  | "wallet_id"
+  WalletId = "wallet_id"
+}
 
 /** aggregate stddev on columns */
 export type Atoms_Stddev_Fields = {
@@ -1659,17 +1653,18 @@ export type Books_Order_By = {
 }
 
 /** select columns of table "book" */
-export type Books_Select_Column =
+export enum Books_Select_Column {
   /** column name */
-  | "description"
+  Description = "description",
   /** column name */
-  | "genre"
+  Genre = "genre",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "name"
+  Name = "name",
   /** column name */
-  | "url"
+  Url = "url"
+}
 
 /** aggregate stddev on columns */
 export type Books_Stddev_Fields = {
@@ -1800,11 +1795,12 @@ export type Byte_Object_Order_By = {
 }
 
 /** select columns of table "byte_object" */
-export type Byte_Object_Select_Column =
+export enum Byte_Object_Select_Column {
   /** column name */
-  | "data"
+  Data = "data",
   /** column name */
-  | "id"
+  Id = "id"
+}
 
 /** aggregate stddev on columns */
 export type Byte_Object_Stddev_Fields = {
@@ -1915,19 +1911,20 @@ export type Cached_Images_Cached_Image_Order_By = {
 }
 
 /** select columns of table "cached_images.cached_image" */
-export type Cached_Images_Cached_Image_Select_Column =
+export enum Cached_Images_Cached_Image_Select_Column {
   /** column name */
-  | "created_at"
+  CreatedAt = "created_at",
   /** column name */
-  | "model"
+  Model = "model",
   /** column name */
-  | "original_url"
+  OriginalUrl = "original_url",
   /** column name */
-  | "safe"
+  Safe = "safe",
   /** column name */
-  | "score"
+  Score = "score",
   /** column name */
-  | "url"
+  Url = "url"
+}
 
 /** Streaming cursor of the table "cached_images_cached_image" */
 export type Cached_Images_Cached_Image_Stream_Cursor_Input = {
@@ -2030,15 +2027,16 @@ export type Caip10_Order_By = {
 }
 
 /** select columns of table "caip10" */
-export type Caip10_Select_Column =
+export enum Caip10_Select_Column {
   /** column name */
-  | "account_address"
+  AccountAddress = "account_address",
   /** column name */
-  | "chain_id"
+  ChainId = "chain_id",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "namespace"
+  Namespace = "namespace"
+}
 
 /** aggregate stddev on columns */
 export type Caip10_Stddev_Fields = {
@@ -2128,11 +2126,12 @@ export type Chainlink_Prices_Order_By = {
 }
 
 /** select columns of table "chainlink_price" */
-export type Chainlink_Prices_Select_Column =
+export enum Chainlink_Prices_Select_Column {
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "usd"
+  Usd = "usd"
+}
 
 /** Streaming cursor of the table "chainlink_prices" */
 export type Chainlink_Prices_Stream_Cursor_Input = {
@@ -2365,27 +2364,28 @@ export type Claims_Order_By = {
 }
 
 /** select columns of table "claim" */
-export type Claims_Select_Column =
+export enum Claims_Select_Column {
   /** column name */
-  | "account_id"
+  AccountId = "account_id",
   /** column name */
-  | "counter_shares"
+  CounterShares = "counter_shares",
   /** column name */
-  | "counter_vault_id"
+  CounterVaultId = "counter_vault_id",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "object_id"
+  ObjectId = "object_id",
   /** column name */
-  | "predicate_id"
+  PredicateId = "predicate_id",
   /** column name */
-  | "shares"
+  Shares = "shares",
   /** column name */
-  | "subject_id"
+  SubjectId = "subject_id",
   /** column name */
-  | "triple_id"
+  TripleId = "triple_id",
   /** column name */
-  | "vault_id"
+  VaultId = "vault_id"
+}
 
 /** aggregate stddev on columns */
 export type Claims_Stddev_Fields = {
@@ -2585,11 +2585,12 @@ export type Claims_Variance_Order_By = {
 }
 
 /** ordering argument of a cursor */
-export type Cursor_Ordering =
+export enum Cursor_Ordering {
   /** ascending ordering of the cursor */
-  | "ASC"
+  Asc = "ASC",
   /** descending ordering of the cursor */
-  | "DESC"
+  Desc = "DESC"
+}
 
 /** columns and relationships of "deposit" */
 export type Deposits = {
@@ -2865,47 +2866,50 @@ export type Deposits_Order_By = {
 }
 
 /** select columns of table "deposit" */
-export type Deposits_Select_Column =
+export enum Deposits_Select_Column {
   /** column name */
-  | "block_number"
+  BlockNumber = "block_number",
   /** column name */
-  | "block_timestamp"
+  BlockTimestamp = "block_timestamp",
   /** column name */
-  | "entry_fee"
+  EntryFee = "entry_fee",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "is_atom_wallet"
+  IsAtomWallet = "is_atom_wallet",
   /** column name */
-  | "is_triple"
+  IsTriple = "is_triple",
   /** column name */
-  | "receiver_id"
+  ReceiverId = "receiver_id",
   /** column name */
-  | "receiver_total_shares_in_vault"
+  ReceiverTotalSharesInVault = "receiver_total_shares_in_vault",
   /** column name */
-  | "sender_assets_after_total_fees"
+  SenderAssetsAfterTotalFees = "sender_assets_after_total_fees",
   /** column name */
-  | "sender_id"
+  SenderId = "sender_id",
   /** column name */
-  | "shares_for_receiver"
+  SharesForReceiver = "shares_for_receiver",
   /** column name */
-  | "transaction_hash"
+  TransactionHash = "transaction_hash",
   /** column name */
-  | "vault_id"
+  VaultId = "vault_id"
+}
 
 /** select "deposits_aggregate_bool_exp_bool_and_arguments_columns" columns of table "deposit" */
-export type Deposits_Select_Column_Deposits_Aggregate_Bool_Exp_Bool_And_Arguments_Columns =
+export enum Deposits_Select_Column_Deposits_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
   /** column name */
-  | "is_atom_wallet"
+  IsAtomWallet = "is_atom_wallet",
   /** column name */
-  | "is_triple"
+  IsTriple = "is_triple"
+}
 
 /** select "deposits_aggregate_bool_exp_bool_or_arguments_columns" columns of table "deposit" */
-export type Deposits_Select_Column_Deposits_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns =
+export enum Deposits_Select_Column_Deposits_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
   /** column name */
-  | "is_atom_wallet"
+  IsAtomWallet = "is_atom_wallet",
   /** column name */
-  | "is_triple"
+  IsTriple = "is_triple"
+}
 
 /** aggregate stddev on columns */
 export type Deposits_Stddev_Fields = {
@@ -3303,27 +3307,28 @@ export type Events_Order_By = {
 }
 
 /** select columns of table "event" */
-export type Events_Select_Column =
+export enum Events_Select_Column {
   /** column name */
-  | "atom_id"
+  AtomId = "atom_id",
   /** column name */
-  | "block_number"
+  BlockNumber = "block_number",
   /** column name */
-  | "block_timestamp"
+  BlockTimestamp = "block_timestamp",
   /** column name */
-  | "deposit_id"
+  DepositId = "deposit_id",
   /** column name */
-  | "fee_transfer_id"
+  FeeTransferId = "fee_transfer_id",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "redemption_id"
+  RedemptionId = "redemption_id",
   /** column name */
-  | "transaction_hash"
+  TransactionHash = "transaction_hash",
   /** column name */
-  | "triple_id"
+  TripleId = "triple_id",
   /** column name */
-  | "type"
+  Type = "type"
+}
 
 /** aggregate stddev on columns */
 export type Events_Stddev_Fields = {
@@ -3653,21 +3658,22 @@ export type Fee_Transfers_Order_By = {
 }
 
 /** select columns of table "fee_transfer" */
-export type Fee_Transfers_Select_Column =
+export enum Fee_Transfers_Select_Column {
   /** column name */
-  | "amount"
+  Amount = "amount",
   /** column name */
-  | "block_number"
+  BlockNumber = "block_number",
   /** column name */
-  | "block_timestamp"
+  BlockTimestamp = "block_timestamp",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "receiver_id"
+  ReceiverId = "receiver_id",
   /** column name */
-  | "sender_id"
+  SenderId = "sender_id",
   /** column name */
-  | "transaction_hash"
+  TransactionHash = "transaction_hash"
+}
 
 /** aggregate stddev on columns */
 export type Fee_Transfers_Stddev_Fields = {
@@ -3885,11 +3891,12 @@ export type Json_Objects_Order_By = {
 }
 
 /** select columns of table "json_object" */
-export type Json_Objects_Select_Column =
+export enum Json_Objects_Select_Column {
   /** column name */
-  | "data"
+  Data = "data",
   /** column name */
-  | "id"
+  Id = "id"
+}
 
 /** aggregate stddev on columns */
 export type Json_Objects_Stddev_Fields = {
@@ -4015,19 +4022,20 @@ export type Numeric_Comparison_Exp = {
 }
 
 /** column ordering options */
-export type Order_By =
+export enum Order_By {
   /** in ascending order, nulls last */
-  | "asc"
+  Asc = "asc",
   /** in ascending order, nulls first */
-  | "asc_nulls_first"
+  AscNullsFirst = "asc_nulls_first",
   /** in ascending order, nulls last */
-  | "asc_nulls_last"
+  AscNullsLast = "asc_nulls_last",
   /** in descending order, nulls first */
-  | "desc"
+  Desc = "desc",
   /** in descending order, nulls first */
-  | "desc_nulls_first"
+  DescNullsFirst = "desc_nulls_first",
   /** in descending order, nulls last */
-  | "desc_nulls_last"
+  DescNullsLast = "desc_nulls_last"
+}
 
 /** columns and relationships of "organization" */
 export type Organizations = {
@@ -4125,19 +4133,20 @@ export type Organizations_Order_By = {
 }
 
 /** select columns of table "organization" */
-export type Organizations_Select_Column =
+export enum Organizations_Select_Column {
   /** column name */
-  | "description"
+  Description = "description",
   /** column name */
-  | "email"
+  Email = "email",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "image"
+  Image = "image",
   /** column name */
-  | "name"
+  Name = "name",
   /** column name */
-  | "url"
+  Url = "url"
+}
 
 /** aggregate stddev on columns */
 export type Organizations_Stddev_Fields = {
@@ -4301,21 +4310,22 @@ export type Persons_Order_By = {
 }
 
 /** select columns of table "person" */
-export type Persons_Select_Column =
+export enum Persons_Select_Column {
   /** column name */
-  | "description"
+  Description = "description",
   /** column name */
-  | "email"
+  Email = "email",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "identifier"
+  Identifier = "identifier",
   /** column name */
-  | "image"
+  Image = "image",
   /** column name */
-  | "name"
+  Name = "name",
   /** column name */
-  | "url"
+  Url = "url"
+}
 
 /** aggregate stddev on columns */
 export type Persons_Stddev_Fields = {
@@ -4517,15 +4527,16 @@ export type Positions_Order_By = {
 }
 
 /** select columns of table "position" */
-export type Positions_Select_Column =
+export enum Positions_Select_Column {
   /** column name */
-  | "account_id"
+  AccountId = "account_id",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "shares"
+  Shares = "shares",
   /** column name */
-  | "vault_id"
+  VaultId = "vault_id"
+}
 
 /** aggregate stddev on columns */
 export type Positions_Stddev_Fields = {
@@ -4732,17 +4743,18 @@ export type Predicate_Objects_Order_By = {
 }
 
 /** select columns of table "predicate_object" */
-export type Predicate_Objects_Select_Column =
+export enum Predicate_Objects_Select_Column {
   /** column name */
-  | "claim_count"
+  ClaimCount = "claim_count",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "object_id"
+  ObjectId = "object_id",
   /** column name */
-  | "predicate_id"
+  PredicateId = "predicate_id",
   /** column name */
-  | "triple_count"
+  TripleCount = "triple_count"
+}
 
 /** aggregate stddev on columns */
 export type Predicate_Objects_Stddev_Fields = {
@@ -5798,29 +5810,30 @@ export type Redemptions_Order_By = {
 }
 
 /** select columns of table "redemption" */
-export type Redemptions_Select_Column =
+export enum Redemptions_Select_Column {
   /** column name */
-  | "assets_for_receiver"
+  AssetsForReceiver = "assets_for_receiver",
   /** column name */
-  | "block_number"
+  BlockNumber = "block_number",
   /** column name */
-  | "block_timestamp"
+  BlockTimestamp = "block_timestamp",
   /** column name */
-  | "exit_fee"
+  ExitFee = "exit_fee",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "receiver_id"
+  ReceiverId = "receiver_id",
   /** column name */
-  | "sender_id"
+  SenderId = "sender_id",
   /** column name */
-  | "sender_total_shares_in_vault"
+  SenderTotalSharesInVault = "sender_total_shares_in_vault",
   /** column name */
-  | "shares_redeemed_by_sender"
+  SharesRedeemedBySender = "shares_redeemed_by_sender",
   /** column name */
-  | "transaction_hash"
+  TransactionHash = "transaction_hash",
   /** column name */
-  | "vault_id"
+  VaultId = "vault_id"
+}
 
 /** aggregate stddev on columns */
 export type Redemptions_Stddev_Fields = {
@@ -6209,27 +6222,28 @@ export type Signals_Order_By = {
 }
 
 /** select columns of table "signal" */
-export type Signals_Select_Column =
+export enum Signals_Select_Column {
   /** column name */
-  | "account_id"
+  AccountId = "account_id",
   /** column name */
-  | "atom_id"
+  AtomId = "atom_id",
   /** column name */
-  | "block_number"
+  BlockNumber = "block_number",
   /** column name */
-  | "block_timestamp"
+  BlockTimestamp = "block_timestamp",
   /** column name */
-  | "delta"
+  Delta = "delta",
   /** column name */
-  | "deposit_id"
+  DepositId = "deposit_id",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "redemption_id"
+  RedemptionId = "redemption_id",
   /** column name */
-  | "transaction_hash"
+  TransactionHash = "transaction_hash",
   /** column name */
-  | "triple_id"
+  TripleId = "triple_id"
+}
 
 /** aggregate stddev on columns */
 export type Signals_Stddev_Fields = {
@@ -6500,25 +6514,26 @@ export type Stat_Hours_Order_By = {
 }
 
 /** select columns of table "stats_hour" */
-export type Stat_Hours_Select_Column =
+export enum Stat_Hours_Select_Column {
   /** column name */
-  | "contract_balance"
+  ContractBalance = "contract_balance",
   /** column name */
-  | "created_at"
+  CreatedAt = "created_at",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "total_accounts"
+  TotalAccounts = "total_accounts",
   /** column name */
-  | "total_atoms"
+  TotalAtoms = "total_atoms",
   /** column name */
-  | "total_fees"
+  TotalFees = "total_fees",
   /** column name */
-  | "total_positions"
+  TotalPositions = "total_positions",
   /** column name */
-  | "total_signals"
+  TotalSignals = "total_signals",
   /** column name */
-  | "total_triples"
+  TotalTriples = "total_triples"
+}
 
 /** aggregate stddev on columns */
 export type Stat_Hours_Stddev_Fields = {
@@ -6758,29 +6773,30 @@ export type Stats_Order_By = {
 }
 
 /** select columns of table "stats" */
-export type Stats_Select_Column =
+export enum Stats_Select_Column {
   /** column name */
-  | "contract_balance"
+  ContractBalance = "contract_balance",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "last_processed_block_number"
+  LastProcessedBlockNumber = "last_processed_block_number",
   /** column name */
-  | "last_processed_block_timestamp"
+  LastProcessedBlockTimestamp = "last_processed_block_timestamp",
   /** column name */
-  | "last_updated"
+  LastUpdated = "last_updated",
   /** column name */
-  | "total_accounts"
+  TotalAccounts = "total_accounts",
   /** column name */
-  | "total_atoms"
+  TotalAtoms = "total_atoms",
   /** column name */
-  | "total_fees"
+  TotalFees = "total_fees",
   /** column name */
-  | "total_positions"
+  TotalPositions = "total_positions",
   /** column name */
-  | "total_signals"
+  TotalSignals = "total_signals",
   /** column name */
-  | "total_triples"
+  TotalTriples = "total_triples"
+}
 
 /** aggregate stddev on columns */
 export type Stats_Stddev_Fields = {
@@ -7904,11 +7920,12 @@ export type Text_Objects_Order_By = {
 }
 
 /** select columns of table "text_object" */
-export type Text_Objects_Select_Column =
+export enum Text_Objects_Select_Column {
   /** column name */
-  | "data"
+  Data = "data",
   /** column name */
-  | "id"
+  Id = "id"
+}
 
 /** aggregate stddev on columns */
 export type Text_Objects_Stddev_Fields = {
@@ -8058,17 +8075,18 @@ export type Things_Order_By = {
 }
 
 /** select columns of table "thing" */
-export type Things_Select_Column =
+export enum Things_Select_Column {
   /** column name */
-  | "description"
+  Description = "description",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "image"
+  Image = "image",
   /** column name */
-  | "name"
+  Name = "name",
   /** column name */
-  | "url"
+  Url = "url"
+}
 
 /** aggregate stddev on columns */
 export type Things_Stddev_Fields = {
@@ -8401,27 +8419,28 @@ export type Triples_Order_By = {
 }
 
 /** select columns of table "triple" */
-export type Triples_Select_Column =
+export enum Triples_Select_Column {
   /** column name */
-  | "block_number"
+  BlockNumber = "block_number",
   /** column name */
-  | "block_timestamp"
+  BlockTimestamp = "block_timestamp",
   /** column name */
-  | "counter_vault_id"
+  CounterVaultId = "counter_vault_id",
   /** column name */
-  | "creator_id"
+  CreatorId = "creator_id",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "object_id"
+  ObjectId = "object_id",
   /** column name */
-  | "predicate_id"
+  PredicateId = "predicate_id",
   /** column name */
-  | "subject_id"
+  SubjectId = "subject_id",
   /** column name */
-  | "transaction_hash"
+  TransactionHash = "transaction_hash",
   /** column name */
-  | "vault_id"
+  VaultId = "vault_id"
+}
 
 /** aggregate stddev on columns */
 export type Triples_Stddev_Fields = {
@@ -8850,19 +8869,20 @@ export type Vaults_Order_By = {
 }
 
 /** select columns of table "vault" */
-export type Vaults_Select_Column =
+export enum Vaults_Select_Column {
   /** column name */
-  | "atom_id"
+  AtomId = "atom_id",
   /** column name */
-  | "current_share_price"
+  CurrentSharePrice = "current_share_price",
   /** column name */
-  | "id"
+  Id = "id",
   /** column name */
-  | "position_count"
+  PositionCount = "position_count",
   /** column name */
-  | "total_shares"
+  TotalShares = "total_shares",
   /** column name */
-  | "triple_id"
+  TripleId = "triple_id"
+}
 
 /** aggregate stddev on columns */
 export type Vaults_Stddev_Fields = {
@@ -11025,107 +11045,6 @@ export type GetAtomsByCreatorQuery = {
       position_count: number
       total_shares: any
       current_share_price: any
-    } | null
-    as_subject_claims_aggregate: {
-      __typename?: "claims_aggregate"
-      nodes: Array<{
-        __typename?: "claims"
-        predicate: { __typename?: "atoms"; label?: string | null }
-        object: { __typename?: "atoms"; label?: string | null }
-      }>
-    }
-  }>
-}
-
-export type GetAtomsWithPositionsQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars["Int"]["input"]>
-  offset?: InputMaybe<Scalars["Int"]["input"]>
-  orderBy?: InputMaybe<Array<Atoms_Order_By> | Atoms_Order_By>
-  where?: InputMaybe<Atoms_Bool_Exp>
-  address?: InputMaybe<Scalars["String"]["input"]>
-}>
-
-export type GetAtomsWithPositionsQuery = {
-  __typename?: "query_root"
-  total: {
-    __typename?: "atoms_aggregate"
-    aggregate?: { __typename?: "atoms_aggregate_fields"; count: number } | null
-  }
-  atoms: Array<{
-    __typename?: "atoms"
-    id: any
-    data?: string | null
-    image?: string | null
-    label?: string | null
-    emoji?: string | null
-    type: any
-    wallet_id: string
-    block_number: any
-    block_timestamp: any
-    transaction_hash: string
-    creator_id: string
-    vault?: {
-      __typename?: "vaults"
-      position_count: number
-      total_shares: any
-      current_share_price: any
-      total: {
-        __typename?: "positions_aggregate"
-        aggregate?: {
-          __typename?: "positions_aggregate_fields"
-          count: number
-          sum?: {
-            __typename?: "positions_sum_fields"
-            shares?: any | null
-          } | null
-        } | null
-      }
-      positions: Array<{
-        __typename?: "positions"
-        id: string
-        shares: any
-        account?: { __typename?: "accounts"; label: string; id: string } | null
-      }>
-    } | null
-    creator?: {
-      __typename?: "accounts"
-      id: string
-      label: string
-      image?: string | null
-      atom_id?: any | null
-      type: any
-    } | null
-    as_subject_claims_aggregate: {
-      __typename?: "claims_aggregate"
-      nodes: Array<{
-        __typename?: "claims"
-        predicate: { __typename?: "atoms"; label?: string | null }
-        object: { __typename?: "atoms"; label?: string | null }
-      }>
-    }
-    value?: {
-      __typename?: "atom_values"
-      person?: {
-        __typename?: "persons"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-      thing?: {
-        __typename?: "things"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-      organization?: {
-        __typename?: "organizations"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
     } | null
   }>
 }
@@ -13840,4475 +13759,7 @@ export type EventsSubscription = {
   }>
 }
 
-export const AccountClaimsAggregateFragmentDoc = `
-    fragment AccountClaimsAggregate on accounts {
-  claims_aggregate(order_by: {shares: desc}) {
-    aggregate {
-      count
-    }
-    nodes {
-      triple {
-        id
-      }
-      shares
-      counter_shares
-    }
-  }
-}
-    `
-export const AccountClaimsFragmentDoc = `
-    fragment AccountClaims on accounts {
-  claims(
-    order_by: {shares: desc}
-    limit: $claimsLimit
-    offset: $claimsOffset
-    where: $claimsWhere
-  ) {
-    triple {
-      id
-    }
-    shares
-    counter_shares
-  }
-}
-    `
-export const AccountPositionsAggregateFragmentDoc = `
-    fragment AccountPositionsAggregate on accounts {
-  positions_aggregate(order_by: {shares: desc}) {
-    aggregate {
-      count
-    }
-    nodes {
-      id
-      shares
-      vault {
-        id
-        total_shares
-        current_share_price
-        atom {
-          id
-          label
-        }
-        triple {
-          id
-        }
-      }
-    }
-  }
-}
-    `
-export const AccountPositionsFragmentDoc = `
-    fragment AccountPositions on accounts {
-  positions(
-    order_by: {shares: desc}
-    limit: $positionsLimit
-    offset: $positionsOffset
-    where: $positionsWhere
-  ) {
-    id
-    shares
-    vault {
-      id
-      total_shares
-      current_share_price
-      atom {
-        id
-        label
-      }
-      triple {
-        id
-      }
-    }
-  }
-}
-    `
-export const AccountAtomsFragmentDoc = `
-    fragment AccountAtoms on accounts {
-  atoms(
-    where: $atomsWhere
-    order_by: $atomsOrderBy
-    limit: $atomsLimit
-    offset: $atomsOffset
-  ) {
-    id
-    label
-    data
-    vault {
-      total_shares
-      positions_aggregate(where: {account_id: {_eq: $address}}) {
-        nodes {
-          account {
-            id
-          }
-          shares
-        }
-      }
-    }
-  }
-}
-    `
-export const AccountAtomsAggregateFragmentDoc = `
-    fragment AccountAtomsAggregate on accounts {
-  atoms_aggregate(
-    where: $atomsWhere
-    order_by: $atomsOrderBy
-    limit: $atomsLimit
-    offset: $atomsOffset
-  ) {
-    aggregate {
-      count
-      sum {
-        id
-      }
-    }
-    nodes {
-      id
-      label
-      data
-      vault {
-        total_shares
-        positions_aggregate(where: {account_id: {_eq: $address}}) {
-          nodes {
-            account {
-              id
-            }
-            shares
-          }
-        }
-      }
-    }
-  }
-}
-    `
-export const AccountTriplesFragmentDoc = `
-    fragment AccountTriples on accounts {
-  triples_aggregate(
-    where: $triplesWhere
-    order_by: $triplesOrderBy
-    limit: $triplesLimit
-    offset: $triplesOffset
-  ) {
-    aggregate {
-      count
-    }
-    nodes {
-      id
-      subject {
-        id
-        label
-      }
-      predicate {
-        id
-        label
-      }
-      object {
-        id
-        label
-      }
-    }
-  }
-}
-    `
-export const AccountTriplesAggregateFragmentDoc = `
-    fragment AccountTriplesAggregate on accounts {
-  triples_aggregate(
-    where: $triplesWhere
-    order_by: $triplesOrderBy
-    limit: $triplesLimit
-    offset: $triplesOffset
-  ) {
-    aggregate {
-      count
-    }
-    nodes {
-      id
-      subject {
-        id
-        label
-      }
-      predicate {
-        id
-        label
-      }
-      object {
-        id
-        label
-      }
-    }
-  }
-}
-    `
-export const AtomTxnFragmentDoc = `
-    fragment AtomTxn on atoms {
-  block_number
-  block_timestamp
-  transaction_hash
-  creator_id
-}
-    `
-export const AtomVaultDetailsFragmentDoc = `
-    fragment AtomVaultDetails on atoms {
-  vault_id
-  wallet_id
-  vault {
-    position_count
-    total_shares
-    current_share_price
-    positions_aggregate {
-      aggregate {
-        count
-        sum {
-          shares
-        }
-      }
-    }
-    positions {
-      id
-      account {
-        label
-        id
-      }
-      shares
-    }
-  }
-}
-    `
-export const AccountMetadataFragmentDoc = `
-    fragment AccountMetadata on accounts {
-  label
-  image
-  id
-  atom_id
-  type
-}
-    `
-export const AtomTripleFragmentDoc = `
-    fragment AtomTriple on atoms {
-  as_subject_triples {
-    id
-    object {
-      data
-      id
-      image
-      label
-      emoji
-      type
-      creator {
-        ...AccountMetadata
-      }
-    }
-    predicate {
-      data
-      id
-      image
-      label
-      emoji
-      type
-      creator {
-        ...AccountMetadata
-      }
-    }
-  }
-  as_predicate_triples {
-    id
-    subject {
-      data
-      id
-      image
-      label
-      emoji
-      type
-      creator {
-        ...AccountMetadata
-      }
-    }
-    object {
-      data
-      id
-      image
-      label
-      emoji
-      type
-      creator {
-        ...AccountMetadata
-      }
-    }
-  }
-  as_object_triples {
-    id
-    subject {
-      data
-      id
-      image
-      label
-      emoji
-      type
-      creator {
-        ...AccountMetadata
-      }
-    }
-    predicate {
-      data
-      id
-      image
-      label
-      emoji
-      type
-      creator {
-        ...AccountMetadata
-      }
-    }
-  }
-}
-    `
-export const AtomVaultDetailsWithPositionsFragmentDoc = `
-    fragment AtomVaultDetailsWithPositions on atoms {
-  vault {
-    total_shares
-    current_share_price
-    positions_aggregate(where: {account_id: {_in: $addresses}}) {
-      aggregate {
-        sum {
-          shares
-        }
-      }
-      nodes {
-        account {
-          id
-        }
-        shares
-      }
-    }
-  }
-}
-    `
-export const DepositEventFragmentFragmentDoc = `
-    fragment DepositEventFragment on events {
-  deposit {
-    vault_id
-    is_atom_wallet
-    is_triple
-    sender_assets_after_total_fees
-    shares_for_receiver
-    receiver {
-      id
-    }
-    sender {
-      id
-      label
-      image
-    }
-  }
-}
-    `
-export const RedemptionEventFragmentFragmentDoc = `
-    fragment RedemptionEventFragment on events {
-  redemption {
-    vault_id
-    receiver_id
-    shares_redeemed_by_sender
-    assets_for_receiver
-  }
-}
-    `
-export const AtomValueFragmentDoc = `
-    fragment AtomValue on atoms {
-  value {
-    person {
-      name
-      image
-      description
-      url
-    }
-    thing {
-      name
-      image
-      description
-      url
-    }
-    organization {
-      name
-      image
-      description
-      url
-    }
-  }
-}
-    `
-export const AtomMetadataFragmentDoc = `
-    fragment AtomMetadata on atoms {
-  id
-  data
-  image
-  label
-  emoji
-  type
-  wallet_id
-  creator {
-    id
-    label
-    image
-  }
-  ...AtomValue
-}
-    `
-export const PositionAggregateFieldsFragmentDoc = `
-    fragment PositionAggregateFields on positions_aggregate {
-  aggregate {
-    count
-    sum {
-      shares
-    }
-  }
-}
-    `
-export const PositionFieldsFragmentDoc = `
-    fragment PositionFields on positions {
-  account {
-    id
-    label
-  }
-  shares
-  vault {
-    id
-    total_shares
-    current_share_price
-  }
-}
-    `
-export const TripleMetadataFragmentDoc = `
-    fragment TripleMetadata on triples {
-  id
-  creator {
-    label
-    id
-  }
-  creator_id
-  subject_id
-  predicate_id
-  object_id
-  subject {
-    data
-    id
-    image
-    label
-    emoji
-    type
-    ...AtomValue
-    creator {
-      ...AccountMetadata
-    }
-  }
-  predicate {
-    data
-    id
-    image
-    label
-    emoji
-    type
-    ...AtomValue
-    creator {
-      ...AccountMetadata
-    }
-  }
-  object {
-    data
-    id
-    image
-    label
-    emoji
-    type
-    ...AtomValue
-    creator {
-      ...AccountMetadata
-    }
-  }
-  vault {
-    total_shares
-    current_share_price
-    allPositions: positions_aggregate {
-      ...PositionAggregateFields
-    }
-    positions {
-      ...PositionFields
-    }
-  }
-  counter_vault {
-    total_shares
-    current_share_price
-    allPositions: positions_aggregate {
-      ...PositionAggregateFields
-    }
-    positions {
-      ...PositionFields
-    }
-  }
-}
-    `
-export const EventDetailsFragmentDoc = `
-    fragment EventDetails on events {
-  block_number
-  block_timestamp
-  type
-  transaction_hash
-  atom_id
-  triple_id
-  deposit_id
-  redemption_id
-  ...DepositEventFragment
-  ...RedemptionEventFragment
-  atom {
-    ...AtomMetadata
-    vault {
-      total_shares
-      position_count
-      positions {
-        account_id
-        shares
-        account {
-          id
-          label
-          image
-        }
-      }
-    }
-  }
-  triple {
-    ...TripleMetadata
-    vault {
-      total_shares
-      position_count
-      positions {
-        account_id
-        shares
-        account {
-          id
-          label
-          image
-        }
-      }
-    }
-    counter_vault {
-      total_shares
-      position_count
-      positions {
-        account_id
-        shares
-        account {
-          id
-          label
-          image
-        }
-      }
-    }
-  }
-}
-    `
-export const TripleMetadataSubscriptionFragmentDoc = `
-    fragment TripleMetadataSubscription on triples {
-  id
-  creator {
-    image
-    label
-    id
-  }
-  creator_id
-  subject_id
-  predicate_id
-  object_id
-  subject {
-    data
-    id
-    image
-    label
-    emoji
-    type
-    creator {
-      ...AccountMetadata
-    }
-  }
-  predicate {
-    data
-    id
-    image
-    label
-    emoji
-    type
-    creator {
-      ...AccountMetadata
-    }
-  }
-  object {
-    data
-    id
-    image
-    label
-    emoji
-    type
-    creator {
-      ...AccountMetadata
-    }
-  }
-}
-    `
-export const VaultBasicDetailsFragmentDoc = `
-    fragment VaultBasicDetails on vaults {
-  id
-  atom {
-    id
-    label
-  }
-  triple {
-    id
-    subject {
-      id
-      label
-    }
-    predicate {
-      id
-      label
-    }
-    object {
-      id
-      label
-    }
-  }
-  current_share_price
-  total_shares
-}
-    `
-export const VaultFilteredPositionsFragmentDoc = `
-    fragment VaultFilteredPositions on vaults {
-  positions(where: {account_id: {_in: $addresses}}) {
-    ...PositionFields
-  }
-}
-    `
-export const VaultDetailsWithFilteredPositionsFragmentDoc = `
-    fragment VaultDetailsWithFilteredPositions on vaults {
-  ...VaultBasicDetails
-  ...VaultFilteredPositions
-}
-    `
-export const TripleVaultCouterVaultDetailsWithPositionsFragmentDoc = `
-    fragment TripleVaultCouterVaultDetailsWithPositions on triples {
-  vault_id
-  counter_vault_id
-  vault {
-    position_count
-    ...VaultDetailsWithFilteredPositions
-  }
-  counter_vault {
-    position_count
-    ...VaultDetailsWithFilteredPositions
-  }
-}
-    `
-export const EventDetailsSubscriptionFragmentDoc = `
-    fragment EventDetailsSubscription on events {
-  block_number
-  block_timestamp
-  type
-  transaction_hash
-  atom_id
-  triple_id
-  deposit_id
-  redemption_id
-  ...DepositEventFragment
-  ...RedemptionEventFragment
-  atom {
-    ...AtomMetadata
-    vault_id
-    vault {
-      id
-      total_shares
-      position_count
-      positions {
-        account_id
-        shares
-        account {
-          id
-          label
-          image
-        }
-      }
-    }
-  }
-  triple {
-    ...TripleMetadataSubscription
-    ...TripleVaultCouterVaultDetailsWithPositions
-    vault_id
-    counter_vault_id
-    claims_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-}
-    `
-export const FollowMetadataFragmentDoc = `
-    fragment FollowMetadata on triples {
-  id
-  subject {
-    id
-    label
-  }
-  predicate {
-    id
-    label
-  }
-  object {
-    id
-    label
-  }
-  vault {
-    id
-    total_shares
-    current_share_price
-    positions_aggregate(where: $positionsWhere) {
-      aggregate {
-        count
-        sum {
-          shares
-        }
-      }
-    }
-    positions(
-      limit: $positionsLimit
-      offset: $positionsOffset
-      order_by: $positionsOrderBy
-      where: $positionsWhere
-    ) {
-      account {
-        id
-        label
-      }
-      shares
-    }
-  }
-}
-    `
-export const FollowAggregateFragmentDoc = `
-    fragment FollowAggregate on triples_aggregate {
-  aggregate {
-    count
-  }
-}
-    `
-export const StatDetailsFragmentDoc = `
-    fragment StatDetails on stats {
-  contract_balance
-  total_accounts
-  total_fees
-  total_atoms
-  total_triples
-  total_positions
-  total_signals
-}
-    `
-export const TripleTxnFragmentDoc = `
-    fragment TripleTxn on triples {
-  block_number
-  block_timestamp
-  transaction_hash
-  creator_id
-}
-    `
-export const PositionDetailsFragmentDoc = `
-    fragment PositionDetails on positions {
-  id
-  account {
-    id
-    label
-    image
-  }
-  vault {
-    id
-    atom {
-      id
-      label
-      image
-    }
-    triple {
-      id
-      vault {
-        id
-        position_count
-        positions_aggregate {
-          aggregate {
-            sum {
-              shares
-            }
-          }
-        }
-      }
-      counter_vault {
-        id
-        position_count
-        positions_aggregate {
-          aggregate {
-            sum {
-              shares
-            }
-          }
-        }
-      }
-      subject {
-        data
-        id
-        label
-        image
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
-        }
-      }
-      predicate {
-        data
-        id
-        label
-        image
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
-        }
-      }
-      object {
-        data
-        id
-        label
-        image
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
-        }
-      }
-    }
-  }
-  shares
-  vault_id
-}
-    `
-export const TripleVaultDetailsFragmentDoc = `
-    fragment TripleVaultDetails on triples {
-  vault_id
-  counter_vault_id
-  vault {
-    positions {
-      ...PositionDetails
-    }
-  }
-  counter_vault {
-    positions {
-      ...PositionDetails
-    }
-  }
-}
-    `
-export const VaultUnfilteredPositionsFragmentDoc = `
-    fragment VaultUnfilteredPositions on vaults {
-  positions {
-    ...PositionFields
-  }
-}
-    `
-export const VaultDetailsFragmentDoc = `
-    fragment VaultDetails on vaults {
-  ...VaultBasicDetails
-}
-    `
-export const VaultPositionsAggregateFragmentDoc = `
-    fragment VaultPositionsAggregate on vaults {
-  positions_aggregate {
-    ...PositionAggregateFields
-  }
-}
-    `
-export const VaultFieldsForTripleFragmentDoc = `
-    fragment VaultFieldsForTriple on vaults {
-  total_shares
-  current_share_price
-  ...VaultPositionsAggregate
-  ...VaultFilteredPositions
-}
-    `
-export const PinPersonDocument = `
-    mutation pinPerson($name: String!, $description: String, $image: String, $url: String, $email: String, $identifier: String) {
-  pinPerson(
-    person: {name: $name, description: $description, image: $image, url: $url, email: $email, identifier: $identifier}
-  ) {
-    uri
-  }
-}
-    `
-
-export const usePinPersonMutation = <TError = unknown, TContext = unknown>(
-  options?: UseMutationOptions<
-    PinPersonMutation,
-    TError,
-    PinPersonMutationVariables,
-    TContext
-  >
-) => {
-  return useMutation<
-    PinPersonMutation,
-    TError,
-    PinPersonMutationVariables,
-    TContext
-  >({
-    mutationKey: ["pinPerson"],
-    mutationFn: (variables?: PinPersonMutationVariables) =>
-      fetcher<PinPersonMutation, PinPersonMutationVariables>(
-        PinPersonDocument,
-        variables
-      )(),
-    ...options
-  })
-}
-
-usePinPersonMutation.getKey = () => ["pinPerson"]
-
-usePinPersonMutation.fetcher = (
-  variables: PinPersonMutationVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<PinPersonMutation, PinPersonMutationVariables>(
-    PinPersonDocument,
-    variables,
-    options
-  )
-
-export const PinThingDocument = `
-    mutation pinThing($name: String!, $description: String, $image: String, $url: String) {
-  pinThing(
-    thing: {description: $description, image: $image, name: $name, url: $url}
-  ) {
-    uri
-  }
-}
-    `
-
-export const usePinThingMutation = <TError = unknown, TContext = unknown>(
-  options?: UseMutationOptions<
-    PinThingMutation,
-    TError,
-    PinThingMutationVariables,
-    TContext
-  >
-) => {
-  return useMutation<
-    PinThingMutation,
-    TError,
-    PinThingMutationVariables,
-    TContext
-  >({
-    mutationKey: ["pinThing"],
-    mutationFn: (variables?: PinThingMutationVariables) =>
-      fetcher<PinThingMutation, PinThingMutationVariables>(
-        PinThingDocument,
-        variables
-      )(),
-    ...options
-  })
-}
-
-usePinThingMutation.getKey = () => ["pinThing"]
-
-usePinThingMutation.fetcher = (
-  variables: PinThingMutationVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<PinThingMutation, PinThingMutationVariables>(
-    PinThingDocument,
-    variables,
-    options
-  )
-
-export const GetAtomsByCreatorDocument = `
-    query GetAtomsByCreator($address: String!) {
-  atoms(where: {creator: {id: {_eq: $address}}}) {
-    id
-    data
-    image
-    label
-    type
-    block_number
-    block_timestamp
-    transaction_hash
-    creator_id
-    value {
-      thing {
-        name
-        image
-        description
-        url
-      }
-    }
-    vault_id
-    vault {
-      position_count
-      total_shares
-      current_share_price
-    }
-    as_subject_claims_aggregate {
-      nodes {
-        predicate {
-          label
-        }
-        object {
-          label
-        }
-      }
-    }
-  }
-}
-    `
-
-export const useGetAtomsByCreatorQuery = <
-  TData = GetAtomsByCreatorQuery,
-  TError = unknown
->(
-  variables: GetAtomsByCreatorQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetAtomsByCreatorQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetAtomsByCreatorQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetAtomsByCreatorQuery, TError, TData>({
-    queryKey: ["GetAtomsByCreator", variables],
-    queryFn: fetcher<GetAtomsByCreatorQuery, GetAtomsByCreatorQueryVariables>(
-      GetAtomsByCreatorDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetAtomsByCreatorQuery.document = GetAtomsByCreatorDocument
-
-useGetAtomsByCreatorQuery.getKey = (
-  variables: GetAtomsByCreatorQueryVariables
-) => ["GetAtomsByCreator", variables]
-
-export const useInfiniteGetAtomsByCreatorQuery = <
-  TData = InfiniteData<GetAtomsByCreatorQuery>,
-  TError = unknown
->(
-  variables: GetAtomsByCreatorQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetAtomsByCreatorQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetAtomsByCreatorQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetAtomsByCreatorQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? ["GetAtomsByCreator.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetAtomsByCreatorQuery, GetAtomsByCreatorQueryVariables>(
-            GetAtomsByCreatorDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetAtomsByCreatorQuery.getKey = (
-  variables: GetAtomsByCreatorQueryVariables
-) => ["GetAtomsByCreator.infinite", variables]
-
-useGetAtomsByCreatorQuery.fetcher = (
-  variables: GetAtomsByCreatorQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetAtomsByCreatorQuery, GetAtomsByCreatorQueryVariables>(
-    GetAtomsByCreatorDocument,
-    variables,
-    options
-  )
-
-export const GetAtomsWithPositionsDocument = `
-    query GetAtomsWithPositions($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp, $address: String) {
-  total: atoms_aggregate(where: $where) {
-    aggregate {
-      count
-    }
-  }
-  atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
-    ...AtomMetadata
-    ...AtomTxn
-    vault {
-      position_count
-      total_shares
-      current_share_price
-      total: positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
-      }
-      positions(where: {account_id: {_eq: $address}}) {
-        id
-        account {
-          label
-          id
-        }
-        shares
-      }
-    }
-    creator {
-      ...AccountMetadata
-    }
-    as_subject_claims_aggregate {
-      nodes {
-        predicate {
-          label
-        }
-        object {
-          label
-        }
-      }
-    }
-  }
-}
-    ${AtomMetadataFragmentDoc}
-${AtomValueFragmentDoc}
-${AtomTxnFragmentDoc}
-${AccountMetadataFragmentDoc}`
-
-export const useGetAtomsWithPositionsQuery = <
-  TData = GetAtomsWithPositionsQuery,
-  TError = unknown
->(
-  variables?: GetAtomsWithPositionsQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetAtomsWithPositionsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetAtomsWithPositionsQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetAtomsWithPositionsQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ["GetAtomsWithPositions"]
-        : ["GetAtomsWithPositions", variables],
-    queryFn: fetcher<
-      GetAtomsWithPositionsQuery,
-      GetAtomsWithPositionsQueryVariables
-    >(GetAtomsWithPositionsDocument, variables),
-    ...options
-  })
-}
-
-useGetAtomsWithPositionsQuery.document = GetAtomsWithPositionsDocument
-
-useGetAtomsWithPositionsQuery.getKey = (
-  variables?: GetAtomsWithPositionsQueryVariables
-) =>
-  variables === undefined
-    ? ["GetAtomsWithPositions"]
-    : ["GetAtomsWithPositions", variables]
-
-export const useInfiniteGetAtomsWithPositionsQuery = <
-  TData = InfiniteData<GetAtomsWithPositionsQuery>,
-  TError = unknown
->(
-  variables: GetAtomsWithPositionsQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetAtomsWithPositionsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetAtomsWithPositionsQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetAtomsWithPositionsQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetAtomsWithPositions.infinite"]
-            : ["GetAtomsWithPositions.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<
-            GetAtomsWithPositionsQuery,
-            GetAtomsWithPositionsQueryVariables
-          >(GetAtomsWithPositionsDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetAtomsWithPositionsQuery.getKey = (
-  variables?: GetAtomsWithPositionsQueryVariables
-) =>
-  variables === undefined
-    ? ["GetAtomsWithPositions.infinite"]
-    : ["GetAtomsWithPositions.infinite", variables]
-
-useGetAtomsWithPositionsQuery.fetcher = (
-  variables?: GetAtomsWithPositionsQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetAtomsWithPositionsQuery, GetAtomsWithPositionsQueryVariables>(
-    GetAtomsWithPositionsDocument,
-    variables,
-    options
-  )
-
-export const GetClaimsByAddressDocument = `
-    query GetClaimsByAddress($address: String) {
-  claims_aggregate(where: {account_id: {_eq: $address}}) {
-    aggregate {
-      count
-    }
-    nodes {
-      account {
-        label
-      }
-      triple {
-        id
-        creator {
-          label
-          id
-          type
-        }
-        subject {
-          id
-          label
-          image
-          type
-        }
-        predicate {
-          id
-          label
-          image
-          type
-        }
-        object {
-          id
-          label
-          image
-          type
-        }
-        vault {
-          id
-          positions_aggregate {
-            aggregate {
-              count
-            }
-          }
-        }
-        counter_vault {
-          id
-          positions_aggregate {
-            aggregate {
-              count
-            }
-          }
-        }
-      }
-      id
-      vault_id
-      counter_vault_id
-      shares
-      counter_shares
-    }
-  }
-}
-    `
-
-export const useGetClaimsByAddressQuery = <
-  TData = GetClaimsByAddressQuery,
-  TError = unknown
->(
-  variables?: GetClaimsByAddressQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetClaimsByAddressQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetClaimsByAddressQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetClaimsByAddressQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ["GetClaimsByAddress"]
-        : ["GetClaimsByAddress", variables],
-    queryFn: fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
-      GetClaimsByAddressDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetClaimsByAddressQuery.document = GetClaimsByAddressDocument
-
-useGetClaimsByAddressQuery.getKey = (
-  variables?: GetClaimsByAddressQueryVariables
-) =>
-  variables === undefined
-    ? ["GetClaimsByAddress"]
-    : ["GetClaimsByAddress", variables]
-
-export const useInfiniteGetClaimsByAddressQuery = <
-  TData = InfiniteData<GetClaimsByAddressQuery>,
-  TError = unknown
->(
-  variables: GetClaimsByAddressQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetClaimsByAddressQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetClaimsByAddressQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetClaimsByAddressQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetClaimsByAddress.infinite"]
-            : ["GetClaimsByAddress.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
-            GetClaimsByAddressDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetClaimsByAddressQuery.getKey = (
-  variables?: GetClaimsByAddressQueryVariables
-) =>
-  variables === undefined
-    ? ["GetClaimsByAddress.infinite"]
-    : ["GetClaimsByAddress.infinite", variables]
-
-useGetClaimsByAddressQuery.fetcher = (
-  variables?: GetClaimsByAddressQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
-    GetClaimsByAddressDocument,
-    variables,
-    options
-  )
-
-export const GetClaimsByUriDocument = `
-    query GetClaimsByUri($uri: String, $address: String) {
-  atoms(
-    where: {_or: [{data: {_eq: $uri}}, {value: {thing: {url: {_eq: $uri}}}}, {value: {person: {url: {_eq: $uri}}}}, {value: {organization: {url: {_eq: $uri}}}}, {value: {book: {url: {_eq: $uri}}}}]}
-  ) {
-    as_object_claims_aggregate {
-      aggregate {
-        count
-      }
-      nodes {
-        id
-        predicate {
-          label
-          image
-          type
-          id
-        }
-        subject {
-          image
-          label
-          type
-          id
-        }
-        object {
-          label
-          image
-          type
-          id
-        }
-        vault {
-          id
-          positions_aggregate {
-            aggregate {
-              count
-            }
-          }
-          positions(where: {account_id: {_eq: $address}}) {
-            shares
-          }
-        }
-        counter_vault {
-          id
-          positions_aggregate {
-            aggregate {
-              count
-            }
-          }
-          positions(where: {account_id: {_eq: $address}}) {
-            shares
-          }
-        }
-        triple_id
-        triple {
-          creator {
-            label
-            id
-            type
-          }
-        }
-        shares
-        counter_shares
-      }
-    }
-    as_subject_claims_aggregate {
-      aggregate {
-        count
-      }
-      nodes {
-        id
-        predicate {
-          label
-          image
-          type
-          id
-        }
-        object {
-          label
-          image
-          type
-          id
-        }
-        subject {
-          label
-          image
-          type
-          id
-        }
-        vault {
-          id
-          positions_aggregate {
-            aggregate {
-              count
-            }
-          }
-          positions(where: {account_id: {_eq: $address}}) {
-            shares
-          }
-        }
-        counter_vault {
-          id
-          positions_aggregate {
-            aggregate {
-              count
-            }
-          }
-          positions(where: {account_id: {_eq: $address}}) {
-            shares
-          }
-        }
-        triple_id
-        triple {
-          creator {
-            label
-            id
-            type
-          }
-        }
-        shares
-        counter_shares
-      }
-    }
-    id
-    label
-    image
-    vault {
-      position_count
-    }
-    value {
-      thing {
-        description
-        url
-      }
-    }
-  }
-}
-    `
-
-export const useGetClaimsByUriQuery = <
-  TData = GetClaimsByUriQuery,
-  TError = unknown
->(
-  variables?: GetClaimsByUriQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetClaimsByUriQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<GetClaimsByUriQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetClaimsByUriQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ["GetClaimsByUri"]
-        : ["GetClaimsByUri", variables],
-    queryFn: fetcher<GetClaimsByUriQuery, GetClaimsByUriQueryVariables>(
-      GetClaimsByUriDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetClaimsByUriQuery.document = GetClaimsByUriDocument
-
-useGetClaimsByUriQuery.getKey = (variables?: GetClaimsByUriQueryVariables) =>
-  variables === undefined ? ["GetClaimsByUri"] : ["GetClaimsByUri", variables]
-
-export const useInfiniteGetClaimsByUriQuery = <
-  TData = InfiniteData<GetClaimsByUriQuery>,
-  TError = unknown
->(
-  variables: GetClaimsByUriQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetClaimsByUriQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetClaimsByUriQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetClaimsByUriQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetClaimsByUri.infinite"]
-            : ["GetClaimsByUri.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetClaimsByUriQuery, GetClaimsByUriQueryVariables>(
-            GetClaimsByUriDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetClaimsByUriQuery.getKey = (
-  variables?: GetClaimsByUriQueryVariables
-) =>
-  variables === undefined
-    ? ["GetClaimsByUri.infinite"]
-    : ["GetClaimsByUri.infinite", variables]
-
-useGetClaimsByUriQuery.fetcher = (
-  variables?: GetClaimsByUriQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetClaimsByUriQuery, GetClaimsByUriQueryVariables>(
-    GetClaimsByUriDocument,
-    variables,
-    options
-  )
-
-export const GetClaimsByAtomDocument = `
-    query GetClaimsByAtom($id: numeric, $address: String) {
-  claims_aggregate(
-    where: {_or: [{object_id: {_eq: $id}}, {subject_id: {_eq: $id}}, {predicate_id: {_eq: $id}}]}
-  ) {
-    aggregate {
-      count
-    }
-    nodes {
-      account {
-        label
-      }
-      triple {
-        id
-        subject {
-          id
-          label
-          image
-          type
-        }
-        predicate {
-          id
-          label
-          image
-          type
-        }
-        object {
-          id
-          label
-          image
-          type
-        }
-        vault {
-          id
-          positions(where: {account_id: {_eq: $address}}) {
-            shares
-            account {
-              id
-            }
-          }
-          positions_aggregate {
-            aggregate {
-              count
-            }
-          }
-        }
-        counter_vault {
-          id
-          positions(where: {account_id: {_eq: $address}}) {
-            shares
-            account {
-              id
-            }
-          }
-          positions_aggregate {
-            aggregate {
-              count
-            }
-          }
-        }
-      }
-    }
-  }
-}
-    `
-
-export const useGetClaimsByAtomQuery = <
-  TData = GetClaimsByAtomQuery,
-  TError = unknown
->(
-  variables?: GetClaimsByAtomQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetClaimsByAtomQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<GetClaimsByAtomQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetClaimsByAtomQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ["GetClaimsByAtom"]
-        : ["GetClaimsByAtom", variables],
-    queryFn: fetcher<GetClaimsByAtomQuery, GetClaimsByAtomQueryVariables>(
-      GetClaimsByAtomDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetClaimsByAtomQuery.document = GetClaimsByAtomDocument
-
-useGetClaimsByAtomQuery.getKey = (variables?: GetClaimsByAtomQueryVariables) =>
-  variables === undefined ? ["GetClaimsByAtom"] : ["GetClaimsByAtom", variables]
-
-export const useInfiniteGetClaimsByAtomQuery = <
-  TData = InfiniteData<GetClaimsByAtomQuery>,
-  TError = unknown
->(
-  variables: GetClaimsByAtomQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetClaimsByAtomQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetClaimsByAtomQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetClaimsByAtomQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetClaimsByAtom.infinite"]
-            : ["GetClaimsByAtom.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetClaimsByAtomQuery, GetClaimsByAtomQueryVariables>(
-            GetClaimsByAtomDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetClaimsByAtomQuery.getKey = (
-  variables?: GetClaimsByAtomQueryVariables
-) =>
-  variables === undefined
-    ? ["GetClaimsByAtom.infinite"]
-    : ["GetClaimsByAtom.infinite", variables]
-
-useGetClaimsByAtomQuery.fetcher = (
-  variables?: GetClaimsByAtomQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetClaimsByAtomQuery, GetClaimsByAtomQueryVariables>(
-    GetClaimsByAtomDocument,
-    variables,
-    options
-  )
-
-export const GetFollowersFromAddressDocument = `
-    query getFollowersFromAddress($address: String!) {
-  triples(
-    where: {predicate: {label: {_eq: "follow"}}, object: {accounts: {id: {_eq: $address}}}}
-  ) {
-    id
-    predicate {
-      label
-    }
-    object {
-      id
-    }
-    vault {
-      id
-      positions {
-        shares
-        account {
-          id
-          label
-          image
-        }
-      }
-    }
-    counter_vault {
-      id
-      positions {
-        shares
-        account {
-          id
-          label
-          image
-        }
-      }
-    }
-  }
-}
-    `
-
-export const useGetFollowersFromAddressQuery = <
-  TData = GetFollowersFromAddressQuery,
-  TError = unknown
->(
-  variables: GetFollowersFromAddressQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetFollowersFromAddressQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetFollowersFromAddressQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetFollowersFromAddressQuery, TError, TData>({
-    queryKey: ["getFollowersFromAddress", variables],
-    queryFn: fetcher<
-      GetFollowersFromAddressQuery,
-      GetFollowersFromAddressQueryVariables
-    >(GetFollowersFromAddressDocument, variables),
-    ...options
-  })
-}
-
-useGetFollowersFromAddressQuery.document = GetFollowersFromAddressDocument
-
-useGetFollowersFromAddressQuery.getKey = (
-  variables: GetFollowersFromAddressQueryVariables
-) => ["getFollowersFromAddress", variables]
-
-export const useInfiniteGetFollowersFromAddressQuery = <
-  TData = InfiniteData<GetFollowersFromAddressQuery>,
-  TError = unknown
->(
-  variables: GetFollowersFromAddressQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetFollowersFromAddressQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetFollowersFromAddressQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetFollowersFromAddressQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? [
-          "getFollowersFromAddress.infinite",
-          variables
-        ],
-        queryFn: (metaData) =>
-          fetcher<
-            GetFollowersFromAddressQuery,
-            GetFollowersFromAddressQueryVariables
-          >(GetFollowersFromAddressDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetFollowersFromAddressQuery.getKey = (
-  variables: GetFollowersFromAddressQueryVariables
-) => ["getFollowersFromAddress.infinite", variables]
-
-useGetFollowersFromAddressQuery.fetcher = (
-  variables: GetFollowersFromAddressQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetFollowersFromAddressQuery, GetFollowersFromAddressQueryVariables>(
-    GetFollowersFromAddressDocument,
-    variables,
-    options
-  )
-
-export const GetFollowingsFromAddressDocument = `
-    query getFollowingsFromAddress($address: String!) {
-  following(args: {address: $address}) {
-    id
-    image
-    label
-    type
-    triples(order_by: {id: desc}) {
-      id
-      creator {
-        label
-        id
-        type
-      }
-      subject {
-        id
-        label
-        image
-        type
-      }
-      predicate {
-        id
-        label
-        image
-        type
-      }
-      object {
-        id
-        label
-        image
-        type
-      }
-      vault_id
-      counter_vault_id
-      vault {
-        id
-        positions_aggregate {
-          aggregate {
-            count
-          }
-        }
-        positions(where: {account_id: {_eq: $address}}) {
-          shares
-          account {
-            id
-          }
-        }
-      }
-      counter_vault {
-        id
-        positions_aggregate {
-          aggregate {
-            count
-          }
-        }
-        positions(where: {account_id: {_eq: $address}}) {
-          shares
-          account {
-            id
-          }
-        }
-      }
-    }
-    positions_aggregate(limit: 10) {
-      aggregate {
-        count
-      }
-      nodes {
-        shares
-        vault {
-          id
-          triple {
-            id
-            object {
-              id
-              type
-              image
-              label
-            }
-            predicate {
-              id
-              type
-              image
-              label
-            }
-            subject {
-              id
-              type
-              image
-              label
-            }
-            counter_vault {
-              id
-              positions_aggregate {
-                aggregate {
-                  count
-                }
-              }
-              positions(where: {account_id: {_eq: $address}}) {
-                shares
-                account {
-                  id
-                }
-              }
-            }
-            vault {
-              id
-              positions_aggregate {
-                aggregate {
-                  count
-                }
-              }
-              positions(where: {account_id: {_eq: $address}}) {
-                shares
-                account {
-                  id
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-    `
-
-export const useGetFollowingsFromAddressQuery = <
-  TData = GetFollowingsFromAddressQuery,
-  TError = unknown
->(
-  variables: GetFollowingsFromAddressQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetFollowingsFromAddressQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetFollowingsFromAddressQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetFollowingsFromAddressQuery, TError, TData>({
-    queryKey: ["getFollowingsFromAddress", variables],
-    queryFn: fetcher<
-      GetFollowingsFromAddressQuery,
-      GetFollowingsFromAddressQueryVariables
-    >(GetFollowingsFromAddressDocument, variables),
-    ...options
-  })
-}
-
-useGetFollowingsFromAddressQuery.document = GetFollowingsFromAddressDocument
-
-useGetFollowingsFromAddressQuery.getKey = (
-  variables: GetFollowingsFromAddressQueryVariables
-) => ["getFollowingsFromAddress", variables]
-
-export const useInfiniteGetFollowingsFromAddressQuery = <
-  TData = InfiniteData<GetFollowingsFromAddressQuery>,
-  TError = unknown
->(
-  variables: GetFollowingsFromAddressQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetFollowingsFromAddressQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetFollowingsFromAddressQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetFollowingsFromAddressQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? [
-          "getFollowingsFromAddress.infinite",
-          variables
-        ],
-        queryFn: (metaData) =>
-          fetcher<
-            GetFollowingsFromAddressQuery,
-            GetFollowingsFromAddressQueryVariables
-          >(GetFollowingsFromAddressDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetFollowingsFromAddressQuery.getKey = (
-  variables: GetFollowingsFromAddressQueryVariables
-) => ["getFollowingsFromAddress.infinite", variables]
-
-useGetFollowingsFromAddressQuery.fetcher = (
-  variables: GetFollowingsFromAddressQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<
-    GetFollowingsFromAddressQuery,
-    GetFollowingsFromAddressQueryVariables
-  >(GetFollowingsFromAddressDocument, variables, options)
-
-export const GetFollowingsTriplesDocument = `
-    query GetFollowingsTriples($accountId: String!) {
-  triples(
-    where: {predicate: {label: {_eq: "follow"}}, subject: {accounts: {id: {_eq: $accountId}}, type: {_eq: "Account"}}}
-  ) {
-    id
-    object {
-      id
-      label
-      type
-      image
-      accounts {
-        id
-      }
-    }
-  }
-}
-    `
-
-export const useGetFollowingsTriplesQuery = <
-  TData = GetFollowingsTriplesQuery,
-  TError = unknown
->(
-  variables: GetFollowingsTriplesQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetFollowingsTriplesQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetFollowingsTriplesQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetFollowingsTriplesQuery, TError, TData>({
-    queryKey: ["GetFollowingsTriples", variables],
-    queryFn: fetcher<
-      GetFollowingsTriplesQuery,
-      GetFollowingsTriplesQueryVariables
-    >(GetFollowingsTriplesDocument, variables),
-    ...options
-  })
-}
-
-useGetFollowingsTriplesQuery.document = GetFollowingsTriplesDocument
-
-useGetFollowingsTriplesQuery.getKey = (
-  variables: GetFollowingsTriplesQueryVariables
-) => ["GetFollowingsTriples", variables]
-
-export const useInfiniteGetFollowingsTriplesQuery = <
-  TData = InfiniteData<GetFollowingsTriplesQuery>,
-  TError = unknown
->(
-  variables: GetFollowingsTriplesQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetFollowingsTriplesQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetFollowingsTriplesQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetFollowingsTriplesQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? [
-          "GetFollowingsTriples.infinite",
-          variables
-        ],
-        queryFn: (metaData) =>
-          fetcher<
-            GetFollowingsTriplesQuery,
-            GetFollowingsTriplesQueryVariables
-          >(GetFollowingsTriplesDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetFollowingsTriplesQuery.getKey = (
-  variables: GetFollowingsTriplesQueryVariables
-) => ["GetFollowingsTriples.infinite", variables]
-
-useGetFollowingsTriplesQuery.fetcher = (
-  variables: GetFollowingsTriplesQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetFollowingsTriplesQuery, GetFollowingsTriplesQueryVariables>(
-    GetFollowingsTriplesDocument,
-    variables,
-    options
-  )
-
-export const GetAccountByIdDocument = `
-    query GetAccountById($id: String!) {
-  account(id: $id) {
-    id
-    label
-    image
-  }
-}
-    `
-
-export const useGetAccountByIdQuery = <
-  TData = GetAccountByIdQuery,
-  TError = unknown
->(
-  variables: GetAccountByIdQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetAccountByIdQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<GetAccountByIdQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetAccountByIdQuery, TError, TData>({
-    queryKey: ["GetAccountById", variables],
-    queryFn: fetcher<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
-      GetAccountByIdDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetAccountByIdQuery.document = GetAccountByIdDocument
-
-useGetAccountByIdQuery.getKey = (variables: GetAccountByIdQueryVariables) => [
-  "GetAccountById",
-  variables
-]
-
-export const useInfiniteGetAccountByIdQuery = <
-  TData = InfiniteData<GetAccountByIdQuery>,
-  TError = unknown
->(
-  variables: GetAccountByIdQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetAccountByIdQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetAccountByIdQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetAccountByIdQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? ["GetAccountById.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
-            GetAccountByIdDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetAccountByIdQuery.getKey = (
-  variables: GetAccountByIdQueryVariables
-) => ["GetAccountById.infinite", variables]
-
-useGetAccountByIdQuery.fetcher = (
-  variables: GetAccountByIdQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
-    GetAccountByIdDocument,
-    variables,
-    options
-  )
-
-export const GetPersonsByIdentifierDocument = `
-    query GetPersonsByIdentifier($identifier: String!) {
-  persons(where: {identifier: {_eq: $identifier}}) {
-    id
-    name
-    image
-    description
-    email
-    url
-    identifier
-  }
-}
-    `
-
-export const useGetPersonsByIdentifierQuery = <
-  TData = GetPersonsByIdentifierQuery,
-  TError = unknown
->(
-  variables: GetPersonsByIdentifierQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetPersonsByIdentifierQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetPersonsByIdentifierQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetPersonsByIdentifierQuery, TError, TData>({
-    queryKey: ["GetPersonsByIdentifier", variables],
-    queryFn: fetcher<
-      GetPersonsByIdentifierQuery,
-      GetPersonsByIdentifierQueryVariables
-    >(GetPersonsByIdentifierDocument, variables),
-    ...options
-  })
-}
-
-useGetPersonsByIdentifierQuery.document = GetPersonsByIdentifierDocument
-
-useGetPersonsByIdentifierQuery.getKey = (
-  variables: GetPersonsByIdentifierQueryVariables
-) => ["GetPersonsByIdentifier", variables]
-
-export const useInfiniteGetPersonsByIdentifierQuery = <
-  TData = InfiniteData<GetPersonsByIdentifierQuery>,
-  TError = unknown
->(
-  variables: GetPersonsByIdentifierQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetPersonsByIdentifierQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetPersonsByIdentifierQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetPersonsByIdentifierQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? [
-          "GetPersonsByIdentifier.infinite",
-          variables
-        ],
-        queryFn: (metaData) =>
-          fetcher<
-            GetPersonsByIdentifierQuery,
-            GetPersonsByIdentifierQueryVariables
-          >(GetPersonsByIdentifierDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetPersonsByIdentifierQuery.getKey = (
-  variables: GetPersonsByIdentifierQueryVariables
-) => ["GetPersonsByIdentifier.infinite", variables]
-
-useGetPersonsByIdentifierQuery.fetcher = (
-  variables: GetPersonsByIdentifierQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetPersonsByIdentifierQuery, GetPersonsByIdentifierQueryVariables>(
-    GetPersonsByIdentifierDocument,
-    variables,
-    options
-  )
-
-export const GetListsDocument = `
-    query GetLists($where: predicate_objects_bool_exp) {
-  predicate_objects_aggregate(where: $where) {
-    aggregate {
-      count
-    }
-  }
-  predicate_objects(
-    where: $where
-    order_by: [{claim_count: desc}, {triple_count: desc}]
-  ) {
-    id
-    claim_count
-    triple_count
-    object {
-      id
-      label
-      image
-    }
-  }
-}
-    `
-
-export const useGetListsQuery = <TData = GetListsQuery, TError = unknown>(
-  variables?: GetListsQueryVariables,
-  options?: Omit<UseQueryOptions<GetListsQuery, TError, TData>, "queryKey"> & {
-    queryKey?: UseQueryOptions<GetListsQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetListsQuery, TError, TData>({
-    queryKey: variables === undefined ? ["GetLists"] : ["GetLists", variables],
-    queryFn: fetcher<GetListsQuery, GetListsQueryVariables>(
-      GetListsDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetListsQuery.document = GetListsDocument
-
-useGetListsQuery.getKey = (variables?: GetListsQueryVariables) =>
-  variables === undefined ? ["GetLists"] : ["GetLists", variables]
-
-export const useInfiniteGetListsQuery = <
-  TData = InfiniteData<GetListsQuery>,
-  TError = unknown
->(
-  variables: GetListsQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetListsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<GetListsQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetListsQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetLists.infinite"]
-            : ["GetLists.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetListsQuery, GetListsQueryVariables>(GetListsDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetListsQuery.getKey = (variables?: GetListsQueryVariables) =>
-  variables === undefined
-    ? ["GetLists.infinite"]
-    : ["GetLists.infinite", variables]
-
-useGetListsQuery.fetcher = (
-  variables?: GetListsQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetListsQuery, GetListsQueryVariables>(
-    GetListsDocument,
-    variables,
-    options
-  )
-
-export const GetListItemsDocument = `
-    query GetListItems($predicateId: numeric, $objectId: numeric) {
-  triples_aggregate(
-    where: {predicate_id: {_eq: predicateId}, object_id: {_eq: $objectId}}
-    order_by: [{vault: {position_count: desc}, counter_vault: {position_count: desc}}]
-  ) {
-    aggregate {
-      count
-    }
-    nodes {
-      ...TripleVaultDetails
-    }
-  }
-}
-    ${TripleVaultDetailsFragmentDoc}
-${PositionDetailsFragmentDoc}
-${AtomValueFragmentDoc}
-${AccountMetadataFragmentDoc}`
-
-export const useGetListItemsQuery = <
-  TData = GetListItemsQuery,
-  TError = unknown
->(
-  variables?: GetListItemsQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetListItemsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<GetListItemsQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetListItemsQuery, TError, TData>({
-    queryKey:
-      variables === undefined ? ["GetListItems"] : ["GetListItems", variables],
-    queryFn: fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
-      GetListItemsDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetListItemsQuery.document = GetListItemsDocument
-
-useGetListItemsQuery.getKey = (variables?: GetListItemsQueryVariables) =>
-  variables === undefined ? ["GetListItems"] : ["GetListItems", variables]
-
-export const useInfiniteGetListItemsQuery = <
-  TData = InfiniteData<GetListItemsQuery>,
-  TError = unknown
->(
-  variables: GetListItemsQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetListItemsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetListItemsQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetListItemsQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetListItems.infinite"]
-            : ["GetListItems.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
-            GetListItemsDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetListItemsQuery.getKey = (
-  variables?: GetListItemsQueryVariables
-) =>
-  variables === undefined
-    ? ["GetListItems.infinite"]
-    : ["GetListItems.infinite", variables]
-
-useGetListItemsQuery.fetcher = (
-  variables?: GetListItemsQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
-    GetListItemsDocument,
-    variables,
-    options
-  )
-
-export const GetListDetailsDocument = `
-    query GetListDetails($globalWhere: triples_bool_exp, $tagPredicateId: numeric, $limit: Int, $offset: Int, $orderBy: [triples_order_by!]) {
-  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
-    aggregate {
-      count
-    }
-  }
-  globalTriples: triples(
-    where: $globalWhere
-    limit: $limit
-    offset: $offset
-    order_by: $orderBy
-  ) {
-    id
-    vault_id
-    counter_vault_id
-    subject {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-      tags: as_subject_triples_aggregate(
-        where: {predicate_id: {_eq: $tagPredicateId}}
-      ) {
-        nodes {
-          object {
-            label
-            vault_id
-            taggedIdentities: as_object_triples_aggregate {
-              nodes {
-                subject {
-                  label
-                  vault_id
-                }
-                vault_id
-              }
-              aggregate {
-                count
-              }
-            }
-          }
-        }
-        aggregate {
-          count
-        }
-      }
-    }
-    object {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-    }
-    predicate {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-    }
-    vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
-      }
-    }
-    counter_vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
-      }
-    }
-  }
-}
-    `
-
-export const useGetListDetailsQuery = <
-  TData = GetListDetailsQuery,
-  TError = unknown
->(
-  variables?: GetListDetailsQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetListDetailsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<GetListDetailsQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetListDetailsQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ["GetListDetails"]
-        : ["GetListDetails", variables],
-    queryFn: fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
-      GetListDetailsDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetListDetailsQuery.document = GetListDetailsDocument
-
-useGetListDetailsQuery.getKey = (variables?: GetListDetailsQueryVariables) =>
-  variables === undefined ? ["GetListDetails"] : ["GetListDetails", variables]
-
-export const useInfiniteGetListDetailsQuery = <
-  TData = InfiniteData<GetListDetailsQuery>,
-  TError = unknown
->(
-  variables: GetListDetailsQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetListDetailsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetListDetailsQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetListDetailsQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetListDetails.infinite"]
-            : ["GetListDetails.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
-            GetListDetailsDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetListDetailsQuery.getKey = (
-  variables?: GetListDetailsQueryVariables
-) =>
-  variables === undefined
-    ? ["GetListDetails.infinite"]
-    : ["GetListDetails.infinite", variables]
-
-useGetListDetailsQuery.fetcher = (
-  variables?: GetListDetailsQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
-    GetListDetailsDocument,
-    variables,
-    options
-  )
-
-export const GetListDetailsWithPositionDocument = `
-    query GetListDetailsWithPosition($globalWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String, $limit: Int, $offset: Int, $orderBy: [triples_order_by!]) {
-  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
-    aggregate {
-      count
-    }
-  }
-  globalTriples: triples(
-    where: $globalWhere
-    limit: $limit
-    offset: $offset
-    order_by: $orderBy
-  ) {
-    id
-    vault_id
-    counter_vault_id
-    subject {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-      tags: as_subject_triples_aggregate(
-        where: {predicate_id: {_eq: $tagPredicateId}}
-      ) {
-        nodes {
-          object {
-            label
-            vault_id
-            taggedIdentities: as_object_triples_aggregate {
-              nodes {
-                subject {
-                  label
-                  vault_id
-                }
-                vault_id
-              }
-              aggregate {
-                count
-              }
-            }
-          }
-        }
-        aggregate {
-          count
-        }
-      }
-    }
-    object {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-    }
-    predicate {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-    }
-    vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
-      }
-      positions(where: {account_id: {_eq: $address}}) {
-        account {
-          id
-          label
-          image
-        }
-        shares
-      }
-    }
-    counter_vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
-      }
-      positions(where: {account_id: {_eq: $address}}) {
-        account {
-          id
-          label
-          image
-        }
-        shares
-      }
-    }
-  }
-}
-    `
-
-export const useGetListDetailsWithPositionQuery = <
-  TData = GetListDetailsWithPositionQuery,
-  TError = unknown
->(
-  variables?: GetListDetailsWithPositionQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetListDetailsWithPositionQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetListDetailsWithPositionQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetListDetailsWithPositionQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ["GetListDetailsWithPosition"]
-        : ["GetListDetailsWithPosition", variables],
-    queryFn: fetcher<
-      GetListDetailsWithPositionQuery,
-      GetListDetailsWithPositionQueryVariables
-    >(GetListDetailsWithPositionDocument, variables),
-    ...options
-  })
-}
-
-useGetListDetailsWithPositionQuery.document = GetListDetailsWithPositionDocument
-
-useGetListDetailsWithPositionQuery.getKey = (
-  variables?: GetListDetailsWithPositionQueryVariables
-) =>
-  variables === undefined
-    ? ["GetListDetailsWithPosition"]
-    : ["GetListDetailsWithPosition", variables]
-
-export const useInfiniteGetListDetailsWithPositionQuery = <
-  TData = InfiniteData<GetListDetailsWithPositionQuery>,
-  TError = unknown
->(
-  variables: GetListDetailsWithPositionQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetListDetailsWithPositionQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetListDetailsWithPositionQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetListDetailsWithPositionQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetListDetailsWithPosition.infinite"]
-            : ["GetListDetailsWithPosition.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<
-            GetListDetailsWithPositionQuery,
-            GetListDetailsWithPositionQueryVariables
-          >(GetListDetailsWithPositionDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetListDetailsWithPositionQuery.getKey = (
-  variables?: GetListDetailsWithPositionQueryVariables
-) =>
-  variables === undefined
-    ? ["GetListDetailsWithPosition.infinite"]
-    : ["GetListDetailsWithPosition.infinite", variables]
-
-useGetListDetailsWithPositionQuery.fetcher = (
-  variables?: GetListDetailsWithPositionQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<
-    GetListDetailsWithPositionQuery,
-    GetListDetailsWithPositionQueryVariables
-  >(GetListDetailsWithPositionDocument, variables, options)
-
-export const GetListDetailsWithUserDocument = `
-    query GetListDetailsWithUser($globalWhere: triples_bool_exp, $userWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String, $limit: Int, $offset: Int, $orderBy: [triples_order_by!]) {
-  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
-    aggregate {
-      count
-    }
-  }
-  globalTriples: triples(
-    where: $globalWhere
-    limit: $limit
-    offset: $offset
-    order_by: $orderBy
-  ) {
-    id
-    vault_id
-    counter_vault_id
-    subject {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-      tags: as_subject_triples_aggregate(
-        where: {predicate_id: {_eq: $tagPredicateId}}
-      ) {
-        nodes {
-          object {
-            label
-            vault_id
-            taggedIdentities: as_object_triples_aggregate {
-              nodes {
-                subject {
-                  label
-                  vault_id
-                }
-                vault_id
-              }
-              aggregate {
-                count
-              }
-            }
-          }
-        }
-        aggregate {
-          count
-        }
-      }
-    }
-    object {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-    }
-    predicate {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-    }
-    vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
-      }
-      positions(where: {account_id: {_eq: $address}}) {
-        account {
-          id
-          label
-          image
-        }
-        shares
-      }
-    }
-    counter_vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
-      }
-      positions(where: {account_id: {_eq: $address}}) {
-        account {
-          id
-          label
-          image
-        }
-        shares
-      }
-    }
-  }
-  userTriplesAggregate: triples_aggregate(where: $userWhere) {
-    aggregate {
-      count
-    }
-  }
-  userTriples: triples(where: $userWhere) {
-    id
-    vault_id
-    counter_vault_id
-    subject {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-      tags: as_subject_triples_aggregate(
-        where: {predicate_id: {_eq: $tagPredicateId}}
-      ) {
-        nodes {
-          object {
-            label
-            vault_id
-            taggedIdentities: as_object_triples_aggregate {
-              nodes {
-                subject {
-                  label
-                  vault_id
-                }
-                vault_id
-              }
-              aggregate {
-                count
-              }
-            }
-          }
-        }
-        aggregate {
-          count
-        }
-      }
-    }
-    object {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-    }
-    predicate {
-      id
-      vault_id
-      label
-      wallet_id
-      image
-      type
-    }
-    vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
-      }
-      positions(where: {account_id: {_eq: $address}}) {
-        account {
-          id
-          label
-          image
-        }
-        shares
-      }
-    }
-    counter_vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
-      }
-      positions(where: {account_id: {_eq: $address}}) {
-        account {
-          id
-          label
-          image
-        }
-        shares
-      }
-    }
-  }
-}
-    `
-
-export const useGetListDetailsWithUserQuery = <
-  TData = GetListDetailsWithUserQuery,
-  TError = unknown
->(
-  variables?: GetListDetailsWithUserQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetListDetailsWithUserQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetListDetailsWithUserQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetListDetailsWithUserQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ["GetListDetailsWithUser"]
-        : ["GetListDetailsWithUser", variables],
-    queryFn: fetcher<
-      GetListDetailsWithUserQuery,
-      GetListDetailsWithUserQueryVariables
-    >(GetListDetailsWithUserDocument, variables),
-    ...options
-  })
-}
-
-useGetListDetailsWithUserQuery.document = GetListDetailsWithUserDocument
-
-useGetListDetailsWithUserQuery.getKey = (
-  variables?: GetListDetailsWithUserQueryVariables
-) =>
-  variables === undefined
-    ? ["GetListDetailsWithUser"]
-    : ["GetListDetailsWithUser", variables]
-
-export const useInfiniteGetListDetailsWithUserQuery = <
-  TData = InfiniteData<GetListDetailsWithUserQuery>,
-  TError = unknown
->(
-  variables: GetListDetailsWithUserQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetListDetailsWithUserQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetListDetailsWithUserQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetListDetailsWithUserQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetListDetailsWithUser.infinite"]
-            : ["GetListDetailsWithUser.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<
-            GetListDetailsWithUserQuery,
-            GetListDetailsWithUserQueryVariables
-          >(GetListDetailsWithUserDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetListDetailsWithUserQuery.getKey = (
-  variables?: GetListDetailsWithUserQueryVariables
-) =>
-  variables === undefined
-    ? ["GetListDetailsWithUser.infinite"]
-    : ["GetListDetailsWithUser.infinite", variables]
-
-useGetListDetailsWithUserQuery.fetcher = (
-  variables?: GetListDetailsWithUserQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetListDetailsWithUserQuery, GetListDetailsWithUserQueryVariables>(
-    GetListDetailsWithUserDocument,
-    variables,
-    options
-  )
-
-export const GetFeeTransfersDocument = `
-    query GetFeeTransfers($address: String!, $cutoff_timestamp: bigint) {
-  before_cutoff: fee_transfers_aggregate(
-    where: {block_timestamp: {_lte: $cutoff_timestamp}, sender_id: {_eq: $address}}
-  ) {
-    aggregate {
-      sum {
-        amount
-      }
-    }
-  }
-  after_cutoff: fee_transfers_aggregate(
-    where: {block_timestamp: {_gt: $cutoff_timestamp}, sender_id: {_eq: $address}}
-  ) {
-    aggregate {
-      sum {
-        amount
-      }
-    }
-  }
-}
-    `
-
-export const useGetFeeTransfersQuery = <
-  TData = GetFeeTransfersQuery,
-  TError = unknown
->(
-  variables: GetFeeTransfersQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetFeeTransfersQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<GetFeeTransfersQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetFeeTransfersQuery, TError, TData>({
-    queryKey: ["GetFeeTransfers", variables],
-    queryFn: fetcher<GetFeeTransfersQuery, GetFeeTransfersQueryVariables>(
-      GetFeeTransfersDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetFeeTransfersQuery.document = GetFeeTransfersDocument
-
-useGetFeeTransfersQuery.getKey = (variables: GetFeeTransfersQueryVariables) => [
-  "GetFeeTransfers",
-  variables
-]
-
-export const useInfiniteGetFeeTransfersQuery = <
-  TData = InfiniteData<GetFeeTransfersQuery>,
-  TError = unknown
->(
-  variables: GetFeeTransfersQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetFeeTransfersQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetFeeTransfersQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetFeeTransfersQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? ["GetFeeTransfers.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetFeeTransfersQuery, GetFeeTransfersQueryVariables>(
-            GetFeeTransfersDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetFeeTransfersQuery.getKey = (
-  variables: GetFeeTransfersQueryVariables
-) => ["GetFeeTransfers.infinite", variables]
-
-useGetFeeTransfersQuery.fetcher = (
-  variables: GetFeeTransfersQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetFeeTransfersQuery, GetFeeTransfersQueryVariables>(
-    GetFeeTransfersDocument,
-    variables,
-    options
-  )
-
-export const GetSignalsDocument = `
-    query GetSignals($limit: Int, $offset: Int, $orderBy: [signals_order_by!], $addresses: [String!]) {
-  total: events_aggregate {
-    aggregate {
-      count
-    }
-  }
-  signals(limit: $limit, offset: $offset, order_by: $orderBy) {
-    id
-    block_number
-    block_timestamp
-    transaction_hash
-    atom_id
-    triple_id
-    deposit_id
-    redemption_id
-    atom {
-      ...AtomMetadata
-      vault {
-        total_shares
-        position_count
-        positions(where: {account: {id: {_in: $addresses}}}) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
-          }
-        }
-      }
-    }
-    triple {
-      id
-      creator {
-        ...AccountMetadata
-      }
-      subject {
-        data
-        id
-        image
-        label
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
-        }
-      }
-      predicate {
-        data
-        id
-        image
-        label
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
-        }
-      }
-      object {
-        data
-        id
-        image
-        label
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
-        }
-      }
-      vault {
-        total_shares
-        position_count
-        positions(where: {account: {id: {_in: $addresses}}}) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
-          }
-        }
-      }
-      counter_vault {
-        total_shares
-        position_count
-        positions(where: {account: {id: {_in: $addresses}}}) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
-          }
-        }
-      }
-    }
-    deposit {
-      sender_id
-      sender {
-        id
-        label
-        image
-      }
-      receiver_id
-      receiver {
-        id
-        label
-        image
-      }
-      shares_for_receiver
-      sender_assets_after_total_fees
-      vault {
-        total_shares
-        position_count
-        positions(where: {account: {id: {_in: $addresses}}}) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
-          }
-        }
-      }
-    }
-    redemption {
-      sender_id
-      sender {
-        id
-        label
-        image
-      }
-      receiver_id
-      receiver {
-        id
-        label
-        image
-      }
-      assets_for_receiver
-      shares_redeemed_by_sender
-    }
-  }
-}
-    ${AtomMetadataFragmentDoc}
-${AtomValueFragmentDoc}
-${AccountMetadataFragmentDoc}`
-
-export const useGetSignalsQuery = <TData = GetSignalsQuery, TError = unknown>(
-  variables?: GetSignalsQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetSignalsQuery, TError, TData>,
-    "queryKey"
-  > & { queryKey?: UseQueryOptions<GetSignalsQuery, TError, TData>["queryKey"] }
-) => {
-  return useQuery<GetSignalsQuery, TError, TData>({
-    queryKey:
-      variables === undefined ? ["GetSignals"] : ["GetSignals", variables],
-    queryFn: fetcher<GetSignalsQuery, GetSignalsQueryVariables>(
-      GetSignalsDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetSignalsQuery.document = GetSignalsDocument
-
-useGetSignalsQuery.getKey = (variables?: GetSignalsQueryVariables) =>
-  variables === undefined ? ["GetSignals"] : ["GetSignals", variables]
-
-export const useInfiniteGetSignalsQuery = <
-  TData = InfiniteData<GetSignalsQuery>,
-  TError = unknown
->(
-  variables: GetSignalsQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetSignalsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetSignalsQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetSignalsQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetSignals.infinite"]
-            : ["GetSignals.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetSignalsQuery, GetSignalsQueryVariables>(
-            GetSignalsDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetSignalsQuery.getKey = (variables?: GetSignalsQueryVariables) =>
-  variables === undefined
-    ? ["GetSignals.infinite"]
-    : ["GetSignals.infinite", variables]
-
-useGetSignalsQuery.fetcher = (
-  variables?: GetSignalsQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetSignalsQuery, GetSignalsQueryVariables>(
-    GetSignalsDocument,
-    variables,
-    options
-  )
-
-export const GetStatsDocument = `
-    query GetStats {
-  stats {
-    ...StatDetails
-  }
-}
-    ${StatDetailsFragmentDoc}`
-
-export const useGetStatsQuery = <TData = GetStatsQuery, TError = unknown>(
-  variables?: GetStatsQueryVariables,
-  options?: Omit<UseQueryOptions<GetStatsQuery, TError, TData>, "queryKey"> & {
-    queryKey?: UseQueryOptions<GetStatsQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetStatsQuery, TError, TData>({
-    queryKey: variables === undefined ? ["GetStats"] : ["GetStats", variables],
-    queryFn: fetcher<GetStatsQuery, GetStatsQueryVariables>(
-      GetStatsDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetStatsQuery.document = GetStatsDocument
-
-useGetStatsQuery.getKey = (variables?: GetStatsQueryVariables) =>
-  variables === undefined ? ["GetStats"] : ["GetStats", variables]
-
-export const useInfiniteGetStatsQuery = <
-  TData = InfiniteData<GetStatsQuery>,
-  TError = unknown
->(
-  variables: GetStatsQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetStatsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<GetStatsQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetStatsQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetStats.infinite"]
-            : ["GetStats.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetStatsQuery.getKey = (variables?: GetStatsQueryVariables) =>
-  variables === undefined
-    ? ["GetStats.infinite"]
-    : ["GetStats.infinite", variables]
-
-useGetStatsQuery.fetcher = (
-  variables?: GetStatsQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetStatsQuery, GetStatsQueryVariables>(
-    GetStatsDocument,
-    variables,
-    options
-  )
-
-export const GetTagsDocument = `
-    query GetTags($subjectId: numeric!, $predicateId: numeric!) {
-  triples(
-    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}]}
-  ) {
-    ...TripleMetadata
-  }
-}
-    ${TripleMetadataFragmentDoc}
-${AtomValueFragmentDoc}
-${AccountMetadataFragmentDoc}
-${PositionAggregateFieldsFragmentDoc}
-${PositionFieldsFragmentDoc}`
-
-export const useGetTagsQuery = <TData = GetTagsQuery, TError = unknown>(
-  variables: GetTagsQueryVariables,
-  options?: Omit<UseQueryOptions<GetTagsQuery, TError, TData>, "queryKey"> & {
-    queryKey?: UseQueryOptions<GetTagsQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetTagsQuery, TError, TData>({
-    queryKey: ["GetTags", variables],
-    queryFn: fetcher<GetTagsQuery, GetTagsQueryVariables>(
-      GetTagsDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetTagsQuery.document = GetTagsDocument
-
-useGetTagsQuery.getKey = (variables: GetTagsQueryVariables) => [
-  "GetTags",
-  variables
-]
-
-export const useInfiniteGetTagsQuery = <
-  TData = InfiniteData<GetTagsQuery>,
-  TError = unknown
->(
-  variables: GetTagsQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetTagsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<GetTagsQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetTagsQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? ["GetTags.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetTagsQuery, GetTagsQueryVariables>(GetTagsDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetTagsQuery.getKey = (variables: GetTagsQueryVariables) => [
-  "GetTags.infinite",
-  variables
-]
-
-useGetTagsQuery.fetcher = (
-  variables: GetTagsQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetTagsQuery, GetTagsQueryVariables>(
-    GetTagsDocument,
-    variables,
-    options
-  )
-
-export const GetTagsCustomDocument = `
-    query GetTagsCustom($where: triples_bool_exp) {
-  triples(where: $where) {
-    ...TripleMetadata
-  }
-}
-    ${TripleMetadataFragmentDoc}
-${AtomValueFragmentDoc}
-${AccountMetadataFragmentDoc}
-${PositionAggregateFieldsFragmentDoc}
-${PositionFieldsFragmentDoc}`
-
-export const useGetTagsCustomQuery = <
-  TData = GetTagsCustomQuery,
-  TError = unknown
->(
-  variables?: GetTagsCustomQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetTagsCustomQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<GetTagsCustomQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetTagsCustomQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ["GetTagsCustom"]
-        : ["GetTagsCustom", variables],
-    queryFn: fetcher<GetTagsCustomQuery, GetTagsCustomQueryVariables>(
-      GetTagsCustomDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetTagsCustomQuery.document = GetTagsCustomDocument
-
-useGetTagsCustomQuery.getKey = (variables?: GetTagsCustomQueryVariables) =>
-  variables === undefined ? ["GetTagsCustom"] : ["GetTagsCustom", variables]
-
-export const useInfiniteGetTagsCustomQuery = <
-  TData = InfiniteData<GetTagsCustomQuery>,
-  TError = unknown
->(
-  variables: GetTagsCustomQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetTagsCustomQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetTagsCustomQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetTagsCustomQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetTagsCustom.infinite"]
-            : ["GetTagsCustom.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetTagsCustomQuery, GetTagsCustomQueryVariables>(
-            GetTagsCustomDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetTagsCustomQuery.getKey = (
-  variables?: GetTagsCustomQueryVariables
-) =>
-  variables === undefined
-    ? ["GetTagsCustom.infinite"]
-    : ["GetTagsCustom.infinite", variables]
-
-useGetTagsCustomQuery.fetcher = (
-  variables?: GetTagsCustomQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetTagsCustomQuery, GetTagsCustomQueryVariables>(
-    GetTagsCustomDocument,
-    variables,
-    options
-  )
-
-export const GetTriplesByCreatorDocument = `
-    query GetTriplesByCreator($address: String) {
-  triples(where: {creator_id: {_eq: $address}}) {
-    id
-    creator_id
-    subject {
-      id
-      label
-      image
-      type
-    }
-    predicate {
-      id
-      label
-      image
-      type
-    }
-    object {
-      id
-      label
-      image
-      type
-    }
-    vault {
-      id
-      positions_aggregate {
-        aggregate {
-          count
-        }
-      }
-    }
-    counter_vault {
-      id
-      positions_aggregate {
-        aggregate {
-          count
-        }
-      }
-    }
-  }
-}
-    `
-
-export const useGetTriplesByCreatorQuery = <
-  TData = GetTriplesByCreatorQuery,
-  TError = unknown
->(
-  variables?: GetTriplesByCreatorQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetTriplesByCreatorQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetTriplesByCreatorQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetTriplesByCreatorQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ["GetTriplesByCreator"]
-        : ["GetTriplesByCreator", variables],
-    queryFn: fetcher<
-      GetTriplesByCreatorQuery,
-      GetTriplesByCreatorQueryVariables
-    >(GetTriplesByCreatorDocument, variables),
-    ...options
-  })
-}
-
-useGetTriplesByCreatorQuery.document = GetTriplesByCreatorDocument
-
-useGetTriplesByCreatorQuery.getKey = (
-  variables?: GetTriplesByCreatorQueryVariables
-) =>
-  variables === undefined
-    ? ["GetTriplesByCreator"]
-    : ["GetTriplesByCreator", variables]
-
-export const useInfiniteGetTriplesByCreatorQuery = <
-  TData = InfiniteData<GetTriplesByCreatorQuery>,
-  TError = unknown
->(
-  variables: GetTriplesByCreatorQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetTriplesByCreatorQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetTriplesByCreatorQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetTriplesByCreatorQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetTriplesByCreator.infinite"]
-            : ["GetTriplesByCreator.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetTriplesByCreatorQuery, GetTriplesByCreatorQueryVariables>(
-            GetTriplesByCreatorDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetTriplesByCreatorQuery.getKey = (
-  variables?: GetTriplesByCreatorQueryVariables
-) =>
-  variables === undefined
-    ? ["GetTriplesByCreator.infinite"]
-    : ["GetTriplesByCreator.infinite", variables]
-
-useGetTriplesByCreatorQuery.fetcher = (
-  variables?: GetTriplesByCreatorQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetTriplesByCreatorQuery, GetTriplesByCreatorQueryVariables>(
-    GetTriplesByCreatorDocument,
-    variables,
-    options
-  )
-
-export const GetTriplesWithPositionsThpDocument = `
-    query GetTriplesWithPositionsTHP($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp, $address: String) {
-  total: triples_aggregate(where: $where) {
-    aggregate {
-      count
-    }
-  }
-  triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
-    id
-    counter_vault_id
-    subject {
-      id
-      label
-      image
-    }
-    predicate {
-      id
-      label
-      image
-    }
-    object {
-      id
-      label
-      image
-    }
-    vault {
-      total_shares
-      position_count
-      positions(where: {account_id: {_eq: $address}}) {
-        account {
-          id
-          label
-          image
-        }
-        shares
-      }
-    }
-    counter_vault {
-      total_shares
-      position_count
-      positions(where: {account_id: {_eq: $address}}) {
-        account {
-          id
-          label
-          image
-        }
-        shares
-      }
-    }
-  }
-}
-    `
-
-export const useGetTriplesWithPositionsThpQuery = <
-  TData = GetTriplesWithPositionsThpQuery,
-  TError = unknown
->(
-  variables?: GetTriplesWithPositionsThpQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetTriplesWithPositionsThpQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetTriplesWithPositionsThpQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetTriplesWithPositionsThpQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ["GetTriplesWithPositionsTHP"]
-        : ["GetTriplesWithPositionsTHP", variables],
-    queryFn: fetcher<
-      GetTriplesWithPositionsThpQuery,
-      GetTriplesWithPositionsThpQueryVariables
-    >(GetTriplesWithPositionsThpDocument, variables),
-    ...options
-  })
-}
-
-useGetTriplesWithPositionsThpQuery.document = GetTriplesWithPositionsThpDocument
-
-useGetTriplesWithPositionsThpQuery.getKey = (
-  variables?: GetTriplesWithPositionsThpQueryVariables
-) =>
-  variables === undefined
-    ? ["GetTriplesWithPositionsTHP"]
-    : ["GetTriplesWithPositionsTHP", variables]
-
-export const useInfiniteGetTriplesWithPositionsThpQuery = <
-  TData = InfiniteData<GetTriplesWithPositionsThpQuery>,
-  TError = unknown
->(
-  variables: GetTriplesWithPositionsThpQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetTriplesWithPositionsThpQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetTriplesWithPositionsThpQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetTriplesWithPositionsThpQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetTriplesWithPositionsTHP.infinite"]
-            : ["GetTriplesWithPositionsTHP.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<
-            GetTriplesWithPositionsThpQuery,
-            GetTriplesWithPositionsThpQueryVariables
-          >(GetTriplesWithPositionsThpDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetTriplesWithPositionsThpQuery.getKey = (
-  variables?: GetTriplesWithPositionsThpQueryVariables
-) =>
-  variables === undefined
-    ? ["GetTriplesWithPositionsTHP.infinite"]
-    : ["GetTriplesWithPositionsTHP.infinite", variables]
-
-useGetTriplesWithPositionsThpQuery.fetcher = (
-  variables?: GetTriplesWithPositionsThpQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<
-    GetTriplesWithPositionsThpQuery,
-    GetTriplesWithPositionsThpQueryVariables
-  >(GetTriplesWithPositionsThpDocument, variables, options)
-
-export const GetTriplesWithPositionsDocument = `
-    query GetTriplesWithPositions($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp, $address: String) {
-  total: triples_aggregate(where: $where) {
-    aggregate {
-      count
-    }
-  }
-  triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
-    id
-    creator {
-      label
-      id
-    }
-    vault_id
-    counter_vault_id
-    subject {
-      id
-      vault_id
-      label
-      image
-    }
-    predicate {
-      id
-      vault_id
-      label
-      image
-    }
-    object {
-      id
-      vault_id
-      label
-      image
-    }
-    vault {
-      total_shares
-      position_count
-      positions(where: {account_id: {_eq: $address}}) {
-        account {
-          id
-          label
-          image
-        }
-        shares
-      }
-    }
-    counter_vault {
-      total_shares
-      position_count
-      positions(where: {account_id: {_eq: $address}}) {
-        account {
-          id
-          label
-          image
-        }
-        shares
-      }
-    }
-  }
-}
-    `
-
-export const useGetTriplesWithPositionsQuery = <
-  TData = GetTriplesWithPositionsQuery,
-  TError = unknown
->(
-  variables?: GetTriplesWithPositionsQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetTriplesWithPositionsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetTriplesWithPositionsQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetTriplesWithPositionsQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ["GetTriplesWithPositions"]
-        : ["GetTriplesWithPositions", variables],
-    queryFn: fetcher<
-      GetTriplesWithPositionsQuery,
-      GetTriplesWithPositionsQueryVariables
-    >(GetTriplesWithPositionsDocument, variables),
-    ...options
-  })
-}
-
-useGetTriplesWithPositionsQuery.document = GetTriplesWithPositionsDocument
-
-useGetTriplesWithPositionsQuery.getKey = (
-  variables?: GetTriplesWithPositionsQueryVariables
-) =>
-  variables === undefined
-    ? ["GetTriplesWithPositions"]
-    : ["GetTriplesWithPositions", variables]
-
-export const useInfiniteGetTriplesWithPositionsQuery = <
-  TData = InfiniteData<GetTriplesWithPositionsQuery>,
-  TError = unknown
->(
-  variables: GetTriplesWithPositionsQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetTriplesWithPositionsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetTriplesWithPositionsQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetTriplesWithPositionsQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetTriplesWithPositions.infinite"]
-            : ["GetTriplesWithPositions.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<
-            GetTriplesWithPositionsQuery,
-            GetTriplesWithPositionsQueryVariables
-          >(GetTriplesWithPositionsDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetTriplesWithPositionsQuery.getKey = (
-  variables?: GetTriplesWithPositionsQueryVariables
-) =>
-  variables === undefined
-    ? ["GetTriplesWithPositions.infinite"]
-    : ["GetTriplesWithPositions.infinite", variables]
-
-useGetTriplesWithPositionsQuery.fetcher = (
-  variables?: GetTriplesWithPositionsQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetTriplesWithPositionsQuery, GetTriplesWithPositionsQueryVariables>(
-    GetTriplesWithPositionsDocument,
-    variables,
-    options
-  )
-
-export const GetVaultsDocument = `
-    query GetVaults($limit: Int, $offset: Int, $orderBy: [vaults_order_by!], $where: vaults_bool_exp) {
-  vaults_aggregate(
-    limit: $limit
-    offset: $offset
-    order_by: $orderBy
-    where: $where
-  ) {
-    aggregate {
-      count
-    }
-    nodes {
-      id
-      atom {
-        id
-        label
-      }
-      triple {
-        id
-        subject {
-          id
-          label
-        }
-        predicate {
-          id
-          label
-        }
-        object {
-          id
-          label
-        }
-      }
-      positions_aggregate {
-        nodes {
-          account {
-            id
-            label
-          }
-          shares
-        }
-      }
-      current_share_price
-      total_shares
-    }
-  }
-}
-    `
-
-export const useGetVaultsQuery = <TData = GetVaultsQuery, TError = unknown>(
-  variables?: GetVaultsQueryVariables,
-  options?: Omit<UseQueryOptions<GetVaultsQuery, TError, TData>, "queryKey"> & {
-    queryKey?: UseQueryOptions<GetVaultsQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetVaultsQuery, TError, TData>({
-    queryKey:
-      variables === undefined ? ["GetVaults"] : ["GetVaults", variables],
-    queryFn: fetcher<GetVaultsQuery, GetVaultsQueryVariables>(
-      GetVaultsDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetVaultsQuery.document = GetVaultsDocument
-
-useGetVaultsQuery.getKey = (variables?: GetVaultsQueryVariables) =>
-  variables === undefined ? ["GetVaults"] : ["GetVaults", variables]
-
-export const useInfiniteGetVaultsQuery = <
-  TData = InfiniteData<GetVaultsQuery>,
-  TError = unknown
->(
-  variables: GetVaultsQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetVaultsQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetVaultsQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetVaultsQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ["GetVaults.infinite"]
-            : ["GetVaults.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetVaultsQuery, GetVaultsQueryVariables>(GetVaultsDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetVaultsQuery.getKey = (variables?: GetVaultsQueryVariables) =>
-  variables === undefined
-    ? ["GetVaults.infinite"]
-    : ["GetVaults.infinite", variables]
-
-useGetVaultsQuery.fetcher = (
-  variables?: GetVaultsQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetVaultsQuery, GetVaultsQueryVariables>(
-    GetVaultsDocument,
-    variables,
-    options
-  )
-
-export const GetVaultDocument = `
-    query GetVault($vaultId: numeric!) {
-  vault(id: $vaultId) {
-    ...VaultDetails
-  }
-}
-    ${VaultDetailsFragmentDoc}
-${VaultBasicDetailsFragmentDoc}`
-
-export const useGetVaultQuery = <TData = GetVaultQuery, TError = unknown>(
-  variables: GetVaultQueryVariables,
-  options?: Omit<UseQueryOptions<GetVaultQuery, TError, TData>, "queryKey"> & {
-    queryKey?: UseQueryOptions<GetVaultQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useQuery<GetVaultQuery, TError, TData>({
-    queryKey: ["GetVault", variables],
-    queryFn: fetcher<GetVaultQuery, GetVaultQueryVariables>(
-      GetVaultDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetVaultQuery.document = GetVaultDocument
-
-useGetVaultQuery.getKey = (variables: GetVaultQueryVariables) => [
-  "GetVault",
-  variables
-]
-
-export const useInfiniteGetVaultQuery = <
-  TData = InfiniteData<GetVaultQuery>,
-  TError = unknown
->(
-  variables: GetVaultQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetVaultQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<GetVaultQuery, TError, TData>["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetVaultQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? ["GetVault.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetVaultQuery, GetVaultQueryVariables>(GetVaultDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetVaultQuery.getKey = (variables: GetVaultQueryVariables) => [
-  "GetVault.infinite",
-  variables
-]
-
-useGetVaultQuery.fetcher = (
-  variables: GetVaultQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetVaultQuery, GetVaultQueryVariables>(
-    GetVaultDocument,
-    variables,
-    options
-  )
-
-export const EventsDocument = `
-    subscription Events($addresses: [String!]!, $limit: Int!) {
-  events(
-    where: {_or: [{deposit_id: {_is_null: false}}, {atom_id: {_is_null: false}}, {triple_id: {_is_null: false}}]}
-    order_by: [{block_number: desc}]
-    limit: $limit
-  ) {
-    ...EventDetailsSubscription
-  }
-}
-    ${EventDetailsSubscriptionFragmentDoc}
-${DepositEventFragmentFragmentDoc}
-${RedemptionEventFragmentFragmentDoc}
-${AtomMetadataFragmentDoc}
-${AtomValueFragmentDoc}
-${TripleMetadataSubscriptionFragmentDoc}
-${AccountMetadataFragmentDoc}
-${TripleVaultCouterVaultDetailsWithPositionsFragmentDoc}
-${VaultDetailsWithFilteredPositionsFragmentDoc}
-${VaultBasicDetailsFragmentDoc}
-${VaultFilteredPositionsFragmentDoc}
-${PositionFieldsFragmentDoc}`
-export const AccountClaimsAggregate = {
+export const AccountClaimsAggregateFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -18391,7 +13842,7 @@ export const AccountClaimsAggregate = {
     }
   ]
 } as unknown as DocumentNode
-export const AccountClaims = {
+export const AccountClaimsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -18473,7 +13924,7 @@ export const AccountClaims = {
     }
   ]
 } as unknown as DocumentNode
-export const AccountPositionsAggregate = {
+export const AccountPositionsAggregateFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -18594,7 +14045,7 @@ export const AccountPositionsAggregate = {
     }
   ]
 } as unknown as DocumentNode
-export const AccountPositions = {
+export const AccountPositionsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -18711,7 +14162,7 @@ export const AccountPositions = {
     }
   ]
 } as unknown as DocumentNode
-export const AccountAtoms = {
+export const AccountAtomsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -18854,7 +14305,7 @@ export const AccountAtoms = {
     }
   ]
 } as unknown as DocumentNode
-export const AccountAtomsAggregate = {
+export const AccountAtomsAggregateFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -19047,7 +14498,7 @@ export const AccountAtomsAggregate = {
     }
   ]
 } as unknown as DocumentNode
-export const AccountTriples = {
+export const AccountTriplesFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -19179,7 +14630,7 @@ export const AccountTriples = {
     }
   ]
 } as unknown as DocumentNode
-export const AccountTriplesAggregate = {
+export const AccountTriplesAggregateFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -19311,7 +14762,7 @@ export const AccountTriplesAggregate = {
     }
   ]
 } as unknown as DocumentNode
-export const AtomTxn = {
+export const AtomTxnFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -19333,7 +14784,7 @@ export const AtomTxn = {
     }
   ]
 } as unknown as DocumentNode
-export const AtomVaultDetails = {
+export const AtomVaultDetailsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -19437,7 +14888,7 @@ export const AtomVaultDetails = {
     }
   ]
 } as unknown as DocumentNode
-export const AccountMetadata = {
+export const AccountMetadataFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -19460,7 +14911,7 @@ export const AccountMetadata = {
     }
   ]
 } as unknown as DocumentNode
-export const AtomTriple = {
+export const AtomTripleFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -19694,7 +15145,7 @@ export const AtomTriple = {
     }
   ]
 } as unknown as DocumentNode
-export const AtomVaultDetailsWithPositions = {
+export const AtomVaultDetailsWithPositionsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -19814,7 +15265,7 @@ export const AtomVaultDetailsWithPositions = {
     }
   ]
 } as unknown as DocumentNode
-export const DepositEventFragment = {
+export const DepositEventFragmentFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -19880,7 +15331,7 @@ export const DepositEventFragment = {
     }
   ]
 } as unknown as DocumentNode
-export const RedemptionEventFragment = {
+export const RedemptionEventFragmentFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -19917,7 +15368,7 @@ export const RedemptionEventFragment = {
     }
   ]
 } as unknown as DocumentNode
-export const AtomValue = {
+export const AtomValueFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -19992,7 +15443,7 @@ export const AtomValue = {
     }
   ]
 } as unknown as DocumentNode
-export const AtomMetadata = {
+export const AtomMetadataFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -20100,7 +15551,7 @@ export const AtomMetadata = {
     }
   ]
 } as unknown as DocumentNode
-export const PositionAggregateFields = {
+export const PositionAggregateFieldsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -20138,7 +15589,7 @@ export const PositionAggregateFields = {
     }
   ]
 } as unknown as DocumentNode
-export const PositionFields = {
+export const PositionFieldsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -20186,7 +15637,7 @@ export const PositionFields = {
     }
   ]
 } as unknown as DocumentNode
-export const TripleMetadata = {
+export const TripleMetadataFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -20568,7 +16019,7 @@ export const TripleMetadata = {
     }
   ]
 } as unknown as DocumentNode
-export const EventDetails = {
+export const EventDetailsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -21296,7 +16747,7 @@ export const EventDetails = {
     }
   ]
 } as unknown as DocumentNode
-export const TripleMetadataSubscription = {
+export const TripleMetadataSubscriptionFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -21433,7 +16884,7 @@ export const TripleMetadataSubscription = {
     }
   ]
 } as unknown as DocumentNode
-export const VaultBasicDetails = {
+export const VaultBasicDetailsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -21511,7 +16962,7 @@ export const VaultBasicDetails = {
     }
   ]
 } as unknown as DocumentNode
-export const VaultFilteredPositions = {
+export const VaultFilteredPositionsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -21613,7 +17064,7 @@ export const VaultFilteredPositions = {
     }
   ]
 } as unknown as DocumentNode
-export const VaultDetailsWithFilteredPositions = {
+export const VaultDetailsWithFilteredPositionsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -21809,7 +17260,7 @@ export const VaultDetailsWithFilteredPositions = {
     }
   ]
 } as unknown as DocumentNode
-export const TripleVaultCouterVaultDetailsWithPositions = {
+export const TripleVaultCouterVaultDetailsWithPositionsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -22063,7 +17514,7 @@ export const TripleVaultCouterVaultDetailsWithPositions = {
     }
   ]
 } as unknown as DocumentNode
-export const EventDetailsSubscription = {
+export const EventDetailsSubscriptionFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -22791,7 +18242,7 @@ export const EventDetailsSubscription = {
     }
   ]
 } as unknown as DocumentNode
-export const FollowMetadata = {
+export const FollowMetadataFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -22967,7 +18418,7 @@ export const FollowMetadata = {
     }
   ]
 } as unknown as DocumentNode
-export const FollowAggregate = {
+export const FollowAggregateFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -22995,7 +18446,7 @@ export const FollowAggregate = {
     }
   ]
 } as unknown as DocumentNode
-export const StatDetails = {
+export const StatDetailsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -23020,7 +18471,7 @@ export const StatDetails = {
     }
   ]
 } as unknown as DocumentNode
-export const TripleTxn = {
+export const TripleTxnFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -23042,7 +18493,7 @@ export const TripleTxn = {
     }
   ]
 } as unknown as DocumentNode
-export const PositionDetails = {
+export const PositionDetailsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -23462,7 +18913,7 @@ export const PositionDetails = {
     }
   ]
 } as unknown as DocumentNode
-export const TripleVaultDetails = {
+export const TripleVaultDetailsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -23941,7 +19392,7 @@ export const TripleVaultDetails = {
     }
   ]
 } as unknown as DocumentNode
-export const VaultUnfilteredPositions = {
+export const VaultUnfilteredPositionsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -24015,7 +19466,7 @@ export const VaultUnfilteredPositions = {
     }
   ]
 } as unknown as DocumentNode
-export const VaultDetails = {
+export const VaultDetailsFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -24110,7 +19561,7 @@ export const VaultDetails = {
     }
   ]
 } as unknown as DocumentNode
-export const VaultPositionsAggregate = {
+export const VaultPositionsAggregateFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -24174,7 +19625,7 @@ export const VaultPositionsAggregate = {
     }
   ]
 } as unknown as DocumentNode
-export const VaultFieldsForTriple = {
+export const VaultFieldsForTripleFragmentDoc = {
   kind: "Document",
   definitions: [
     {
@@ -24361,7 +19812,7 @@ export const VaultFieldsForTriple = {
     }
   ]
 } as unknown as DocumentNode
-export const PinPerson = {
+export const PinPersonDocument = {
   kind: "Document",
   definitions: [
     {
@@ -24492,7 +19943,54 @@ export const PinPerson = {
     }
   ]
 } as unknown as DocumentNode
-export const PinThing = {
+export type PinPersonMutationFn = Apollo.MutationFunction<
+  PinPersonMutation,
+  PinPersonMutationVariables
+>
+
+/**
+ * __usePinPersonMutation__
+ *
+ * To run a mutation, you first call `usePinPersonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePinPersonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [pinPersonMutation, { data, loading, error }] = usePinPersonMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      description: // value for 'description'
+ *      image: // value for 'image'
+ *      url: // value for 'url'
+ *      email: // value for 'email'
+ *      identifier: // value for 'identifier'
+ *   },
+ * });
+ */
+export function usePinPersonMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PinPersonMutation,
+    PinPersonMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<PinPersonMutation, PinPersonMutationVariables>(
+    PinPersonDocument,
+    options
+  )
+}
+export type PinPersonMutationHookResult = ReturnType<
+  typeof usePinPersonMutation
+>
+export type PinPersonMutationResult = Apollo.MutationResult<PinPersonMutation>
+export type PinPersonMutationOptions = Apollo.BaseMutationOptions<
+  PinPersonMutation,
+  PinPersonMutationVariables
+>
+export const PinThingDocument = {
   kind: "Document",
   definitions: [
     {
@@ -24591,7 +20089,50 @@ export const PinThing = {
     }
   ]
 } as unknown as DocumentNode
-export const GetAtomsByCreator = {
+export type PinThingMutationFn = Apollo.MutationFunction<
+  PinThingMutation,
+  PinThingMutationVariables
+>
+
+/**
+ * __usePinThingMutation__
+ *
+ * To run a mutation, you first call `usePinThingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePinThingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [pinThingMutation, { data, loading, error }] = usePinThingMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      description: // value for 'description'
+ *      image: // value for 'image'
+ *      url: // value for 'url'
+ *   },
+ * });
+ */
+export function usePinThingMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PinThingMutation,
+    PinThingMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<PinThingMutation, PinThingMutationVariables>(
+    PinThingDocument,
+    options
+  )
+}
+export type PinThingMutationHookResult = ReturnType<typeof usePinThingMutation>
+export type PinThingMutationResult = Apollo.MutationResult<PinThingMutation>
+export type PinThingMutationOptions = Apollo.BaseMutationOptions<
+  PinThingMutation,
+  PinThingMutationVariables
+>
+export const GetAtomsByCreatorDocument = {
   kind: "Document",
   definitions: [
     {
@@ -24730,50 +20271,6 @@ export const GetAtomsByCreator = {
                       }
                     ]
                   }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "as_subject_claims_aggregate" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "nodes" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "predicate" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "label" }
-                                  }
-                                ]
-                              }
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "object" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "label" }
-                                  }
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
                 }
               ]
             }
@@ -24783,477 +20280,82 @@ export const GetAtomsByCreator = {
     }
   ]
 } as unknown as DocumentNode
-export const GetAtomsWithPositions = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "GetAtomsWithPositions" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "limit" }
-          },
-          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
-        },
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "offset" }
-          },
-          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
-        },
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "orderBy" }
-          },
-          type: {
-            kind: "ListType",
-            type: {
-              kind: "NonNullType",
-              type: {
-                kind: "NamedType",
-                name: { kind: "Name", value: "atoms_order_by" }
-              }
-            }
-          }
-        },
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "where" }
-          },
-          type: {
-            kind: "NamedType",
-            name: { kind: "Name", value: "atoms_bool_exp" }
-          }
-        },
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "address" }
-          },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
-        }
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            alias: { kind: "Name", value: "total" },
-            name: { kind: "Name", value: "atoms_aggregate" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "where" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "where" }
-                }
-              }
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "aggregate" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "count" } }
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "atoms" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "limit" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "limit" }
-                }
-              },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "offset" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "offset" }
-                }
-              },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "order_by" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "orderBy" }
-                }
-              },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "where" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "where" }
-                }
-              }
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "AtomMetadata" }
-                },
-                {
-                  kind: "FragmentSpread",
-                  name: { kind: "Name", value: "AtomTxn" }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "vault" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "position_count" }
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "total_shares" }
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "current_share_price" }
-                      },
-                      {
-                        kind: "Field",
-                        alias: { kind: "Name", value: "total" },
-                        name: { kind: "Name", value: "positions_aggregate" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "aggregate" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "count" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "sum" },
-                                    selectionSet: {
-                                      kind: "SelectionSet",
-                                      selections: [
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "shares"
-                                          }
-                                        }
-                                      ]
-                                    }
-                                  }
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "positions" },
-                        arguments: [
-                          {
-                            kind: "Argument",
-                            name: { kind: "Name", value: "where" },
-                            value: {
-                              kind: "ObjectValue",
-                              fields: [
-                                {
-                                  kind: "ObjectField",
-                                  name: { kind: "Name", value: "account_id" },
-                                  value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                      {
-                                        kind: "ObjectField",
-                                        name: { kind: "Name", value: "_eq" },
-                                        value: {
-                                          kind: "Variable",
-                                          name: {
-                                            kind: "Name",
-                                            value: "address"
-                                          }
-                                        }
-                                      }
-                                    ]
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        ],
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "id" }
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "account" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "label" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "id" }
-                                  }
-                                ]
-                              }
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "shares" }
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "creator" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "FragmentSpread",
-                        name: { kind: "Name", value: "AccountMetadata" }
-                      }
-                    ]
-                  }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "as_subject_claims_aggregate" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "nodes" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "predicate" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "label" }
-                                  }
-                                ]
-                              }
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "object" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "label" }
-                                  }
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "AccountMetadata" },
-      typeCondition: {
-        kind: "NamedType",
-        name: { kind: "Name", value: "accounts" }
-      },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "label" } },
-          { kind: "Field", name: { kind: "Name", value: "image" } },
-          { kind: "Field", name: { kind: "Name", value: "id" } },
-          { kind: "Field", name: { kind: "Name", value: "atom_id" } },
-          { kind: "Field", name: { kind: "Name", value: "type" } }
-        ]
-      }
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "AtomValue" },
-      typeCondition: {
-        kind: "NamedType",
-        name: { kind: "Name", value: "atoms" }
-      },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "value" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "person" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                      { kind: "Field", name: { kind: "Name", value: "image" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" }
-                      },
-                      { kind: "Field", name: { kind: "Name", value: "url" } }
-                    ]
-                  }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "thing" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                      { kind: "Field", name: { kind: "Name", value: "image" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" }
-                      },
-                      { kind: "Field", name: { kind: "Name", value: "url" } }
-                    ]
-                  }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "organization" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "name" } },
-                      { kind: "Field", name: { kind: "Name", value: "image" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "description" }
-                      },
-                      { kind: "Field", name: { kind: "Name", value: "url" } }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "AtomMetadata" },
-      typeCondition: {
-        kind: "NamedType",
-        name: { kind: "Name", value: "atoms" }
-      },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "id" } },
-          { kind: "Field", name: { kind: "Name", value: "data" } },
-          { kind: "Field", name: { kind: "Name", value: "image" } },
-          { kind: "Field", name: { kind: "Name", value: "label" } },
-          { kind: "Field", name: { kind: "Name", value: "emoji" } },
-          { kind: "Field", name: { kind: "Name", value: "type" } },
-          { kind: "Field", name: { kind: "Name", value: "wallet_id" } },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "creator" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "label" } },
-                { kind: "Field", name: { kind: "Name", value: "image" } }
-              ]
-            }
-          },
-          { kind: "FragmentSpread", name: { kind: "Name", value: "AtomValue" } }
-        ]
-      }
-    },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "AtomTxn" },
-      typeCondition: {
-        kind: "NamedType",
-        name: { kind: "Name", value: "atoms" }
-      },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "block_number" } },
-          { kind: "Field", name: { kind: "Name", value: "block_timestamp" } },
-          { kind: "Field", name: { kind: "Name", value: "transaction_hash" } },
-          { kind: "Field", name: { kind: "Name", value: "creator_id" } }
-        ]
-      }
-    }
-  ]
-} as unknown as DocumentNode
-export const GetClaimsByAddress = {
+
+/**
+ * __useGetAtomsByCreatorQuery__
+ *
+ * To run a query within a React component, call `useGetAtomsByCreatorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAtomsByCreatorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAtomsByCreatorQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetAtomsByCreatorQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetAtomsByCreatorQuery,
+    GetAtomsByCreatorQueryVariables
+  > &
+    (
+      | { variables: GetAtomsByCreatorQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetAtomsByCreatorQuery,
+    GetAtomsByCreatorQueryVariables
+  >(GetAtomsByCreatorDocument, options)
+}
+export function useGetAtomsByCreatorLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAtomsByCreatorQuery,
+    GetAtomsByCreatorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetAtomsByCreatorQuery,
+    GetAtomsByCreatorQueryVariables
+  >(GetAtomsByCreatorDocument, options)
+}
+export function useGetAtomsByCreatorSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAtomsByCreatorQuery,
+        GetAtomsByCreatorQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetAtomsByCreatorQuery,
+    GetAtomsByCreatorQueryVariables
+  >(GetAtomsByCreatorDocument, options)
+}
+export type GetAtomsByCreatorQueryHookResult = ReturnType<
+  typeof useGetAtomsByCreatorQuery
+>
+export type GetAtomsByCreatorLazyQueryHookResult = ReturnType<
+  typeof useGetAtomsByCreatorLazyQuery
+>
+export type GetAtomsByCreatorSuspenseQueryHookResult = ReturnType<
+  typeof useGetAtomsByCreatorSuspenseQuery
+>
+export type GetAtomsByCreatorQueryResult = Apollo.QueryResult<
+  GetAtomsByCreatorQuery,
+  GetAtomsByCreatorQueryVariables
+>
+export const GetClaimsByAddressDocument = {
   kind: "Document",
   definitions: [
     {
@@ -25561,7 +20663,78 @@ export const GetClaimsByAddress = {
     }
   ]
 } as unknown as DocumentNode
-export const GetClaimsByUri = {
+
+/**
+ * __useGetClaimsByAddressQuery__
+ *
+ * To run a query within a React component, call `useGetClaimsByAddressQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimsByAddressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimsByAddressQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetClaimsByAddressQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetClaimsByAddressQuery,
+    GetClaimsByAddressQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetClaimsByAddressQuery,
+    GetClaimsByAddressQueryVariables
+  >(GetClaimsByAddressDocument, options)
+}
+export function useGetClaimsByAddressLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetClaimsByAddressQuery,
+    GetClaimsByAddressQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetClaimsByAddressQuery,
+    GetClaimsByAddressQueryVariables
+  >(GetClaimsByAddressDocument, options)
+}
+export function useGetClaimsByAddressSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetClaimsByAddressQuery,
+        GetClaimsByAddressQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetClaimsByAddressQuery,
+    GetClaimsByAddressQueryVariables
+  >(GetClaimsByAddressDocument, options)
+}
+export type GetClaimsByAddressQueryHookResult = ReturnType<
+  typeof useGetClaimsByAddressQuery
+>
+export type GetClaimsByAddressLazyQueryHookResult = ReturnType<
+  typeof useGetClaimsByAddressLazyQuery
+>
+export type GetClaimsByAddressSuspenseQueryHookResult = ReturnType<
+  typeof useGetClaimsByAddressSuspenseQuery
+>
+export type GetClaimsByAddressQueryResult = Apollo.QueryResult<
+  GetClaimsByAddressQuery,
+  GetClaimsByAddressQueryVariables
+>
+export const GetClaimsByUriDocument = {
   kind: "Document",
   definitions: [
     {
@@ -26575,7 +21748,79 @@ export const GetClaimsByUri = {
     }
   ]
 } as unknown as DocumentNode
-export const GetClaimsByAtom = {
+
+/**
+ * __useGetClaimsByUriQuery__
+ *
+ * To run a query within a React component, call `useGetClaimsByUriQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimsByUriQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimsByUriQuery({
+ *   variables: {
+ *      uri: // value for 'uri'
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetClaimsByUriQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetClaimsByUriQuery,
+    GetClaimsByUriQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetClaimsByUriQuery, GetClaimsByUriQueryVariables>(
+    GetClaimsByUriDocument,
+    options
+  )
+}
+export function useGetClaimsByUriLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetClaimsByUriQuery,
+    GetClaimsByUriQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetClaimsByUriQuery, GetClaimsByUriQueryVariables>(
+    GetClaimsByUriDocument,
+    options
+  )
+}
+export function useGetClaimsByUriSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetClaimsByUriQuery,
+        GetClaimsByUriQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetClaimsByUriQuery,
+    GetClaimsByUriQueryVariables
+  >(GetClaimsByUriDocument, options)
+}
+export type GetClaimsByUriQueryHookResult = ReturnType<
+  typeof useGetClaimsByUriQuery
+>
+export type GetClaimsByUriLazyQueryHookResult = ReturnType<
+  typeof useGetClaimsByUriLazyQuery
+>
+export type GetClaimsByUriSuspenseQueryHookResult = ReturnType<
+  typeof useGetClaimsByUriSuspenseQuery
+>
+export type GetClaimsByUriQueryResult = Apollo.QueryResult<
+  GetClaimsByUriQuery,
+  GetClaimsByUriQueryVariables
+>
+export const GetClaimsByAtomDocument = {
   kind: "Document",
   definitions: [
     {
@@ -27052,7 +22297,79 @@ export const GetClaimsByAtom = {
     }
   ]
 } as unknown as DocumentNode
-export const GetFollowersFromAddress = {
+
+/**
+ * __useGetClaimsByAtomQuery__
+ *
+ * To run a query within a React component, call `useGetClaimsByAtomQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClaimsByAtomQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClaimsByAtomQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetClaimsByAtomQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetClaimsByAtomQuery,
+    GetClaimsByAtomQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetClaimsByAtomQuery, GetClaimsByAtomQueryVariables>(
+    GetClaimsByAtomDocument,
+    options
+  )
+}
+export function useGetClaimsByAtomLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetClaimsByAtomQuery,
+    GetClaimsByAtomQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetClaimsByAtomQuery,
+    GetClaimsByAtomQueryVariables
+  >(GetClaimsByAtomDocument, options)
+}
+export function useGetClaimsByAtomSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetClaimsByAtomQuery,
+        GetClaimsByAtomQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetClaimsByAtomQuery,
+    GetClaimsByAtomQueryVariables
+  >(GetClaimsByAtomDocument, options)
+}
+export type GetClaimsByAtomQueryHookResult = ReturnType<
+  typeof useGetClaimsByAtomQuery
+>
+export type GetClaimsByAtomLazyQueryHookResult = ReturnType<
+  typeof useGetClaimsByAtomLazyQuery
+>
+export type GetClaimsByAtomSuspenseQueryHookResult = ReturnType<
+  typeof useGetClaimsByAtomSuspenseQuery
+>
+export type GetClaimsByAtomQueryResult = Apollo.QueryResult<
+  GetClaimsByAtomQuery,
+  GetClaimsByAtomQueryVariables
+>
+export const GetFollowersFromAddressDocument = {
   kind: "Document",
   definitions: [
     {
@@ -27274,7 +22591,82 @@ export const GetFollowersFromAddress = {
     }
   ]
 } as unknown as DocumentNode
-export const GetFollowingsFromAddress = {
+
+/**
+ * __useGetFollowersFromAddressQuery__
+ *
+ * To run a query within a React component, call `useGetFollowersFromAddressQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFollowersFromAddressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFollowersFromAddressQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetFollowersFromAddressQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetFollowersFromAddressQuery,
+    GetFollowersFromAddressQueryVariables
+  > &
+    (
+      | { variables: GetFollowersFromAddressQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetFollowersFromAddressQuery,
+    GetFollowersFromAddressQueryVariables
+  >(GetFollowersFromAddressDocument, options)
+}
+export function useGetFollowersFromAddressLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetFollowersFromAddressQuery,
+    GetFollowersFromAddressQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetFollowersFromAddressQuery,
+    GetFollowersFromAddressQueryVariables
+  >(GetFollowersFromAddressDocument, options)
+}
+export function useGetFollowersFromAddressSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetFollowersFromAddressQuery,
+        GetFollowersFromAddressQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetFollowersFromAddressQuery,
+    GetFollowersFromAddressQueryVariables
+  >(GetFollowersFromAddressDocument, options)
+}
+export type GetFollowersFromAddressQueryHookResult = ReturnType<
+  typeof useGetFollowersFromAddressQuery
+>
+export type GetFollowersFromAddressLazyQueryHookResult = ReturnType<
+  typeof useGetFollowersFromAddressLazyQuery
+>
+export type GetFollowersFromAddressSuspenseQueryHookResult = ReturnType<
+  typeof useGetFollowersFromAddressSuspenseQuery
+>
+export type GetFollowersFromAddressQueryResult = Apollo.QueryResult<
+  GetFollowersFromAddressQuery,
+  GetFollowersFromAddressQueryVariables
+>
+export const GetFollowingsFromAddressDocument = {
   kind: "Document",
   definitions: [
     {
@@ -28112,7 +23504,82 @@ export const GetFollowingsFromAddress = {
     }
   ]
 } as unknown as DocumentNode
-export const GetFollowingsTriples = {
+
+/**
+ * __useGetFollowingsFromAddressQuery__
+ *
+ * To run a query within a React component, call `useGetFollowingsFromAddressQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFollowingsFromAddressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFollowingsFromAddressQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetFollowingsFromAddressQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetFollowingsFromAddressQuery,
+    GetFollowingsFromAddressQueryVariables
+  > &
+    (
+      | { variables: GetFollowingsFromAddressQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetFollowingsFromAddressQuery,
+    GetFollowingsFromAddressQueryVariables
+  >(GetFollowingsFromAddressDocument, options)
+}
+export function useGetFollowingsFromAddressLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetFollowingsFromAddressQuery,
+    GetFollowingsFromAddressQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetFollowingsFromAddressQuery,
+    GetFollowingsFromAddressQueryVariables
+  >(GetFollowingsFromAddressDocument, options)
+}
+export function useGetFollowingsFromAddressSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetFollowingsFromAddressQuery,
+        GetFollowingsFromAddressQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetFollowingsFromAddressQuery,
+    GetFollowingsFromAddressQueryVariables
+  >(GetFollowingsFromAddressDocument, options)
+}
+export type GetFollowingsFromAddressQueryHookResult = ReturnType<
+  typeof useGetFollowingsFromAddressQuery
+>
+export type GetFollowingsFromAddressLazyQueryHookResult = ReturnType<
+  typeof useGetFollowingsFromAddressLazyQuery
+>
+export type GetFollowingsFromAddressSuspenseQueryHookResult = ReturnType<
+  typeof useGetFollowingsFromAddressSuspenseQuery
+>
+export type GetFollowingsFromAddressQueryResult = Apollo.QueryResult<
+  GetFollowingsFromAddressQuery,
+  GetFollowingsFromAddressQueryVariables
+>
+export const GetFollowingsTriplesDocument = {
   kind: "Document",
   definitions: [
     {
@@ -28270,7 +23737,82 @@ export const GetFollowingsTriples = {
     }
   ]
 } as unknown as DocumentNode
-export const GetAccountById = {
+
+/**
+ * __useGetFollowingsTriplesQuery__
+ *
+ * To run a query within a React component, call `useGetFollowingsTriplesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFollowingsTriplesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFollowingsTriplesQuery({
+ *   variables: {
+ *      accountId: // value for 'accountId'
+ *   },
+ * });
+ */
+export function useGetFollowingsTriplesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetFollowingsTriplesQuery,
+    GetFollowingsTriplesQueryVariables
+  > &
+    (
+      | { variables: GetFollowingsTriplesQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetFollowingsTriplesQuery,
+    GetFollowingsTriplesQueryVariables
+  >(GetFollowingsTriplesDocument, options)
+}
+export function useGetFollowingsTriplesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetFollowingsTriplesQuery,
+    GetFollowingsTriplesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetFollowingsTriplesQuery,
+    GetFollowingsTriplesQueryVariables
+  >(GetFollowingsTriplesDocument, options)
+}
+export function useGetFollowingsTriplesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetFollowingsTriplesQuery,
+        GetFollowingsTriplesQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetFollowingsTriplesQuery,
+    GetFollowingsTriplesQueryVariables
+  >(GetFollowingsTriplesDocument, options)
+}
+export type GetFollowingsTriplesQueryHookResult = ReturnType<
+  typeof useGetFollowingsTriplesQuery
+>
+export type GetFollowingsTriplesLazyQueryHookResult = ReturnType<
+  typeof useGetFollowingsTriplesLazyQuery
+>
+export type GetFollowingsTriplesSuspenseQueryHookResult = ReturnType<
+  typeof useGetFollowingsTriplesSuspenseQuery
+>
+export type GetFollowingsTriplesQueryResult = Apollo.QueryResult<
+  GetFollowingsTriplesQuery,
+  GetFollowingsTriplesQueryVariables
+>
+export const GetAccountByIdDocument = {
   kind: "Document",
   definitions: [
     {
@@ -28314,7 +23856,82 @@ export const GetAccountById = {
     }
   ]
 } as unknown as DocumentNode
-export const GetPersonsByIdentifier = {
+
+/**
+ * __useGetAccountByIdQuery__
+ *
+ * To run a query within a React component, call `useGetAccountByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAccountByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAccountByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetAccountByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetAccountByIdQuery,
+    GetAccountByIdQueryVariables
+  > &
+    (
+      | { variables: GetAccountByIdQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
+    GetAccountByIdDocument,
+    options
+  )
+}
+export function useGetAccountByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAccountByIdQuery,
+    GetAccountByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetAccountByIdQuery, GetAccountByIdQueryVariables>(
+    GetAccountByIdDocument,
+    options
+  )
+}
+export function useGetAccountByIdSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAccountByIdQuery,
+        GetAccountByIdQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetAccountByIdQuery,
+    GetAccountByIdQueryVariables
+  >(GetAccountByIdDocument, options)
+}
+export type GetAccountByIdQueryHookResult = ReturnType<
+  typeof useGetAccountByIdQuery
+>
+export type GetAccountByIdLazyQueryHookResult = ReturnType<
+  typeof useGetAccountByIdLazyQuery
+>
+export type GetAccountByIdSuspenseQueryHookResult = ReturnType<
+  typeof useGetAccountByIdSuspenseQuery
+>
+export type GetAccountByIdQueryResult = Apollo.QueryResult<
+  GetAccountByIdQuery,
+  GetAccountByIdQueryVariables
+>
+export const GetPersonsByIdentifierDocument = {
   kind: "Document",
   definitions: [
     {
@@ -28386,7 +24003,82 @@ export const GetPersonsByIdentifier = {
     }
   ]
 } as unknown as DocumentNode
-export const GetLists = {
+
+/**
+ * __useGetPersonsByIdentifierQuery__
+ *
+ * To run a query within a React component, call `useGetPersonsByIdentifierQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPersonsByIdentifierQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPersonsByIdentifierQuery({
+ *   variables: {
+ *      identifier: // value for 'identifier'
+ *   },
+ * });
+ */
+export function useGetPersonsByIdentifierQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetPersonsByIdentifierQuery,
+    GetPersonsByIdentifierQueryVariables
+  > &
+    (
+      | { variables: GetPersonsByIdentifierQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetPersonsByIdentifierQuery,
+    GetPersonsByIdentifierQueryVariables
+  >(GetPersonsByIdentifierDocument, options)
+}
+export function useGetPersonsByIdentifierLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPersonsByIdentifierQuery,
+    GetPersonsByIdentifierQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetPersonsByIdentifierQuery,
+    GetPersonsByIdentifierQueryVariables
+  >(GetPersonsByIdentifierDocument, options)
+}
+export function useGetPersonsByIdentifierSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetPersonsByIdentifierQuery,
+        GetPersonsByIdentifierQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetPersonsByIdentifierQuery,
+    GetPersonsByIdentifierQueryVariables
+  >(GetPersonsByIdentifierDocument, options)
+}
+export type GetPersonsByIdentifierQueryHookResult = ReturnType<
+  typeof useGetPersonsByIdentifierQuery
+>
+export type GetPersonsByIdentifierLazyQueryHookResult = ReturnType<
+  typeof useGetPersonsByIdentifierLazyQuery
+>
+export type GetPersonsByIdentifierSuspenseQueryHookResult = ReturnType<
+  typeof useGetPersonsByIdentifierSuspenseQuery
+>
+export type GetPersonsByIdentifierQueryResult = Apollo.QueryResult<
+  GetPersonsByIdentifierQuery,
+  GetPersonsByIdentifierQueryVariables
+>
+export const GetListsDocument = {
   kind: "Document",
   definitions: [
     {
@@ -28509,7 +24201,70 @@ export const GetLists = {
     }
   ]
 } as unknown as DocumentNode
-export const GetListItems = {
+
+/**
+ * __useGetListsQuery__
+ *
+ * To run a query within a React component, call `useGetListsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetListsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetListsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetListsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetListsQuery, GetListsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetListsQuery, GetListsQueryVariables>(
+    GetListsDocument,
+    options
+  )
+}
+export function useGetListsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetListsQuery,
+    GetListsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetListsQuery, GetListsQueryVariables>(
+    GetListsDocument,
+    options
+  )
+}
+export function useGetListsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetListsQuery, GetListsQueryVariables>
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetListsQuery, GetListsQueryVariables>(
+    GetListsDocument,
+    options
+  )
+}
+export type GetListsQueryHookResult = ReturnType<typeof useGetListsQuery>
+export type GetListsLazyQueryHookResult = ReturnType<
+  typeof useGetListsLazyQuery
+>
+export type GetListsSuspenseQueryHookResult = ReturnType<
+  typeof useGetListsSuspenseQuery
+>
+export type GetListsQueryResult = Apollo.QueryResult<
+  GetListsQuery,
+  GetListsQueryVariables
+>
+export const GetListItemsDocument = {
   kind: "Document",
   definitions: [
     {
@@ -29132,7 +24887,79 @@ export const GetListItems = {
     }
   ]
 } as unknown as DocumentNode
-export const GetListDetails = {
+
+/**
+ * __useGetListItemsQuery__
+ *
+ * To run a query within a React component, call `useGetListItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetListItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetListItemsQuery({
+ *   variables: {
+ *      predicateId: // value for 'predicateId'
+ *      objectId: // value for 'objectId'
+ *   },
+ * });
+ */
+export function useGetListItemsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetListItemsQuery,
+    GetListItemsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetListItemsQuery, GetListItemsQueryVariables>(
+    GetListItemsDocument,
+    options
+  )
+}
+export function useGetListItemsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetListItemsQuery,
+    GetListItemsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetListItemsQuery, GetListItemsQueryVariables>(
+    GetListItemsDocument,
+    options
+  )
+}
+export function useGetListItemsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetListItemsQuery,
+        GetListItemsQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetListItemsQuery, GetListItemsQueryVariables>(
+    GetListItemsDocument,
+    options
+  )
+}
+export type GetListItemsQueryHookResult = ReturnType<
+  typeof useGetListItemsQuery
+>
+export type GetListItemsLazyQueryHookResult = ReturnType<
+  typeof useGetListItemsLazyQuery
+>
+export type GetListItemsSuspenseQueryHookResult = ReturnType<
+  typeof useGetListItemsSuspenseQuery
+>
+export type GetListItemsQueryResult = Apollo.QueryResult<
+  GetListItemsQuery,
+  GetListItemsQueryVariables
+>
+export const GetListDetailsDocument = {
   kind: "Document",
   definitions: [
     {
@@ -29612,7 +25439,82 @@ export const GetListDetails = {
     }
   ]
 } as unknown as DocumentNode
-export const GetListDetailsWithPosition = {
+
+/**
+ * __useGetListDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetListDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetListDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetListDetailsQuery({
+ *   variables: {
+ *      globalWhere: // value for 'globalWhere'
+ *      tagPredicateId: // value for 'tagPredicateId'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetListDetailsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetListDetailsQuery,
+    GetListDetailsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetListDetailsQuery, GetListDetailsQueryVariables>(
+    GetListDetailsDocument,
+    options
+  )
+}
+export function useGetListDetailsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetListDetailsQuery,
+    GetListDetailsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetListDetailsQuery, GetListDetailsQueryVariables>(
+    GetListDetailsDocument,
+    options
+  )
+}
+export function useGetListDetailsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetListDetailsQuery,
+        GetListDetailsQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetListDetailsQuery,
+    GetListDetailsQueryVariables
+  >(GetListDetailsDocument, options)
+}
+export type GetListDetailsQueryHookResult = ReturnType<
+  typeof useGetListDetailsQuery
+>
+export type GetListDetailsLazyQueryHookResult = ReturnType<
+  typeof useGetListDetailsLazyQuery
+>
+export type GetListDetailsSuspenseQueryHookResult = ReturnType<
+  typeof useGetListDetailsSuspenseQuery
+>
+export type GetListDetailsQueryResult = Apollo.QueryResult<
+  GetListDetailsQuery,
+  GetListDetailsQueryVariables
+>
+export const GetListDetailsWithPositionDocument = {
   kind: "Document",
   definitions: [
     {
@@ -30230,7 +26132,83 @@ export const GetListDetailsWithPosition = {
     }
   ]
 } as unknown as DocumentNode
-export const GetListDetailsWithUser = {
+
+/**
+ * __useGetListDetailsWithPositionQuery__
+ *
+ * To run a query within a React component, call `useGetListDetailsWithPositionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetListDetailsWithPositionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetListDetailsWithPositionQuery({
+ *   variables: {
+ *      globalWhere: // value for 'globalWhere'
+ *      tagPredicateId: // value for 'tagPredicateId'
+ *      address: // value for 'address'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetListDetailsWithPositionQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetListDetailsWithPositionQuery,
+    GetListDetailsWithPositionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetListDetailsWithPositionQuery,
+    GetListDetailsWithPositionQueryVariables
+  >(GetListDetailsWithPositionDocument, options)
+}
+export function useGetListDetailsWithPositionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetListDetailsWithPositionQuery,
+    GetListDetailsWithPositionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetListDetailsWithPositionQuery,
+    GetListDetailsWithPositionQueryVariables
+  >(GetListDetailsWithPositionDocument, options)
+}
+export function useGetListDetailsWithPositionSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetListDetailsWithPositionQuery,
+        GetListDetailsWithPositionQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetListDetailsWithPositionQuery,
+    GetListDetailsWithPositionQueryVariables
+  >(GetListDetailsWithPositionDocument, options)
+}
+export type GetListDetailsWithPositionQueryHookResult = ReturnType<
+  typeof useGetListDetailsWithPositionQuery
+>
+export type GetListDetailsWithPositionLazyQueryHookResult = ReturnType<
+  typeof useGetListDetailsWithPositionLazyQuery
+>
+export type GetListDetailsWithPositionSuspenseQueryHookResult = ReturnType<
+  typeof useGetListDetailsWithPositionSuspenseQuery
+>
+export type GetListDetailsWithPositionQueryResult = Apollo.QueryResult<
+  GetListDetailsWithPositionQuery,
+  GetListDetailsWithPositionQueryVariables
+>
+export const GetListDetailsWithUserDocument = {
   kind: "Document",
   definitions: [
     {
@@ -31376,7 +27354,84 @@ export const GetListDetailsWithUser = {
     }
   ]
 } as unknown as DocumentNode
-export const GetFeeTransfers = {
+
+/**
+ * __useGetListDetailsWithUserQuery__
+ *
+ * To run a query within a React component, call `useGetListDetailsWithUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetListDetailsWithUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetListDetailsWithUserQuery({
+ *   variables: {
+ *      globalWhere: // value for 'globalWhere'
+ *      userWhere: // value for 'userWhere'
+ *      tagPredicateId: // value for 'tagPredicateId'
+ *      address: // value for 'address'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetListDetailsWithUserQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetListDetailsWithUserQuery,
+    GetListDetailsWithUserQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetListDetailsWithUserQuery,
+    GetListDetailsWithUserQueryVariables
+  >(GetListDetailsWithUserDocument, options)
+}
+export function useGetListDetailsWithUserLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetListDetailsWithUserQuery,
+    GetListDetailsWithUserQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetListDetailsWithUserQuery,
+    GetListDetailsWithUserQueryVariables
+  >(GetListDetailsWithUserDocument, options)
+}
+export function useGetListDetailsWithUserSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetListDetailsWithUserQuery,
+        GetListDetailsWithUserQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetListDetailsWithUserQuery,
+    GetListDetailsWithUserQueryVariables
+  >(GetListDetailsWithUserDocument, options)
+}
+export type GetListDetailsWithUserQueryHookResult = ReturnType<
+  typeof useGetListDetailsWithUserQuery
+>
+export type GetListDetailsWithUserLazyQueryHookResult = ReturnType<
+  typeof useGetListDetailsWithUserLazyQuery
+>
+export type GetListDetailsWithUserSuspenseQueryHookResult = ReturnType<
+  typeof useGetListDetailsWithUserSuspenseQuery
+>
+export type GetListDetailsWithUserQueryResult = Apollo.QueryResult<
+  GetListDetailsWithUserQuery,
+  GetListDetailsWithUserQueryVariables
+>
+export const GetFeeTransfersDocument = {
   kind: "Document",
   definitions: [
     {
@@ -31566,7 +27621,83 @@ export const GetFeeTransfers = {
     }
   ]
 } as unknown as DocumentNode
-export const GetSignals = {
+
+/**
+ * __useGetFeeTransfersQuery__
+ *
+ * To run a query within a React component, call `useGetFeeTransfersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFeeTransfersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFeeTransfersQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      cutoff_timestamp: // value for 'cutoff_timestamp'
+ *   },
+ * });
+ */
+export function useGetFeeTransfersQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetFeeTransfersQuery,
+    GetFeeTransfersQueryVariables
+  > &
+    (
+      | { variables: GetFeeTransfersQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetFeeTransfersQuery, GetFeeTransfersQueryVariables>(
+    GetFeeTransfersDocument,
+    options
+  )
+}
+export function useGetFeeTransfersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetFeeTransfersQuery,
+    GetFeeTransfersQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetFeeTransfersQuery,
+    GetFeeTransfersQueryVariables
+  >(GetFeeTransfersDocument, options)
+}
+export function useGetFeeTransfersSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetFeeTransfersQuery,
+        GetFeeTransfersQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetFeeTransfersQuery,
+    GetFeeTransfersQueryVariables
+  >(GetFeeTransfersDocument, options)
+}
+export type GetFeeTransfersQueryHookResult = ReturnType<
+  typeof useGetFeeTransfersQuery
+>
+export type GetFeeTransfersLazyQueryHookResult = ReturnType<
+  typeof useGetFeeTransfersLazyQuery
+>
+export type GetFeeTransfersSuspenseQueryHookResult = ReturnType<
+  typeof useGetFeeTransfersSuspenseQuery
+>
+export type GetFeeTransfersQueryResult = Apollo.QueryResult<
+  GetFeeTransfersQuery,
+  GetFeeTransfersQueryVariables
+>
+export const GetSignalsDocument = {
   kind: "Document",
   definitions: [
     {
@@ -32580,7 +28711,76 @@ export const GetSignals = {
     }
   ]
 } as unknown as DocumentNode
-export const GetStats = {
+
+/**
+ * __useGetSignalsQuery__
+ *
+ * To run a query within a React component, call `useGetSignalsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSignalsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSignalsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      orderBy: // value for 'orderBy'
+ *      addresses: // value for 'addresses'
+ *   },
+ * });
+ */
+export function useGetSignalsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetSignalsQuery,
+    GetSignalsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetSignalsQuery, GetSignalsQueryVariables>(
+    GetSignalsDocument,
+    options
+  )
+}
+export function useGetSignalsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetSignalsQuery,
+    GetSignalsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetSignalsQuery, GetSignalsQueryVariables>(
+    GetSignalsDocument,
+    options
+  )
+}
+export function useGetSignalsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetSignalsQuery, GetSignalsQueryVariables>
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetSignalsQuery, GetSignalsQueryVariables>(
+    GetSignalsDocument,
+    options
+  )
+}
+export type GetSignalsQueryHookResult = ReturnType<typeof useGetSignalsQuery>
+export type GetSignalsLazyQueryHookResult = ReturnType<
+  typeof useGetSignalsLazyQuery
+>
+export type GetSignalsSuspenseQueryHookResult = ReturnType<
+  typeof useGetSignalsSuspenseQuery
+>
+export type GetSignalsQueryResult = Apollo.QueryResult<
+  GetSignalsQuery,
+  GetSignalsQueryVariables
+>
+export const GetStatsDocument = {
   kind: "Document",
   definitions: [
     {
@@ -32628,7 +28828,69 @@ export const GetStats = {
     }
   ]
 } as unknown as DocumentNode
-export const GetTags = {
+
+/**
+ * __useGetStatsQuery__
+ *
+ * To run a query within a React component, call `useGetStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetStatsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetStatsQuery, GetStatsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetStatsQuery, GetStatsQueryVariables>(
+    GetStatsDocument,
+    options
+  )
+}
+export function useGetStatsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetStatsQuery,
+    GetStatsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetStatsQuery, GetStatsQueryVariables>(
+    GetStatsDocument,
+    options
+  )
+}
+export function useGetStatsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetStatsQuery, GetStatsQueryVariables>
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetStatsQuery, GetStatsQueryVariables>(
+    GetStatsDocument,
+    options
+  )
+}
+export type GetStatsQueryHookResult = ReturnType<typeof useGetStatsQuery>
+export type GetStatsLazyQueryHookResult = ReturnType<
+  typeof useGetStatsLazyQuery
+>
+export type GetStatsSuspenseQueryHookResult = ReturnType<
+  typeof useGetStatsSuspenseQuery
+>
+export type GetStatsQueryResult = Apollo.QueryResult<
+  GetStatsQuery,
+  GetStatsQueryVariables
+>
+export const GetTagsDocument = {
   kind: "Document",
   definitions: [
     {
@@ -33133,7 +29395,67 @@ export const GetTags = {
     }
   ]
 } as unknown as DocumentNode
-export const GetTagsCustom = {
+
+/**
+ * __useGetTagsQuery__
+ *
+ * To run a query within a React component, call `useGetTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTagsQuery({
+ *   variables: {
+ *      subjectId: // value for 'subjectId'
+ *      predicateId: // value for 'predicateId'
+ *   },
+ * });
+ */
+export function useGetTagsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetTagsQuery, GetTagsQueryVariables> &
+    ({ variables: GetTagsQueryVariables; skip?: boolean } | { skip: boolean })
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTagsQuery, GetTagsQueryVariables>(
+    GetTagsDocument,
+    options
+  )
+}
+export function useGetTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTagsQuery, GetTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTagsQuery, GetTagsQueryVariables>(
+    GetTagsDocument,
+    options
+  )
+}
+export function useGetTagsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetTagsQuery, GetTagsQueryVariables>
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetTagsQuery, GetTagsQueryVariables>(
+    GetTagsDocument,
+    options
+  )
+}
+export type GetTagsQueryHookResult = ReturnType<typeof useGetTagsQuery>
+export type GetTagsLazyQueryHookResult = ReturnType<typeof useGetTagsLazyQuery>
+export type GetTagsSuspenseQueryHookResult = ReturnType<
+  typeof useGetTagsSuspenseQuery
+>
+export type GetTagsQueryResult = Apollo.QueryResult<
+  GetTagsQuery,
+  GetTagsQueryVariables
+>
+export const GetTagsCustomDocument = {
   kind: "Document",
   definitions: [
     {
@@ -33561,7 +29883,78 @@ export const GetTagsCustom = {
     }
   ]
 } as unknown as DocumentNode
-export const GetTriplesByCreator = {
+
+/**
+ * __useGetTagsCustomQuery__
+ *
+ * To run a query within a React component, call `useGetTagsCustomQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTagsCustomQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTagsCustomQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetTagsCustomQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetTagsCustomQuery,
+    GetTagsCustomQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTagsCustomQuery, GetTagsCustomQueryVariables>(
+    GetTagsCustomDocument,
+    options
+  )
+}
+export function useGetTagsCustomLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetTagsCustomQuery,
+    GetTagsCustomQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTagsCustomQuery, GetTagsCustomQueryVariables>(
+    GetTagsCustomDocument,
+    options
+  )
+}
+export function useGetTagsCustomSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTagsCustomQuery,
+        GetTagsCustomQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetTagsCustomQuery,
+    GetTagsCustomQueryVariables
+  >(GetTagsCustomDocument, options)
+}
+export type GetTagsCustomQueryHookResult = ReturnType<
+  typeof useGetTagsCustomQuery
+>
+export type GetTagsCustomLazyQueryHookResult = ReturnType<
+  typeof useGetTagsCustomLazyQuery
+>
+export type GetTagsCustomSuspenseQueryHookResult = ReturnType<
+  typeof useGetTagsCustomSuspenseQuery
+>
+export type GetTagsCustomQueryResult = Apollo.QueryResult<
+  GetTagsCustomQuery,
+  GetTagsCustomQueryVariables
+>
+export const GetTriplesByCreatorDocument = {
   kind: "Document",
   definitions: [
     {
@@ -33728,7 +30121,78 @@ export const GetTriplesByCreator = {
     }
   ]
 } as unknown as DocumentNode
-export const GetTriplesWithPositionsThp = {
+
+/**
+ * __useGetTriplesByCreatorQuery__
+ *
+ * To run a query within a React component, call `useGetTriplesByCreatorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTriplesByCreatorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTriplesByCreatorQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetTriplesByCreatorQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetTriplesByCreatorQuery,
+    GetTriplesByCreatorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetTriplesByCreatorQuery,
+    GetTriplesByCreatorQueryVariables
+  >(GetTriplesByCreatorDocument, options)
+}
+export function useGetTriplesByCreatorLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetTriplesByCreatorQuery,
+    GetTriplesByCreatorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetTriplesByCreatorQuery,
+    GetTriplesByCreatorQueryVariables
+  >(GetTriplesByCreatorDocument, options)
+}
+export function useGetTriplesByCreatorSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTriplesByCreatorQuery,
+        GetTriplesByCreatorQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetTriplesByCreatorQuery,
+    GetTriplesByCreatorQueryVariables
+  >(GetTriplesByCreatorDocument, options)
+}
+export type GetTriplesByCreatorQueryHookResult = ReturnType<
+  typeof useGetTriplesByCreatorQuery
+>
+export type GetTriplesByCreatorLazyQueryHookResult = ReturnType<
+  typeof useGetTriplesByCreatorLazyQuery
+>
+export type GetTriplesByCreatorSuspenseQueryHookResult = ReturnType<
+  typeof useGetTriplesByCreatorSuspenseQuery
+>
+export type GetTriplesByCreatorQueryResult = Apollo.QueryResult<
+  GetTriplesByCreatorQuery,
+  GetTriplesByCreatorQueryVariables
+>
+export const GetTriplesWithPositionsThpDocument = {
   kind: "Document",
   definitions: [
     {
@@ -34075,7 +30539,82 @@ export const GetTriplesWithPositionsThp = {
     }
   ]
 } as unknown as DocumentNode
-export const GetTriplesWithPositions = {
+
+/**
+ * __useGetTriplesWithPositionsThpQuery__
+ *
+ * To run a query within a React component, call `useGetTriplesWithPositionsThpQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTriplesWithPositionsThpQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTriplesWithPositionsThpQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetTriplesWithPositionsThpQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetTriplesWithPositionsThpQuery,
+    GetTriplesWithPositionsThpQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetTriplesWithPositionsThpQuery,
+    GetTriplesWithPositionsThpQueryVariables
+  >(GetTriplesWithPositionsThpDocument, options)
+}
+export function useGetTriplesWithPositionsThpLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetTriplesWithPositionsThpQuery,
+    GetTriplesWithPositionsThpQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetTriplesWithPositionsThpQuery,
+    GetTriplesWithPositionsThpQueryVariables
+  >(GetTriplesWithPositionsThpDocument, options)
+}
+export function useGetTriplesWithPositionsThpSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTriplesWithPositionsThpQuery,
+        GetTriplesWithPositionsThpQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetTriplesWithPositionsThpQuery,
+    GetTriplesWithPositionsThpQueryVariables
+  >(GetTriplesWithPositionsThpDocument, options)
+}
+export type GetTriplesWithPositionsThpQueryHookResult = ReturnType<
+  typeof useGetTriplesWithPositionsThpQuery
+>
+export type GetTriplesWithPositionsThpLazyQueryHookResult = ReturnType<
+  typeof useGetTriplesWithPositionsThpLazyQuery
+>
+export type GetTriplesWithPositionsThpSuspenseQueryHookResult = ReturnType<
+  typeof useGetTriplesWithPositionsThpSuspenseQuery
+>
+export type GetTriplesWithPositionsThpQueryResult = Apollo.QueryResult<
+  GetTriplesWithPositionsThpQuery,
+  GetTriplesWithPositionsThpQueryVariables
+>
+export const GetTriplesWithPositionsDocument = {
   kind: "Document",
   definitions: [
     {
@@ -34446,7 +30985,82 @@ export const GetTriplesWithPositions = {
     }
   ]
 } as unknown as DocumentNode
-export const GetVaults = {
+
+/**
+ * __useGetTriplesWithPositionsQuery__
+ *
+ * To run a query within a React component, call `useGetTriplesWithPositionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTriplesWithPositionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTriplesWithPositionsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetTriplesWithPositionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetTriplesWithPositionsQuery,
+    GetTriplesWithPositionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetTriplesWithPositionsQuery,
+    GetTriplesWithPositionsQueryVariables
+  >(GetTriplesWithPositionsDocument, options)
+}
+export function useGetTriplesWithPositionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetTriplesWithPositionsQuery,
+    GetTriplesWithPositionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetTriplesWithPositionsQuery,
+    GetTriplesWithPositionsQueryVariables
+  >(GetTriplesWithPositionsDocument, options)
+}
+export function useGetTriplesWithPositionsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTriplesWithPositionsQuery,
+        GetTriplesWithPositionsQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetTriplesWithPositionsQuery,
+    GetTriplesWithPositionsQueryVariables
+  >(GetTriplesWithPositionsDocument, options)
+}
+export type GetTriplesWithPositionsQueryHookResult = ReturnType<
+  typeof useGetTriplesWithPositionsQuery
+>
+export type GetTriplesWithPositionsLazyQueryHookResult = ReturnType<
+  typeof useGetTriplesWithPositionsLazyQuery
+>
+export type GetTriplesWithPositionsSuspenseQueryHookResult = ReturnType<
+  typeof useGetTriplesWithPositionsSuspenseQuery
+>
+export type GetTriplesWithPositionsQueryResult = Apollo.QueryResult<
+  GetTriplesWithPositionsQuery,
+  GetTriplesWithPositionsQueryVariables
+>
+export const GetVaultsDocument = {
   kind: "Document",
   definitions: [
     {
@@ -34698,7 +31312,73 @@ export const GetVaults = {
     }
   ]
 } as unknown as DocumentNode
-export const GetVault = {
+
+/**
+ * __useGetVaultsQuery__
+ *
+ * To run a query within a React component, call `useGetVaultsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVaultsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVaultsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetVaultsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetVaultsQuery, GetVaultsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetVaultsQuery, GetVaultsQueryVariables>(
+    GetVaultsDocument,
+    options
+  )
+}
+export function useGetVaultsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetVaultsQuery,
+    GetVaultsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetVaultsQuery, GetVaultsQueryVariables>(
+    GetVaultsDocument,
+    options
+  )
+}
+export function useGetVaultsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetVaultsQuery, GetVaultsQueryVariables>
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetVaultsQuery, GetVaultsQueryVariables>(
+    GetVaultsDocument,
+    options
+  )
+}
+export type GetVaultsQueryHookResult = ReturnType<typeof useGetVaultsQuery>
+export type GetVaultsLazyQueryHookResult = ReturnType<
+  typeof useGetVaultsLazyQuery
+>
+export type GetVaultsSuspenseQueryHookResult = ReturnType<
+  typeof useGetVaultsSuspenseQuery
+>
+export type GetVaultsQueryResult = Apollo.QueryResult<
+  GetVaultsQuery,
+  GetVaultsQueryVariables
+>
+export const GetVaultDocument = {
   kind: "Document",
   definitions: [
     {
@@ -34842,7 +31522,71 @@ export const GetVault = {
     }
   ]
 } as unknown as DocumentNode
-export const Events = {
+
+/**
+ * __useGetVaultQuery__
+ *
+ * To run a query within a React component, call `useGetVaultQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVaultQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVaultQuery({
+ *   variables: {
+ *      vaultId: // value for 'vaultId'
+ *   },
+ * });
+ */
+export function useGetVaultQuery(
+  baseOptions: Apollo.QueryHookOptions<GetVaultQuery, GetVaultQueryVariables> &
+    ({ variables: GetVaultQueryVariables; skip?: boolean } | { skip: boolean })
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetVaultQuery, GetVaultQueryVariables>(
+    GetVaultDocument,
+    options
+  )
+}
+export function useGetVaultLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetVaultQuery,
+    GetVaultQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetVaultQuery, GetVaultQueryVariables>(
+    GetVaultDocument,
+    options
+  )
+}
+export function useGetVaultSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetVaultQuery, GetVaultQueryVariables>
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetVaultQuery, GetVaultQueryVariables>(
+    GetVaultDocument,
+    options
+  )
+}
+export type GetVaultQueryHookResult = ReturnType<typeof useGetVaultQuery>
+export type GetVaultLazyQueryHookResult = ReturnType<
+  typeof useGetVaultLazyQuery
+>
+export type GetVaultSuspenseQueryHookResult = ReturnType<
+  typeof useGetVaultSuspenseQuery
+>
+export type GetVaultQueryResult = Apollo.QueryResult<
+  GetVaultQuery,
+  GetVaultQueryVariables
+>
+export const EventsDocument = {
   kind: "Document",
   definitions: [
     {
@@ -35739,3 +32483,42 @@ export const Events = {
     }
   ]
 } as unknown as DocumentNode
+
+/**
+ * __useEventsSubscription__
+ *
+ * To run a query within a React component, call `useEventsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useEventsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEventsSubscription({
+ *   variables: {
+ *      addresses: // value for 'addresses'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useEventsSubscription(
+  baseOptions: Apollo.SubscriptionHookOptions<
+    EventsSubscription,
+    EventsSubscriptionVariables
+  > &
+    (
+      | { variables: EventsSubscriptionVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useSubscription<
+    EventsSubscription,
+    EventsSubscriptionVariables
+  >(EventsDocument, options)
+}
+export type EventsSubscriptionHookResult = ReturnType<
+  typeof useEventsSubscription
+>
+export type EventsSubscriptionResult =
+  Apollo.SubscriptionResult<EventsSubscription>
