@@ -5,7 +5,7 @@ import { parseEther } from "viem"
 import { getClients } from "../lib/viemClient"
 import { LinkTypeSelector } from "./LinkTypeSelector"
 import React, { forwardRef, useEffect, useState, useRef, useImperativeHandle } from "react"
-import { umamiCollect } from "~src/lib/umami"
+import { umami } from "~src/lib/umami"
 
 export interface AtomFormHandle {
   resetForm(): void
@@ -20,7 +20,7 @@ interface AtomFormProps {
 }
 
 const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
-  { onCreated, initialName = "", initialDescription = "", initialImage = "", initialUrl = "" }, 
+  { onCreated, initialName = "", initialDescription = "", initialImage = "", initialUrl = "" },
   ref
 ) {
   const { mutateAsync: pinThing } = usePinThingMutation()
@@ -29,7 +29,7 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
   const [description, setDescription] = useState(initialDescription ?? "")
   const [image, setImage] = useState(initialImage ?? "")
   const [url, setUrl] = useState(initialUrl ?? "")
-  
+
   const [rawUrl, setRawUrl] = useState(initialUrl ?? "")
 
   const [progressMessage, setProgressMessage] = useState<string | null>(null)
@@ -39,7 +39,7 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
   const [linkType, setLinkType] = useState<"url" | "domain">("url")
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
   const [initialUrlCaptured, setInitialUrlCaptured] = useState(false)
-  
+
 
   useImperativeHandle(ref, () => ({
     resetForm() {
@@ -60,14 +60,14 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
     e.target.style.height = "auto"
     e.target.style.height = e.target.scrollHeight + "px"
   }
-  
+
   useEffect(() => {
     if (descriptionRef.current) {
       descriptionRef.current.style.height = "auto"
       descriptionRef.current.style.height = `${descriptionRef.current.scrollHeight}px`
     }
   }, [description])
-  
+
   useEffect(() => {
     if (!rawUrl) return;
 
@@ -119,7 +119,7 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
         wait: true
       })
       setProgressMessage(` Atom créé ! Vault ID: ${vaultId} | Tx: ${hash}`)
-      
+
       const atom = {
         id: hash,
         label: name,
@@ -131,10 +131,10 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
         onCreated(atom)
       }
 
-      umamiCollect("atom_created", "/sidepanel", {
+      umami("atom_created", {
         vaultId,
         txHash: hash
-      }).catch(console.error)
+      })
 
     } catch (error: any) {
       console.error(error)
@@ -204,7 +204,7 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
         onChange={(e) => setUrl(e.target.value)}
         className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10 relative z-10"
       />
-      
+
       <button
         onClick={handleSubmit}
         disabled={isSubmitting}

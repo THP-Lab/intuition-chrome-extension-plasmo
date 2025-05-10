@@ -18,6 +18,7 @@ import RecentActivity from "~src/pages/RecentActivity"
 import Search from "~src/pages/Search"
 import { AtomSelectionProvider } from "./ui/AtomSelectionContext"
 import AtomDetailPage from "~src/pages/AtomDetailPage"
+import PageViewTracker from "./PageViewTracker"
 
 import { NavigationProvider, useNavigation } from "./layout/NavigationProvider"
 import NavArc from "./layout/NavArc"
@@ -52,6 +53,8 @@ const Content = ({ children }: ContentProps) => {
     s.setAttribute("defer", "")
     s.src = `umami.js`
     s.setAttribute("data-website-id", UMAMI_WEBSITE_ID)
+    s.setAttribute("data-auto-track", "true")
+    s.setAttribute("data-domains", "auto")
 
     document.head.appendChild(s)
     return () => {
@@ -66,48 +69,49 @@ const Content = ({ children }: ContentProps) => {
       <QueryClientProvider client={queryClient}>
         <AtomSelectionProvider>
           <Router>
+            <PageViewTracker />
             {navType === "classic" && <NavbarUp />}
-              <main className="flex-1 overflow-auto pb-24 pt-14">
-                {children}
-                <div className="container mx-auto space-y-8 p-2">
-                  <Routes>
-                    <Route path="*" element={<Home />} />
-                    <Route path="/" element={<Home />} />
+            <main className="flex-1 overflow-auto pb-24 pt-14">
+              {children}
+              <div className="container mx-auto space-y-8 p-2">
+                <Routes>
+                  <Route path="*" element={<Home />} />
+                  <Route path="/" element={<Home />} />
 
-                    <Route path="/profile" element={<Profile />}>
-                      <Route index element={<Navigate to="/profile/claims/all" />} />
-                      <Route element={<ProfileLayout />}>
-                        <Route path="claims">
-                          <Route path="all" element={<MyPositionsTab />} />
-                          <Route path="created" element={<YourClaimsTab />} />
-                        </Route>
-
-                        <Route path="identities">
-                          <Route path="all" element={<IdentitiesVotedTab />} />
-                          <Route path="created" element={<IdentityTab />} />
-                        </Route>
-
-                        <Route path="followers" element={<FollowersTab />} />
-                        <Route path="following" element={<FollowingTab />} />
+                  <Route path="/profile" element={<Profile />}>
+                    <Route index element={<Navigate to="/profile/claims/all" />} />
+                    <Route element={<ProfileLayout />}>
+                      <Route path="claims">
+                        <Route path="all" element={<MyPositionsTab />} />
+                        <Route path="created" element={<YourClaimsTab />} />
                       </Route>
-                    </Route>
 
-                    <Route path="/feed" element={<Feed />} />
-                    <Route path="/page-form" element={<PageForm />} />
-                    <Route path="/recent-activity" element={<RecentActivity />} />
-                    <Route path="/search" element={<Search />} />
-                    <Route path="/atoms/:id" element={<AtomDetailPage />} />
-                  </Routes>
-                </div>
-              </main>
-              {navType === "classic" ? (
+                      <Route path="identities">
+                        <Route path="all" element={<IdentitiesVotedTab />} />
+                        <Route path="created" element={<IdentityTab />} />
+                      </Route>
+
+                      <Route path="followers" element={<FollowersTab />} />
+                      <Route path="following" element={<FollowingTab />} />
+                    </Route>
+                  </Route>
+
+                  <Route path="/feed" element={<Feed />} />
+                  <Route path="/page-form" element={<PageForm />} />
+                  <Route path="/recent-activity" element={<RecentActivity />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/atoms/:id" element={<AtomDetailPage />} />
+                </Routes>
+              </div>
+            </main>
+            {navType === "classic" ? (
               <Navbar />
-              ) : (
+            ) : (
               <>
                 <NavArc />
               </>
             )}
-        </Router>
+          </Router>
         </AtomSelectionProvider>
       </QueryClientProvider>
     </ApolloProvider>

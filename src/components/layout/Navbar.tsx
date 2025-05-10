@@ -9,7 +9,7 @@ import IntuitionSearchIcon from "~/src/components/icons/IntuitionSearchIcon"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { cn } from "~src/lib/utils"
-import { umamiCollect } from "~src/lib/umami"
+import { umami } from "~src/lib/umami"
 
 function Navbar() {
   const { theme, setTheme } = useTheme()
@@ -17,12 +17,6 @@ function Navbar() {
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark")
-  }
-
-  const handleNavClick = (label: string, to: string) => {
-    umamiCollect("nav_click", location.pathname, { label, to }).catch(
-      console.error
-    )
   }
 
   const isActive = (path: string) => {
@@ -44,7 +38,7 @@ function Navbar() {
             isActive("/") && "animate-fade-bg"
           )}>
           <Link to="/" className="flex flex-col items-center">
-            <div className="text-foreground" title="Home" onClick={() => handleNavClick("Home", "/")}>
+            <div className="text-foreground" title="Home" onClick={() => umami("Home")}>
               <IntuitionIcon size={46} className="navbar-icon" />
             </div>
           </Link>
@@ -58,7 +52,7 @@ function Navbar() {
             "navbar-button",
             isActive("/search") && "animate-fade-bg"
           )}>
-          <Link to="/search" className="flex flex-col items-center" onClick={() => handleNavClick("Search", "/search")}>
+          <Link to="/search" className="flex flex-col items-center" onClick={() => umami("Search")}>
             <div className="text-foreground" title="Search">
               <IntuitionSearchIcon size={44} className="navbar-icon" />
             </div>
@@ -73,7 +67,7 @@ function Navbar() {
             "navbar-button",
             isActive("/profile") && "animate-fade-bg"
           )}>
-          <Link to="/profile" className="flex flex-col items-center" onClick={() => handleNavClick("Profile", "/profile")}>
+          <Link to="/profile" className="flex flex-col items-center" onClick={() => umami("Profile")}>
             <div className="text-foreground" title="Profile">
               <IntuitionProfil size={44} className="navbar-icon" />
             </div>
@@ -88,7 +82,7 @@ function Navbar() {
             "navbar-button",
             isActive("/feed") && "animate-fade-bg"
           )}>
-          <Link to="/feed" className="flex flex-col items-center" onClick={() => handleNavClick("Recent Activity", "/recent-activity")}>
+          <Link to="/feed" className="flex flex-col items-center" onClick={() => umami("Feed")}>
             <div className="text-foreground" title="Feed">
               <IntuitionFeed size={44} className="navbar-icon" />
             </div>
@@ -103,7 +97,7 @@ function Navbar() {
             "navbar-button",
             isActive("/recent-activity") && "animate-fade-bg"
           )}>
-          <Link to="/recent-activity" className="flex flex-col items-center">
+          <Link to="/recent-activity" className="flex flex-col items-center" onClick={() => umami("Recent Activity")}>
             <div className="text-foreground" title="Recent Activity">
               <IntuitionHistory size={44} className="navbar-icon" />
             </div>
