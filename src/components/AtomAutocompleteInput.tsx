@@ -4,13 +4,15 @@ import { useGetAtomsQuery } from '@0xintuition/graphql';
 import { usePageMetadata } from "../hooks/usePageMetadata"
 import AtomForm from './AtomForm'
 import { Plus } from "lucide-react"
-
+import { UserRound } from "lucide-react"
 
 interface Atom {
   id: string;
   label?: string | null;
   emoji?: string | null;
-  vault_id: string;
+  image?: string | null;
+  vault?: string;
+  positionCount: number;
 }
 
 interface AtomAutocompleteInputProps {
@@ -72,10 +74,11 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
       id: atom.id,
       label: atom.label,
       emoji: atom.emoji,
-      vault_id: atom.vault_id,
+      image: atom.image,
+      positionCount: atom.vault.position_count,
     })) || [];
 
-  const handleSelect = (atom: Atom) => {
+  const handleSelect = (atom: Atom  ) => {
     onSelect(atom);
     setIsOpen(false);
     setCreatingAtom(false);
@@ -113,13 +116,25 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
           {atoms.map((atom) => (
             <li
               key={atom.id}
-              className="p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer"
+              className="flex items-center gap-2 p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer"
               onMouseDown={(e) => e.stopPropagation()}
               onClick={() => handleSelect(atom)}
             >
-              {atom.emoji && <span className="mr-2">{atom.emoji}</span>}
+            {atom.image ? (
+              <img
+                src={atom.image}
+                alt={atom.label ?? ''}
+                className="w-6 h-6 rounded-full object-cover"
+              />
+            ) : (
+              <span>{atom.emoji}</span>
+            )}
               <span>{atom.label}</span>
-              <span className="text-xs text-muted-foreground ml-2">({atom.id})</span>
+              <span className="flex items-center text-xs text-muted-foreground ml-auto">
+                <UserRound className="w-4 h-4 mr-1" />
+                {atom.positionCount.toLocaleString()}
+
+              </span>
             </li>
           ))}
 
