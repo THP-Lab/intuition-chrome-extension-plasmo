@@ -53,7 +53,9 @@ const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom, tags, tagsSection }) =>
         {atom.vault?.position_count && (
           <div className="flex items-center gap-1 text-muted-foreground">
             <UserRound className="w-4 h-4" />
-            <span className="text-sm">{atom.vault.position_count}</span>
+            <span className="text-sm">
+              {Math.max((atom.vault?.position_count ?? 0) - 1, 0)}
+            </span>
           </div>
         )}
       </div>

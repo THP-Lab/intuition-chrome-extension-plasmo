@@ -3,8 +3,6 @@ subscription Events($addresses: [String!]!, $limit: Int!) {
     where: {
       _or: [
         { deposit_id: { _is_null: false } }
-        { atom_id:    { _is_null: false } }
-        { triple_id:  { _is_null: false } }
       ]
     }
     order_by: [{ block_number: desc }] 
