@@ -45,9 +45,6 @@ const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom, tags, tagsSection }) =>
           <h1 className="text-xl font-bold mb-1">
             {atom.label ?? "Unnamed identity"}
           </h1>
-          {thing?.name && (
-            <p className="text-sm text-muted-foreground">{thing.name}</p>
-          )}
         </div>
 
         {atom.vault?.position_count && (

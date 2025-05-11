@@ -87,24 +87,18 @@ const AtomDetailPage = () => {
 
   return (
     <div className="p-4 space-y-6">
-      <AtomDisplay
-        atom={data.atom}
-        tagsSection={
-          <Tags
-            tags={tags}
-            addButton={
-              <TagCreator 
-                subjectAtom={{
-                  id: data.atom.id,
-                  label: data.atom.label || "",
-                  vault_id: data.atom.vault_id || ""
-                }}
-                onTagCreated={() => refetchClaims()}
-              />
-            }
+    <AtomDisplay
+      atom={data.atom}
+      tagsSection={
+        <div className="flex flex-wrap items-center gap-2">
+          <Tags tags={tags} />
+          <TagCreator 
+            subjectAtom={data.atom}
+            onTagCreated={() => refetchClaims()}
           />
-        }
-      />
+        </div>
+      }
+    />
       
       <div>
         <div className="flex items-center mt-2 mb-1">
