@@ -146,7 +146,6 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
 
   return (
     <form
-      onSubmit={handleSubmit}
       className="space-y-4 p-4 bg-background rounded">
       <div>
         <label htmlFor="name" className="font-bold mb-1">
