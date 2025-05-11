@@ -2,7 +2,7 @@ import { base, baseSepolia } from "viem/chains"
 
 const CURRENT_ENV = process.env.NODE_ENV
 
-export const IS_DEV = CURRENT_ENV !== "production"
+export const IS_DEV = CURRENT_ENV === "production"
 
 export const SELECTED_CHAIN = IS_DEV ? baseSepolia : base
 
