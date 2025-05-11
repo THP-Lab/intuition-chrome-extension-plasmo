@@ -121,11 +121,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
             <Tags tags={tags} />
             <div className="mt-2" onClick={(e) => e.stopPropagation()}>
               <TagCreator
-                subjectAtom={{
-                  id: atom.id,
-                  label: atom.label || "",
-                  vault_id: atom.vault_id || ""
-                }}
+                subjectAtom={atom}
               />
             </div>
           </>
