@@ -52,7 +52,6 @@ const RecentActivity: React.FC = () => {
       <h1 className="text-xl font-bold mb-4">Live Feed</h1>
       {data.events.map((e, idx) => {
         const isDeposit = Boolean(e.deposit_id)
-        const isTripleCreate = !e.deposit_id && Boolean(e.triple?.id)
 
         // ------ DEPOSIT ATOM ------
         if (isDeposit && e.deposit && !e.deposit.is_triple && e.atom) {
