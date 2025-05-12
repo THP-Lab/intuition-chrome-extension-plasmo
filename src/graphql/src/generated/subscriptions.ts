@@ -32340,16 +32340,31 @@ export const EventsDocument = {
                             fields: [
                               {
                                 kind: "ObjectField",
-                                name: { kind: "Name", value: "deposit_id" },
+                                name: { kind: "Name", value: "deposit" },
                                 value: {
                                   kind: "ObjectValue",
                                   fields: [
                                     {
                                       kind: "ObjectField",
-                                      name: { kind: "Name", value: "_is_null" },
+                                      name: {
+                                        kind: "Name",
+                                        value: "is_atom_wallet"
+                                      },
                                       value: {
-                                        kind: "BooleanValue",
-                                        value: false
+                                        kind: "ObjectValue",
+                                        fields: [
+                                          {
+                                            kind: "ObjectField",
+                                            name: {
+                                              kind: "Name",
+                                              value: "_eq"
+                                            },
+                                            value: {
+                                              kind: "BooleanValue",
+                                              value: false
+                                            }
+                                          }
+                                        ]
                                       }
                                     }
                                   ]
