@@ -2,22 +2,13 @@ export {}
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
   if (changeInfo.status === "complete") {
-    try {
-      const behavior = await chrome.sidePanel.getPanelBehavior({ tabId })
-      const isOpen = behavior?.open || false
-
-      chrome.tabs.sendMessage(tabId, {
-        type: "sidepanel_state",
-        open: isOpen
-      })
-    } catch (e) {
-      console.warn("Unable to check sidepanel state:", e)
-    }
+    chrome.tabs.sendMessage(tabId, {
+      type: "sidepanel_state",
+      open: panelStateByTab[tabId] ?? false
+    })
   }
 })
 
-
-//  sidepanel <-> background connection
 chrome.runtime.onConnect.addListener((port) => {
   if (port.name === "sidepanel") {
     let tabId: number | undefined
@@ -25,6 +16,7 @@ chrome.runtime.onConnect.addListener((port) => {
     port.onMessage.addListener((msg) => {
       if (msg.type === "init") {
         tabId = msg.tabId
+        panelStateByTab[tabId] = true
 
         chrome.tabs.sendMessage(tabId, {
           type: "sidepanel_state",
@@ -35,6 +27,7 @@ chrome.runtime.onConnect.addListener((port) => {
 
     port.onDisconnect.addListener(() => {
       if (tabId !== undefined) {
+        panelStateByTab[tabId] = false
         chrome.tabs.sendMessage(tabId, {
           type: "sidepanel_state",
           open: false
@@ -44,14 +37,40 @@ chrome.runtime.onConnect.addListener((port) => {
   }
 })
 
-// reception on the floating button
-chrome.runtime.onMessage.addListener((message, sender) => {
-  if (message.type === "open_sidepanel") {
-    const tabId = sender.tab?.id
-    const windowId = sender.tab?.windowId
+let panelStateByTab: Record<number, boolean> = {}
 
-    if (tabId && windowId) {
-      chrome.sidePanel.open({ windowId, tabId })
-    }
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  const tabId = sender.tab?.id
+  const windowId = sender.tab?.windowId
+
+  if (!tabId || !windowId) {
+    sendResponse({ opened: false })
+    return true
   }
+
+  if (message.type === "toggle_sidepanel") {
+    console.log("[toggle] toggle requested for tab", tabId)
+
+    if (panelStateByTab[tabId]) {
+      chrome.sidePanel.close({ windowId }).then(() => {
+        panelStateByTab[tabId] = false
+        sendResponse({ opened: false })
+      })
+    } else {
+      chrome.sidePanel.open({ tabId, windowId }).then(() => {
+        panelStateByTab[tabId] = true
+        sendResponse({ opened: true })
+      })
+    }
+
+    return true
+  }
+
+  if (message.type === "check_sidepanel") {
+    console.log("[check] check request from tab", tabId)
+    sendResponse({ opened: panelStateByTab[tabId] ?? false })
+    return true
+  }
+
+  return false
 })
