@@ -9,7 +9,7 @@ import { useCreateTriples } from '~src/hooks/useCreateTriples'
 import { useCreatePosition } from '~src/hooks/useCreatePosition'
 import { getClients } from "~src/lib/viemClient"
 import { Multivault } from "@0xintuition/protocol"
-import { umamiCollect } from "~src/lib/umami"
+import { umami } from "~src/lib/umami"
 
 interface Atom {
   id: string
@@ -81,7 +81,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
       setErrorMessage("All three atoms must be selected.")
       return
     }
-  
+
     try {
       addTriple([
         BigInt(subject.vault_id),
@@ -107,50 +107,50 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
 
   const handleSubmitAll = async () => {
     setErrorMessage(null)
-  
+
     try {
       if (triples.length === 0) {
         setErrorMessage("Please add at least one triple to submit.")
         return
       }
       const totalTxCount = 1 + labeledTriples.length
-  
+
       setProgressMessage(`Transaction 1/${totalTxCount}: Creating triples...`)
       const { vaultIds: createdVaultIds } = await createTriples()
-  
-      umamiCollect("triples_created", "/sidepanel", {
+
+      umami("triples_created", {
         vaultIds: createdVaultIds.join(",")
       }).catch(console.error)
 
       if (!createdVaultIds || createdVaultIds.length !== labeledTriples.length) {
         throw new Error("Mismatch between created triples and local list")
       }
-  
+
       setProgressMessage("Triples created. Preparing to vote...")
-  
+
       const { walletClient, publicClient } = await getClients()
       const multivault = new Multivault({ walletClient, publicClient })
-  
+
       for (let i = 0; i < createdVaultIds.length; i++) {
         const { triple: [s, p, o], vote } = labeledTriples[i]
         const vaultId = createdVaultIds[i]
-  
+
         setProgressMessage(
           `Transaction ${i + 2}/${totalTxCount}: Voting ${vote?.toUpperCase()} for "${s.label} → ${p.label} → ${o.label}"`
         )
-        
-        
+
+
         let targetVaultId = vaultId
-  
+
         if (vote === "against") {
           const counterId = await multivault.getCounterIdFromTriple(vaultId)
           if (!counterId) throw new Error("No counter vault for triple")
           targetVaultId = counterId
         }
-  
+
         await createPosition({ vaultId: targetVaultId })
       }
-  
+
       setProgressMessage("✅ All votes submitted!")
       setLabeledTriples([])
       clearTriples()
@@ -161,7 +161,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
       setErrorMessage(err.message || "An unknown error occurred.")
     }
   }
-  
+
 
   return (
     <div className="space-y-6">
@@ -246,11 +246,10 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
         {vaultIds && <p className="text-green-600 text-sm">Vaults: {vaultIds.join(', ')}</p>}
         {progressMessage && (
           <p
-            className={`text-sm ${
-              progressMessage.startsWith("Transaction")
-                ? "text-blue-500"
-                : "text-green-600"
-            }`}
+            className={`text-sm ${progressMessage.startsWith("Transaction")
+              ? "text-blue-500"
+              : "text-green-600"
+              }`}
           >
             {progressMessage}
           </p>
