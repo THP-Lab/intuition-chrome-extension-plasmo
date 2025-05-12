@@ -13,49 +13,37 @@ export const getShadowHostId = () => "plasmo-inline-example-unique-id"
 
 function PlasmoInline() {
   const [positionY, setPositionY] = useState<number>(50)
-  const [sidePanelOpen, setSidePanelOpen] = useState(false)
   const draggingRef = useRef(false)
-
-  useEffect(() => {
-    const listener = (msg: any) => {
-      if (msg.type === "sidepanel_state") {
-        setSidePanelOpen(msg.open)
-      }
-    }
-
-    chrome.runtime.onMessage.addListener(listener)
-    return () => chrome.runtime.onMessage.removeListener(listener)
-  }, [])
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const startY = e.clientY
     const startPositionY = positionY
     draggingRef.current = false
-  
+
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaY = moveEvent.clientY - startY
       if (Math.abs(deltaY) > 5) {
         draggingRef.current = true
       }
+
       if (draggingRef.current) {
         const newY = startPositionY + (deltaY / window.innerHeight) * 100
         setPositionY(Math.min(90, Math.max(0, newY)))
       }
     }
-  
+
     const handleMouseUp = () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("mouseup", handleMouseUp)
-  
+
       if (!draggingRef.current) {
         handleSidePanel()
       }
     }
-  
+
     window.addEventListener("mousemove", handleMouseMove)
     window.addEventListener("mouseup", handleMouseUp)
   }
-
 
   const handleSidePanel = () => {
     chrome.runtime.sendMessage({ type: "open_sidepanel" })
@@ -64,7 +52,6 @@ function PlasmoInline() {
   return (
     <div>
       <div
-        
         onMouseDown={handleMouseDown}
         style={{
           position: "fixed",
@@ -77,8 +64,14 @@ function PlasmoInline() {
           border: "1px solid #fff",
           cursor: "grab",
           zIndex: 9999,
-          opacity: sidePanelOpen ? 0.2 : 1,
-          transition: "opacity 0.3s ease",
+          opacity: 0.2,
+          transition: "opacity 0.3s ease"
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.opacity = "1"
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.opacity = "0.2"
         }}
       >
         <IntuitionSearchIcon

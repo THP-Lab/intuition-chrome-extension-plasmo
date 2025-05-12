@@ -1,8 +1,7 @@
 {
   "name": "intuition-chrome-extension",
   "displayName": "Intuition Chrome Extension",
-
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "",
   "author": "THP-Lab.org",
   "scripts": {
@@ -29,7 +28,7 @@
     "@types/three": "^0.175.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "graphql": "^16.9.0",
+    "graphql": "^16.10.0",
     "graphql-request": "^7.1.2",
     "graphql-ws": "^6.0.4",
     "lucide-react": "^0.483.0",
