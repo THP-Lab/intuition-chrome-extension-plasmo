@@ -11,7 +11,7 @@ const Tags: React.FC<TagsProps> = ({ tags, addButton }) => {
   if (!tags || tags.length === 0) return null
 
   return (
-      <div className="mt-6 flex flex-wrap gap-2 items-center">
+      <div className="flex flex-wrap gap-2 items-center">
       {tags.map((tag, index) => (
         <span
           key={index}

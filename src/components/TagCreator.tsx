@@ -5,16 +5,19 @@ import { useCreatePosition } from "~src/hooks/useCreatePosition"
 import { Multivault } from "@0xintuition/protocol"
 import { getClients } from "~src/lib/viemClient"
 
+interface AtomProps {
+  id: string
+  label?: string | null
+  vault_id?: string
+}
+
 interface TagCreatorProps {
-  subjectAtom: {
-    id: string
-    label: string
-    vault_id: string
-  }
+  subjectAtom: AtomProps;
   onTagCreated?: () => void
 }
 
-const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) => {
+const TagCreator: React.FC<TagCreatorProps> = ( {subjectAtom, onTagCreated} ) => {
+
   const [isOpen, setIsOpen] = useState(false)
   const [selectedTag, setSelectedTag] = useState<any | null>(null)
   const [vote, setVote] = useState<"for" | "against" | null>(null)
@@ -27,15 +30,23 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
   const handleSubmit = async () => {
     if (!selectedTag || !vote) return 
 
+    const subjectVault = subjectAtom.vault_id ?? subjectAtom.id;
+    const objectVault = selectedTag.vault_id ?? selectedTag.id;
+
+    if (!subjectVault || !objectVault) {
+      setError("Missing vault_id");
+      return;
+    }
+
+    const subjectId = BigInt(subjectVault);
+    const predicateId = 4n;
+    const objectId = BigInt(objectVault);
+
     setIsSubmitting(true)
     setError(null)
 
     try {
-      addTriple([
-        BigInt(subjectAtom.vault_id),
-        BigInt(4),
-        BigInt(selectedTag.vault_id)
-      ])
+      addTriple([subjectId, predicateId, objectId]);
 
       const { vaultIds } = await createTriples()
 
@@ -49,6 +60,7 @@ const TagCreator: React.FC<TagCreatorProps> = ({ subjectAtom, onTagCreated }) =>
         targetVaultId = counterId
       }
       
+      console.log("▶️ TagCreator: calling createPosition on vault", targetVaultId); 
       await createPosition({ vaultId: targetVaultId })
 
       // Reset local state
