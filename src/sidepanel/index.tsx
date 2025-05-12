@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { umamiCollect } from "../lib/umami"
+import { umami } from "../lib/umami"
 import Content from "~src/components/content"
 import ParticlesCanvas from "~src/components/ui/ParticulBg/ParticlesCanvas"
 import GroupParticlesCanvas from "~src/components/ui/ParticulBg/GroupParticlesCanvas"
@@ -9,7 +9,7 @@ import { NavigationProvider } from "~src/components/layout/NavigationProvider"
 function IndexSidepanel() {
 
   useEffect(() => {
-    umamiCollect("pageview", "/sidepanel").catch(console.error)
+    umami("Open Side Panel")
     const port = chrome.runtime.connect({ name: "sidepanel" })
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -18,7 +18,7 @@ function IndexSidepanel() {
         console.log("[SIDEPANEL] Envoi tabId:", tabs[0].id)
       }
     })
-    
+
 
     return () => {
       port.disconnect()
@@ -28,13 +28,13 @@ function IndexSidepanel() {
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="intuition-theme">
-      <NavigationProvider>
-        <div className="flex min-h-screen flex-col bg-background text-foreground">
-          <ParticlesCanvas />
-          <GroupParticlesCanvas />
-          <Content />
-        </div>
-      </NavigationProvider>
+        <NavigationProvider>
+          <div className="flex min-h-screen flex-col bg-background text-foreground">
+            <ParticlesCanvas />
+            <GroupParticlesCanvas />
+            <Content />
+          </div>
+        </NavigationProvider>
       </ThemeProvider>
     </>
   )
