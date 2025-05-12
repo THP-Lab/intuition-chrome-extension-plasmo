@@ -17,6 +17,15 @@ function PlasmoInline() {
   const draggingRef = useRef(false)
 
   useEffect(() => {
+    chrome.runtime.sendMessage({ type: "check_sidepanel" }, (res) => {
+      if (res?.opened !== undefined) {
+        setSidePanelOpen(res.opened)
+      }
+    })
+  }, [])
+
+
+  useEffect(() => {
     const listener = (msg: any) => {
       if (msg.type === "sidepanel_state") {
         setSidePanelOpen(msg.open)
@@ -27,13 +36,7 @@ function PlasmoInline() {
     return () => chrome.runtime.onMessage.removeListener(listener)
   }, [])
 
-  useEffect(() => {
-    chrome.runtime.sendMessage({ type: "check_sidepanel" }, (res) => {
-      if (res?.opened !== undefined) {
-        setSidePanelOpen(res.opened)
-      }
-    })
-  }, [])
+
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const startY = e.clientY
