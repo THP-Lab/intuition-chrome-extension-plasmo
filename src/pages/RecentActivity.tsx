@@ -52,8 +52,6 @@ const RecentActivity: React.FC = () => {
       <h1 className="text-xl font-bold mb-4">Live Feed</h1>
       {data.events.map((e, idx) => {
         const isDeposit = Boolean(e.deposit_id)
-        const isAtomCreate = !e.deposit_id && Boolean(e.atom?.id)
-        const isTripleCreate = !e.deposit_id && Boolean(e.triple?.id)
 
         // ------ DEPOSIT ATOM ------
         if (isDeposit && e.deposit && !e.deposit.is_triple && e.atom) {
@@ -95,47 +93,6 @@ const RecentActivity: React.FC = () => {
               
                 <ClaimRowLite claim={e.triple} />
               
-            </div>
-          )
-        }
-
-        // ------ CREATE ATOM ------
-        if (isAtomCreate && e.atom) {
-          //)e.atom.creator.id est renseigné par ton fragment AtomMetadata
-          const creatorLabel = e.atom.creator.label
-          const creatorImg = e.atom.creator.image
-
-          return (
-            <div key={idx} className="pt-2 pb-3 border-b">
-              <p className="flex items-center gap-2">
-                <img
-                  src={creatorImg ?? default_img} 
-                  alt={creatorLabel}
-                  className="w-6 h-6 rounded-full"
-                />
-                <span className="text-sm font-medium">{renderSenderLink(creatorLabel)}<strong> create</strong> :</span>
-              </p>
-              <AtomCard atom={e.atom} />
-            </div>
-          )
-        }
-
-        // ------ CREATE TRIPLE ------
-        if (isTripleCreate && e.triple) {
-          const creatorLabel = e.triple.creator.label
-          const creatorImg = e.triple.creator.image
-
-          return (
-            <div key={idx} className="pt-2 pb-2 border-b">
-              <p className="flex items-center gap-2">
-                <img
-                  src={creatorImg ?? default_img} 
-                  alt={creatorLabel}
-                  className="w-6 h-6 rounded-full"
-                />
-                <span className="text-sm font-medium">{renderSenderLink(creatorLabel)}<strong> create</strong> :</span>
-              </p>
-              <ClaimRowLite claim={e.triple} />
             </div>
           )
         }

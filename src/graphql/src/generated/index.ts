@@ -18289,7 +18289,7 @@ useGetVaultQuery.fetcher = (
 export const EventsDocument = `
     subscription Events($addresses: [String!]!, $limit: Int!) {
   events(
-    where: {_or: [{deposit_id: {_is_null: false}}, {atom_id: {_is_null: false}}, {triple_id: {_is_null: false}}]}
+    where: {_or: [{deposit_id: {_is_null: false}}]}
     order_by: [{block_number: desc}]
     limit: $limit
   ) {
@@ -34907,50 +34907,6 @@ export const Events = {
                               {
                                 kind: "ObjectField",
                                 name: { kind: "Name", value: "deposit_id" },
-                                value: {
-                                  kind: "ObjectValue",
-                                  fields: [
-                                    {
-                                      kind: "ObjectField",
-                                      name: { kind: "Name", value: "_is_null" },
-                                      value: {
-                                        kind: "BooleanValue",
-                                        value: false
-                                      }
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            kind: "ObjectValue",
-                            fields: [
-                              {
-                                kind: "ObjectField",
-                                name: { kind: "Name", value: "atom_id" },
-                                value: {
-                                  kind: "ObjectValue",
-                                  fields: [
-                                    {
-                                      kind: "ObjectField",
-                                      name: { kind: "Name", value: "_is_null" },
-                                      value: {
-                                        kind: "BooleanValue",
-                                        value: false
-                                      }
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            kind: "ObjectValue",
-                            fields: [
-                              {
-                                kind: "ObjectField",
-                                name: { kind: "Name", value: "triple_id" },
                                 value: {
                                   kind: "ObjectValue",
                                   fields: [
