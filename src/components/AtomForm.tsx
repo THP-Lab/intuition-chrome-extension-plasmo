@@ -1,6 +1,7 @@
 import { usePinThingMutation } from "@0xintuition/graphql"
 import { Multivault } from "@0xintuition/protocol"
 import { parseEther } from "viem"
+import { Link, useNavigate } from "react-router-dom"
 
 import { getClients } from "../lib/viemClient"
 import { LinkTypeSelector } from "./LinkTypeSelector"
@@ -32,14 +33,16 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
 
   const [rawUrl, setRawUrl] = useState(initialUrl ?? "")
 
+  const [created, setCreated] = useState<{ vaultId: string; txHash: string } | null>(null)
   const [progressMessage, setProgressMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [linkType, setLinkType] = useState<"url" | "domain">("url")
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
-  const [initialUrlCaptured, setInitialUrlCaptured] = useState(false)
 
+  const shortHash = (h: string, head = 6, tail = 4) =>
+  h.length > head + tail ? `${h.slice(0, head)}…${h.slice(-tail)}` : h;
 
   useImperativeHandle(ref, () => ({
     resetForm() {
@@ -118,7 +121,8 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
         initialDeposit: deposit,
         wait: true
       })
-      setProgressMessage(` Atom créé ! Vault ID: ${vaultId} | Tx: ${hash}`)
+      setProgressMessage("Atom created!")
+      setCreated({ vaultId: vaultId.toString(), txHash: hash })
 
       const atom = {
         id: hash,
@@ -213,6 +217,23 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
       {progressMessage && (
         <p className="text-sm text-green-600">{progressMessage}</p>
       )}
+      {created && (
+          <p className="text-sm text-green-600">
+            Vault:
+            <Link to={`/atoms/${created.vaultId}`} className="ml-2 font-semibold underline">
+              {created.vaultId}
+            </Link>
+            {" | TX: "}
+            <a
+              href={`https://basescan.org/tx/${created.txHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              {shortHash(created.txHash)}
+            </a>
+          </p>
+        )}
       {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
     </form>
   )
