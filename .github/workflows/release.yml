@@ -7,6 +7,8 @@ on:
 
 jobs:
   release:
+    environment:
+      name: umami
     runs-on: ubuntu-latest
 
     steps:
