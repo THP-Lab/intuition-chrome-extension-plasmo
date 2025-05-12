@@ -142,7 +142,7 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
 
     } catch (error: any) {
       console.error(error)
-      setErrorMessage(error.message || "An error occurred.")
+      setErrorMessage("Transaction failed")
     } finally {
       setIsSubmitting(false)
     }
