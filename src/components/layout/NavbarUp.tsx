@@ -1,22 +1,20 @@
 import * as React from "react"
 import { Link } from "react-router-dom"
 
-import IntuitionThemeAvatar from "~/src/components/icons/IntuitionThemeAvatar"
-import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { cn } from "~src/lib/utils"
 import IntuitionIconPlus from "~src/components/icons/intuition_icon_plus"
+import IntuitionProfil from "~/src/components/icons/IntuitionProfil"
+import { umami } from "~src/lib/umami"
+
 
 function NavbarUp() {
-  const { theme, setTheme } = useTheme()
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
-  }
-
-  const handleSearch = (value: string) => {
-
-    console.log("Recherche:", value)
+    const isActive = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/' || location.pathname === '/home';
+    }
+    return location.pathname.startsWith(path);
   }
 
   return (
@@ -36,15 +34,18 @@ function NavbarUp() {
         </div>
 
         <Button
-          variant="ghost"
+          variant={isActive("/profile") ? "default" : "ghost"}
           size="sm"
-          onClick={toggleTheme}
+          asChild
           className={cn(
             "navbar-up-button",
-            theme === "dark" ? "text-primary" : "text-foreground"
-          )}
-          title="Theme">
-          <IntuitionThemeAvatar size={44} className="navbar-up-icon"/>
+            isActive("/profile") && "animate-fade-bg"
+          )}>
+          <Link to="/profile" className="flex flex-col items-center" onClick={() => umami("Profile")}>
+            <div className="text-foreground" title="Profile">
+              <IntuitionProfil size={44} className="navbar-up-icon" />
+            </div>
+          </Link>
         </Button>
       </div>
     </nav>
