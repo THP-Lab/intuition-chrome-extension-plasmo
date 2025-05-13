@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom"
 import IntuitionFeed from "~/src/components/icons/IntuitionFeed"
 import IntuitionHistory from "~/src/components/icons/IntuitionHistory"
 import IntuitionIcon from "~/src/components/icons/IntuitionIcon"
-import IntuitionProfil from "~/src/components/icons/IntuitionProfil"
+import IntuitionHashtagIcon from "~/src/components/icons/IntuitionIcon"
 import IntuitionSearchIcon from "~/src/components/icons/IntuitionSearchIcon"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
@@ -60,16 +60,16 @@ function Navbar() {
         </Button>
 
         <Button
-          variant={isActive("/profile") ? "default" : "ghost"}
+          variant={isActive("/Tag") ? "default" : "ghost"}
           size="sm"
           asChild
           className={cn(
             "navbar-button",
-            isActive("/profile") && "animate-fade-bg"
+            isActive("/Tag") && "animate-fade-bg"
           )}>
-          <Link to="/profile" className="flex flex-col items-center" onClick={() => umami("Profile")}>
-            <div className="text-foreground" title="Profile">
-              <IntuitionProfil size={44} className="navbar-icon" />
+          <Link to="/Tag" className="flex flex-col items-center" onClick={() => umami("Tag")}>
+            <div className="text-foreground" title="Tag">
+              <IntuitionHashtagIcon size={44} className="navbar-icon" />
             </div>
           </Link>
         </Button>

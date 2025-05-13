@@ -2,6 +2,7 @@ import React from "react"
 import { Button } from "~src/components/ui/button"
 import { connectWallet, disconnectWallet } from "../lib/metamask"
 import { useStorage } from "@plasmohq/storage/hook"
+import { PowerOff } from 'lucide-react';
 
 const WalletConnectionButton = () => {
   const [account, setAccount] = useStorage<string>("metamask-account")
@@ -26,7 +27,12 @@ const WalletConnectionButton = () => {
         <Button variant="successOutline" onClick={handleConnect}>Connect to Metamask</Button>
       ) : (
         <div>
-          <Button variant="destructiveOutline" onClick={handleDisconnect}>Disconnect</Button>
+          <button
+            onClick={handleDisconnect}
+            className="p-1 text-red-500 transition-transform duration-200 transform hover:scale-110"
+          >
+            <PowerOff />
+          </button>
         </div>
       )}
     </div>
