@@ -11,7 +11,7 @@ const EyeComponent: React.FC<EyeComponentProps> = ({ className = "", style = {} 
 
   useEyeScene(
     containerRef,
-    chrome.runtime.getURL("assets/Collection_V1.1_color-black_eye-gray_anneaux-chrom__V1.1.glb"),
+    chrome.runtime.getURL("assets/Eye-1K.glb"),
     "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr"
   );
 
