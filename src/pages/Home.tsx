@@ -7,6 +7,7 @@ import { useStorage } from "@plasmohq/storage/dist/hook"
 import { useGetClaimsByUriQuery } from "~src/graphql/src"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
 import AtomCard from "~src/components/AtomCard";
+import EyeComponent from "~/src/components/3D/EyeComponent"
 
 function Home() {
   const { theme } = useTheme()
@@ -136,24 +137,35 @@ function Home() {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
+      <div className="relative w-full" style={{ height: "280px" }}>
+        <h1 className="light-sweep-heading text-center relative z-10 mt-[10px]">INTUITION</h1>
+        <EyeComponent
+          style={{
+            width: "500px",
+            height: "500px",
+            position: "absolute",
+            top: "-90px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 0,
+            opacity: 0.9,
+            pointerEvents: "none"
+          }}
+        />
 
-      <h1 className="light-sweep-heading">INTUITION</h1>
-
-        <p className="text-muted-foreground, text-center ">
-        "Intuition lets you explore, vote, and debate verifiable facts — all directly from your browser."
-        </p>
+<p className="text-muted-foreground text-center relative z-10 mt-[220px]">
+  "Intuition lets you explore, vote, and debate verifiable facts — all directly from your browser."
+</p>
       </div>
-
-      <div>
+  
+      <div className="mt-1">
         {error && <p className="text-red-500">An error occurred while requesting this page.</p>}
-
+  
         <TabSystem
           tabs={tabs}
           activeTab={activeTab}
           onTabChange={setActiveTab}
         />
-        
       </div>
     </div>
   )

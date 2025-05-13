@@ -6,7 +6,7 @@
   "description": "",
   "author": "THP-Lab.org",
   "scripts": {
-    "dev": "plasmo dev && cd build/chrome-mv3-dev && pnpm cp-umami-script",
+    "dev": "plasmo dev --hmr-host=0.0.0.0 --hmr-port=1815 --serve-host=0.0.0.0 --serve-port=1012 && cd build/chrome-mv3-dev && pnpm cp-umami-script",
     "build": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3 && pnpm cp-umami-script",
     "cp-umami-script": "cd build/chrome-mv3-prod && curl -o umami.js https://analytics.thp.box/script.js",
     "build:firefox": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2 && pnpm cp-umami-script:firefox",
@@ -87,7 +87,8 @@
       {
         "resources": [
           "./src/Icon.sprites-2W56CM52.svg",
-          "./assets/*"
+          "./assets/*",
+          "./assets/Collection_V1.1_color-black_eye-gray_anneaux-chrom__V1.1.glb"
         ],
         "matches": [
           "<all_urls>"
@@ -102,7 +103,7 @@
       "sidePanel"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com/ https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org wss://prod.base.intuition-api.com/v1/graphql  ws://localhost:* wss://localhost:*;"
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com/ https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org wss://prod.base.intuition-api.com/v1/graphql  ws://localhost:* wss://localhost:* https://dl.polyhaven.org https://www.gstatic.com;"
     }
   },
   "pnpm": {
