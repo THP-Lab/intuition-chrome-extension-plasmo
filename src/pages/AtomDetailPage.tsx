@@ -90,12 +90,14 @@ const AtomDetailPage = () => {
     <AtomDisplay
       atom={data.atom}
       tagsSection={
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="gap-2">
           <Tags tags={tags} />
-          <TagCreator 
-            subjectAtom={data.atom}
-            onTagCreated={() => refetchClaims()}
-          />
+          <div className="pt-2">
+            <TagCreator 
+              subjectAtom={data.atom}
+              onTagCreated={() => refetchClaims()}
+            />
+          </div>
         </div>
       }
     />

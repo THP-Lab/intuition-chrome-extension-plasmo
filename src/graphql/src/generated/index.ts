@@ -18289,7 +18289,7 @@ useGetVaultQuery.fetcher = (
 export const EventsDocument = `
     subscription Events($addresses: [String!]!, $limit: Int!) {
   events(
-    where: {_or: [{deposit_id: {_is_null: false}}]}
+    where: {_or: [{deposit: {is_atom_wallet: {_eq: false}}}]}
     order_by: [{block_number: desc}]
     limit: $limit
   ) {
@@ -34906,16 +34906,31 @@ export const Events = {
                             fields: [
                               {
                                 kind: "ObjectField",
-                                name: { kind: "Name", value: "deposit_id" },
+                                name: { kind: "Name", value: "deposit" },
                                 value: {
                                   kind: "ObjectValue",
                                   fields: [
                                     {
                                       kind: "ObjectField",
-                                      name: { kind: "Name", value: "_is_null" },
+                                      name: {
+                                        kind: "Name",
+                                        value: "is_atom_wallet"
+                                      },
                                       value: {
-                                        kind: "BooleanValue",
-                                        value: false
+                                        kind: "ObjectValue",
+                                        fields: [
+                                          {
+                                            kind: "ObjectField",
+                                            name: {
+                                              kind: "Name",
+                                              value: "_eq"
+                                            },
+                                            value: {
+                                              kind: "BooleanValue",
+                                              value: false
+                                            }
+                                          }
+                                        ]
                                       }
                                     }
                                   ]
