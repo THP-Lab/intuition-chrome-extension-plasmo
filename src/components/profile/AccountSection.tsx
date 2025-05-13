@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react"
+import React, { Dispatch, SetStateAction } from "react";
 import SignUpForm from "../SignUpForm"
 import { cn } from "~src/lib/utils"
 

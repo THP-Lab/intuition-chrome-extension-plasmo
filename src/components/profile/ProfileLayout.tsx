@@ -11,6 +11,7 @@ import { Outlet } from "react-router-dom";
 import { useStorage } from "@plasmohq/storage/hook";
 import { useNavigation } from "~src/components/layout/NavigationProvider"
 import AccountSection from "~src/components/profile/AccountSection";
+import PreferenceSection from "~src/components/profile/PreferenceSection";
 import AtomProfileSection from "~src/components/profile/AtomProfileSection";
 import IntuitionNavSwitch from "~src/components/layout/IntuitionNavSwitch";
 
@@ -83,6 +84,7 @@ const ProfileLayout = () => {
         editMode={editMode}
         setEditMode={setEditMode}
       />
+      <PreferenceSection/>
 
       {person && <AtomProfileSection person={person} />}
 
