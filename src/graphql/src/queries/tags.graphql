@@ -23,6 +23,22 @@ query GetTagsObjects($distinctOn: [triples_select_column!], $where: triples_bool
       id
       label
       image
+      value {
+        thing {
+          id
+          name
+          image
+          description
+          url
+        }
+        person {
+          id
+          name
+          image
+          description
+          url
+        }
+      }
     }
     object_id
   }
