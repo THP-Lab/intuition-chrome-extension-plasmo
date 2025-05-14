@@ -13403,6 +13403,7 @@ export type GetTaggedObjectsQuery = {
   triples: Array<{
     __typename?: "triples"
     id: any
+    vault_id: any
     subject: {
       __typename?: "atoms"
       id: any
@@ -13420,6 +13421,18 @@ export type GetTaggedObjectsQuery = {
       } | null
       vault?: { __typename?: "vaults"; position_count: number } | null
     }
+    vault?: {
+      __typename?: "vaults"
+      id: any
+      position_count: number
+      positions: Array<{ __typename?: "positions"; shares: any }>
+    } | null
+    counter_vault?: {
+      __typename?: "vaults"
+      id: any
+      position_count: number
+      positions: Array<{ __typename?: "positions"; shares: any }>
+    } | null
   }>
 }
 
@@ -17971,6 +17984,21 @@ export const GetTaggedObjectsDocument = `
       }
       vault {
         position_count
+      }
+    }
+    vault_id
+    vault {
+      id
+      position_count
+      positions {
+        shares
+      }
+    }
+    counter_vault {
+      id
+      position_count
+      positions {
+        shares
       }
     }
   }
@@ -34392,6 +34420,61 @@ export const GetTaggedObjects = {
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "position_count" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                { kind: "Field", name: { kind: "Name", value: "vault_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "vault" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "position_count" }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "positions" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "counter_vault" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "position_count" }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "positions" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
                             }
                           ]
                         }

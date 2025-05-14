@@ -85,5 +85,21 @@ query GetTaggedObjects(
         position_count
       }
     }
+    vault_id
+    vault {
+      id
+      position_count
+        positions {
+          shares
+        }
+    }
+
+    counter_vault {
+      id
+      position_count
+        positions {
+          shares
+        }
+    }
   }
 }

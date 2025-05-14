@@ -26,7 +26,7 @@ const SubjectCount: React.FC<{ objectId: string }> = ({ objectId }) => {
     objectId: Number(objectId),
     predicateId: HASHTAG_PREDICATE_ID,
   })
-  const count = data?.triples_aggregate.aggregate.count ?? 0
+  const count = data?.triples_aggregate.aggregate?.count ?? 0
   return <span className="ml-2 text-sm text-gray-400">{count}</span>
 }
 
@@ -54,7 +54,7 @@ const HashtagObjectsPage: React.FC = () => {
       <Link
         key={obj.id}
         to={`/tags/${obj.id}`}
-        className="block no-underline"
+        className="no-underline"
       >
         <div
           key={obj.id}
