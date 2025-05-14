@@ -34,6 +34,8 @@ import IdentitiesVotedTab from "./profile/IdentitiesVotedTab"
 import ProfileLayout from "./profile/ProfileLayout"
 
 import "../styles/global.css"
+import umamiScriptUrl from "url:../../assets/umami.js"
+
 
 const API_URL = "https://prod.base.intuition-api.com/v1/graphql"
 configureClient({ apiUrl: API_URL })
@@ -48,18 +50,14 @@ const Content = ({ children }: ContentProps) => {
   const UMAMI_ORIGIN = process.env.PLASMO_PUBLIC_UMAMI_ORIGIN!
   const UMAMI_WEBSITE_ID = process.env.PLASMO_PUBLIC_UMAMI_WEBSITE_ID!
 
-  useEffect(() => {
-    const s = document.createElement("script")
-    s.setAttribute("defer", "")
-    s.src = `umami.js`
-    s.setAttribute("data-website-id", UMAMI_WEBSITE_ID)
-    s.setAttribute("data-auto-track", "true")
-    s.setAttribute("data-domains", "auto")
 
-    document.head.appendChild(s)
-    return () => {
-      document.head.removeChild(s)
-    }
+
+  useEffect(() => {
+    const script = document.createElement("script")
+    script.src = umamiScriptUrl
+    script.defer = true
+    script.setAttribute("data-website-id", UMAMI_WEBSITE_ID)
+    document.head.appendChild(script)
   }, [])
 
   const { navType } = useNavigation()

@@ -5,9 +5,7 @@
   "description": "",
   "author": "THP-Lab.org",
   "scripts": {
-    "dev": "pnpm copy-umami && plasmo dev --hmr-host=0.0.0.0 --hmr-port=1815 --serve-host=0.0.0.0 --serve-port=1012",
-    "copy-umami": "cp src/vendor/umami.js .plasmo/umami.js",
-    "prebuild": "mkdir .plasmo && pnpm copy-umami",
+    "dev": "plasmo dev --hmr-host=0.0.0.0 --hmr-port=1815 --serve-host=0.0.0.0 --serve-port=1012",
     "build": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3 ",
     "build:firefox": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2 ",
     "package": "plasmo package",
@@ -87,6 +85,7 @@
         "resources": [
           "./src/Icon.sprites-2W56CM52.svg",
           "./assets/*",
+          "assets/umami.js",
           "./assets/Collection_V1.1_color-black_eye-gray_anneaux-chrom__V1.1.glb"
         ],
         "matches": [
