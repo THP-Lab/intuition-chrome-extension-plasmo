@@ -21,7 +21,6 @@ interface TagObject {
 
 const HASHTAG_PREDICATE_ID = 4
 
-// Composant pour afficher le count de subjects pour un objet donné
 const SubjectCount: React.FC<{ objectId: string }> = ({ objectId }) => {
   const { data } = useGetTaggedObjectsQuery({
     objectId: Number(objectId),
@@ -30,6 +29,7 @@ const SubjectCount: React.FC<{ objectId: string }> = ({ objectId }) => {
   const count = data?.triples_aggregate.aggregate.count ?? 0
   return <span className="ml-2 text-sm text-gray-400">{count}</span>
 }
+
 
 const HashtagObjectsPage: React.FC = () => {
   
@@ -51,13 +51,17 @@ const HashtagObjectsPage: React.FC = () => {
     <div className="space-y-6 p-4">
       <h1 className="text-xl font-bold mb-4">Tags List</h1>
       {objects.map((obj) => (
+      <Link
+        key={obj.id}
+        to={`/tags/${obj.id}`}
+        className="block no-underline"
+      >
         <div
           key={obj.id}
           className="flex justify-between items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-3 claims-hover-effect"
         >
-          {/* Left: icon + title + description */}
+
           <div className="flex items-center gap-4">
-            
             {obj.image ? (
               <ImageWithFallback
                 src={obj.image}
@@ -90,6 +94,7 @@ const HashtagObjectsPage: React.FC = () => {
             <SubjectCount objectId={obj.id} />
           </div>
         </div>
+      </Link>
       ))}
     </div>
   )

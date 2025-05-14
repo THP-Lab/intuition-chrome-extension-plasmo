@@ -19,7 +19,9 @@ import Search from "~src/pages/Search"
 import { AtomSelectionProvider } from "./ui/AtomSelectionContext"
 import AtomDetailPage from "~src/pages/AtomDetailPage"
 import PageViewTracker from "./PageViewTracker"
-import pageTags from "~src/pages/TagsPage"
+import TagsPage from "~src/pages/TagsPage"
+import TagsDetailPage from "~src/pages/TagsDetailPage"
+
 
 import { NavigationProvider, useNavigation } from "./layout/NavigationProvider"
 import NavArc from "./layout/NavArc"
@@ -102,7 +104,7 @@ const Content = ({ children }: ContentProps) => {
                   <Route path="/search" element={<Search />} />
                   <Route path="/atoms/:id" element={<AtomDetailPage />} />
                   <Route path="/tags" element={<TagsPage />} />
-
+                  <Route path="/tags/:tagId" element={<TagsDetailPage />} />
                 </Routes>
               </div>
             </main>
