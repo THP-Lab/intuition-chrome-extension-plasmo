@@ -1,16 +1,15 @@
 {
   "name": "intuition-chrome-extension",
   "displayName": "Intuition Chrome Extension",
-
   "version": "0.1.39",
   "description": "",
   "author": "THP-Lab.org",
   "scripts": {
-    "dev": "plasmo dev --hmr-host=0.0.0.0 --hmr-port=1815 --serve-host=0.0.0.0 --serve-port=1012 && cd build/chrome-mv3-dev && pnpm cp-umami-script",
-    "build": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3 && pnpm cp-umami-script",
-    "cp-umami-script": "cd build/chrome-mv3-prod && curl -o umami.js https://analytics.thp.box/script.js",
-    "build:firefox": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2 && pnpm cp-umami-script:firefox",
-    "cp-umami-script:firefox": "cd build/firefox-mv2-prod && curl -o umami.js https://analytics.thp.box/script.js",
+    "dev": "plasmo dev --hmr-host=0.0.0.0 --hmr-port=1815 --serve-host=0.0.0.0 --serve-port=1012",
+    "copy-umami": "mkdir -p .plasmo && cp src/vendor/umami.js .plasmo/umami.js",
+    "prebuild": "pnpm copy-umami",
+    "build": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3 ",
+    "build:firefox": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2 ",
     "package": "plasmo package",
     "graphql:build": " cd src/graphql && NODE_ENV=production graphql-codegen --config codegen.ts"
   },
