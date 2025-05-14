@@ -1,12 +1,12 @@
 {
   "name": "intuition-chrome-extension",
   "displayName": "Intuition Chrome Extension",
-  "version": "0.1.39",
+  "version": "0.1.40",
   "description": "",
   "author": "THP-Lab.org",
   "scripts": {
-    "dev": "plasmo dev --hmr-host=0.0.0.0 --hmr-port=1815 --serve-host=0.0.0.0 --serve-port=1012",
-    "copy-umami": "mkdir -p .plasmo && cp src/vendor/umami.js .plasmo/umami.js",
+    "dev": "pnpm copy-umami && plasmo dev --hmr-host=0.0.0.0 --hmr-port=1815 --serve-host=0.0.0.0 --serve-port=1012",
+    "copy-umami": "cp src/vendor/umami.js .plasmo/umami.js",
     "prebuild": "pnpm copy-umami",
     "build": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3 ",
     "build:firefox": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2 ",
