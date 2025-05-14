@@ -1,37 +1,43 @@
 import React, { useEffect } from 'react'
 import { useGetTagsObjectsQuery, useGetTaggedObjectsQuery } from '~src/graphql/src'
 import { Link } from 'react-router-dom'
+import { ImageWithFallback } from '../components/ui/ImageWithFallback'
+import { Fingerprint } from "lucide-react"
 
 interface TagObject {
   id: string
   label?: string | null
   image?: string | null
   type: string
+  value?: {
+    thing?: {
+      description?: string | null
+    }
+    person?: {
+      description?: string | null
+    }
+  }
 }
 
 const HASHTAG_PREDICATE_ID = 4
 
 // Composant pour afficher le count de subjects pour un objet donné
 const SubjectCount: React.FC<{ objectId: string }> = ({ objectId }) => {
-  const { data, isLoading, error } = useGetTaggedObjectsQuery({
+  const { data } = useGetTaggedObjectsQuery({
     objectId: Number(objectId),
     predicateId: HASHTAG_PREDICATE_ID,
   })
-
-  if (isLoading) return <span>…</span>
-  if (error) return <span>error</span>
-
-  return <span>{data.triples_aggregate.aggregate.count}</span>
+  const count = data?.triples_aggregate.aggregate.count ?? 0
+  return <span className="ml-2 text-sm text-gray-400">{count}</span>
 }
 
 const HashtagObjectsPage: React.FC = () => {
-  // Récupère tous les triples pour le prédicat hashtag
+  
   const { data, isLoading, error } = useGetTagsObjectsQuery({
     distinctOn: ['object_id'],
     where: { predicate_id: { _eq: HASHTAG_PREDICATE_ID } },
   })
 
-  // debug raw triples
   useEffect(() => {
     if (data) console.log('raw triples:', data.triples)
   }, [data])
@@ -39,28 +45,52 @@ const HashtagObjectsPage: React.FC = () => {
   if (isLoading) return <p>Chargement…</p>
   if (error) return <p className="text-red-600">Erreur de chargement</p>
 
-  // Extraire les objets (sans compter)
   const objects: TagObject[] = data.triples.map((t: any) => t.object)
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">
-        Objets taggés avec #{HASHTAG_PREDICATE_ID}
-      </h1>
+    <div className="space-y-6 p-4">
+      <h1 className="text-xl font-bold mb-4">Tags List</h1>
+      {objects.map((obj) => (
+        <div
+          key={obj.id}
+          className="flex justify-between items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-3 claims-hover-effect"
+        >
+          {/* Left: icon + title + description */}
+          <div className="flex items-center gap-4">
+            
+            {obj.image ? (
+              <ImageWithFallback
+                src={obj.image}
+                alt={obj.label || ""}
+                className="w-10 h-10 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-10 h-10 flex items-center justify-center rounded-md bg-muted text-muted-foreground">
+                <Fingerprint className="w-10 h-10" />
+              </div>
+            )}
 
-
-      <ul className="space-y-4">
-          {objects.map((obj) => (
-          <li key={obj.id} className="border rounded-lg p-4">
-            <Link to={`/atoms/${obj.id}`} className="font-semibold hover:underline">
-              {obj.label}
-            </Link>
-            <div className="mt-2 text-sm">
-              Sujet(s) ayant taggé cet object: <SubjectCount objectId={obj.id} />
+            <div>
+              <h3 className="text-white font-semibold text-base">
+                {obj.label}
+              </h3>
+              <p className="text-gray-400 text-xs">
+                {(() => {
+                  const raw = 
+                    obj.value?.thing?.description 
+                    ?? obj.value?.person?.description 
+                    ?? '';
+                  return raw.length > 70 ? raw.slice(0, 70) + '…' : raw;
+                })()}
+              </p>
             </div>
-          </li>
-        ))}
-      </ul>
+          </div>
+
+          <div className="flex items-center">
+            <SubjectCount objectId={obj.id} />
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
