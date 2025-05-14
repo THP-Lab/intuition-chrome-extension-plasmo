@@ -61,25 +61,16 @@ function Navbar() {
         </Button>
 
         <Button
-          variant={isActive("/Tag") ? "default" : "ghost"}
+          variant={isActive("/tags") ? "default" : "ghost"}
           size="sm"
           asChild
           className={cn(
             "navbar-button",
-            isActive("/Tag") && "animate-fade-bg"
+            isActive("/tags") && "animate-fade-bg"
           )}>
-          <Link
-            to="/Tag"
-            className="flex flex-col items-center"
-            onClick={() => umami("Tag")}
-          >
-            <div className="relative w-11 h-11"> 
-              <IntuitionIcon size={44} className="navbar-icon" />
-              <TagsIcon
-                size={18}
-                className="absolute top-1/2 left-1/2 
-                          transform -translate-x-1/2 -translate-y-1/2"
-              />
+          <Link to="/tags" className="flex flex-col items-center" onClick={() => umami("Profile")}>
+            <div className="text-foreground" title="Profile">
+              <IntuitionProfil size={44} className="navbar-icon" />
             </div>
           </Link>
         </Button>

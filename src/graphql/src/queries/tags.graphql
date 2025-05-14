@@ -16,3 +16,26 @@ query GetTagsCustom($where: triples_bool_exp) {
     ...TripleMetadata
   }
 }
+
+query GetTagsObjects($distinctOn: [triples_select_column!], $where: triples_bool_exp, $orderBy: [triples_order_by!]) {
+  triples(distinct_on: $distinctOn, where: $where, order_by: $orderBy) {
+    object {
+      id
+      label
+      image
+    }
+    object_id
+  }
+}
+
+
+query GetSubjectsCountForObject($objectId: Int!, $predicateId: Int!) {
+  triples_aggregate(
+    where: {
+      object_id:    { _eq: $objectId }
+      predicate_id: { _eq: $predicateId }
+    }
+  ) {
+    aggregate { count }
+  }
+}
