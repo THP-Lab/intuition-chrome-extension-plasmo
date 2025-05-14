@@ -29,7 +29,7 @@ query GetTagsObjects($distinctOn: [triples_select_column!], $where: triples_bool
 }
 
 
-query GetSubjectsCountForObject($objectId: Int!, $predicateId: Int!) {
+query GetTaggedObjects($objectId: numeric!, $predicateId: numeric!) {
   triples_aggregate(
     where: {
       object_id:    { _eq: $objectId }

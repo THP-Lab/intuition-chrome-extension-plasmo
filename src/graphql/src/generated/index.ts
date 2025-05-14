@@ -13358,6 +13358,22 @@ export type GetTagsObjectsQuery = {
   }>
 }
 
+export type GetTaggedObjectsQueryVariables = Exact<{
+  objectId: Scalars["numeric"]["input"]
+  predicateId: Scalars["numeric"]["input"]
+}>
+
+export type GetTaggedObjectsQuery = {
+  __typename?: "query_root"
+  triples_aggregate: {
+    __typename?: "triples_aggregate"
+    aggregate?: {
+      __typename?: "triples_aggregate_fields"
+      count: number
+    } | null
+  }
+}
+
 export type GetTriplesByCreatorQueryVariables = Exact<{
   address?: InputMaybe<Scalars["String"]["input"]>
 }>
@@ -17770,6 +17786,92 @@ useGetTagsObjectsQuery.fetcher = (
 ) =>
   fetcher<GetTagsObjectsQuery, GetTagsObjectsQueryVariables>(
     GetTagsObjectsDocument,
+    variables,
+    options
+  )
+
+export const GetTaggedObjectsDocument = `
+    query GetTaggedObjects($objectId: numeric!, $predicateId: numeric!) {
+  triples_aggregate(
+    where: {object_id: {_eq: $objectId}, predicate_id: {_eq: $predicateId}}
+  ) {
+    aggregate {
+      count
+    }
+  }
+}
+    `
+
+export const useGetTaggedObjectsQuery = <
+  TData = GetTaggedObjectsQuery,
+  TError = unknown
+>(
+  variables: GetTaggedObjectsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetTaggedObjectsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<GetTaggedObjectsQuery, TError, TData>["queryKey"]
+  }
+) => {
+  return useQuery<GetTaggedObjectsQuery, TError, TData>({
+    queryKey: ["GetTaggedObjects", variables],
+    queryFn: fetcher<GetTaggedObjectsQuery, GetTaggedObjectsQueryVariables>(
+      GetTaggedObjectsDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetTaggedObjectsQuery.document = GetTaggedObjectsDocument
+
+useGetTaggedObjectsQuery.getKey = (
+  variables: GetTaggedObjectsQueryVariables
+) => ["GetTaggedObjects", variables]
+
+export const useInfiniteGetTaggedObjectsQuery = <
+  TData = InfiniteData<GetTaggedObjectsQuery>,
+  TError = unknown
+>(
+  variables: GetTaggedObjectsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetTaggedObjectsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetTaggedObjectsQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetTaggedObjectsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ["GetTaggedObjects.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetTaggedObjectsQuery, GetTaggedObjectsQueryVariables>(
+            GetTaggedObjectsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetTaggedObjectsQuery.getKey = (
+  variables: GetTaggedObjectsQueryVariables
+) => ["GetTaggedObjects.infinite", variables]
+
+useGetTaggedObjectsQuery.fetcher = (
+  variables: GetTaggedObjectsQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetTaggedObjectsQuery, GetTaggedObjectsQueryVariables>(
+    GetTaggedObjectsDocument,
     variables,
     options
   )
@@ -33778,6 +33880,115 @@ export const GetTagsObjects = {
                   }
                 },
                 { kind: "Field", name: { kind: "Name", value: "object_id" } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetTaggedObjects = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetTaggedObjects" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "objectId" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "numeric" }
+            }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "predicateId" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "numeric" }
+            }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "triples_aggregate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "object_id" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_eq" },
+                            value: {
+                              kind: "Variable",
+                              name: { kind: "Name", value: "objectId" }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "predicate_id" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_eq" },
+                            value: {
+                              kind: "Variable",
+                              name: { kind: "Name", value: "predicateId" }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "count" } }
+                    ]
+                  }
+                }
               ]
             }
           }
