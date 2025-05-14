@@ -13338,6 +13338,26 @@ export type GetTagsCustomQuery = {
   }>
 }
 
+export type GetTagsObjectsQueryVariables = Exact<{
+  distinctOn?: InputMaybe<Array<Triples_Select_Column> | Triples_Select_Column>
+  where?: InputMaybe<Triples_Bool_Exp>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
+}>
+
+export type GetTagsObjectsQuery = {
+  __typename?: "query_root"
+  triples: Array<{
+    __typename?: "triples"
+    object_id: any
+    object: {
+      __typename?: "atoms"
+      id: any
+      label?: string | null
+      image?: string | null
+    }
+  }>
+}
+
 export type GetTriplesByCreatorQueryVariables = Exact<{
   address?: InputMaybe<Scalars["String"]["input"]>
 }>
@@ -17655,6 +17675,101 @@ useGetTagsCustomQuery.fetcher = (
 ) =>
   fetcher<GetTagsCustomQuery, GetTagsCustomQueryVariables>(
     GetTagsCustomDocument,
+    variables,
+    options
+  )
+
+export const GetTagsObjectsDocument = `
+    query GetTagsObjects($distinctOn: [triples_select_column!], $where: triples_bool_exp, $orderBy: [triples_order_by!]) {
+  triples(distinct_on: $distinctOn, where: $where, order_by: $orderBy) {
+    object {
+      id
+      label
+      image
+    }
+    object_id
+  }
+}
+    `
+
+export const useGetTagsObjectsQuery = <
+  TData = GetTagsObjectsQuery,
+  TError = unknown
+>(
+  variables?: GetTagsObjectsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetTagsObjectsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<GetTagsObjectsQuery, TError, TData>["queryKey"]
+  }
+) => {
+  return useQuery<GetTagsObjectsQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ["GetTagsObjects"]
+        : ["GetTagsObjects", variables],
+    queryFn: fetcher<GetTagsObjectsQuery, GetTagsObjectsQueryVariables>(
+      GetTagsObjectsDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetTagsObjectsQuery.document = GetTagsObjectsDocument
+
+useGetTagsObjectsQuery.getKey = (variables?: GetTagsObjectsQueryVariables) =>
+  variables === undefined ? ["GetTagsObjects"] : ["GetTagsObjects", variables]
+
+export const useInfiniteGetTagsObjectsQuery = <
+  TData = InfiniteData<GetTagsObjectsQuery>,
+  TError = unknown
+>(
+  variables: GetTagsObjectsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetTagsObjectsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetTagsObjectsQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetTagsObjectsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ["GetTagsObjects.infinite"]
+            : ["GetTagsObjects.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetTagsObjectsQuery, GetTagsObjectsQueryVariables>(
+            GetTagsObjectsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetTagsObjectsQuery.getKey = (
+  variables?: GetTagsObjectsQueryVariables
+) =>
+  variables === undefined
+    ? ["GetTagsObjects.infinite"]
+    : ["GetTagsObjects.infinite", variables]
+
+useGetTagsObjectsQuery.fetcher = (
+  variables?: GetTagsObjectsQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetTagsObjectsQuery, GetTagsObjectsQueryVariables>(
+    GetTagsObjectsDocument,
     variables,
     options
   )
@@ -33553,6 +33668,116 @@ export const GetTagsCustom = {
                     ]
                   }
                 }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetTagsObjects = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetTagsObjects" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "distinctOn" }
+          },
+          type: {
+            kind: "ListType",
+            type: {
+              kind: "NonNullType",
+              type: {
+                kind: "NamedType",
+                name: { kind: "Name", value: "triples_select_column" }
+              }
+            }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "where" }
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "triples_bool_exp" }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "orderBy" }
+          },
+          type: {
+            kind: "ListType",
+            type: {
+              kind: "NonNullType",
+              type: {
+                kind: "NamedType",
+                name: { kind: "Name", value: "triples_order_by" }
+              }
+            }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "triples" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "distinct_on" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "distinctOn" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "where" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "order_by" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "orderBy" }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "object" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                { kind: "Field", name: { kind: "Name", value: "object_id" } }
               ]
             }
           }

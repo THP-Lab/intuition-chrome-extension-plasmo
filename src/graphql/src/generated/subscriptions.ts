@@ -13358,6 +13358,26 @@ export type GetTagsCustomQuery = {
   }>
 }
 
+export type GetTagsObjectsQueryVariables = Exact<{
+  distinctOn?: InputMaybe<Array<Triples_Select_Column> | Triples_Select_Column>
+  where?: InputMaybe<Triples_Bool_Exp>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
+}>
+
+export type GetTagsObjectsQuery = {
+  __typename?: "query_root"
+  triples: Array<{
+    __typename?: "triples"
+    object_id: any
+    object: {
+      __typename?: "atoms"
+      id: any
+      label?: string | null
+      image?: string | null
+    }
+  }>
+}
+
 export type GetTriplesByCreatorQueryVariables = Exact<{
   address?: InputMaybe<Scalars["String"]["input"]>
 }>
@@ -30643,6 +30663,189 @@ export type GetTagsCustomSuspenseQueryHookResult = ReturnType<
 export type GetTagsCustomQueryResult = Apollo.QueryResult<
   GetTagsCustomQuery,
   GetTagsCustomQueryVariables
+>
+export const GetTagsObjectsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetTagsObjects" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "distinctOn" }
+          },
+          type: {
+            kind: "ListType",
+            type: {
+              kind: "NonNullType",
+              type: {
+                kind: "NamedType",
+                name: { kind: "Name", value: "triples_select_column" }
+              }
+            }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "where" }
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "triples_bool_exp" }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "orderBy" }
+          },
+          type: {
+            kind: "ListType",
+            type: {
+              kind: "NonNullType",
+              type: {
+                kind: "NamedType",
+                name: { kind: "Name", value: "triples_order_by" }
+              }
+            }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "triples" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "distinct_on" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "distinctOn" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "where" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "order_by" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "orderBy" }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "object" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                { kind: "Field", name: { kind: "Name", value: "object_id" } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+
+/**
+ * __useGetTagsObjectsQuery__
+ *
+ * To run a query within a React component, call `useGetTagsObjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTagsObjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTagsObjectsQuery({
+ *   variables: {
+ *      distinctOn: // value for 'distinctOn'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetTagsObjectsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetTagsObjectsQuery,
+    GetTagsObjectsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTagsObjectsQuery, GetTagsObjectsQueryVariables>(
+    GetTagsObjectsDocument,
+    options
+  )
+}
+export function useGetTagsObjectsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetTagsObjectsQuery,
+    GetTagsObjectsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTagsObjectsQuery, GetTagsObjectsQueryVariables>(
+    GetTagsObjectsDocument,
+    options
+  )
+}
+export function useGetTagsObjectsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTagsObjectsQuery,
+        GetTagsObjectsQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetTagsObjectsQuery,
+    GetTagsObjectsQueryVariables
+  >(GetTagsObjectsDocument, options)
+}
+export type GetTagsObjectsQueryHookResult = ReturnType<
+  typeof useGetTagsObjectsQuery
+>
+export type GetTagsObjectsLazyQueryHookResult = ReturnType<
+  typeof useGetTagsObjectsLazyQuery
+>
+export type GetTagsObjectsSuspenseQueryHookResult = ReturnType<
+  typeof useGetTagsObjectsSuspenseQuery
+>
+export type GetTagsObjectsQueryResult = Apollo.QueryResult<
+  GetTagsObjectsQuery,
+  GetTagsObjectsQueryVariables
 >
 export const GetTriplesByCreatorDocument = {
   kind: "Document",
