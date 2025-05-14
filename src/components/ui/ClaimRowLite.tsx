@@ -57,7 +57,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
           "flex justify-between items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-3 claims-hover-effect"
         )}>
 
-        <div className="flex flex-col flex-1 min-w-0">
+        <div className="flex flex-col">
           <div className="flex gap-1 items-center flex-wrap">
             
             <PopupAtom key={`${claim.id}-subject`} atom={subject} />
@@ -78,9 +78,9 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
           </p>
           )}
         </div>
-
+        <div>
         {vaultId && counterVaultId ? (
-          <div className="flex flex-col items-end gap-1">
+          <div className="flex">
             <VoteButtons
               vaultId={BigInt(vaultId)}
               counterVaultId={BigInt(counterVaultId)}
@@ -92,6 +92,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
         ) : (
           <div className="text-xs text-gray-500">Missing ID</div>
         )}
+        </div>
       </div>
     )
   } catch (err) {
