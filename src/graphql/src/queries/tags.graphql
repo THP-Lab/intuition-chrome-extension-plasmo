@@ -45,7 +45,7 @@ query GetTagsObjects($distinctOn: [triples_select_column!], $where: triples_bool
 }
 
 
-query GetTaggedObjects($objectId: numeric!, $predicateId: numeric!) {
+query GetCountTaggedObjects($objectId: numeric!, $predicateId: numeric!) {
   triples_aggregate(
     where: {
       object_id:    { _eq: $objectId }
@@ -53,5 +53,37 @@ query GetTaggedObjects($objectId: numeric!, $predicateId: numeric!) {
     }
   ) {
     aggregate { count }
+  }
+}
+
+query GetTaggedObjects(
+  $objectId: numeric!
+  $predicateId: numeric!
+) {
+  triples(
+    where: {
+      object_id:    { _eq: $objectId }
+      predicate_id: { _eq: $predicateId }
+    }
+  ) {
+    id
+    subject {
+      id
+      label
+      image
+      value {
+        thing {
+          name
+          description
+          url
+        }
+        person {
+          description
+        }
+      }
+      vault {
+        position_count
+      }
+    }
   }
 }
