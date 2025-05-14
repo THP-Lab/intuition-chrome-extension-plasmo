@@ -13378,6 +13378,22 @@ export type GetTagsObjectsQuery = {
   }>
 }
 
+export type GetTaggedObjectsQueryVariables = Exact<{
+  objectId: Scalars["numeric"]["input"]
+  predicateId: Scalars["numeric"]["input"]
+}>
+
+export type GetTaggedObjectsQuery = {
+  __typename?: "query_root"
+  triples_aggregate: {
+    __typename?: "triples_aggregate"
+    aggregate?: {
+      __typename?: "triples_aggregate_fields"
+      count: number
+    } | null
+  }
+}
+
 export type GetTriplesByCreatorQueryVariables = Exact<{
   address?: InputMaybe<Scalars["String"]["input"]>
 }>
@@ -30846,6 +30862,191 @@ export type GetTagsObjectsSuspenseQueryHookResult = ReturnType<
 export type GetTagsObjectsQueryResult = Apollo.QueryResult<
   GetTagsObjectsQuery,
   GetTagsObjectsQueryVariables
+>
+export const GetTaggedObjectsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetTaggedObjects" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "objectId" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "numeric" }
+            }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "predicateId" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "numeric" }
+            }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "triples_aggregate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "object_id" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_eq" },
+                            value: {
+                              kind: "Variable",
+                              name: { kind: "Name", value: "objectId" }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "predicate_id" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_eq" },
+                            value: {
+                              kind: "Variable",
+                              name: { kind: "Name", value: "predicateId" }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "count" } }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+
+/**
+ * __useGetTaggedObjectsQuery__
+ *
+ * To run a query within a React component, call `useGetTaggedObjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTaggedObjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTaggedObjectsQuery({
+ *   variables: {
+ *      objectId: // value for 'objectId'
+ *      predicateId: // value for 'predicateId'
+ *   },
+ * });
+ */
+export function useGetTaggedObjectsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetTaggedObjectsQuery,
+    GetTaggedObjectsQueryVariables
+  > &
+    (
+      | { variables: GetTaggedObjectsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTaggedObjectsQuery, GetTaggedObjectsQueryVariables>(
+    GetTaggedObjectsDocument,
+    options
+  )
+}
+export function useGetTaggedObjectsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetTaggedObjectsQuery,
+    GetTaggedObjectsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetTaggedObjectsQuery,
+    GetTaggedObjectsQueryVariables
+  >(GetTaggedObjectsDocument, options)
+}
+export function useGetTaggedObjectsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTaggedObjectsQuery,
+        GetTaggedObjectsQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetTaggedObjectsQuery,
+    GetTaggedObjectsQueryVariables
+  >(GetTaggedObjectsDocument, options)
+}
+export type GetTaggedObjectsQueryHookResult = ReturnType<
+  typeof useGetTaggedObjectsQuery
+>
+export type GetTaggedObjectsLazyQueryHookResult = ReturnType<
+  typeof useGetTaggedObjectsLazyQuery
+>
+export type GetTaggedObjectsSuspenseQueryHookResult = ReturnType<
+  typeof useGetTaggedObjectsSuspenseQuery
+>
+export type GetTaggedObjectsQueryResult = Apollo.QueryResult<
+  GetTaggedObjectsQuery,
+  GetTaggedObjectsQueryVariables
 >
 export const GetTriplesByCreatorDocument = {
   kind: "Document",
