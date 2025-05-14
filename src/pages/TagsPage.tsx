@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useGetTagsObjectsQuery, useGetTaggedObjectsQuery } from '~src/graphql/src'
+import { useGetTagsObjectsQuery, useGetCountTaggedObjectsQuery } from '~src/graphql/src'
 import { Link } from 'react-router-dom'
 import { ImageWithFallback } from '../components/ui/ImageWithFallback'
 import { Fingerprint } from "lucide-react"
@@ -22,7 +22,7 @@ interface TagObject {
 const HASHTAG_PREDICATE_ID = 4
 
 const SubjectCount: React.FC<{ objectId: string }> = ({ objectId }) => {
-  const { data } = useGetTaggedObjectsQuery({
+  const { data } = useGetCountTaggedObjectsQuery({
     objectId: Number(objectId),
     predicateId: HASHTAG_PREDICATE_ID,
   })
