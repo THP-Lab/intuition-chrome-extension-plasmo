@@ -2,6 +2,10 @@ import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect, useRef, useState } from "react"
 import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
 
+import { ApolloProvider, useSubscription } from "@apollo/client"
+import { apolloSubscriptionClient } from "~src/graphql/src/apollo-subscription-client"
+import { EventsDocument } from "~src/graphql/src/generated/subscriptions"
+
 export const config: PlasmoCSConfig = {
   matches: ["https://*/*"]
 }
@@ -11,9 +15,30 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
 
 export const getShadowHostId = () => "plasmo-inline-example-unique-id"
 
-function PlasmoInline() {
+export default function Wrapper() {
+  return (
+    <ApolloProvider client={apolloSubscriptionClient}>
+      <PlasmoInline />
+    </ApolloProvider>
+  )
+}
+
+export function PlasmoInline() {
   const [positionY, setPositionY] = useState<number>(50)
+  const [hasNotification, setHasNotification] = useState(false)
   const draggingRef = useRef(false)
+
+  const { data } = useSubscription(EventsDocument, {
+    variables: { addresses: [], limit: 1 }
+  })
+
+  useEffect(() => {
+    const latest = data?.events?.[0]
+    const type = latest?.type?.toLowerCase?.()
+    if (type?.includes("claim") || type?.includes("atom")) {
+      setHasNotification(true)
+    }
+  }, [data])
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const startY = e.clientY
@@ -25,7 +50,6 @@ function PlasmoInline() {
       if (Math.abs(deltaY) > 5) {
         draggingRef.current = true
       }
-
       if (draggingRef.current) {
         const newY = startPositionY + (deltaY / window.innerHeight) * 100
         setPositionY(Math.min(90, Math.max(0, newY)))
@@ -35,7 +59,6 @@ function PlasmoInline() {
     const handleMouseUp = () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("mouseup", handleMouseUp)
-
       if (!draggingRef.current) {
         handleSidePanel()
       }
@@ -46,6 +69,7 @@ function PlasmoInline() {
   }
 
   const handleSidePanel = () => {
+    setHasNotification(false)
     chrome.runtime.sendMessage({ type: "open_sidepanel" })
   }
 
@@ -74,15 +98,60 @@ function PlasmoInline() {
           e.currentTarget.style.opacity = "0.2"
         }}
       >
-        <IntuitionSearchIcon
-          onSearch={() => {}}
-          size={35}
-          position={{ x: 0, y: 0 }}
-          className="hover:opacity-80 transition-opacity"
-        />
+        <div style={{ position: "relative" }}>
+          <IntuitionSearchIcon
+            onSearch={() => {}}
+            size={35}
+            position={{ x: 0, y: 0 }}
+            className="hover:opacity-80 transition-opacity"
+          />
+          {hasNotification && (
+            <span
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "12px",
+                height: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "9999px",
+                  backgroundColor: "#38bdf8",
+                  animation: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
+                  opacity: 0.75
+                }}
+              />
+              <span
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "9999px",
+                  backgroundColor: "#0ea5e9"
+                }}
+              />
+            </span>
+          )}
+        </div>
       </div>
+
+      {/* Inline keyframe for the ping animation */}
+      <style>
+        {`@keyframes ping {
+            75%, 100% {
+              transform: scale(2);
+              opacity: 0;
+            }
+        }`}
+      </style>
     </div>
   )
 }
-
-export default PlasmoInline
