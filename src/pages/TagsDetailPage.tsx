@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useGetAtomQuery } from "@0xintuition/graphql"
 import AtomDisplay from '../components/ui/AtomDisplay'
 import SubjectTag from '../components/SubjectTag'
+import BackButton from '~/src/components/BackButton'
 
 const TagDetailPage: React.FC = () => {
   const { tagId } = useParams<{ tagId: string }>()
@@ -21,9 +22,7 @@ const TagDetailPage: React.FC = () => {
 
   return (
     <div className="p-4">
-      <Link to="/tags" className="text-sm text-blue-400 hover:underline mb-4 block">
-        ← Return to tags
-      </Link>
+      <BackButton />
       <AtomDisplay atom={data.atom} />
       <SubjectTag atom={data.atom} />
 
