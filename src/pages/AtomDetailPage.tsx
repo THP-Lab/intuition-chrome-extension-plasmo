@@ -7,6 +7,7 @@ import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import { useGetClaimsByAtomQuery } from "~src/graphql/src"
 import TagCreator from "~src/components/TagCreator"
 import Tags from "~src/components/ui/Tags"
+import BackButton from '~/src/components/BackButton'
 
 const AtomDetailPage = () => {
   const params = useParams<{ id: string }>()
@@ -90,21 +91,23 @@ const AtomDetailPage = () => {
   if (!data?.atom) return <div className="p-4">No identity found</div>
 
   return (
-    <div className="p-4 space-y-6">
-    <AtomDisplay
-      atom={data.atom}
-      tagsSection={
-        <div className="gap-2">
-          <Tags tags={tags} />
-          <div className="pt-2">
-            <TagCreator 
-              subjectAtom={data.atom}
-              onTagCreated={() => refetchClaims()}
-            />
+    <div className="p-4">
+      <BackButton />
+
+      <AtomDisplay
+        atom={data.atom}
+        tagsSection={
+          <div className="gap-2">
+            <Tags tags={tags} />
+            <div className="pt-2">
+              <TagCreator 
+                subjectAtom={data.atom}
+                onTagCreated={() => refetchClaims()}
+              />
+            </div>
           </div>
-        </div>
-      }
-    />
+        }
+      />
       
       <div>
         <div className="flex items-center mt-2 mb-1">
