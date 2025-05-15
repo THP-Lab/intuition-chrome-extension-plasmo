@@ -13396,6 +13396,7 @@ export type GetCountTaggedObjectsQuery = {
 export type GetTaggedObjectsQueryVariables = Exact<{
   objectId: Scalars["numeric"]["input"]
   predicateId: Scalars["numeric"]["input"]
+  address?: InputMaybe<Scalars["String"]["input"]>
 }>
 
 export type GetTaggedObjectsQuery = {
@@ -17965,7 +17966,7 @@ useGetCountTaggedObjectsQuery.fetcher = (
   )
 
 export const GetTaggedObjectsDocument = `
-    query GetTaggedObjects($objectId: numeric!, $predicateId: numeric!) {
+    query GetTaggedObjects($objectId: numeric!, $predicateId: numeric!, $address: String) {
   triples(where: {object_id: {_eq: $objectId}, predicate_id: {_eq: $predicateId}}) {
     id
     subject {
@@ -17990,14 +17991,14 @@ export const GetTaggedObjectsDocument = `
     vault {
       id
       position_count
-      positions {
+      positions(where: {account_id: {_eq: $address}}) {
         shares
       }
     }
     counter_vault {
       id
       position_count
-      positions {
+      positions(where: {account_id: {_eq: $address}}) {
         shares
       }
     }
@@ -34302,6 +34303,14 @@ export const GetTaggedObjects = {
               name: { kind: "Name", value: "numeric" }
             }
           }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
         }
       ],
       selectionSet: {
@@ -34442,6 +34451,37 @@ export const GetTaggedObjects = {
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "positions" },
+                        arguments: [
+                          {
+                            kind: "Argument",
+                            name: { kind: "Name", value: "where" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "account_id" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: { kind: "Name", value: "_eq" },
+                                        value: {
+                                          kind: "Variable",
+                                          name: {
+                                            kind: "Name",
+                                            value: "address"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
@@ -34469,6 +34509,37 @@ export const GetTaggedObjects = {
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "positions" },
+                        arguments: [
+                          {
+                            kind: "Argument",
+                            name: { kind: "Name", value: "where" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "account_id" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: { kind: "Name", value: "_eq" },
+                                        value: {
+                                          kind: "Variable",
+                                          name: {
+                                            kind: "Name",
+                                            value: "address"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
