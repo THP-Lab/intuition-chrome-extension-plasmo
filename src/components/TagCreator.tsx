@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react"
 import AtomAutocompleteInput from "./AtomAutocompleteInput"
 import { useCreateTriples } from "~src/hooks/useCreateTriples"
 import { useCreatePosition } from "~src/hooks/useCreatePosition"
@@ -18,6 +18,8 @@ interface TagCreatorProps {
 
 const TagCreator: React.FC<TagCreatorProps> = ( {subjectAtom, onTagCreated} ) => {
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const [isOpen, setIsOpen] = useState(false)
   const [selectedTag, setSelectedTag] = useState<any | null>(null)
   const [vote, setVote] = useState<"for" | "against" | null>(null)
@@ -27,6 +29,20 @@ const TagCreator: React.FC<TagCreatorProps> = ( {subjectAtom, onTagCreated} ) =>
   const { addTriple, createTriples, clearTriples } = useCreateTriples()
   const { createPosition } = useCreatePosition()
 
+  useLayoutEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [isOpen])
+  
+  useEffect(() => {
+    console.log('Reset on atom change');
+    setIsOpen(false);
+    setSelectedTag(null);
+    setVote(null);
+  }, [subjectAtom]);
+
+  
   const handleSubmit = async () => {
     if (!selectedTag || !vote) return 
 
@@ -94,11 +110,12 @@ const TagCreator: React.FC<TagCreatorProps> = ( {subjectAtom, onTagCreated} ) =>
           +
         </button>
       ) : (
-        <div className="w-full mt-4">
+        <div className="w-full mt-1">
           <AtomAutocompleteInput
             label="Tag"
             onSelect={setSelectedTag}
             selected={selectedTag}
+            inputRef={inputRef}
           />
           {selectedTag && (
             <div className="mt-3 flex gap-4 items-center mt-2">
