@@ -28,9 +28,11 @@ query GetAtomsByCreator($address: String!) {
       nodes {
         predicate {
           label
+          id
         }
         object {
           label
+          id
         }
       }
     }
@@ -81,9 +83,11 @@ query GetAtomsWithPositions(
       nodes {
         predicate {
           label
+          id
         }
         object {
           label
+          id
         }
       }
     }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useGetListsTagsQuery } from '~src/graphql/src'
 import { ImageWithFallback } from '../components/ui/ImageWithFallback'
 import { Fingerprint } from 'lucide-react'
+import { Tag } from 'lucide-react';
 
 const HASHTAG_PREDICATE_ID = 4
 const PAGE_SIZE = 18
@@ -68,9 +69,9 @@ const HashtagObjectsPage: React.FC = () => {
           <Link
             key={atom.id}
             to={`/tags/${atom.id}`}
-            className="flex justify-between items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-2 claims-hover-effect"
+            className="flex justify-between gap-3 items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-2 claims-hover-effect"
           >
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {atom.image ? (
                 <ImageWithFallback
                   src={atom.image}
@@ -89,7 +90,7 @@ const HashtagObjectsPage: React.FC = () => {
                 </p>
               </div>
             </div>
-            <span className="text-sm text-gray-400">{count}</span>
+            <span className="text-sm text-gray-400 items-center">{count}<Tag className='w-3 h-3'/></span>
           </Link>
         )
       })}
