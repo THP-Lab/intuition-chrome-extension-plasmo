@@ -19,15 +19,14 @@ interface AtomAutocompleteInputProps {
   label: string;
   onSelect: (atom: Atom) => void;
   selected: Atom | null;
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement>
 }
 
-const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, onSelect, selected }) => {
+const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, onSelect, selected, inputRef }) => {
   const [search, setSearch] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [creatingAtom, setCreatingAtom] = useState(false);
   const [newAtomLabel, setNewAtomLabel] = useState('');
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const [creationMode, setCreationMode] = useState<"input" | "page" | null>(null)
   const pageMeta = usePageMetadata()
@@ -99,7 +98,7 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
   return (
     <div className="relative" ref={wrapperRef}>
       <input
-        ref={inputRef ?? internalInputRef}
+        ref={inputRef ? inputRef : internalInputRef}
         type="text"
         placeholder="Add a tag" 
         value={search}
@@ -112,8 +111,8 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
         onClick={(e) => e.stopPropagation()}
         onFocus={() => setIsOpen(true)}
         className="w-full p-2 bg-[hsl(var(--navbar-bg))] text-foreground rounded border border-border/10"
-        
       />
+      
       {isOpen && (
         <ul className="absolute z-10 bg-[hsl(var(--navbar-bg))] text-foreground border border-border rounded w-full max-h-60 overflow-y-auto shadow-md">
           {atoms.map((atom) => (

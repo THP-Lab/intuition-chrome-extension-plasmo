@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react"
 import AtomAutocompleteInput from "./AtomAutocompleteInput"
 import { useCreateTriples } from "~src/hooks/useCreateTriples"
 import { useCreatePosition } from "~src/hooks/useCreatePosition"
@@ -29,7 +29,7 @@ const TagCreator: React.FC<TagCreatorProps> = ( {subjectAtom, onTagCreated} ) =>
   const { addTriple, createTriples, clearTriples } = useCreateTriples()
   const { createPosition } = useCreatePosition()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus()
     }
