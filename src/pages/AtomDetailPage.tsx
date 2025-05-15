@@ -65,9 +65,13 @@ const AtomDetailPage = () => {
   )
  )
 
-  const allTags = claims.filter((claim) => claim.predicate.label === "has tag").map((claim) => claim.object.label)
+  const rawTags = claimsWithoutDuplicates
+    .filter(c => c.predicate.label === "has tag")
+    .map(c => c.object)
 
-  const tags = [...new Set(allTags)]
+  const tags: typeof rawTags = Array.from(
+    new Map(rawTags.map(tag => [tag.id, tag])).values()
+  )
 
   console.log("walletAddress:", walletAddress)
   console.log("atomId:", stableId)

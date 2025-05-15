@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from "react-router-dom"
 import { useParams } from 'react-router-dom'
 import { useGetTaggedObjectsQuery } from '~src/graphql/src'
 import { useStorage } from '@plasmohq/storage/hook'
@@ -13,6 +14,7 @@ const SubjectTag: React.FC = () => {
   const { tagId } = useParams<{ tagId: string }>()
   const [walletAddress] = useStorage<string>('metamask-account')
 
+
   const { data, isLoading, error } = useGetTaggedObjectsQuery({
     objectId: Number(tagId),
     predicateId: HASHTAG_PREDICATE_ID,
@@ -21,14 +23,13 @@ const SubjectTag: React.FC = () => {
 
   if (isLoading) return <p>Chargement…</p>
   if (error) return <p className="text-red-600">Error loading</p> 
-  
   const triples = data?.triples ?? []
 
   return (
     <div className="mt-2 space-y-6">
       <section>
         <p className="text-lg font-semibold">
-          Liste d’objets taggés
+          List of tagged objects
         </p>
         <div className="space-y-4 mt-2">
           {triples.map(triple => {
@@ -52,9 +53,10 @@ const SubjectTag: React.FC = () => {
                 : undefined
 
             return (
-              <div
+              <Link
+                to={`/atoms/${subject.id}`}
                 key={subject.id}
-                className="flex justify-between items-center p-1 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl claims-hover-effect"
+                className="flex justify-between items-center p-1 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl claims-hover-effect cursor-pointer"
               >
                 <div className="flex items-center gap-4">
                   {subject.image ? (
@@ -75,7 +77,12 @@ const SubjectTag: React.FC = () => {
                     </h3>
                   </div>
                   {vaultId && counterVaultId ? (
-                    <div className="flex flex-col items-end gap-1">
+                    <div 
+                      className="flex flex-col items-end gap-1"
+                      onClick={e => {
+                        e.stopPropagation(); 
+                      }}
+                    >
                       <VoteButtons
                         vaultId={BigInt(vaultId)}
                         counterVaultId={BigInt(counterVaultId)}
@@ -88,7 +95,7 @@ const SubjectTag: React.FC = () => {
                     <div className="text-xs text-gray-500">Missing ID</div>
                   )}
                 </div>
-              </div>
+              </Link>
             )
           })}
         </div>

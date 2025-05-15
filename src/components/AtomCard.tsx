@@ -117,7 +117,12 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
         )}
 
         {tags && (
-          <div className="gap-2">
+          <div 
+            className="gap-2"
+            onClick={e => {
+              e.stopPropagation(); 
+            }}
+          >
             <Tags tags={tags} />
             <div onClick={(e) => e.stopPropagation()} className="pt-2">
               <TagCreator
