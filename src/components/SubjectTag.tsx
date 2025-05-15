@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import { Link } from "react-router-dom"
 import { useParams } from 'react-router-dom'
 import { useGetTaggedObjectsQuery } from '~src/graphql/src'
@@ -21,9 +21,28 @@ const SubjectTag: React.FC = () => {
     address: walletAddress!
   })
 
-  if (isLoading) return <p>Chargement…</p>
-  if (error) return <p className="text-red-600">Error loading</p> 
   const triples = data?.triples ?? []
+
+  const sorted = useMemo(() => {
+    return triples
+      .map(triple => {
+        const vault = triple.vault!
+        const counter = triple.counter_vault!
+        const userFor    = Number(vault.positions?.[0]?.shares ?? 0)
+        const userAgainst= Number(counter.positions?.[0]?.shares ?? 0)
+        const userVoted = userFor > 0 || userAgainst > 0
+        const totalVotes = (vault.position_count ?? 0) + (counter.position_count ?? 0)
+        return { triple, userVoted, totalVotes }
+      })
+      .sort((a, b) => {
+        if (a.userVoted && !b.userVoted) return -1
+        if (!a.userVoted && b.userVoted) return 1
+        return b.totalVotes - a.totalVotes
+      })
+  }, [triples])
+
+  if (isLoading) return <p>Loading…</p>
+  if (error) return <p className="text-red-600">Error loading</p> 
 
   return (
     <div className="mt-2 space-y-6">
@@ -32,7 +51,7 @@ const SubjectTag: React.FC = () => {
           List of tagged objects
         </p>
         <div className="space-y-4 mt-2">
-          {triples.map(triple => {
+          {sorted.map(({ triple }) => {
             const subject = triple.subject
             const vault = triple.vault!
             const counterVault = triple.counter_vault!
@@ -53,12 +72,12 @@ const SubjectTag: React.FC = () => {
                 : undefined
 
             return (
-              <Link
-                to={`/atoms/${subject.id}`}
+              <div
+                
                 key={subject.id}
-                className="flex justify-between items-center p-1 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl claims-hover-effect cursor-pointer"
+                className="flex justify-between items-center p-1 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl claims-hover-effect"
               >
-                <div className="flex items-center gap-4">
+                <Link to={`/atoms/${subject.id}`} className="flex items-center gap-4">
                   {subject.image ? (
                     <ImageWithFallback
                       src={subject.image}
@@ -72,10 +91,12 @@ const SubjectTag: React.FC = () => {
                   )}
 
                   <div>
-                    <h3 className="text-white font-semibold text-sm">
+                    <h3 className="text-white font-semibold text-sm max-w-[150px] truncate ">
                       {subject.label}
                     </h3>
                   </div>
+              </Link>
+
                   {vaultId && counterVaultId ? (
                     <div 
                       className="flex flex-col items-end gap-1"
@@ -95,7 +116,6 @@ const SubjectTag: React.FC = () => {
                     <div className="text-xs text-gray-500">Missing ID</div>
                   )}
                 </div>
-              </Link>
             )
           })}
         </div>
