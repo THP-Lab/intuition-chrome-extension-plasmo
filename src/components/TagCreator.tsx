@@ -35,7 +35,14 @@ const TagCreator: React.FC<TagCreatorProps> = ( {subjectAtom, onTagCreated} ) =>
     }
   }, [isOpen])
   
+  useEffect(() => {
+    console.log('Reset on atom change');
+    setIsOpen(false);
+    setSelectedTag(null);
+    setVote(null);
+  }, [subjectAtom]);
 
+  
   const handleSubmit = async () => {
     if (!selectedTag || !vote) return 
 
