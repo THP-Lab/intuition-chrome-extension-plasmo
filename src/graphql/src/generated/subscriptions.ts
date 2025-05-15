@@ -13358,59 +13358,45 @@ export type GetTagsCustomQuery = {
   }>
 }
 
-export type GetTagsObjectsQueryVariables = Exact<{
-  distinctOn?: InputMaybe<Array<Triples_Select_Column> | Triples_Select_Column>
-  where?: InputMaybe<Triples_Bool_Exp>
-  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
+export type GetListsTagsQueryVariables = Exact<{
+  where?: InputMaybe<Atoms_Bool_Exp>
+  triplesWhere?: InputMaybe<Triples_Bool_Exp>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  orderBy?: InputMaybe<Array<Atoms_Order_By> | Atoms_Order_By>
 }>
 
-export type GetTagsObjectsQuery = {
+export type GetListsTagsQuery = {
   __typename?: "query_root"
-  triples: Array<{
-    __typename?: "triples"
-    object_id: any
-    object: {
-      __typename?: "atoms"
-      id: any
-      label?: string | null
-      image?: string | null
-      value?: {
-        __typename?: "atom_values"
-        thing?: {
-          __typename?: "things"
-          id: any
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
-        person?: {
-          __typename?: "persons"
-          id: any
-          name?: string | null
-          image?: string | null
-          description?: string | null
-          url?: string | null
-        } | null
+  atoms_aggregate: {
+    __typename?: "atoms_aggregate"
+    aggregate?: { __typename?: "atoms_aggregate_fields"; count: number } | null
+  }
+  atoms: Array<{
+    __typename?: "atoms"
+    id: any
+    label?: string | null
+    image?: string | null
+    value?: {
+      __typename?: "atom_values"
+      thing?: { __typename?: "things"; description?: string | null } | null
+    } | null
+    as_object_triples_aggregate: {
+      __typename?: "triples_aggregate"
+      aggregate?: {
+        __typename?: "triples_aggregate_fields"
+        count: number
       } | null
     }
+    as_object_triples: Array<{
+      __typename?: "triples"
+      subject: {
+        __typename?: "atoms"
+        label?: string | null
+        image?: string | null
+      }
+    }>
   }>
-}
-
-export type GetCountTaggedObjectsQueryVariables = Exact<{
-  objectId: Scalars["numeric"]["input"]
-  predicateId: Scalars["numeric"]["input"]
-}>
-
-export type GetCountTaggedObjectsQuery = {
-  __typename?: "query_root"
-  triples_aggregate: {
-    __typename?: "triples_aggregate"
-    aggregate?: {
-      __typename?: "triples_aggregate_fields"
-      count: number
-    } | null
-  }
 }
 
 export type GetTaggedObjectsQueryVariables = Exact<{
@@ -30743,31 +30729,14 @@ export type GetTagsCustomQueryResult = Apollo.QueryResult<
   GetTagsCustomQuery,
   GetTagsCustomQueryVariables
 >
-export const GetTagsObjectsDocument = {
+export const GetListsTagsDocument = {
   kind: "Document",
   definitions: [
     {
       kind: "OperationDefinition",
       operation: "query",
-      name: { kind: "Name", value: "GetTagsObjects" },
+      name: { kind: "Name", value: "GetListsTags" },
       variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "distinctOn" }
-          },
-          type: {
-            kind: "ListType",
-            type: {
-              kind: "NonNullType",
-              type: {
-                kind: "NamedType",
-                name: { kind: "Name", value: "triples_select_column" }
-              }
-            }
-          }
-        },
         {
           kind: "VariableDefinition",
           variable: {
@@ -30776,8 +30745,35 @@ export const GetTagsObjectsDocument = {
           },
           type: {
             kind: "NamedType",
+            name: { kind: "Name", value: "atoms_bool_exp" }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "triplesWhere" }
+          },
+          type: {
+            kind: "NamedType",
             name: { kind: "Name", value: "triples_bool_exp" }
           }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "limit" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "offset" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
         },
         {
           kind: "VariableDefinition",
@@ -30791,7 +30787,7 @@ export const GetTagsObjectsDocument = {
               kind: "NonNullType",
               type: {
                 kind: "NamedType",
-                name: { kind: "Name", value: "triples_order_by" }
+                name: { kind: "Name", value: "atoms_order_by" }
               }
             }
           }
@@ -30802,282 +30798,14 @@ export const GetTagsObjectsDocument = {
         selections: [
           {
             kind: "Field",
-            name: { kind: "Name", value: "triples" },
+            name: { kind: "Name", value: "atoms_aggregate" },
             arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "distinct_on" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "distinctOn" }
-                }
-              },
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "where" },
                 value: {
                   kind: "Variable",
                   name: { kind: "Name", value: "where" }
-                }
-              },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "order_by" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "orderBy" }
-                }
-              }
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "object" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "label" } },
-                      { kind: "Field", name: { kind: "Name", value: "image" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "value" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "thing" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "id" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "name" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "image" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "description" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "url" }
-                                  }
-                                ]
-                              }
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "person" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "id" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "name" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "image" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "description" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "url" }
-                                  }
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                },
-                { kind: "Field", name: { kind: "Name", value: "object_id" } }
-              ]
-            }
-          }
-        ]
-      }
-    }
-  ]
-} as unknown as DocumentNode
-
-/**
- * __useGetTagsObjectsQuery__
- *
- * To run a query within a React component, call `useGetTagsObjectsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTagsObjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTagsObjectsQuery({
- *   variables: {
- *      distinctOn: // value for 'distinctOn'
- *      where: // value for 'where'
- *      orderBy: // value for 'orderBy'
- *   },
- * });
- */
-export function useGetTagsObjectsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetTagsObjectsQuery,
-    GetTagsObjectsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetTagsObjectsQuery, GetTagsObjectsQueryVariables>(
-    GetTagsObjectsDocument,
-    options
-  )
-}
-export function useGetTagsObjectsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetTagsObjectsQuery,
-    GetTagsObjectsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetTagsObjectsQuery, GetTagsObjectsQueryVariables>(
-    GetTagsObjectsDocument,
-    options
-  )
-}
-export function useGetTagsObjectsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetTagsObjectsQuery,
-        GetTagsObjectsQueryVariables
-      >
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<
-    GetTagsObjectsQuery,
-    GetTagsObjectsQueryVariables
-  >(GetTagsObjectsDocument, options)
-}
-export type GetTagsObjectsQueryHookResult = ReturnType<
-  typeof useGetTagsObjectsQuery
->
-export type GetTagsObjectsLazyQueryHookResult = ReturnType<
-  typeof useGetTagsObjectsLazyQuery
->
-export type GetTagsObjectsSuspenseQueryHookResult = ReturnType<
-  typeof useGetTagsObjectsSuspenseQuery
->
-export type GetTagsObjectsQueryResult = Apollo.QueryResult<
-  GetTagsObjectsQuery,
-  GetTagsObjectsQueryVariables
->
-export const GetCountTaggedObjectsDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "GetCountTaggedObjects" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "objectId" }
-          },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "numeric" }
-            }
-          }
-        },
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "predicateId" }
-          },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "numeric" }
-            }
-          }
-        }
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "triples_aggregate" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "where" },
-                value: {
-                  kind: "ObjectValue",
-                  fields: [
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "object_id" },
-                      value: {
-                        kind: "ObjectValue",
-                        fields: [
-                          {
-                            kind: "ObjectField",
-                            name: { kind: "Name", value: "_eq" },
-                            value: {
-                              kind: "Variable",
-                              name: { kind: "Name", value: "objectId" }
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "predicate_id" },
-                      value: {
-                        kind: "ObjectValue",
-                        fields: [
-                          {
-                            kind: "ObjectField",
-                            name: { kind: "Name", value: "_eq" },
-                            value: {
-                              kind: "Variable",
-                              name: { kind: "Name", value: "predicateId" }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
                 }
               }
             ],
@@ -31096,6 +30824,170 @@ export const GetCountTaggedObjectsDocument = {
                 }
               ]
             }
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "atoms" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "where" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "limit" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "limit" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "offset" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "offset" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "order_by" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "orderBy" }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "value" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "thing" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "as_object_triples_aggregate" },
+                  arguments: [
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "where" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "triplesWhere" }
+                      }
+                    }
+                  ],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "aggregate" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "count" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "as_object_triples" },
+                  arguments: [
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "where" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "triplesWhere" }
+                      }
+                    },
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "limit" },
+                      value: { kind: "IntValue", value: "10" }
+                    },
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "order_by" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "vault" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "total_shares" },
+                                  value: { kind: "EnumValue", value: "desc" }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "subject" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "image" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
           }
         ]
       }
@@ -31104,79 +30996,78 @@ export const GetCountTaggedObjectsDocument = {
 } as unknown as DocumentNode
 
 /**
- * __useGetCountTaggedObjectsQuery__
+ * __useGetListsTagsQuery__
  *
- * To run a query within a React component, call `useGetCountTaggedObjectsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCountTaggedObjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetListsTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetListsTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCountTaggedObjectsQuery({
+ * const { data, loading, error } = useGetListsTagsQuery({
  *   variables: {
- *      objectId: // value for 'objectId'
- *      predicateId: // value for 'predicateId'
+ *      where: // value for 'where'
+ *      triplesWhere: // value for 'triplesWhere'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
-export function useGetCountTaggedObjectsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCountTaggedObjectsQuery,
-    GetCountTaggedObjectsQueryVariables
-  > &
-    (
-      | { variables: GetCountTaggedObjectsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    )
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<
-    GetCountTaggedObjectsQuery,
-    GetCountTaggedObjectsQueryVariables
-  >(GetCountTaggedObjectsDocument, options)
-}
-export function useGetCountTaggedObjectsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCountTaggedObjectsQuery,
-    GetCountTaggedObjectsQueryVariables
+export function useGetListsTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetListsTagsQuery,
+    GetListsTagsQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<
-    GetCountTaggedObjectsQuery,
-    GetCountTaggedObjectsQueryVariables
-  >(GetCountTaggedObjectsDocument, options)
+  return Apollo.useQuery<GetListsTagsQuery, GetListsTagsQueryVariables>(
+    GetListsTagsDocument,
+    options
+  )
 }
-export function useGetCountTaggedObjectsSuspenseQuery(
+export function useGetListsTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetListsTagsQuery,
+    GetListsTagsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetListsTagsQuery, GetListsTagsQueryVariables>(
+    GetListsTagsDocument,
+    options
+  )
+}
+export function useGetListsTagsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
     | Apollo.SuspenseQueryHookOptions<
-        GetCountTaggedObjectsQuery,
-        GetCountTaggedObjectsQueryVariables
+        GetListsTagsQuery,
+        GetListsTagsQueryVariables
       >
 ) {
   const options =
     baseOptions === Apollo.skipToken
       ? baseOptions
       : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<
-    GetCountTaggedObjectsQuery,
-    GetCountTaggedObjectsQueryVariables
-  >(GetCountTaggedObjectsDocument, options)
+  return Apollo.useSuspenseQuery<GetListsTagsQuery, GetListsTagsQueryVariables>(
+    GetListsTagsDocument,
+    options
+  )
 }
-export type GetCountTaggedObjectsQueryHookResult = ReturnType<
-  typeof useGetCountTaggedObjectsQuery
+export type GetListsTagsQueryHookResult = ReturnType<
+  typeof useGetListsTagsQuery
 >
-export type GetCountTaggedObjectsLazyQueryHookResult = ReturnType<
-  typeof useGetCountTaggedObjectsLazyQuery
+export type GetListsTagsLazyQueryHookResult = ReturnType<
+  typeof useGetListsTagsLazyQuery
 >
-export type GetCountTaggedObjectsSuspenseQueryHookResult = ReturnType<
-  typeof useGetCountTaggedObjectsSuspenseQuery
+export type GetListsTagsSuspenseQueryHookResult = ReturnType<
+  typeof useGetListsTagsSuspenseQuery
 >
-export type GetCountTaggedObjectsQueryResult = Apollo.QueryResult<
-  GetCountTaggedObjectsQuery,
-  GetCountTaggedObjectsQueryVariables
+export type GetListsTagsQueryResult = Apollo.QueryResult<
+  GetListsTagsQuery,
+  GetListsTagsQueryVariables
 >
 export const GetTaggedObjectsDocument = {
   kind: "Document",
