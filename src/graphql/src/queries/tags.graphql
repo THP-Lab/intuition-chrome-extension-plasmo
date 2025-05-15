@@ -57,8 +57,9 @@ query GetCountTaggedObjects($objectId: numeric!, $predicateId: numeric!) {
 }
 
 query GetTaggedObjects(
-  $objectId: numeric!
-  $predicateId: numeric!
+  $objectId: numeric!,
+  $predicateId: numeric!,
+  $address: String
 ) {
   triples(
     where: {
@@ -89,7 +90,7 @@ query GetTaggedObjects(
     vault {
       id
       position_count
-        positions {
+        positions (where: { account_id: { _eq: $address } }){
           shares
         }
     }
@@ -97,7 +98,7 @@ query GetTaggedObjects(
     counter_vault {
       id
       position_count
-        positions {
+        positions (where: { account_id: { _eq: $address } }){
           shares
         }
     }

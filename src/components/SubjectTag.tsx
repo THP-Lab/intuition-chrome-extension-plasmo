@@ -1,6 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useGetTaggedObjectsQuery } from '~src/graphql/src'
+import { useStorage } from '@plasmohq/storage/hook'
 import { ImageWithFallback } from '../components/ui/ImageWithFallback'
 import { Fingerprint } from 'lucide-react'
 import VoteButtons from '~src/components/VoteButtons'
@@ -10,15 +11,17 @@ const HASHTAG_PREDICATE_ID = 4
 
 const SubjectTag: React.FC = () => {
   const { tagId } = useParams<{ tagId: string }>()
+  const [walletAddress] = useStorage<string>('metamask-account')
 
   const { data, isLoading, error } = useGetTaggedObjectsQuery({
     objectId: Number(tagId),
     predicateId: HASHTAG_PREDICATE_ID,
+    address: walletAddress!
   })
 
   if (isLoading) return <p>Chargement…</p>
-  if (error) return <p className="text-red-600">Erreur de chargement</p>
-
+  if (error) return <p className="text-red-600">Error loading</p> 
+  
   const triples = data?.triples ?? []
 
   return (

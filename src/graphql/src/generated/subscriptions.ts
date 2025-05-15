@@ -13416,6 +13416,7 @@ export type GetCountTaggedObjectsQuery = {
 export type GetTaggedObjectsQueryVariables = Exact<{
   objectId: Scalars["numeric"]["input"]
   predicateId: Scalars["numeric"]["input"]
+  address?: InputMaybe<Scalars["String"]["input"]>
 }>
 
 export type GetTaggedObjectsQuery = {
@@ -31212,6 +31213,14 @@ export const GetTaggedObjectsDocument = {
               name: { kind: "Name", value: "numeric" }
             }
           }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
         }
       ],
       selectionSet: {
@@ -31352,6 +31361,37 @@ export const GetTaggedObjectsDocument = {
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "positions" },
+                        arguments: [
+                          {
+                            kind: "Argument",
+                            name: { kind: "Name", value: "where" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "account_id" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: { kind: "Name", value: "_eq" },
+                                        value: {
+                                          kind: "Variable",
+                                          name: {
+                                            kind: "Name",
+                                            value: "address"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
@@ -31379,6 +31419,37 @@ export const GetTaggedObjectsDocument = {
                       {
                         kind: "Field",
                         name: { kind: "Name", value: "positions" },
+                        arguments: [
+                          {
+                            kind: "Argument",
+                            name: { kind: "Name", value: "where" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "account_id" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: { kind: "Name", value: "_eq" },
+                                        value: {
+                                          kind: "Variable",
+                                          name: {
+                                            kind: "Name",
+                                            value: "address"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
@@ -31415,6 +31486,7 @@ export const GetTaggedObjectsDocument = {
  *   variables: {
  *      objectId: // value for 'objectId'
  *      predicateId: // value for 'predicateId'
+ *      address: // value for 'address'
  *   },
  * });
  */
