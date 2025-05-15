@@ -11050,8 +11050,8 @@ export type GetAtomsByCreatorQuery = {
       __typename?: "claims_aggregate"
       nodes: Array<{
         __typename?: "claims"
-        predicate: { __typename?: "atoms"; label?: string | null }
-        object: { __typename?: "atoms"; label?: string | null }
+        predicate: { __typename?: "atoms"; label?: string | null; id: any }
+        object: { __typename?: "atoms"; label?: string | null; id: any }
       }>
     }
   }>
@@ -11119,8 +11119,8 @@ export type GetAtomsWithPositionsQuery = {
       __typename?: "claims_aggregate"
       nodes: Array<{
         __typename?: "claims"
-        predicate: { __typename?: "atoms"; label?: string | null }
-        object: { __typename?: "atoms"; label?: string | null }
+        predicate: { __typename?: "atoms"; label?: string | null; id: any }
+        object: { __typename?: "atoms"; label?: string | null; id: any }
       }>
     }
     value?: {
@@ -20479,6 +20479,10 @@ export const GetAtomsByCreatorDocument = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -20492,6 +20496,10 @@ export const GetAtomsByCreatorDocument = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -20886,6 +20894,10 @@ export const GetAtomsWithPositionsDocument = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -20899,6 +20911,10 @@ export const GetAtomsWithPositionsDocument = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
