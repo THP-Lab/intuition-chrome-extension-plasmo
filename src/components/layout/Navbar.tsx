@@ -10,6 +10,7 @@ import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { cn } from "~src/lib/utils"
 import { umami } from "~src/lib/umami"
+import { Tags as TagsIcon } from "lucide-react"
 
 function Navbar() {
   const { theme, setTheme } = useTheme()
@@ -67,12 +68,22 @@ function Navbar() {
             "navbar-button",
             isActive("/Tag") && "animate-fade-bg"
           )}>
-          <Link to="/Tag" className="flex flex-col items-center" onClick={() => umami("Tag")}>
-            <div className="text-foreground" title="Tag">
-              <IntuitionHashtagIcon size={44} className="navbar-icon" />
+          <Link
+            to="/Tag"
+            className="flex flex-col items-center"
+            onClick={() => umami("Tag")}
+          >
+            <div className="relative w-11 h-11"> 
+              <IntuitionIcon size={44} className="navbar-icon" />
+              <TagsIcon
+                size={18}
+                className="absolute top-1/2 left-1/2 
+                          transform -translate-x-1/2 -translate-y-1/2"
+              />
             </div>
           </Link>
         </Button>
+
 
         <Button
           variant={isActive("/feed") ? "default" : "ghost"}

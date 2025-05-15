@@ -28,10 +28,11 @@ const WalletConnectionButton = () => {
       ) : (
         <div>
           <button
+            title="Disconnect"
             onClick={handleDisconnect}
-            className="p-1 text-red-500 transition-transform duration-200 transform hover:scale-110"
+            className="p-1 text-grey-400 transition-transform duration-200 transform hover:scale-110"
           >
-            <PowerOff />
+            <PowerOff className="h-4 w-4"/>
           </button>
         </div>
       )}
