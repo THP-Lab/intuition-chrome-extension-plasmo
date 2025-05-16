@@ -6,17 +6,23 @@ import { ApolloProvider, useSubscription } from "@apollo/client"
 import { apolloSubscriptionClient } from "~src/graphql/src/apollo-subscription-client"
 import { FollowerActivityDocument } from "~src/graphql/src/generated/subscriptions"
 
+// This config tells Plasmo to inject this content script on all HTTPS pages
 export const config: PlasmoCSConfig = {
   matches: ["https://*/*"]
 }
 
+// Anchors the shadow DOM to the <body> element
 export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
   document.querySelector("body")
 
+// A unique shadow host ID for Plasmo to scope this component
 export const getShadowHostId = () => "plasmo-inline-example-unique-id"
 
+// Static list of account IDs to treat as "followers"
+// When any of these perform an action, a notification is triggered
 const FOLLOWER_IDS = ["0xd01cd97bf00bddfbccf0a79a2a579e8add6ac4f8"]
 
+// Top-level wrapper that provides Apollo context to the floating UI
 export default function Wrapper() {
   return (
     <ApolloProvider client={apolloSubscriptionClient}>
@@ -25,20 +31,24 @@ export default function Wrapper() {
   )
 }
 
+// Main floating button component
 export function PlasmoInline() {
-  const [positionY, setPositionY] = useState<number>(50)
-  const [hasNotification, setHasNotification] = useState(false)
+  const [positionY, setPositionY] = useState<number>(50) // Y-axis position of the button
+  const [hasNotification, setHasNotification] = useState(false) // Whether to show the badge
   const draggingRef = useRef(false)
 
+  // Subscribes to GraphQL real-time events using the generated subscription
   const { data } = useSubscription(FollowerActivityDocument, {
     variables: { limit: 1 }
   })
 
+  // Reacts to incoming subscription data
   useEffect(() => {
     const event = data?.events?.[0]
     const actorId = event?.account?.id
     const type = event?.type
 
+    // Check if the actor is a follower and if they created a claim or atom
     if (
       actorId &&
       FOLLOWER_IDS.includes(actorId) &&
@@ -48,6 +58,7 @@ export function PlasmoInline() {
     }
   }, [data])
 
+  // Handle mouse drag interaction for repositioning the button vertically
   const handleMouseDown = (e: React.MouseEvent) => {
     const startY = e.clientY
     const startPositionY = positionY
@@ -67,6 +78,7 @@ export function PlasmoInline() {
     const handleMouseUp = () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("mouseup", handleMouseUp)
+
       if (!draggingRef.current) {
         handleSidePanel()
       }
@@ -76,6 +88,7 @@ export function PlasmoInline() {
     window.addEventListener("mouseup", handleMouseUp)
   }
 
+  // Opens the side panel and clears the notification badge
   const handleSidePanel = () => {
     setHasNotification(false)
     chrome.runtime.sendMessage({ type: "open_sidepanel" })
@@ -107,12 +120,14 @@ export function PlasmoInline() {
         }}
       >
         <div style={{ position: "relative" }}>
+          {/* Main button icon */}
           <IntuitionSearchIcon
             onSearch={() => {}}
             size={35}
             position={{ x: 0, y: 0 }}
             className="hover:opacity-80 transition-opacity"
           />
+          {/* Ping-style animated badge when a notification is active */}
           {hasNotification && (
             <span
               style={{
@@ -151,6 +166,7 @@ export function PlasmoInline() {
         </div>
       </div>
 
+      {/* CSS animation for the ping effect */}
       <style>
         {`@keyframes ping {
           75%, 100% {
