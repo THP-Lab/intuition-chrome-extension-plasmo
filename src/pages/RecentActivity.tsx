@@ -38,7 +38,7 @@ const RecentActivity: React.FC = () => {
   }
   
 
-  if (error) return <div>Erreur : {error.message}</div>
+  if (error) return <div>Error : {error.message}</div>
   if (loading || !data) {
     return (
       <div className="flex items-center justify-center w-full">
