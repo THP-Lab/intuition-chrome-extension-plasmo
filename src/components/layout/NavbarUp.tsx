@@ -1,20 +1,21 @@
 import * as React from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 
 import { Button } from "~/src/components/ui/button"
 import { cn } from "~src/lib/utils"
-import IntuitionIconPlus from "~src/components/icons/intuition_icon_plus"
+import IntuitionIconPlus from "~/src/components/icons/intuition_icon_plus"
 import IntuitionProfil from "~/src/components/icons/IntuitionProfil"
 import { umami } from "~src/lib/umami"
 
-
 function NavbarUp() {
 
-    const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/' || location.pathname === '/home';
+  const location = useLocation()
+
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return location.pathname === "/" || location.pathname === "/home"
     }
-    return location.pathname.startsWith(path);
+    return location.pathname.startsWith(path)
   }
 
   return (
@@ -22,11 +23,12 @@ function NavbarUp() {
       <div className="flex h-14 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <Button
-            variant="ghost"
+            variant={isActive("/page-form") ? "default" : "ghost"}
             size="sm"
             asChild
-            className="navbar-up-button"
-            title="Create Atom">
+            className={cn("navbar-up-button", isActive("/page-form") && "animate-fade-bg")}
+            title="Create Atom"
+          >
             <Link to="/page-form">
               <IntuitionIconPlus size={44} className="navbar-up-icon" />
             </Link>
@@ -40,8 +42,13 @@ function NavbarUp() {
           className={cn(
             "navbar-up-button",
             isActive("/profile") && "animate-fade-bg"
-          )}>
-          <Link to="/profile" className="flex flex-col items-center" onClick={() => umami("Profile")}>
+          )}
+        >
+          <Link
+            to="/profile"
+            className="flex flex-col items-center"
+            onClick={() => umami("Profile")}
+          >
             <div className="text-foreground" title="Profile">
               <IntuitionProfil size={44} className="navbar-up-icon" />
             </div>

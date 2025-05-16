@@ -1,8 +1,11 @@
 import React from "react";
-
+import { Link } from "react-router-dom"
 
 interface TagsProps {
   tags?: string[]
+  label?: string[]
+  id?: string[]
+
   addButton?: React.ReactNode
 }
 
@@ -13,12 +16,13 @@ const Tags: React.FC<TagsProps> = ({ tags, addButton }) => {
   return (
       <div className="flex flex-wrap gap-2 items-center">
       {tags.map((tag, index) => (
-        <span
+        <Link
           key={index}
-          className="bg-gray-700 text-white text-xs px-2 py-1 rounded-full"
+          to={`/tags/${tag.id}`}
+          className="bg-gray-700 text-white text-xs px-2 py-1 rounded-full hover:bg-gray-600 transition"
         >
-          {tag}
-        </span>
+          {tag.label}
+        </Link>
       ))}
 
       {addButton && addButton}

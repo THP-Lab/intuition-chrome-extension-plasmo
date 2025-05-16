@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom"
 import IntuitionFeed from "~/src/components/icons/IntuitionFeed"
 import IntuitionHistory from "~/src/components/icons/IntuitionHistory"
 import IntuitionIcon from "~/src/components/icons/IntuitionIcon"
-import IntuitionHashtagIcon from "~/src/components/icons/IntuitionIcon"
+import IntuitionIconTag from "~/src/components/icons/IntuitionIconTag"
 import IntuitionSearchIcon from "~/src/components/icons/IntuitionSearchIcon"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
@@ -61,29 +61,23 @@ function Navbar() {
         </Button>
 
         <Button
-          variant={isActive("/Tag") ? "default" : "ghost"}
+          variant={isActive("/tags") ? "default" : "ghost"}
           size="sm"
           asChild
           className={cn(
             "navbar-button",
-            isActive("/Tag") && "animate-fade-bg"
+            isActive("/tags") && "animate-fade-bg"
           )}>
           <Link
-            to="/Tag"
+            to="/tags"
             className="flex flex-col items-center"
-            onClick={() => umami("Tag")}
+            onClick={() => umami("tags")}
           >
             <div className="relative w-11 h-11"> 
-              <IntuitionIcon size={44} className="navbar-icon" />
-              <TagsIcon
-                size={18}
-                className="absolute top-1/2 left-1/2 
-                          transform -translate-x-1/2 -translate-y-1/2"
-              />
+              <IntuitionIconTag size={44} className="navbar-icon" />
             </div>
           </Link>
         </Button>
-
 
         <Button
           variant={isActive("/feed") ? "default" : "ghost"}

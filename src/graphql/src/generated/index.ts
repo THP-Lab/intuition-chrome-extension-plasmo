@@ -11030,8 +11030,8 @@ export type GetAtomsByCreatorQuery = {
       __typename?: "claims_aggregate"
       nodes: Array<{
         __typename?: "claims"
-        predicate: { __typename?: "atoms"; label?: string | null }
-        object: { __typename?: "atoms"; label?: string | null }
+        predicate: { __typename?: "atoms"; label?: string | null; id: any }
+        object: { __typename?: "atoms"; label?: string | null; id: any }
       }>
     }
   }>
@@ -11099,8 +11099,8 @@ export type GetAtomsWithPositionsQuery = {
       __typename?: "claims_aggregate"
       nodes: Array<{
         __typename?: "claims"
-        predicate: { __typename?: "atoms"; label?: string | null }
-        object: { __typename?: "atoms"; label?: string | null }
+        predicate: { __typename?: "atoms"; label?: string | null; id: any }
+        object: { __typename?: "atoms"; label?: string | null; id: any }
       }>
     }
     value?: {
@@ -13338,6 +13338,91 @@ export type GetTagsCustomQuery = {
   }>
 }
 
+export type GetListsTagsQueryVariables = Exact<{
+  where?: InputMaybe<Atoms_Bool_Exp>
+  triplesWhere?: InputMaybe<Triples_Bool_Exp>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  orderBy?: InputMaybe<Array<Atoms_Order_By> | Atoms_Order_By>
+}>
+
+export type GetListsTagsQuery = {
+  __typename?: "query_root"
+  atoms_aggregate: {
+    __typename?: "atoms_aggregate"
+    aggregate?: { __typename?: "atoms_aggregate_fields"; count: number } | null
+  }
+  atoms: Array<{
+    __typename?: "atoms"
+    id: any
+    label?: string | null
+    image?: string | null
+    value?: {
+      __typename?: "atom_values"
+      thing?: { __typename?: "things"; description?: string | null } | null
+    } | null
+    as_object_triples_aggregate: {
+      __typename?: "triples_aggregate"
+      aggregate?: {
+        __typename?: "triples_aggregate_fields"
+        count: number
+      } | null
+    }
+    as_object_triples: Array<{
+      __typename?: "triples"
+      subject: {
+        __typename?: "atoms"
+        label?: string | null
+        image?: string | null
+      }
+    }>
+  }>
+}
+
+export type GetTaggedObjectsQueryVariables = Exact<{
+  objectId: Scalars["numeric"]["input"]
+  predicateId: Scalars["numeric"]["input"]
+  address?: InputMaybe<Scalars["String"]["input"]>
+}>
+
+export type GetTaggedObjectsQuery = {
+  __typename?: "query_root"
+  triples: Array<{
+    __typename?: "triples"
+    id: any
+    vault_id: any
+    subject: {
+      __typename?: "atoms"
+      id: any
+      label?: string | null
+      image?: string | null
+      value?: {
+        __typename?: "atom_values"
+        thing?: {
+          __typename?: "things"
+          name?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        person?: { __typename?: "persons"; description?: string | null } | null
+      } | null
+      vault?: { __typename?: "vaults"; position_count: number } | null
+    }
+    vault?: {
+      __typename?: "vaults"
+      id: any
+      position_count: number
+      positions: Array<{ __typename?: "positions"; shares: any }>
+    } | null
+    counter_vault?: {
+      __typename?: "vaults"
+      id: any
+      position_count: number
+      positions: Array<{ __typename?: "positions"; shares: any }>
+    } | null
+  }>
+}
+
 export type GetTriplesByCreatorQueryVariables = Exact<{
   address?: InputMaybe<Scalars["String"]["input"]>
 }>
@@ -14861,9 +14946,11 @@ export const GetAtomsByCreatorDocument = `
       nodes {
         predicate {
           label
+          id
         }
         object {
           label
+          id
         }
       }
     }
@@ -14987,9 +15074,11 @@ export const GetAtomsWithPositionsDocument = `
       nodes {
         predicate {
           label
+          id
         }
         object {
           label
+          id
         }
       }
     }
@@ -17655,6 +17744,236 @@ useGetTagsCustomQuery.fetcher = (
 ) =>
   fetcher<GetTagsCustomQuery, GetTagsCustomQueryVariables>(
     GetTagsCustomDocument,
+    variables,
+    options
+  )
+
+export const GetListsTagsDocument = `
+    query GetListsTags($where: atoms_bool_exp, $triplesWhere: triples_bool_exp, $limit: Int, $offset: Int, $orderBy: [atoms_order_by!]) {
+  atoms_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  atoms(where: $where, limit: $limit, offset: $offset, order_by: $orderBy) {
+    id
+    label
+    image
+    value {
+      thing {
+        description
+      }
+    }
+    as_object_triples_aggregate(where: $triplesWhere) {
+      aggregate {
+        count
+      }
+    }
+    as_object_triples(
+      where: $triplesWhere
+      limit: 10
+      order_by: {vault: {total_shares: desc}}
+    ) {
+      subject {
+        label
+        image
+      }
+    }
+  }
+}
+    `
+
+export const useGetListsTagsQuery = <
+  TData = GetListsTagsQuery,
+  TError = unknown
+>(
+  variables?: GetListsTagsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetListsTagsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<GetListsTagsQuery, TError, TData>["queryKey"]
+  }
+) => {
+  return useQuery<GetListsTagsQuery, TError, TData>({
+    queryKey:
+      variables === undefined ? ["GetListsTags"] : ["GetListsTags", variables],
+    queryFn: fetcher<GetListsTagsQuery, GetListsTagsQueryVariables>(
+      GetListsTagsDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetListsTagsQuery.document = GetListsTagsDocument
+
+useGetListsTagsQuery.getKey = (variables?: GetListsTagsQueryVariables) =>
+  variables === undefined ? ["GetListsTags"] : ["GetListsTags", variables]
+
+export const useInfiniteGetListsTagsQuery = <
+  TData = InfiniteData<GetListsTagsQuery>,
+  TError = unknown
+>(
+  variables: GetListsTagsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetListsTagsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetListsTagsQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetListsTagsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ["GetListsTags.infinite"]
+            : ["GetListsTags.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetListsTagsQuery, GetListsTagsQueryVariables>(
+            GetListsTagsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetListsTagsQuery.getKey = (
+  variables?: GetListsTagsQueryVariables
+) =>
+  variables === undefined
+    ? ["GetListsTags.infinite"]
+    : ["GetListsTags.infinite", variables]
+
+useGetListsTagsQuery.fetcher = (
+  variables?: GetListsTagsQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetListsTagsQuery, GetListsTagsQueryVariables>(
+    GetListsTagsDocument,
+    variables,
+    options
+  )
+
+export const GetTaggedObjectsDocument = `
+    query GetTaggedObjects($objectId: numeric!, $predicateId: numeric!, $address: String) {
+  triples(where: {object_id: {_eq: $objectId}, predicate_id: {_eq: $predicateId}}) {
+    id
+    subject {
+      id
+      label
+      image
+      value {
+        thing {
+          name
+          description
+          url
+        }
+        person {
+          description
+        }
+      }
+      vault {
+        position_count
+      }
+    }
+    vault_id
+    vault {
+      id
+      position_count
+      positions(where: {account_id: {_eq: $address}}) {
+        shares
+      }
+    }
+    counter_vault {
+      id
+      position_count
+      positions(where: {account_id: {_eq: $address}}) {
+        shares
+      }
+    }
+  }
+}
+    `
+
+export const useGetTaggedObjectsQuery = <
+  TData = GetTaggedObjectsQuery,
+  TError = unknown
+>(
+  variables: GetTaggedObjectsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetTaggedObjectsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<GetTaggedObjectsQuery, TError, TData>["queryKey"]
+  }
+) => {
+  return useQuery<GetTaggedObjectsQuery, TError, TData>({
+    queryKey: ["GetTaggedObjects", variables],
+    queryFn: fetcher<GetTaggedObjectsQuery, GetTaggedObjectsQueryVariables>(
+      GetTaggedObjectsDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetTaggedObjectsQuery.document = GetTaggedObjectsDocument
+
+useGetTaggedObjectsQuery.getKey = (
+  variables: GetTaggedObjectsQueryVariables
+) => ["GetTaggedObjects", variables]
+
+export const useInfiniteGetTaggedObjectsQuery = <
+  TData = InfiniteData<GetTaggedObjectsQuery>,
+  TError = unknown
+>(
+  variables: GetTaggedObjectsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetTaggedObjectsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetTaggedObjectsQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetTaggedObjectsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ["GetTaggedObjects.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetTaggedObjectsQuery, GetTaggedObjectsQueryVariables>(
+            GetTaggedObjectsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetTaggedObjectsQuery.getKey = (
+  variables: GetTaggedObjectsQueryVariables
+) => ["GetTaggedObjects.infinite", variables]
+
+useGetTaggedObjectsQuery.fetcher = (
+  variables: GetTaggedObjectsQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetTaggedObjectsQuery, GetTaggedObjectsQueryVariables>(
+    GetTaggedObjectsDocument,
     variables,
     options
   )
@@ -24752,6 +25071,10 @@ export const GetAtomsByCreator = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -24765,6 +25088,10 @@ export const GetAtomsByCreator = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -25084,6 +25411,10 @@ export const GetAtomsWithPositions = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -25097,6 +25428,10 @@ export const GetAtomsWithPositions = {
                                   {
                                     kind: "Field",
                                     name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" }
                                   }
                                 ]
                               }
@@ -33549,6 +33884,564 @@ export const GetTagsCustom = {
                       {
                         kind: "FragmentSpread",
                         name: { kind: "Name", value: "PositionFields" }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetListsTags = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetListsTags" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "where" }
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "atoms_bool_exp" }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "triplesWhere" }
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "triples_bool_exp" }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "limit" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "offset" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "orderBy" }
+          },
+          type: {
+            kind: "ListType",
+            type: {
+              kind: "NonNullType",
+              type: {
+                kind: "NamedType",
+                name: { kind: "Name", value: "atoms_order_by" }
+              }
+            }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "atoms_aggregate" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "where" }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "count" } }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "atoms" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "where" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "limit" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "limit" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "offset" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "offset" }
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "order_by" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "orderBy" }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "value" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "thing" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "as_object_triples_aggregate" },
+                  arguments: [
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "where" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "triplesWhere" }
+                      }
+                    }
+                  ],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "aggregate" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "count" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "as_object_triples" },
+                  arguments: [
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "where" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "triplesWhere" }
+                      }
+                    },
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "limit" },
+                      value: { kind: "IntValue", value: "10" }
+                    },
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "order_by" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "vault" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "total_shares" },
+                                  value: { kind: "EnumValue", value: "desc" }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "subject" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "image" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetTaggedObjects = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetTaggedObjects" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "objectId" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "numeric" }
+            }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "predicateId" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "numeric" }
+            }
+          }
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "triples" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "object_id" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_eq" },
+                            value: {
+                              kind: "Variable",
+                              name: { kind: "Name", value: "objectId" }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "predicate_id" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_eq" },
+                            value: {
+                              kind: "Variable",
+                              name: { kind: "Name", value: "predicateId" }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "subject" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "value" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "thing" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "name" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "description" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "url" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "person" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "description" }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "vault" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "position_count" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                { kind: "Field", name: { kind: "Name", value: "vault_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "vault" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "position_count" }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "positions" },
+                        arguments: [
+                          {
+                            kind: "Argument",
+                            name: { kind: "Name", value: "where" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "account_id" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: { kind: "Name", value: "_eq" },
+                                        value: {
+                                          kind: "Variable",
+                                          name: {
+                                            kind: "Name",
+                                            value: "address"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "counter_vault" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "position_count" }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "positions" },
+                        arguments: [
+                          {
+                            kind: "Argument",
+                            name: { kind: "Name", value: "where" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "account_id" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: { kind: "Name", value: "_eq" },
+                                        value: {
+                                          kind: "Variable",
+                                          name: {
+                                            kind: "Name",
+                                            value: "address"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "shares" }
+                            }
+                          ]
+                        }
                       }
                     ]
                   }

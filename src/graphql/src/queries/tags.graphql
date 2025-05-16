@@ -16,3 +16,88 @@ query GetTagsCustom($where: triples_bool_exp) {
     ...TripleMetadata
   }
 }
+
+query GetListsTags(
+  $where: atoms_bool_exp
+  $triplesWhere: triples_bool_exp
+  $limit: Int
+  $offset: Int
+  $orderBy: [atoms_order_by!]
+) {
+  atoms_aggregate(where: $where) {
+    aggregate { count }
+  }
+  atoms(
+    where: $where
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
+    id
+    label
+    image
+    value {
+      thing { description }
+    }
+    as_object_triples_aggregate(where: $triplesWhere) {
+      aggregate { count }
+    }
+    as_object_triples(
+      where: $triplesWhere
+      limit: 10
+      order_by: { vault: { total_shares: desc } }
+    ) {
+      subject { label image }
+    }
+  }
+}
+
+
+query GetTaggedObjects(
+  $objectId: numeric!,
+  $predicateId: numeric!,
+  $address: String
+) {
+  triples(
+    where: {
+      object_id:    { _eq: $objectId }
+      predicate_id: { _eq: $predicateId }
+    }
+  ) {
+    id
+    subject {
+      id
+      label
+      image
+      value {
+        thing {
+          name
+          description
+          url
+        }
+        person {
+          description
+        }
+      }
+      vault {
+        position_count
+      }
+    }
+    vault_id
+    vault {
+      id
+      position_count
+        positions (where: { account_id: { _eq: $address } }){
+          shares
+        }
+    }
+
+    counter_vault {
+      id
+      position_count
+        positions (where: { account_id: { _eq: $address } }){
+          shares
+        }
+    }
+  }
+}

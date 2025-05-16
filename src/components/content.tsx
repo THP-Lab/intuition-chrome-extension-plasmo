@@ -19,6 +19,9 @@ import Search from "~src/pages/Search"
 import { AtomSelectionProvider } from "./ui/AtomSelectionContext"
 import AtomDetailPage from "~src/pages/AtomDetailPage"
 import PageViewTracker from "./PageViewTracker"
+import TagsPage from "~src/pages/TagsPage"
+import TagsDetailPage from "~src/pages/TagsDetailPage"
+
 
 import { NavigationProvider, useNavigation } from "./layout/NavigationProvider"
 import NavArc from "./layout/NavArc"
@@ -36,6 +39,7 @@ import ProfileLayout from "./profile/ProfileLayout"
 import "../styles/global.css"
 import umamiScriptUrl from "url:../../assets/umami.js"
 
+import TagsPage from "~src/pages/TagsPage"
 
 const API_URL = "https://prod.base.intuition-api.com/v1/graphql"
 configureClient({ apiUrl: API_URL })
@@ -99,6 +103,8 @@ const Content = ({ children }: ContentProps) => {
                   <Route path="/recent-activity" element={<RecentActivity />} />
                   <Route path="/search" element={<Search />} />
                   <Route path="/atoms/:id" element={<AtomDetailPage />} />
+                  <Route path="/tags" element={<TagsPage />} />
+                  <Route path="/tags/:tagId" element={<TagsDetailPage />} />
                 </Routes>
               </div>
             </main>

@@ -5,21 +5,19 @@ import { useLocation, useNavigate } from "react-router-dom"
 import IntuitionIconPlus from "~/src/components/icons/intuition_icon_plus"
 import IntuitionFeed from "~/src/components/icons/IntuitionFeed"
 import IntuitionHistory from "~/src/components/icons/IntuitionHistory"
+import IntuitionIconTag from "~/src/components/icons/IntuitionIconTag"
 
 import IntuitionIcon from "~/src/components/icons/IntuitionIcon"
 import IntuitionProfil from "~/src/components/icons/IntuitionProfil"
 import IntuitionSearchIcon from "~/src/components/icons/IntuitionSearchIcon"
-import IntuitionThemeAvatar from "~/src/components/icons/IntuitionThemeAvatar"
 import { useTheme } from "~/src/components/ThemeProvider"
 
-// Function to calculate the responsive values for the navbar
 const getResponsiveValues = () => {
   if (typeof window === "undefined") return { radius: 188, bottomOffset: -300 } // 198 * 0.95 = 188
 
   const screenWidth = window.innerWidth
   const screenHeight = window.innerHeight
 
-  // Calculate the responsive values for the navbar
   const baseRadius = 188
   const responsiveRadius = Math.min(
     baseRadius,
@@ -44,7 +42,7 @@ const items = [
   { Icon: IntuitionFeed, label: "Feed", to: "/feed" },
   { Icon: IntuitionHistory, label: "Recent", to: "/recent-activity" },
   { Icon: IntuitionIconPlus, label: "Create", to: "/page-form" },
-  { Icon: IntuitionThemeAvatar, label: "Theme", to: null }
+  { Icon: IntuitionIconTag, label: "Tag", to: "/tags" }
 ]
 
 const NavArc = () => {
@@ -129,7 +127,7 @@ const NavArc = () => {
       | "Feed"
       | "Recent"
       | "Create"
-      | "Theme"]: ButtonConfig
+      | "Tag"]: ButtonConfig
   }
 
   const buttonPositions: ButtonPositions = {
@@ -140,7 +138,7 @@ const NavArc = () => {
       radius: responsiveValues.radius - 26,
       angleOffset: -Math.PI
     },
-    Theme: {
+    Tag: {
       top: "36%",
       radius: responsiveValues.radius - 26,
       angleOffset: 0
