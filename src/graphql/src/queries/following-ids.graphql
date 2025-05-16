@@ -1,0 +1,12 @@
+query getFollowingIds($address: String!) {
+  triples(
+    where: {
+      predicate: { label: { _eq: "follow" } }
+      subject: { accounts: { id: { _eq: $address } } }
+    }
+  ) {
+    object {
+      id
+    }
+  }
+}

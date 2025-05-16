@@ -11500,6 +11500,18 @@ export type GetFollowersFromAddressQuery = {
   }>
 }
 
+export type GetFollowingIdsQueryVariables = Exact<{
+  address: Scalars["String"]["input"]
+}>
+
+export type GetFollowingIdsQuery = {
+  __typename?: "query_root"
+  triples: Array<{
+    __typename?: "triples"
+    object: { __typename?: "atoms"; id: any }
+  }>
+}
+
 export type GetFollowingsFromAddressQueryVariables = Exact<{
   address: Scalars["String"]["input"]
 }>
@@ -23465,6 +23477,204 @@ export type GetFollowersFromAddressSuspenseQueryHookResult = ReturnType<
 export type GetFollowersFromAddressQueryResult = Apollo.QueryResult<
   GetFollowersFromAddressQuery,
   GetFollowersFromAddressQueryVariables
+>
+export const GetFollowingIdsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "getFollowingIds" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "triples" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "predicate" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "label" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "_eq" },
+                                  value: {
+                                    kind: "StringValue",
+                                    value: "follow",
+                                    block: false
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "subject" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "accounts" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "id" },
+                                  value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                      {
+                                        kind: "ObjectField",
+                                        name: { kind: "Name", value: "_eq" },
+                                        value: {
+                                          kind: "Variable",
+                                          name: {
+                                            kind: "Name",
+                                            value: "address"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "object" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+
+/**
+ * __useGetFollowingIdsQuery__
+ *
+ * To run a query within a React component, call `useGetFollowingIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFollowingIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFollowingIdsQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetFollowingIdsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetFollowingIdsQuery,
+    GetFollowingIdsQueryVariables
+  > &
+    (
+      | { variables: GetFollowingIdsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetFollowingIdsQuery, GetFollowingIdsQueryVariables>(
+    GetFollowingIdsDocument,
+    options
+  )
+}
+export function useGetFollowingIdsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetFollowingIdsQuery,
+    GetFollowingIdsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetFollowingIdsQuery,
+    GetFollowingIdsQueryVariables
+  >(GetFollowingIdsDocument, options)
+}
+export function useGetFollowingIdsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetFollowingIdsQuery,
+        GetFollowingIdsQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetFollowingIdsQuery,
+    GetFollowingIdsQueryVariables
+  >(GetFollowingIdsDocument, options)
+}
+export type GetFollowingIdsQueryHookResult = ReturnType<
+  typeof useGetFollowingIdsQuery
+>
+export type GetFollowingIdsLazyQueryHookResult = ReturnType<
+  typeof useGetFollowingIdsLazyQuery
+>
+export type GetFollowingIdsSuspenseQueryHookResult = ReturnType<
+  typeof useGetFollowingIdsSuspenseQuery
+>
+export type GetFollowingIdsQueryResult = Apollo.QueryResult<
+  GetFollowingIdsQuery,
+  GetFollowingIdsQueryVariables
 >
 export const GetFollowingsFromAddressDocument = {
   kind: "Document",
