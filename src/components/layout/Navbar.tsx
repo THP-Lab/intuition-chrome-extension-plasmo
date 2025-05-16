@@ -4,12 +4,13 @@ import { Link, useLocation } from "react-router-dom"
 import IntuitionFeed from "~/src/components/icons/IntuitionFeed"
 import IntuitionHistory from "~/src/components/icons/IntuitionHistory"
 import IntuitionIcon from "~/src/components/icons/IntuitionIcon"
-import IntuitionProfil from "~/src/components/icons/IntuitionProfil"
+import IntuitionHashtagIcon from "~/src/components/icons/IntuitionIcon"
 import IntuitionSearchIcon from "~/src/components/icons/IntuitionSearchIcon"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { Button } from "~/src/components/ui/button"
 import { cn } from "~src/lib/utils"
 import { umami } from "~src/lib/umami"
+import { Tags as TagsIcon } from "lucide-react"
 
 function Navbar() {
   const { theme, setTheme } = useTheme()
@@ -60,19 +61,29 @@ function Navbar() {
         </Button>
 
         <Button
-          variant={isActive("/profile") ? "default" : "ghost"}
+          variant={isActive("/Tag") ? "default" : "ghost"}
           size="sm"
           asChild
           className={cn(
             "navbar-button",
-            isActive("/profile") && "animate-fade-bg"
+            isActive("/Tag") && "animate-fade-bg"
           )}>
-          <Link to="/profile" className="flex flex-col items-center" onClick={() => umami("Profile")}>
-            <div className="text-foreground" title="Profile">
-              <IntuitionProfil size={44} className="navbar-icon" />
+          <Link
+            to="/Tag"
+            className="flex flex-col items-center"
+            onClick={() => umami("Tag")}
+          >
+            <div className="relative w-11 h-11"> 
+              <IntuitionIcon size={44} className="navbar-icon" />
+              <TagsIcon
+                size={18}
+                className="absolute top-1/2 left-1/2 
+                          transform -translate-x-1/2 -translate-y-1/2"
+              />
             </div>
           </Link>
         </Button>
+
 
         <Button
           variant={isActive("/feed") ? "default" : "ghost"}
