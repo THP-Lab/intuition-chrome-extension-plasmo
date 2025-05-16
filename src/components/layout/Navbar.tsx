@@ -75,12 +75,6 @@ function Navbar() {
           >
             <div className="relative w-11 h-11"> 
               <IntuitionIconTag size={44} className="navbar-icon" />
-              <TagsIcon
-                size={18}
-                stroke={theme === 'dark' ? '#fff' : '#000'}
-                className="absolute top-1/2 left-1/2 
-                          transform -translate-x-1/2 -translate-y-1/2"
-              />
             </div>
           </Link>
         </Button>
