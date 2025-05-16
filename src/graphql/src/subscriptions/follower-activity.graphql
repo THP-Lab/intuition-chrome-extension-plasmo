@@ -1,0 +1,11 @@
+subscription FollowerActivity($limit: Int!) {
+  events(
+    where: { type: { _in: ["ClaimCreated", "AtomCreated"] } }
+    order_by: [{ block_number: desc }]
+    limit: $limit
+  ) {
+    type
+   
+    block_timestamp
+  }
+}

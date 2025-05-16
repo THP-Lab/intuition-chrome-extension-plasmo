@@ -13945,6 +13945,15 @@ export type EventsSubscription = {
   }>
 }
 
+export type FollowerActivitySubscriptionVariables = Exact<{
+  limit: Scalars["Int"]["input"]
+}>
+
+export type FollowerActivitySubscription = {
+  __typename?: "subscription_root"
+  events: Array<{ __typename?: "events"; type: any; block_timestamp: any }>
+}
+
 export const AccountClaimsAggregateFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -33994,3 +34003,149 @@ export type EventsSubscriptionHookResult = ReturnType<
 >
 export type EventsSubscriptionResult =
   Apollo.SubscriptionResult<EventsSubscription>
+export const FollowerActivityDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "subscription",
+      name: { kind: "Name", value: "FollowerActivity" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "limit" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "events" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "type" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_in" },
+                            value: {
+                              kind: "ListValue",
+                              values: [
+                                {
+                                  kind: "StringValue",
+                                  value: "ClaimCreated",
+                                  block: false
+                                },
+                                {
+                                  kind: "StringValue",
+                                  value: "AtomCreated",
+                                  block: false
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "order_by" },
+                value: {
+                  kind: "ListValue",
+                  values: [
+                    {
+                      kind: "ObjectValue",
+                      fields: [
+                        {
+                          kind: "ObjectField",
+                          name: { kind: "Name", value: "block_number" },
+                          value: { kind: "EnumValue", value: "desc" }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "limit" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "limit" }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "type" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "block_timestamp" }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+
+/**
+ * __useFollowerActivitySubscription__
+ *
+ * To run a query within a React component, call `useFollowerActivitySubscription` and pass it any options that fit your needs.
+ * When your component renders, `useFollowerActivitySubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFollowerActivitySubscription({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useFollowerActivitySubscription(
+  baseOptions: Apollo.SubscriptionHookOptions<
+    FollowerActivitySubscription,
+    FollowerActivitySubscriptionVariables
+  > &
+    (
+      | { variables: FollowerActivitySubscriptionVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useSubscription<
+    FollowerActivitySubscription,
+    FollowerActivitySubscriptionVariables
+  >(FollowerActivityDocument, options)
+}
+export type FollowerActivitySubscriptionHookResult = ReturnType<
+  typeof useFollowerActivitySubscription
+>
+export type FollowerActivitySubscriptionResult =
+  Apollo.SubscriptionResult<FollowerActivitySubscription>

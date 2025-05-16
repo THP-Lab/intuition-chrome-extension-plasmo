@@ -4,7 +4,7 @@ import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
 
 import { ApolloProvider, useSubscription } from "@apollo/client"
 import { apolloSubscriptionClient } from "~src/graphql/src/apollo-subscription-client"
-import { EventsDocument } from "~src/graphql/src/generated/subscriptions"
+import { FollowerActivityDocument } from "~src/graphql/src/generated/subscriptions"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://*/*"]
@@ -14,6 +14,8 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
   document.querySelector("body")
 
 export const getShadowHostId = () => "plasmo-inline-example-unique-id"
+
+const FOLLOWER_IDS = ["0xd01cd97bf00bddfbccf0a79a2a579e8add6ac4f8"]
 
 export default function Wrapper() {
   return (
@@ -28,14 +30,20 @@ export function PlasmoInline() {
   const [hasNotification, setHasNotification] = useState(false)
   const draggingRef = useRef(false)
 
-  const { data } = useSubscription(EventsDocument, {
-    variables: { addresses: [], limit: 1 }
+  const { data } = useSubscription(FollowerActivityDocument, {
+    variables: { limit: 1 }
   })
 
   useEffect(() => {
-    const latest = data?.events?.[0]
-    const type = latest?.type?.toLowerCase?.()
-    if (type?.includes("claim") || type?.includes("atom")) {
+    const event = data?.events?.[0]
+    const actorId = event?.account?.id
+    const type = event?.type
+
+    if (
+      actorId &&
+      FOLLOWER_IDS.includes(actorId) &&
+      (type === "ClaimCreated" || type === "AtomCreated")
+    ) {
       setHasNotification(true)
     }
   }, [data])
@@ -143,13 +151,12 @@ export function PlasmoInline() {
         </div>
       </div>
 
-      {/* Inline keyframe for the ping animation */}
       <style>
         {`@keyframes ping {
-            75%, 100% {
-              transform: scale(2);
-              opacity: 0;
-            }
+          75%, 100% {
+            transform: scale(2);
+            opacity: 0;
+          }
         }`}
       </style>
     </div>

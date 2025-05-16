@@ -13925,6 +13925,15 @@ export type EventsSubscription = {
   }>
 }
 
+export type FollowerActivitySubscriptionVariables = Exact<{
+  limit: Scalars["Int"]["input"]
+}>
+
+export type FollowerActivitySubscription = {
+  __typename?: "subscription_root"
+  events: Array<{ __typename?: "events"; type: any; block_timestamp: any }>
+}
+
 export const AccountClaimsAggregateFragmentDoc = `
     fragment AccountClaimsAggregate on accounts {
   claims_aggregate(order_by: {shares: desc}) {
@@ -18627,6 +18636,18 @@ ${VaultDetailsWithFilteredPositionsFragmentDoc}
 ${VaultBasicDetailsFragmentDoc}
 ${VaultFilteredPositionsFragmentDoc}
 ${PositionFieldsFragmentDoc}`
+export const FollowerActivityDocument = `
+    subscription FollowerActivity($limit: Int!) {
+  events(
+    where: {type: {_in: ["ClaimCreated", "AtomCreated"]}}
+    order_by: [{block_number: desc}]
+    limit: $limit
+  ) {
+    type
+    block_timestamp
+  }
+}
+    `
 export const AccountClaimsAggregate = {
   kind: "Document",
   definitions: [
@@ -36597,6 +36618,114 @@ export const Events = {
           {
             kind: "FragmentSpread",
             name: { kind: "Name", value: "VaultFilteredPositions" }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const FollowerActivity = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "subscription",
+      name: { kind: "Name", value: "FollowerActivity" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "limit" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "events" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "type" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_in" },
+                            value: {
+                              kind: "ListValue",
+                              values: [
+                                {
+                                  kind: "StringValue",
+                                  value: "ClaimCreated",
+                                  block: false
+                                },
+                                {
+                                  kind: "StringValue",
+                                  value: "AtomCreated",
+                                  block: false
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "order_by" },
+                value: {
+                  kind: "ListValue",
+                  values: [
+                    {
+                      kind: "ObjectValue",
+                      fields: [
+                        {
+                          kind: "ObjectField",
+                          name: { kind: "Name", value: "block_number" },
+                          value: { kind: "EnumValue", value: "desc" }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "limit" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "limit" }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "type" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "block_timestamp" }
+                }
+              ]
+            }
           }
         ]
       }
