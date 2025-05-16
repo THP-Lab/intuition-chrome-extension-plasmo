@@ -7,10 +7,12 @@ import { PowerOff } from 'lucide-react';
 const WalletConnectionButton = () => {
   const [account, setAccount] = useStorage<string>("metamask-account")
 
+
   const handleConnect = async () => {
     try {
       const accountAddress = await connectWallet()
       setAccount(accountAddress)
+      chrome.storage.local.set({ "metamask-account": accountAddress })
     } catch (error) {
       console.error("Failed to connect to wallet: ", error)
     }

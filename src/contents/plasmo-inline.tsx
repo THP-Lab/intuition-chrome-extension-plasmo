@@ -18,6 +18,7 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
 
 export const getShadowHostId = () => "plasmo-floating-button"
 
+// ---- GraphQL ----
 const EVENTS_SUBSCRIPTION = gql`
   subscription Events($limit: Int!) {
     events(
@@ -43,6 +44,7 @@ const GET_FOLLOWINGS = gql`
   }
 `
 
+// ---- Button ----
 const FloatingButton = ({ address }: { address: string }) => {
   const [positionY, setPositionY] = useState<number>(50)
   const [hasNotification, setHasNotification] = useState(false)
@@ -60,6 +62,7 @@ const FloatingButton = ({ address }: { address: string }) => {
   const followingIds = followData?.following?.map((f) => f.id) ?? []
 
   useEffect(() => {
+    console.log("✅ followingIds", followingIds)
     const latestEvent = eventData?.events?.[0]
     const actorId = latestEvent?.deposit?.sender?.id
     const eventType = latestEvent?.type
@@ -69,10 +72,11 @@ const FloatingButton = ({ address }: { address: string }) => {
       followingIds.includes(actorId) &&
       ["ClaimCreated", "AtomCreated", "TripleCreated"].includes(eventType)
     ) {
-      console.log(" Notification: Event from followed account:", actorId)
+      console.log("🔔 Real event from followed account:", actorId)
       setHasNotification(true)
     }
   }, [eventData, followingIds])
+
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const startY = e.clientY
@@ -100,9 +104,6 @@ const FloatingButton = ({ address }: { address: string }) => {
     window.addEventListener("mousemove", handleMouseMove)
     window.addEventListener("mouseup", handleMouseUp)
   }
-
-
-
 
   return (
     <div
@@ -179,6 +180,7 @@ const FloatingButton = ({ address }: { address: string }) => {
   )
 }
 
+// ---- Wrapper ----
 const Wrapper = () => {
   const [address, setAddress] = useState<string>("")
 
@@ -186,10 +188,10 @@ const Wrapper = () => {
     chrome.storage.local.get("metamask-account", (res) => {
       const addr = res["metamask-account"]
       if (addr) {
-        console.log("Metamask account loaded:", addr)
+        console.log(" Metamask account loaded:", addr)
         setAddress(addr)
       } else {
-        console.warn("No metamask-account found in storage")
+        console.warn(" No metamask-account found in storage")
       }
     })
   }, [])
