@@ -1,0 +1,19 @@
+query GetFollowingsTriples($accountId: String!) {
+  triples(
+    where: {
+      predicate: { label: { _eq: "follow" } }
+      subject: { accounts: { id: { _eq: $accountId } }, type: { _eq: "Account" } }
+    }
+  ) {
+    id
+    object {
+      id
+      label
+      type
+      image
+      accounts {
+        id
+      }
+    }
+  }
+}

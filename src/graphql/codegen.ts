@@ -1,14 +1,14 @@
-import { CodegenConfig } from "@graphql-codegen/cli"
-import type { Types } from "@graphql-codegen/plugin-helpers"
+import { CodegenConfig } from '@graphql-codegen/cli'
+import type { Types } from '@graphql-codegen/plugin-helpers'
 
-import { API_URL_PROD } from "./src/constants"
+import { API_URL_DEV } from './src/constants'
 
 const commonGenerateOptions: Types.ConfiguredOutput = {
   config: {
     reactQueryVersion: 5,
     fetcher: {
-      func: "../client#fetcher",
-      isReactHook: false
+      func: '../client#fetcher',
+      isReactHook: false,
     },
     exposeDocument: true,
     exposeFetcher: true,
@@ -17,75 +17,50 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
     addInfiniteQuery: true,
     enumsAsTypes: true,
     dedupeFragments: true,
-    documentMode: "documentNode",
+    documentMode: 'documentNode',
     scalars: {
-      Date: "Date",
-      JSON: "Record<string, any>",
-      ID: "string",
-      Void: "void"
-    }
+      Date: 'Date',
+      JSON: 'Record<string, any>',
+      ID: 'string',
+      Void: 'void',
+    },
   },
   plugins: [
-    "typescript",
-    "@graphql-codegen/typescript-operations",
-    "@graphql-codegen/typescript-react-query",
-    "typescript-document-nodes"
-  ]
+    'typescript',
+    '@graphql-codegen/typescript-operations',
+    '@graphql-codegen/typescript-react-query',
+    'typescript-document-nodes',
+  ],
 }
 
 const config: CodegenConfig = {
   overwrite: true,
-  hooks: { afterAllFileWrite: ["prettier --write"] },
+  hooks: { afterAllFileWrite: ['prettier --write'] },
   schema: {
-    [API_URL_PROD]: {
-      method: "POST",
+    [API_URL_DEV]: {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json"
-      }
-    }
+        'Content-Type': 'application/json',
+      },
+    },
   },
   ignoreNoDocuments: true,
-  documents: ["**/*.graphql"],
+  documents: ['**/*.graphql'],
   generates: {
-    // Main output using react-query
-    "./src/generated/index.ts": {
+    './src/generated/index.ts': {
       config: {
-        ...commonGenerateOptions.config
+        ...commonGenerateOptions.config,
       },
-      plugins: commonGenerateOptions.plugins
+      plugins: commonGenerateOptions.plugins,
     },
-
-    // Apollo Client output for subscriptions
-    "./src/generated/subscriptions.ts": {
-      documents: ["src/graphql/subscriptions/**/*.graphql"], // Or wherever you place your .graphql subscription ops
-      plugins: [
-        "typescript",
-        "@graphql-codegen/typescript-operations",
-        "@graphql-codegen/typescript-react-apollo"
-      ],
+    './schema.graphql': {
+      plugins: ['schema-ast'],
       config: {
-        withHooks: true,
-        withHOC: false,
-        withComponent: false,
-        scalars: {
-          Date: "Date",
-          JSON: "Record<string, any>",
-          ID: "string",
-          Void: "void"
-        },
-        documentMode: "documentNode"
-      }
+        includeDirectives: true,
+      },
     },
-
-    // Optional: export your schema
-    "./schema.graphql": {
-      plugins: ["schema-ast"],
-      config: {
-        includeDirectives: true
-      }
-    }
   },
-  watch: process.env.NODE_ENV === "development"
+  watch: process.env.NODE_ENV === 'development',
 }
 
 export default config

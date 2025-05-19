@@ -1,16 +1,11 @@
 fragment TripleMetadata on triples {
-  id
-  creator {
-    label
-    id
-  }
-  creator_id
+  term_id
   subject_id
   predicate_id
   object_id
   subject {
     data
-    id
+    term_id
     image
     label
     emoji
@@ -22,7 +17,7 @@ fragment TripleMetadata on triples {
   }
   predicate {
     data
-    id
+    term_id
     image
     label
     emoji
@@ -34,7 +29,7 @@ fragment TripleMetadata on triples {
   }
   object {
     data
-    id
+    term_id
     image
     label
     emoji
@@ -44,24 +39,28 @@ fragment TripleMetadata on triples {
       ...AccountMetadata
     }
   }
-  vault {
-    total_shares
-    current_share_price
-    allPositions: positions_aggregate {
-      ...PositionAggregateFields
-    }
-    positions {
-      ...PositionFields
+  term {
+    vaults(where: { curve_id: { _eq: "1" } }) {
+      total_shares
+      current_share_price
+      allPositions: positions_aggregate {
+        ...PositionAggregateFields
+      }
+      positions {
+        ...PositionFields
+      }
     }
   }
-  counter_vault {
-    total_shares
-    current_share_price
-    allPositions: positions_aggregate {
-      ...PositionAggregateFields
-    }
-    positions {
-      ...PositionFields
+  counter_term {
+    vaults(where: { curve_id: { _eq: "1" } }) {
+      total_shares
+      current_share_price
+      allPositions: positions_aggregate {
+        ...PositionAggregateFields
+      }
+      positions {
+        ...PositionFields
+      }
     }
   }
 }
@@ -74,76 +73,35 @@ fragment TripleTxn on triples {
 }
 
 fragment TripleVaultDetails on triples {
-  vault_id
-  counter_vault_id
-  vault {
-    positions {
-      ...PositionDetails
+  term_id
+  counter_term_id
+  term {
+    vaults(where: { curve_id: { _eq: "1" } }) {
+      positions {
+        ...PositionDetails
+      }
     }
   }
-  counter_vault {
-    positions {
-      ...PositionDetails
+  counter_term {
+    vaults(where: { curve_id: { _eq: "1" } }) {
+      positions {
+        ...PositionDetails
+      }
     }
   }
 }
 
 fragment TripleVaultCouterVaultDetailsWithPositions on triples {
-  vault_id
-  counter_vault_id
-  vault {
-    position_count
-    ...VaultDetailsWithFilteredPositions
-  }
-  counter_vault {
-    position_count
-    ...VaultDetailsWithFilteredPositions
-  }
-}
-
-
-fragment TripleMetadataSubscription on triples {
-  id
-  creator {
-    image
-    label
-    id
-  }
-  creator_id
-  subject_id
-  predicate_id
-  object_id
-  subject {
-    data
-    id
-    image
-    label
-    emoji
-    type
-    creator {
-      ...AccountMetadata
+  term_id
+  counter_term_id
+  term {
+    vaults(where: { curve_id: { _eq: "1" } }) {
+      ...VaultDetailsWithFilteredPositions
     }
   }
-  predicate {
-    data
-    id
-    image
-    label
-    emoji
-    type
-    creator {
-      ...AccountMetadata
-    }
-  }
-  object {
-    data
-    id
-    image
-    label
-    emoji
-    type
-    creator {
-      ...AccountMetadata
+  counter_term {
+    vaults(where: { curve_id: { _eq: "1" } }) {
+      ...VaultDetailsWithFilteredPositions
     }
   }
 }

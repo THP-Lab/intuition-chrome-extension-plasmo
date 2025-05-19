@@ -1,0 +1,169 @@
+fragment AtomValue on atoms {
+  value {
+    person {
+      name
+      image
+      description
+      url
+    }
+    thing {
+      name
+      image
+      description
+      url
+    }
+    organization {
+      name
+      image
+      description
+      url
+    }
+  }
+}
+
+fragment AtomMetadata on atoms {
+  id
+  data
+  image
+  label
+  emoji
+  type
+  wallet_id
+  creator {
+    id
+    label
+    image
+  }
+  ...AtomValue
+}
+
+fragment AtomTxn on atoms {
+  block_number
+  block_timestamp
+  transaction_hash
+  creator_id
+}
+
+fragment AtomVaultDetails on atoms {
+  vault_id
+  wallet_id
+  vault {
+    position_count
+    total_shares
+    current_share_price
+    positions_aggregate {
+      aggregate {
+        count
+        sum {
+          shares
+        }
+      }
+    }
+    positions {
+      id
+      account {
+        label
+        id
+      }
+      shares
+    }
+  }
+}
+
+fragment AtomTriple on atoms {
+  as_subject_triples {
+    id
+    object {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
+    }
+    predicate {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
+    }
+  }
+  as_predicate_triples {
+    id
+    subject {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
+    }
+    object {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
+    }
+  }
+  as_object_triples {
+    id
+    subject {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
+    }
+    predicate {
+      data
+      id
+      image
+      label
+      emoji
+      type
+      creator {
+        ...AccountMetadata
+      }
+    }
+  }
+}
+
+fragment AtomVaultDetailsWithPositions on atoms {
+  vault {
+    total_shares
+    current_share_price
+    positions_aggregate(where: { account_id: { _in: $addresses } }) {
+      aggregate {
+        sum {
+          shares
+        }
+      }
+      nodes {
+        account {
+          id
+        }
+        shares
+      }
+    }
+  }
+}

@@ -1,50 +1,9 @@
-query GetTriplesByCreator($address: String) {
-  triples(where: { creator_id: { _eq: $address } }) {
-    id
-    creator_id
-    subject {
-      id
-      label
-      image
-      type
-    }
-    predicate {
-      id
-      label
-      image
-      type
-    }
-    object {
-      id
-      label
-      image
-      type
-    }
-    vault {
-      id
-      positions_aggregate {
-        aggregate {
-          count
-        }
-      }
-    }
-    counter_vault {
-      id
-      positions_aggregate {
-        aggregate {
-          count
-        }
-      }
-    }
-  }
-}
-
-query GetTriplesWithPositionsTHP(
+# Main pagination query
+query GetTriples(
   $limit: Int
   $offset: Int
   $orderBy: [triples_order_by!]
   $where: triples_bool_exp
-  $address: String
 ) {
   total: triples_aggregate(where: $where) {
     aggregate {
@@ -52,46 +11,65 @@ query GetTriplesWithPositionsTHP(
     }
   }
   triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
-    id
-    counter_vault_id
-    subject {
-      id
-      label
-      image
+    ...TripleMetadata
+    ...TripleTxn
+    ...TripleVaultDetails
+    creator {
+      ...AccountMetadata
     }
-    predicate {
-      id
-      label
-      image
+  }
+}
+
+# Combined query with aggregates and nodes
+query GetTriplesWithAggregates(
+  $limit: Int
+  $offset: Int
+  $orderBy: [triples_order_by!]
+  $where: triples_bool_exp
+) {
+  triples_aggregate(
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+    where: $where
+  ) {
+    aggregate {
+      count
     }
-    object {
-      id
-      label
-      image
-    }
-    vault {
-      total_shares
-      position_count
-      positions(where: { account_id: { _eq: $address } }) {
-        account {
-          id
-          label
-          image
-        }
-        shares
+    nodes {
+      ...TripleMetadata
+      ...TripleTxn
+      ...TripleVaultDetails
+      creator {
+        ...AccountMetadata
       }
     }
-    counter_vault {
-      total_shares
-      position_count
-      positions(where: { account_id: { _eq: $address } }) {
-        account {
-          id
-          label
-          image
-        }
-        shares
-      }
+  }
+}
+
+query GetTriplesCount($where: triples_bool_exp) {
+  triples_aggregate(where: $where) {
+    total: aggregate {
+      count
+    }
+  }
+}
+
+query GetTriple($tripleId: numeric!) {
+  triple(term_id: $tripleId) {
+    ...TripleMetadata
+    ...TripleTxn
+    ...TripleVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+
+query GetAtomTriplesWithPositions($where: triples_bool_exp) {
+  triples_aggregate(where: $where) {
+    aggregate {
+      count
     }
   }
 }
@@ -109,53 +87,49 @@ query GetTriplesWithPositions(
     }
   }
   triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
-    id
-    creator {
-      label
-      id
-    }
-    vault_id
-    counter_vault_id
+    term_id
+    counter_term_id
     subject {
-      id
-      vault_id
+      term_id
       label
       image
     }
     predicate {
-      id
-      vault_id
+      term_id
       label
       image
     }
     object {
-      id
-      vault_id
+      term_id
       label
       image
     }
-    vault {
-      total_shares
-      position_count
-      positions(where: { account_id: { _eq: $address } }) {
-        account {
-          id
-          label
-          image
+    term {
+      vaults {
+        total_shares
+        position_count
+        positions(where: { account_id: { _eq: $address } }) {
+          account {
+            id
+            label
+            image
+          }
+          shares
         }
-        shares
       }
     }
-    counter_vault {
-      total_shares
-      position_count
-      positions(where: { account_id: { _eq: $address } }) {
-        account {
-          id
-          label
-          image
+    counter_term {
+      vaults {
+        total_shares
+        position_count
+        positions(where: { account_id: { _eq: $address } }) {
+          account {
+            id
+            label
+            image
+          }
+          shares
         }
-        shares
       }
     }
   }
