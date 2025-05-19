@@ -7,7 +7,7 @@ import { Plus } from "lucide-react"
 import { UserRound } from "lucide-react"
 
 interface Atom {
-  id: string;
+  term_id: string;
   label?: string | null;
   emoji?: string | null;
   image?: string | null;
@@ -73,7 +73,7 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
 
   const atoms: Atom[] =
     data?.atoms.map(atom => ({
-      id: atom.id,
+      term_id: atom.term_id,
       label: atom.label,
       emoji: atom.emoji,
       image: atom.image,
@@ -117,7 +117,7 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
         <ul className="absolute z-10 bg-[hsl(var(--navbar-bg))] text-foreground border border-border rounded w-full max-h-60 overflow-y-auto shadow-md">
           {atoms.map((atom) => (
             <li
-              key={atom.id}
+              key={atom.term_id}
               className="flex items-center gap-2 p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer"
               onMouseDown={(e) => e.stopPropagation()}
               onClick={() => handleSelect(atom)}
