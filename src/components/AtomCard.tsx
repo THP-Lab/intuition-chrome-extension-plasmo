@@ -7,13 +7,13 @@ import TagCreator from "./TagCreator"
 import Tags from "./ui/Tags"
 
 interface AtomProps {
-  id: string
+  term_id: string
   data?: string | null
   type: string
   label?: string | null
   image?: string | null
   emoji?: string | null
-  value?: {
+  atom_value?: {
     thing?: {
       name?: string | null
       image?: string | null
@@ -49,10 +49,10 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
       return <div className="text-xs text-gray-500">Invalid atom data</div>
     }
     const { atomPosition, isVoting, txHash } = useAtomPosition()
-    const thing = atom.value?.thing
+    const thing = atom.atom_value?.thing
     const navigate = useNavigate()
     const goToAtomPage = () => {
-      navigate(`/atoms/${atom.id || ''}`)
+      navigate(`/atoms/${atom.term_id || ''}`)
     }
 
     return (
@@ -88,7 +88,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                atomPosition(BigInt(atom.id));
+                atomPosition(BigInt(atom.term_id));
               }}
               disabled={isVoting}
               className="border border-gray-400 text-white rounded-md px-2 py-1 text-sm
