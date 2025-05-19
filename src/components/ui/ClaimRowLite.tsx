@@ -25,11 +25,11 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
     const creator = (triple as any)?.creator ?? (claim as any)?.creator
 
-    const vault = claim.vault ?? (claim.triple as any)?.vault ?? {}
-    const counterVault = claim.counter_vault ?? (claim.triple as any)?.counter_vault ?? {}
+    const vault = triple?.term?.vaults?.find((v: any) => v.curve_id === "1") 
+    const counterVault = triple?.counter_term?.vaults?.find((v: any) => v.curve_id === "1") 
 
-    const vaultId = vault.id ?? (claim as any).vault_id
-    const counterVaultId = counterVault.id ?? (claim as any).counter_vault_id
+    const vaultId = triple.term_id ?? (claim as any).vault_id
+    const counterVaultId = triple?.counter_term_id
 
     const numPositionsFor =
       vault.positions_aggregate?.aggregate?.count ??
@@ -60,15 +60,15 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
         <div className="flex flex-col">
           <div className="flex gap-1 items-center flex-wrap">
             
-            <PopupAtom key={`${claim.id}-subject`} atom={subject} />
-            <PopupAtom key={`${claim.id}-predicate`} atom={predicate} />
-            <PopupAtom key={`${claim.id}-object`} atom={object} />
+            <PopupAtom key={`${claim.term_id}-subject`} atom={subject} />
+            <PopupAtom key={`${claim.term_id}-predicate`} atom={predicate} />
+            <PopupAtom key={`${claim.term_id}-object`} atom={object} />
           </div>
           {creator && (
             <p className="mt-2 text-xs text-gray-500">
             Created by{' '}
             <a
-              href={`https://portal.intuition.systems/app/atom/${creator.id}?tab=portfolio`}
+              href={`https://portal.intuition.systems/app/atom/${creator.term_id}?tab=portfolio`}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline"
