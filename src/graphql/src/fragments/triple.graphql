@@ -105,3 +105,49 @@ fragment TripleVaultCouterVaultDetailsWithPositions on triples {
     }
   }
 }
+
+fragment TripleMetadataSubscription on triples {
+  term_id
+  creator {
+    image
+    label
+    id
+  }
+  creator_id
+  subject_id
+  predicate_id
+  object_id
+  subject {
+    data
+    term_id
+    image
+    label
+    emoji
+    type
+    creator {
+      ...AccountMetadata
+    }
+  }
+  predicate {
+    data
+    term_id
+    image
+    label
+    emoji
+    type
+    creator {
+      ...AccountMetadata
+    }
+  }
+  object {
+    data
+    term_id
+    image
+    label
+    emoji
+    type
+    creator {
+      ...AccountMetadata
+    }
+  }
+}

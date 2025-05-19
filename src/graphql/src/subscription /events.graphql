@@ -1,0 +1,13 @@
+subscription Events($addresses: [String!]!, $limit: Int!) {
+  events(
+    where: {
+      _or: [
+        { deposit: { is_atom_wallet: { _eq: false } } }
+
+      ]
+    }
+    order_by: [{ block_number: desc }] 
+    limit: $limit) {
+    ...EventDetailsSubscription
+  }
+}

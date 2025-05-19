@@ -53,14 +53,37 @@ const config: CodegenConfig = {
       },
       plugins: commonGenerateOptions.plugins,
     },
-    './schema.graphql': {
-      plugins: ['schema-ast'],
+    // Apollo Client output for subscriptions
+    "./src/generated/subscriptions.ts": {
+      documents: ["src/graphql/subscriptions/**/*.graphql"], // Or wherever you place your .graphql subscription ops
+      plugins: [
+        "typescript",
+        "@graphql-codegen/typescript-operations",
+        "@graphql-codegen/typescript-react-apollo"
+      ],
       config: {
-        includeDirectives: true,
-      },
+        withHooks: true,
+        withHOC: false,
+        withComponent: false,
+        scalars: {
+          Date: "Date",
+          JSON: "Record<string, any>",
+          ID: "string",
+          Void: "void"
+        },
+        documentMode: "documentNode"
+      }
     },
+
+    // Optional: export your schema
+    "./schema.graphql": {
+      plugins: ["schema-ast"],
+      config: {
+        includeDirectives: true
+      }
+    }
   },
-  watch: process.env.NODE_ENV === 'development',
+  watch: process.env.NODE_ENV === "development"
 }
 
 export default config

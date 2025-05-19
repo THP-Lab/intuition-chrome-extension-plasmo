@@ -64,9 +64,9 @@ query GetTaggedObjects(
       predicate_id: { _eq: $predicateId }
     }
   ) {
-    id
+    term_id
     subject {
-      id
+      term_id
       label
       image
       value {
@@ -79,22 +79,27 @@ query GetTaggedObjects(
           description
         }
       }
-      vault {
-        position_count
+      term {
+        vaults {
+          position_count
+        }
       }
     }
-    vault_id
-    vault {
+    term {
       id
-      position_count
-        positions (where: { account_id: { _eq: $address } }){
-          shares
-        }
+      vaults {
+        position_count
+      }
+      positions (where: { account_id: { _eq: $address } }){
+        shares
+      }
     }
 
-    counter_vault {
+    counter_term {
       id
-      position_count
+      vaults {
+        position_count
+      }
         positions (where: { account_id: { _eq: $address } }){
           shares
         }
