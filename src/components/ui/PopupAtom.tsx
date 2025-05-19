@@ -10,7 +10,7 @@ import { Fingerprint } from "lucide-react"
 
 interface PopupAtomProps {
   atom: {
-    id: string
+    term_id: string
     label: string
     image?: string
   }
@@ -18,15 +18,15 @@ interface PopupAtomProps {
 
 export const PopupAtom = ({ atom }: PopupAtomProps) => {
   if (!atom) return null
-  const { id, label, image } = atom;
+  const { term_id, label, image } = atom;
   const atomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const { data, isLoading, error } = useGetAtomQuery({ id });
+  const { data, isLoading, error } = useGetAtomQuery({ term_id });
   const { isHovered, setIsHovered, isOpen } = useAtomInteraction()
 
   const goToAtomPage = () => {
-    navigate(`/atoms/${id}`)
+    navigate(`/atoms/${term_id}`)
   };
 
   const renderAtomImage = () => {
@@ -60,9 +60,9 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
     )
 
     const renderAtomDescription = () =>
-      data?.atom?.value?.thing?.description ? (
+      data?.atom?.atom_value?.thing?.description ? (
         <p className="text-sm text-muted-foreground mt-2">
-          {data.atom.value.thing.description}
+          {data.atom.atom_value.thing.description}
         </p>
       ) : null
 
