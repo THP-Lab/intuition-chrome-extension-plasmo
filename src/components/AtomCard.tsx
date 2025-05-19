@@ -21,26 +21,26 @@ interface AtomProps {
       url?: string | null
     } | null
   } | null
-  term?: {
-    position.count?: number
-    total_market_cap?: string
+ term?: {
+  vaults?: {
+    curve_id: string
     current_share_price?: string
-    total?: {
+    market_cap?: string
+    total_assets?: string
+    total_shares?: string
+    positions_aggregate?: {
       aggregate?: {
         count?: number
-        sum?: {
-          shares?: string | number
-        } | null
-      } | null
+      }
     }
-  } | null
-  vault_id?: string
+  }[]
+}
 }
 
 interface AtomCardProps {
   atom: AtomProps
   tags?: string[]
-}
+} 
 
 export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
   try {
@@ -117,12 +117,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
         )}
 
         {tags && (
-          <div 
-            className="gap-2"
-            onClick={e => {
-              e.stopPropagation(); 
-            }}
-          >
+          <div className="gap-2">
             <Tags tags={tags} />
             <div onClick={(e) => e.stopPropagation()} className="pt-2">
               <TagCreator
