@@ -97,10 +97,10 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
 
   return (
     <div className="relative" ref={wrapperRef}>
+      <label className="block text-sm font-medium mb-1">{label}</label>
       <input
         ref={inputRef ? inputRef : internalInputRef}
         type="text"
-        placeholder="Add a tag" 
         value={search}
         onChange={(e) => {
           setSearch(e.target.value);
