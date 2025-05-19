@@ -21,9 +21,9 @@ interface AtomProps {
       url?: string | null
     } | null
   } | null
-  vault?: {
-    position_count?: number
-    total_shares?: string
+  term?: {
+    position.count?: number
+    total_market_cap?: string
     current_share_price?: string
     total?: {
       aggregate?: {
@@ -83,7 +83,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
           <div className="flex items-center gap-4 ml-2">
             <p className="flex items-center text-sm text-white text-muted-foreground">
               <UserRound className="w-4 h-4 mr-1" />
-              {Math.max((atom.vault?.position_count ?? 0) - 1, 0)}
+              {Math.max((atom.term?.position_count ?? 0) - 1, 0)}
             </p>
             <button
               onClick={(e) => {
