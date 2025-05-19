@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import { useStorage } from "@plasmohq/storage/dist/hook"
 import { useGetFollowingsFromAddressQuery } from "~src/graphql/src"
+import WalletConnectionButton from "~src/components/WalletConnectionButton"
 
 function Feed() {
   const [walletAddress] = useStorage<string>("metamask-account")
@@ -14,7 +15,14 @@ function Feed() {
   const default_img =
     "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000"
 
-  if (!walletAddress) return <p>Connect your wallet</p>
+if (!walletAddress) {
+    return (
+      <div className="flex flex-col justify-center items-center">
+        <p>Please connect your wallet</p>
+        <WalletConnectionButton />
+      </div>
+    )
+  }
   if (isLoading) return <p>Loading who you follow...</p>
   if (isError) return <p>Error loading followings</p>
 
