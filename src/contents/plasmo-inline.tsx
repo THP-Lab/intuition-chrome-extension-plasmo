@@ -18,7 +18,6 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
 
 export const getShadowHostId = () => "plasmo-floating-button"
 
-// ---- GraphQL ----
 const EVENTS_SUBSCRIPTION = gql`
   subscription Events($limit: Int!) {
     events(
@@ -38,20 +37,26 @@ const EVENTS_SUBSCRIPTION = gql`
 
 const GET_FOLLOWINGS = gql`
   query getFollowingsFromAddress($address: String!) {
-    following(args: { address: $address }) {
-      id
+    triples(
+      where: {
+        predicate: { label: { _eq: "follow" } }
+        subject: { accounts: { id: { _eq: $address } } }
+      }
+    ) {
+      object {
+        id
+      }
     }
   }
 `
 
-// ---- Button ----
 const FloatingButton = ({ address }: { address: string }) => {
   const [positionY, setPositionY] = useState<number>(50)
   const [hasNotification, setHasNotification] = useState(false)
   const draggingRef = useRef(false)
 
   const { data: followData } = useQuery(GET_FOLLOWINGS, {
-    variables: { address },
+    variables: { address: address?.toLowerCase() },
     skip: !address
   })
 
@@ -59,10 +64,13 @@ const FloatingButton = ({ address }: { address: string }) => {
     variables: { limit: 1 }
   })
 
-  const followingIds = followData?.following?.map((f) => f.id) ?? []
+  const followingIds =
+    followData?.triples?.map((t) => t.object?.id).filter(Boolean) ?? []
+
+  console.log("🐛 Raw followData:", followData)
+  console.log("🎯 followings (from triples):", followingIds)
 
   useEffect(() => {
-    console.log("✅ followingIds", followingIds)
     const latestEvent = eventData?.events?.[0]
     const actorId = latestEvent?.deposit?.sender?.id
     const eventType = latestEvent?.type
@@ -76,7 +84,6 @@ const FloatingButton = ({ address }: { address: string }) => {
       setHasNotification(true)
     }
   }, [eventData, followingIds])
-
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const startY = e.clientY
@@ -180,7 +187,6 @@ const FloatingButton = ({ address }: { address: string }) => {
   )
 }
 
-// ---- Wrapper ----
 const Wrapper = () => {
   const [address, setAddress] = useState<string>("")
 

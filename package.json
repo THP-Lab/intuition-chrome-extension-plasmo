@@ -61,7 +61,7 @@
     "autoprefixer": "10.4.16",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
-    "plasmo": "0.90.3",
+    "plasmo": "0.90.5",
     "postcss": "8.4.31",
     "prettier": "3.2.4",
     "svgo": "^3.0.2",
