@@ -24391,6 +24391,244 @@ useGetTagsCustomQuery.fetcher = (
     options
   )
 
+<<<<<<< HEAD
+=======
+export const GetListsTagsDocument = `
+    query GetListsTags($where: atoms_bool_exp, $triplesWhere: triples_bool_exp, $limit: Int, $offset: Int, $orderBy: [atoms_order_by!]) {
+  atoms_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  atoms(where: $where, limit: $limit, offset: $offset, order_by: $orderBy) {
+    term_id
+    label
+    image
+    value {
+      thing {
+        description
+      }
+    }
+    as_object_triples_aggregate(where: $triplesWhere) {
+      aggregate {
+        count
+      }
+    }
+    as_object_triples(
+      where: $triplesWhere
+      limit: 10
+      order_by: {term: {total_market_cap: desc}}
+    ) {
+      subject {
+        label
+        image
+      }
+    }
+  }
+}
+    `
+
+export const useGetListsTagsQuery = <
+  TData = GetListsTagsQuery,
+  TError = unknown
+>(
+  variables?: GetListsTagsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetListsTagsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<GetListsTagsQuery, TError, TData>["queryKey"]
+  }
+) => {
+  return useQuery<GetListsTagsQuery, TError, TData>({
+    queryKey:
+      variables === undefined ? ["GetListsTags"] : ["GetListsTags", variables],
+    queryFn: fetcher<GetListsTagsQuery, GetListsTagsQueryVariables>(
+      GetListsTagsDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetListsTagsQuery.document = GetListsTagsDocument
+
+useGetListsTagsQuery.getKey = (variables?: GetListsTagsQueryVariables) =>
+  variables === undefined ? ["GetListsTags"] : ["GetListsTags", variables]
+
+export const useInfiniteGetListsTagsQuery = <
+  TData = InfiniteData<GetListsTagsQuery>,
+  TError = unknown
+>(
+  variables: GetListsTagsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetListsTagsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetListsTagsQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetListsTagsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          (optionsQueryKey ?? variables === undefined)
+            ? ["GetListsTags.infinite"]
+            : ["GetListsTags.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetListsTagsQuery, GetListsTagsQueryVariables>(
+            GetListsTagsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetListsTagsQuery.getKey = (
+  variables?: GetListsTagsQueryVariables
+) =>
+  variables === undefined
+    ? ["GetListsTags.infinite"]
+    : ["GetListsTags.infinite", variables]
+
+useGetListsTagsQuery.fetcher = (
+  variables?: GetListsTagsQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetListsTagsQuery, GetListsTagsQueryVariables>(
+    GetListsTagsDocument,
+    variables,
+    options
+  )
+
+export const GetTaggedObjectsDocument = `
+    query GetTaggedObjects($objectId: numeric!, $predicateId: numeric!, $address: String) {
+  triples(where: {object_id: {_eq: $objectId}, predicate_id: {_eq: $predicateId}}) {
+    term_id
+    subject {
+      term_id
+      label
+      image
+      value {
+        thing {
+          name
+          description
+          url
+        }
+        person {
+          description
+        }
+      }
+      term {
+        vaults {
+          position_count
+        }
+      }
+    }
+    term {
+      id
+      vaults {
+        position_count
+      }
+      positions(where: {account_id: {_eq: $address}}) {
+        shares
+      }
+    }
+    counter_term {
+      id
+      vaults {
+        position_count
+      }
+      positions(where: {account_id: {_eq: $address}}) {
+        shares
+      }
+    }
+  }
+}
+    `
+
+export const useGetTaggedObjectsQuery = <
+  TData = GetTaggedObjectsQuery,
+  TError = unknown
+>(
+  variables: GetTaggedObjectsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetTaggedObjectsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<GetTaggedObjectsQuery, TError, TData>["queryKey"]
+  }
+) => {
+  return useQuery<GetTaggedObjectsQuery, TError, TData>({
+    queryKey: ["GetTaggedObjects", variables],
+    queryFn: fetcher<GetTaggedObjectsQuery, GetTaggedObjectsQueryVariables>(
+      GetTaggedObjectsDocument,
+      variables
+    ),
+    ...options
+  })
+}
+
+useGetTaggedObjectsQuery.document = GetTaggedObjectsDocument
+
+useGetTaggedObjectsQuery.getKey = (
+  variables: GetTaggedObjectsQueryVariables
+) => ["GetTaggedObjects", variables]
+
+export const useInfiniteGetTaggedObjectsQuery = <
+  TData = InfiniteData<GetTaggedObjectsQuery>,
+  TError = unknown
+>(
+  variables: GetTaggedObjectsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetTaggedObjectsQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetTaggedObjectsQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetTaggedObjectsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ["GetTaggedObjects.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetTaggedObjectsQuery, GetTaggedObjectsQueryVariables>(
+            GetTaggedObjectsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetTaggedObjectsQuery.getKey = (
+  variables: GetTaggedObjectsQueryVariables
+) => ["GetTaggedObjects.infinite", variables]
+
+useGetTaggedObjectsQuery.fetcher = (
+  variables: GetTaggedObjectsQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetTaggedObjectsQuery, GetTaggedObjectsQueryVariables>(
+    GetTaggedObjectsDocument,
+    variables,
+    options
+  )
+
+>>>>>>> 6df63820 (unified generated index)
 export const GetTriplesDocument = `
     query GetTriples($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp) {
   total: triples_aggregate(where: $where) {
