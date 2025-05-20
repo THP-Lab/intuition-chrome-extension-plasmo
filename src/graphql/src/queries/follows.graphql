@@ -235,3 +235,174 @@ query GetConnectionsCount(
     }
   }
 }
+
+
+query getFollowingsFromAddress($address: String!) {
+  following(args: { address: $address }) {
+    id
+    image
+    label
+    type
+
+    triples(order_by: { term_id: desc }) {
+      term_id
+      creator {
+        label
+        id
+        type
+      }
+      subject {
+        term_id
+        label
+        image
+        type
+      }
+      predicate {
+        term_id
+        label
+        image
+        type
+      }
+      object {
+        term_id
+        label
+        image
+        type
+      }
+      counter_term_id
+
+      term {
+        id
+        positions_aggregate {
+          aggregate {
+            count
+          }
+        }
+        positions(where: { account_id: { _eq: $address } }) { 
+          shares
+          account {
+            id
+          }
+        }
+      }
+
+      counter_term {
+        id
+        positions_aggregate {
+          aggregate {
+            count
+          }
+        }
+        positions(where: { account_id: { _eq: $address } }) {
+          shares
+          account {
+            id
+          }
+        }
+      }
+    }
+
+    positions_aggregate(limit: 10) {
+      aggregate {
+        count
+      }
+      nodes {
+        shares
+        term {
+          id
+          triple {
+            term_id
+            object {
+              term_id
+              type
+              image
+              label
+            }
+            predicate {
+              term_id
+              type
+              image
+              label
+            }
+            subject {
+              term_id
+              type
+              image
+              label
+            }
+            counter_term {
+              id
+              positions_aggregate {
+                aggregate {
+                  count
+                }
+              }
+              positions(where: { account_id: { _eq: $address } }) {
+                shares
+                account {
+                  id
+                }
+              }
+            }
+            term {
+              id
+              positions_aggregate {
+                aggregate {
+                  count
+                }
+              }
+              positions(where: { account_id: { _eq: $address } }) {
+                shares
+                account {
+                  id
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+query getFollowersFromAddress($address: String!) {
+  triples(
+    where: {
+      predicate: { label: { _eq: "follow" } }
+      object: { accounts: { id: { _eq: $address } } }
+    }
+  ) {
+    term_id
+    predicate {
+      label
+    }
+    object {
+      term_id
+    }
+
+    term {
+      id
+      positions {
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
+
+    counter_term {
+      id
+      positions {
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
+  }
+}

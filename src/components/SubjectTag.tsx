@@ -26,12 +26,12 @@ const SubjectTag: React.FC = () => {
   const sorted = useMemo(() => {
     return triples
       .map(triple => {
-        const vault = triple.vault!
-        const counter = triple.counter_vault!
+        const vault = triple.term!
+        const counter = triple.counter_term!
         const userFor    = Number(vault.positions?.[0]?.shares ?? 0)
         const userAgainst= Number(counter.positions?.[0]?.shares ?? 0)
         const userVoted = userFor > 0 || userAgainst > 0
-        const totalVotes = (vault.position_count ?? 0) + (counter.position_count ?? 0)
+        const totalVotes = (vault.vaults.position_count ?? 0) + (counter.vaults.position_count ?? 0)
         return { triple, userVoted, totalVotes }
       })
       .sort((a, b) => {
@@ -53,14 +53,14 @@ const SubjectTag: React.FC = () => {
         <div className="space-y-4 mt-2">
           {sorted.map(({ triple }) => {
             const subject = triple.subject
-            const vault = triple.vault!
-            const counterVault = triple.counter_vault!
+            const vault = triple.term!
+            const counterVault = triple.counter_term!
 
             const vaultId = vault.id
             const counterVaultId = counterVault.id
 
-            const numPositionsFor = vault.position_count ?? 0
-            const numPositionsAgainst = counterVault.position_count ?? 0
+            const numPositionsFor = vault.vaults.position_count ?? 0
+            const numPositionsAgainst = counterVault.vaults.position_count ?? 0
 
             const userStake = Number(vault.positions?.[0]?.shares ?? 0)
             const userCounterStake = Number(counterVault.positions?.[0]?.shares ?? 0)
@@ -74,10 +74,10 @@ const SubjectTag: React.FC = () => {
             return (
               <div
                 
-                key={subject.id}
+                key={subject.term_id}
                 className="flex justify-between items-center p-1 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl claims-hover-effect"
               >
-                <Link to={`/atoms/${subject.id}`} className="flex items-center gap-4">
+                <Link to={`/atoms/${subject.term_id}`} className="flex items-center gap-4">
                   {subject.image ? (
                     <ImageWithFallback
                       src={subject.image}

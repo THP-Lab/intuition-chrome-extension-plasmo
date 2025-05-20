@@ -5,35 +5,34 @@ query getFollowingsFromAddress($address: String!) {
     label
     type
 
-    triples(order_by: { id: desc }) {
-      id
+    triples(order_by: { term_id: desc }) {
+      term_id
       creator {
         label
         id
         type
       }
       subject {
-        id
+        term_id
         label
         image
         type
       }
       predicate {
-        id
+        term_id
         label
         image
         type
       }
       object {
-        id
+        term_id
         label
         image
         type
       }
-      vault_id
-      counter_vault_id
+      counter_term_id
 
-      vault {
+      term {
         id
         positions_aggregate {
           aggregate {
@@ -48,7 +47,7 @@ query getFollowingsFromAddress($address: String!) {
         }
       }
 
-      counter_vault {
+      counter_term {
         id
         positions_aggregate {
           aggregate {
@@ -70,29 +69,29 @@ query getFollowingsFromAddress($address: String!) {
       }
       nodes {
         shares
-        vault {
+        term {
           id
           triple {
-            id
+            term
             object {
-              id
+              term
               type
               image
               label
             }
             predicate {
-              id
+              term
               type
               image
               label
             }
             subject {
-              id
+              term
               type
               image
               label
             }
-            counter_vault {
+            counter_term {
               id
               positions_aggregate {
                 aggregate {
@@ -106,7 +105,7 @@ query getFollowingsFromAddress($address: String!) {
                 }
               }
             }
-            vault {
+            term {
               id
               positions_aggregate {
                 aggregate {
