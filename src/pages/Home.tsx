@@ -8,7 +8,7 @@ import EyeComponent from "~/src/components/3D/EyeComponent"
 import { useTheme } from "~/src/components/ThemeProvider"
 import AtomCard from "~src/components/AtomCard"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
-import { useGetClaimsByUriQuery } from "~src/graphql/src"
+import { useGetClaimsByUriQuery } from "@warzieram/graphql"
 
 import TabSystem from "../components/TabSystem"
 

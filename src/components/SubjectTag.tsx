@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import { Link } from "react-router-dom"
 import { useParams } from 'react-router-dom'
-import { useGetTaggedObjectsQuery } from '~src/graphql/src'
+import { useGetTaggedObjectsQuery } from '@warzieram/graphql'
 import { useStorage } from '@plasmohq/storage/hook'
 import { ImageWithFallback } from '../components/ui/ImageWithFallback'
 import { Fingerprint } from 'lucide-react'

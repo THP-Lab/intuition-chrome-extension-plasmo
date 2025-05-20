@@ -1,6 +1,6 @@
 import React from "react";
 import { useStorage } from "@plasmohq/storage/hook";
-import { useGetTriplesByCreatorQuery } from "~src/graphql/src"
+import { useGetTriplesByCreatorQuery } from "@warzieram/graphql"
 import ClaimRowLite from "../ui/ClaimRowLite"
 
 const YourClaimsTab = () => {

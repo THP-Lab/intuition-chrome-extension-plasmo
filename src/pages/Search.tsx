@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
 import TabSystem from "../components/TabSystem"
-import { useGetTriplesWithPositionsQuery } from "~src/graphql/src"
+import { useGetTriplesWithPositionsQuery } from "@warzieram/graphql"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
 import { useStorage } from "@plasmohq/storage/dist/hook"
 

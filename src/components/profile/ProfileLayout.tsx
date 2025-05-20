@@ -3,7 +3,7 @@ import {
   useGetAccountByIdQuery,
   useGetClaimsByAddressQuery,
   useGetPersonsByIdentifierQuery
-} from "~src/graphql/src";
+} from "@warzieram/graphql";
 
 import WalletConnectionButton from "~src/components/WalletConnectionButton";
 import ProfileTabs from "~src/components/profile/ProfileTabs";

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { usePinPersonMutation } from "~src/graphql/src"
+import { usePinPersonMutation } from "@warzieram/graphql"
 import { Button } from "~src/components/ui/button"
 import { useStorage } from "@plasmohq/storage/hook";
 import { parseEther } from 'viem';

@@ -2,7 +2,7 @@ import React from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import { useGetAtomsWithPositionsQuery } from "~src/graphql/src"
+import { useGetAtomsWithPositionsQuery } from "@warzieram/graphql"
 
 import AtomCard from "../AtomCard"
 
