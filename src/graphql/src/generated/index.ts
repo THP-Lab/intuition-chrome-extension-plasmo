@@ -12247,14 +12247,6 @@ export type GetAtomsWithPositionsQuery = {
       atom_id?: any | null
       type: any
     }
-    as_subject_triples_aggregate: {
-      __typename?: "triples_aggregate"
-      nodes: Array<{
-        __typename?: "triples"
-        predicate: { __typename?: "atoms"; label?: string | null; term_id: any }
-        object: { __typename?: "atoms"; label?: string | null; term_id: any }
-      }>
-    }
     value?: {
       __typename?: "atom_values"
       person?: {
@@ -12926,49 +12918,6 @@ export type GetAtomDetailsQuery = {
       } | null
     }
   } | null
-}
-
-export type GetAtomsByCreatorQueryVariables = Exact<{
-  address: Scalars["String"]["input"]
-}>
-
-export type GetAtomsByCreatorQuery = {
-  __typename?: "query_root"
-  atoms: Array<{
-    __typename?: "atoms"
-    term_id: any
-    data?: string | null
-    image?: string | null
-    label?: string | null
-    type: any
-    block_number: any
-    block_timestamp: any
-    transaction_hash: string
-    creator_id: string
-    value?: {
-      __typename?: "atom_values"
-      thing?: {
-        __typename?: "things"
-        name?: string | null
-        image?: string | null
-        description?: string | null
-        url?: string | null
-      } | null
-    } | null
-    term: {
-      __typename?: "terms"
-      total_market_cap?: any | null
-      vaults: Array<{ __typename?: "vaults"; position_count: number }>
-    }
-    as_subject_triples_aggregate: {
-      __typename?: "triples_aggregate"
-      nodes: Array<{
-        __typename?: "triples"
-        predicate: { __typename?: "atoms"; label?: string | null; term_id: any }
-        object: { __typename?: "atoms"; label?: string | null; term_id: any }
-      }>
-    }
-  }>
 }
 
 export type GetClaimsByAddressQueryVariables = Exact<{
@@ -14536,44 +14485,6 @@ export type GetFollowersFromAddressQuery = {
         } | null
       }>
     } | null
-  }>
-}
-
-export type GetFollowingsTriplesQueryVariables = Exact<{
-  accountId: Scalars["String"]["input"]
-}>
-
-export type GetFollowingsTriplesQuery = {
-  __typename?: "query_root"
-  triples: Array<{
-    __typename?: "triples"
-    term_id: any
-    object: {
-      __typename?: "atoms"
-      term_id: any
-      label?: string | null
-      type: any
-      image?: string | null
-      accounts: Array<{ __typename?: "accounts"; id: string }>
-    }
-  }>
-}
-
-export type GetPersonsByIdentifierQueryVariables = Exact<{
-  identifier: Scalars["String"]["input"]
-}>
-
-export type GetPersonsByIdentifierQuery = {
-  __typename?: "query_root"
-  persons: Array<{
-    __typename?: "persons"
-    id: any
-    name?: string | null
-    image?: string | null
-    description?: string | null
-    email?: string | null
-    url?: string | null
-    identifier?: string | null
   }>
 }
 
@@ -20505,7 +20416,7 @@ export const useInfiniteGetAccountsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetAccounts.infinite"]
             : ["GetAccounts.infinite", variables],
         queryFn: (metaData) =>
@@ -20615,7 +20526,7 @@ export const useInfiniteGetAccountsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetAccountsWithAggregates.infinite"]
             : ["GetAccountsWithAggregates.infinite", variables],
         queryFn: (metaData) =>
@@ -20713,7 +20624,7 @@ export const useInfiniteGetAccountsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetAccountsCount.infinite"]
             : ["GetAccountsCount.infinite", variables],
         queryFn: (metaData) =>
@@ -21106,7 +21017,7 @@ export const useInfiniteGetAtomsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetAtoms.infinite"]
             : ["GetAtoms.infinite", variables],
         queryFn: (metaData) =>
@@ -21170,18 +21081,6 @@ export const GetAtomsWithPositionsDocument = `
     }
     creator {
       ...AccountMetadata
-    }
-    as_subject_triples_aggregate {
-      nodes {
-        predicate {
-          label
-          term_id
-        }
-        object {
-          label
-          term_id
-        }
-      }
     }
   }
 }
@@ -21249,7 +21148,7 @@ export const useInfiniteGetAtomsWithPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetAtomsWithPositions.infinite"]
             : ["GetAtomsWithPositions.infinite", variables],
         queryFn: (metaData) =>
@@ -21369,7 +21268,7 @@ export const useInfiniteGetAtomsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetAtomsWithAggregates.infinite"]
             : ["GetAtomsWithAggregates.infinite", variables],
         queryFn: (metaData) =>
@@ -21464,7 +21363,7 @@ export const useInfiniteGetAtomsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetAtomsCount.infinite"]
             : ["GetAtomsCount.infinite", variables],
         queryFn: (metaData) =>
@@ -21965,126 +21864,6 @@ useGetAtomDetailsQuery.fetcher = (
     options
   )
 
-export const GetAtomsByCreatorDocument = `
-    query GetAtomsByCreator($address: String!) {
-  atoms(where: {creator: {id: {_eq: $address}}}) {
-    term_id
-    data
-    image
-    label
-    type
-    block_number
-    block_timestamp
-    transaction_hash
-    creator_id
-    value {
-      thing {
-        name
-        image
-        description
-        url
-      }
-    }
-    term {
-      vaults {
-        position_count
-      }
-      total_market_cap
-    }
-    as_subject_triples_aggregate {
-      nodes {
-        predicate {
-          label
-          term_id
-        }
-        object {
-          label
-          term_id
-        }
-      }
-    }
-  }
-}
-    `
-
-export const useGetAtomsByCreatorQuery = <
-  TData = GetAtomsByCreatorQuery,
-  TError = unknown
->(
-  variables: GetAtomsByCreatorQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetAtomsByCreatorQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetAtomsByCreatorQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetAtomsByCreatorQuery, TError, TData>({
-    queryKey: ["GetAtomsByCreator", variables],
-    queryFn: fetcher<GetAtomsByCreatorQuery, GetAtomsByCreatorQueryVariables>(
-      GetAtomsByCreatorDocument,
-      variables
-    ),
-    ...options
-  })
-}
-
-useGetAtomsByCreatorQuery.document = GetAtomsByCreatorDocument
-
-useGetAtomsByCreatorQuery.getKey = (
-  variables: GetAtomsByCreatorQueryVariables
-) => ["GetAtomsByCreator", variables]
-
-export const useInfiniteGetAtomsByCreatorQuery = <
-  TData = InfiniteData<GetAtomsByCreatorQuery>,
-  TError = unknown
->(
-  variables: GetAtomsByCreatorQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetAtomsByCreatorQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetAtomsByCreatorQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetAtomsByCreatorQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? ["GetAtomsByCreator.infinite", variables],
-        queryFn: (metaData) =>
-          fetcher<GetAtomsByCreatorQuery, GetAtomsByCreatorQueryVariables>(
-            GetAtomsByCreatorDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) }
-          )(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetAtomsByCreatorQuery.getKey = (
-  variables: GetAtomsByCreatorQueryVariables
-) => ["GetAtomsByCreator.infinite", variables]
-
-useGetAtomsByCreatorQuery.fetcher = (
-  variables: GetAtomsByCreatorQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetAtomsByCreatorQuery, GetAtomsByCreatorQueryVariables>(
-    GetAtomsByCreatorDocument,
-    variables,
-    options
-  )
-
 export const GetClaimsByAddressDocument = `
     query GetClaimsByAddress($address: String) {
   claims_aggregate(where: {account_id: {_eq: $address}}) {
@@ -22177,7 +21956,7 @@ export const useInfiniteGetClaimsByAddressQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetClaimsByAddress.infinite"]
             : ["GetClaimsByAddress.infinite", variables],
         queryFn: (metaData) =>
@@ -22417,7 +22196,7 @@ export const useInfiniteGetClaimsByUriQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetClaimsByUri.infinite"]
             : ["GetClaimsByUri.infinite", variables],
         queryFn: (metaData) =>
@@ -22631,7 +22410,7 @@ export const useInfiniteGetEventsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetEvents.infinite"]
             : ["GetEvents.infinite", variables],
         queryFn: (metaData) =>
@@ -22753,7 +22532,7 @@ export const useInfiniteGetEventsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetEventsWithAggregates.infinite"]
             : ["GetEventsWithAggregates.infinite", variables],
         queryFn: (metaData) =>
@@ -22848,7 +22627,7 @@ export const useInfiniteGetEventsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetEventsCount.infinite"]
             : ["GetEventsCount.infinite", variables],
         queryFn: (metaData) =>
@@ -22951,7 +22730,7 @@ export const useInfiniteGetEventsDataQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetEventsData.infinite"]
             : ["GetEventsData.infinite", variables],
         queryFn: (metaData) =>
@@ -23049,7 +22828,7 @@ export const useInfiniteGetDebugEventsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetDebugEvents.infinite"]
             : ["GetDebugEvents.infinite", variables],
         queryFn: (metaData) =>
@@ -23890,207 +23669,6 @@ useGetFollowersFromAddressQuery.fetcher = (
     options
   )
 
-export const GetFollowingsTriplesDocument = `
-    query GetFollowingsTriples($accountId: String!) {
-  triples(
-    where: {predicate: {label: {_eq: "follow"}}, subject: {accounts: {id: {_eq: $accountId}}, type: {_eq: "Account"}}}
-  ) {
-    term_id
-    object {
-      term_id
-      label
-      type
-      image
-      accounts {
-        id
-      }
-    }
-  }
-}
-    `
-
-export const useGetFollowingsTriplesQuery = <
-  TData = GetFollowingsTriplesQuery,
-  TError = unknown
->(
-  variables: GetFollowingsTriplesQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetFollowingsTriplesQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetFollowingsTriplesQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetFollowingsTriplesQuery, TError, TData>({
-    queryKey: ["GetFollowingsTriples", variables],
-    queryFn: fetcher<
-      GetFollowingsTriplesQuery,
-      GetFollowingsTriplesQueryVariables
-    >(GetFollowingsTriplesDocument, variables),
-    ...options
-  })
-}
-
-useGetFollowingsTriplesQuery.document = GetFollowingsTriplesDocument
-
-useGetFollowingsTriplesQuery.getKey = (
-  variables: GetFollowingsTriplesQueryVariables
-) => ["GetFollowingsTriples", variables]
-
-export const useInfiniteGetFollowingsTriplesQuery = <
-  TData = InfiniteData<GetFollowingsTriplesQuery>,
-  TError = unknown
->(
-  variables: GetFollowingsTriplesQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetFollowingsTriplesQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetFollowingsTriplesQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetFollowingsTriplesQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? [
-          "GetFollowingsTriples.infinite",
-          variables
-        ],
-        queryFn: (metaData) =>
-          fetcher<
-            GetFollowingsTriplesQuery,
-            GetFollowingsTriplesQueryVariables
-          >(GetFollowingsTriplesDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetFollowingsTriplesQuery.getKey = (
-  variables: GetFollowingsTriplesQueryVariables
-) => ["GetFollowingsTriples.infinite", variables]
-
-useGetFollowingsTriplesQuery.fetcher = (
-  variables: GetFollowingsTriplesQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetFollowingsTriplesQuery, GetFollowingsTriplesQueryVariables>(
-    GetFollowingsTriplesDocument,
-    variables,
-    options
-  )
-
-export const GetPersonsByIdentifierDocument = `
-    query GetPersonsByIdentifier($identifier: String!) {
-  persons(where: {identifier: {_eq: $identifier}}) {
-    id
-    name
-    image
-    description
-    email
-    url
-    identifier
-  }
-}
-    `
-
-export const useGetPersonsByIdentifierQuery = <
-  TData = GetPersonsByIdentifierQuery,
-  TError = unknown
->(
-  variables: GetPersonsByIdentifierQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetPersonsByIdentifierQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseQueryOptions<
-      GetPersonsByIdentifierQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useQuery<GetPersonsByIdentifierQuery, TError, TData>({
-    queryKey: ["GetPersonsByIdentifier", variables],
-    queryFn: fetcher<
-      GetPersonsByIdentifierQuery,
-      GetPersonsByIdentifierQueryVariables
-    >(GetPersonsByIdentifierDocument, variables),
-    ...options
-  })
-}
-
-useGetPersonsByIdentifierQuery.document = GetPersonsByIdentifierDocument
-
-useGetPersonsByIdentifierQuery.getKey = (
-  variables: GetPersonsByIdentifierQueryVariables
-) => ["GetPersonsByIdentifier", variables]
-
-export const useInfiniteGetPersonsByIdentifierQuery = <
-  TData = InfiniteData<GetPersonsByIdentifierQuery>,
-  TError = unknown
->(
-  variables: GetPersonsByIdentifierQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetPersonsByIdentifierQuery, TError, TData>,
-    "queryKey"
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetPersonsByIdentifierQuery,
-      TError,
-      TData
-    >["queryKey"]
-  }
-) => {
-  return useInfiniteQuery<GetPersonsByIdentifierQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey: optionsQueryKey ?? [
-          "GetPersonsByIdentifier.infinite",
-          variables
-        ],
-        queryFn: (metaData) =>
-          fetcher<
-            GetPersonsByIdentifierQuery,
-            GetPersonsByIdentifierQueryVariables
-          >(GetPersonsByIdentifierDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {})
-          })(),
-        ...restOptions
-      }
-    })()
-  )
-}
-
-useInfiniteGetPersonsByIdentifierQuery.getKey = (
-  variables: GetPersonsByIdentifierQueryVariables
-) => ["GetPersonsByIdentifier.infinite", variables]
-
-useGetPersonsByIdentifierQuery.fetcher = (
-  variables: GetPersonsByIdentifierQueryVariables,
-  options?: RequestInit["headers"]
-) =>
-  fetcher<GetPersonsByIdentifierQuery, GetPersonsByIdentifierQueryVariables>(
-    GetPersonsByIdentifierDocument,
-    variables,
-    options
-  )
-
 export const GetListsDocument = `
     query GetLists($where: predicate_objects_bool_exp) {
   predicate_objects_aggregate(where: $where) {
@@ -24152,7 +23730,7 @@ export const useInfiniteGetListsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetLists.infinite"]
             : ["GetLists.infinite", variables],
         queryFn: (metaData) =>
@@ -24249,7 +23827,7 @@ export const useInfiniteGetListItemsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetListItems.infinite"]
             : ["GetListItems.infinite", variables],
         queryFn: (metaData) =>
@@ -24410,7 +23988,7 @@ export const useInfiniteGetListDetailsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetListDetails.infinite"]
             : ["GetListDetails.infinite", variables],
         queryFn: (metaData) =>
@@ -24595,7 +24173,7 @@ export const useInfiniteGetListDetailsWithPositionQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetListDetailsWithPosition.infinite"]
             : ["GetListDetailsWithPosition.infinite", variables],
         queryFn: (metaData) =>
@@ -24867,7 +24445,7 @@ export const useInfiniteGetListDetailsWithUserQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetListDetailsWithUser.infinite"]
             : ["GetListDetailsWithUser.infinite", variables],
         queryFn: (metaData) =>
@@ -25066,7 +24644,7 @@ export const useInfiniteGetPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetPositions.infinite"]
             : ["GetPositions.infinite", variables],
         queryFn: (metaData) =>
@@ -25305,7 +24883,7 @@ export const useInfiniteGetPositionsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetPositionsWithAggregates.infinite"]
             : ["GetPositionsWithAggregates.infinite", variables],
         queryFn: (metaData) =>
@@ -25410,7 +24988,7 @@ export const useInfiniteGetPositionsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetPositionsCount.infinite"]
             : ["GetPositionsCount.infinite", variables],
         queryFn: (metaData) =>
@@ -25601,7 +25179,7 @@ export const useInfiniteGetPositionsCountByTypeQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetPositionsCountByType.infinite"]
             : ["GetPositionsCountByType.infinite", variables],
         queryFn: (metaData) =>
@@ -25838,7 +25416,7 @@ export const useInfiniteGetSignalsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetSignals.infinite"]
             : ["GetSignals.infinite", variables],
         queryFn: (metaData) =>
@@ -25913,7 +25491,7 @@ export const useInfiniteGetStatsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetStats.infinite"]
             : ["GetStats.infinite", variables],
         queryFn: (metaData) =>
@@ -26085,7 +25663,7 @@ export const useInfiniteGetTagsCustomQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetTagsCustom.infinite"]
             : ["GetTagsCustom.infinite", variables],
         queryFn: (metaData) =>
@@ -26200,7 +25778,7 @@ export const useInfiniteGetListsTagsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetListsTags.infinite"]
             : ["GetListsTags.infinite", variables],
         queryFn: (metaData) =>
@@ -26420,7 +25998,7 @@ export const useInfiniteGetTriplesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetTriples.infinite"]
             : ["GetTriples.infinite", variables],
         queryFn: (metaData) =>
@@ -26538,7 +26116,7 @@ export const useInfiniteGetTriplesWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetTriplesWithAggregates.infinite"]
             : ["GetTriplesWithAggregates.infinite", variables],
         queryFn: (metaData) =>
@@ -26632,7 +26210,7 @@ export const useInfiniteGetTriplesCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetTriplesCount.infinite"]
             : ["GetTriplesCount.infinite", variables],
         queryFn: (metaData) =>
@@ -26823,7 +26401,7 @@ export const useInfiniteGetAtomTriplesWithPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetAtomTriplesWithPositions.infinite"]
             : ["GetAtomTriplesWithPositions.infinite", variables],
         queryFn: (metaData) =>
@@ -26972,7 +26550,7 @@ export const useInfiniteGetTriplesWithPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetTriplesWithPositions.infinite"]
             : ["GetTriplesWithPositions.infinite", variables],
         queryFn: (metaData) =>
@@ -27099,7 +26677,7 @@ export const useInfiniteGetVaultsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ["GetVaults.infinite"]
             : ["GetVaults.infinite", variables],
         queryFn: (metaData) =>
@@ -39401,58 +38979,6 @@ export const GetAtomsWithPositions = {
                       }
                     ]
                   }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "as_subject_triples_aggregate" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "nodes" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "predicate" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "label" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "term_id" }
-                                  }
-                                ]
-                              }
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "object" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "label" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "term_id" }
-                                  }
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
                 }
               ]
             }
@@ -42348,210 +41874,6 @@ export const GetAtomDetails = {
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "count" }
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
-  ]
-} as unknown as DocumentNode
-export const GetAtomsByCreator = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "GetAtomsByCreator" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "address" }
-          },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
-          }
-        }
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "atoms" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "where" },
-                value: {
-                  kind: "ObjectValue",
-                  fields: [
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "creator" },
-                      value: {
-                        kind: "ObjectValue",
-                        fields: [
-                          {
-                            kind: "ObjectField",
-                            name: { kind: "Name", value: "id" },
-                            value: {
-                              kind: "ObjectValue",
-                              fields: [
-                                {
-                                  kind: "ObjectField",
-                                  name: { kind: "Name", value: "_eq" },
-                                  value: {
-                                    kind: "Variable",
-                                    name: { kind: "Name", value: "address" }
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              }
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "term_id" } },
-                { kind: "Field", name: { kind: "Name", value: "data" } },
-                { kind: "Field", name: { kind: "Name", value: "image" } },
-                { kind: "Field", name: { kind: "Name", value: "label" } },
-                { kind: "Field", name: { kind: "Name", value: "type" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "block_number" }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "block_timestamp" }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "transaction_hash" }
-                },
-                { kind: "Field", name: { kind: "Name", value: "creator_id" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "value" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "thing" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "name" }
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "image" }
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "description" }
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "url" }
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "term" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "vaults" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "position_count" }
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "total_market_cap" }
-                      }
-                    ]
-                  }
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "as_subject_triples_aggregate" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "nodes" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "predicate" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "label" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "term_id" }
-                                  }
-                                ]
-                              }
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "object" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "label" }
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "term_id" }
-                                  }
-                                ]
-                              }
                             }
                           ]
                         }
@@ -49925,239 +49247,6 @@ export const GetFollowersFromAddress = {
                     ]
                   }
                 }
-              ]
-            }
-          }
-        ]
-      }
-    }
-  ]
-} as unknown as DocumentNode
-export const GetFollowingsTriples = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "GetFollowingsTriples" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "accountId" }
-          },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
-          }
-        }
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "triples" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "where" },
-                value: {
-                  kind: "ObjectValue",
-                  fields: [
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "predicate" },
-                      value: {
-                        kind: "ObjectValue",
-                        fields: [
-                          {
-                            kind: "ObjectField",
-                            name: { kind: "Name", value: "label" },
-                            value: {
-                              kind: "ObjectValue",
-                              fields: [
-                                {
-                                  kind: "ObjectField",
-                                  name: { kind: "Name", value: "_eq" },
-                                  value: {
-                                    kind: "StringValue",
-                                    value: "follow",
-                                    block: false
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "subject" },
-                      value: {
-                        kind: "ObjectValue",
-                        fields: [
-                          {
-                            kind: "ObjectField",
-                            name: { kind: "Name", value: "accounts" },
-                            value: {
-                              kind: "ObjectValue",
-                              fields: [
-                                {
-                                  kind: "ObjectField",
-                                  name: { kind: "Name", value: "id" },
-                                  value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                      {
-                                        kind: "ObjectField",
-                                        name: { kind: "Name", value: "_eq" },
-                                        value: {
-                                          kind: "Variable",
-                                          name: {
-                                            kind: "Name",
-                                            value: "accountId"
-                                          }
-                                        }
-                                      }
-                                    ]
-                                  }
-                                }
-                              ]
-                            }
-                          },
-                          {
-                            kind: "ObjectField",
-                            name: { kind: "Name", value: "type" },
-                            value: {
-                              kind: "ObjectValue",
-                              fields: [
-                                {
-                                  kind: "ObjectField",
-                                  name: { kind: "Name", value: "_eq" },
-                                  value: {
-                                    kind: "StringValue",
-                                    value: "Account",
-                                    block: false
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              }
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "term_id" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "object" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "term_id" }
-                      },
-                      { kind: "Field", name: { kind: "Name", value: "label" } },
-                      { kind: "Field", name: { kind: "Name", value: "type" } },
-                      { kind: "Field", name: { kind: "Name", value: "image" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "accounts" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "id" }
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
-  ]
-} as unknown as DocumentNode
-export const GetPersonsByIdentifier = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "GetPersonsByIdentifier" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "identifier" }
-          },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
-          }
-        }
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "persons" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "where" },
-                value: {
-                  kind: "ObjectValue",
-                  fields: [
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "identifier" },
-                      value: {
-                        kind: "ObjectValue",
-                        fields: [
-                          {
-                            kind: "ObjectField",
-                            name: { kind: "Name", value: "_eq" },
-                            value: {
-                              kind: "Variable",
-                              name: { kind: "Name", value: "identifier" }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              }
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "name" } },
-                { kind: "Field", name: { kind: "Name", value: "image" } },
-                { kind: "Field", name: { kind: "Name", value: "description" } },
-                { kind: "Field", name: { kind: "Name", value: "email" } },
-                { kind: "Field", name: { kind: "Name", value: "url" } },
-                { kind: "Field", name: { kind: "Name", value: "identifier" } }
               ]
             }
           }
