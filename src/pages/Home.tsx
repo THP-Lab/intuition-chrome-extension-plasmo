@@ -46,8 +46,8 @@ function Home() {
 
   const claims = Array.from(
     new Map(
-      atoms?.flatMap(atom => [...atom.as_object_claims_aggregate.nodes, ...atom.as_subject_claims_aggregate.nodes])
-        .map(claim => [claim.triple_id, claim])
+      atoms?.flatMap(atom => [...atom.as_object_triples_aggregate.nodes, ...atom.as_subject_triples_aggregate.nodes])
+        .map(claim => [claim.term_id, claim])
 
     ).values()
   )
@@ -55,13 +55,13 @@ function Home() {
   console.log("Claims :", claims);
   
   const atomsWithTags = atoms.map(atom => {
-    const tags = atom.as_subject_claims_aggregate.nodes
+    const tags = atom.as_subject_triples_aggregate.nodes
     .filter(claim => claim.predicate.label === "has tag")
       .map(claim => claim.object)
       .filter(Boolean)
 
     const uniqueTags = Array.from(
-      new Map(tags.map(tag => [tag.id, tag])).values()
+      new Map(tags.map(tag => [tag.term_id, tag])).values()
     )
 
     return {
@@ -82,7 +82,7 @@ function Home() {
           console.log(claim),
         
         <ClaimRowLite
-          key={`${claim.id}-${index}`}
+          key={`${claim.term_id}-${index}`}
           claim={claim}
         />
 
@@ -111,7 +111,7 @@ function Home() {
         {isLoading ? "Chargement...": (typeof data !== "undefined" &&  atoms.length != 0)?
           (atomsWithTags.map((atom) => {
             return (
-              <AtomCard key={atom.id} atom={atom} tags={atom.tags} />
+              <AtomCard key={atom.term_id} atom={atom} tags={atom.tags} />
             );
           })):
           (
