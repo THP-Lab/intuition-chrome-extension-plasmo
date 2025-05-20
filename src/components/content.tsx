@@ -40,7 +40,7 @@ import "../styles/global.css"
 import umamiScriptUrl from "url:../../assets/umami.js"
 
 
-const API_URL = " https://prod.base-sepolia-v-1-5.intuition.sh/v1/graphql"
+const API_URL = "https://prod.base-sepolia-v-1-5.intuition.sh/v1/graphql"
 configureClient({ apiUrl: API_URL })
 
 const queryClient = new QueryClient()
@@ -65,6 +65,9 @@ const Content = ({ children }: ContentProps) => {
 
   const { navType } = useNavigation()
 
+  console.log(queryClient);
+  console.log(queryClient);
+  
   return (
     <ApolloProvider client={apolloClient}>
       <QueryClientProvider client={queryClient}>
