@@ -33,12 +33,12 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
     const numPositionsFor =
       vault.positions_aggregate?.aggregate?.count ??
-      vault.position_count ??
+     
       vault.positions?.length ?? 0
 
     const numPositionsAgainst =
       counterVault.positions_aggregate?.aggregate?.count ??
-      counterVault.position_count ??
+ 
       counterVault.positions?.length ?? 0
 
     const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
@@ -60,9 +60,9 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
         <div className="flex flex-col">
           <div className="flex gap-1 items-center flex-wrap">
             
-            <PopupAtom key={`${claim.term_id}-subject`} atom={subject} />
-            <PopupAtom key={`${claim.term_id}-predicate`} atom={predicate} />
-            <PopupAtom key={`${claim.term_id}-object`} atom={object} />
+            <PopupAtom key={`${claim.id}-subject`} atom={subject} />
+            <PopupAtom key={`${claim.id}-predicate`} atom={predicate} />
+            <PopupAtom key={`${claim.id}-object`} atom={object} />
           </div>
           {creator && (
             <p className="mt-2 text-xs text-gray-500">

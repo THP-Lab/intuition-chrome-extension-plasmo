@@ -137,13 +137,14 @@ query GetVerifiedAtomDetails($id: numeric!, $userPositionAddress: String!) {
     creator {
       id
     }
-    value {
+    atom_value {
       thing {
         name
         description
         url
       }
     }
+
     term {
       vaults(where: { curve_id: { _eq: "1" }, term_id: { _eq: $id } }) {
         current_share_price
@@ -223,13 +224,14 @@ query GetAtomDetails($id: numeric!, $userPositionAddress: String!) {
     creator {
       id
     }
-    value {
+  atom_value {
       thing {
         name
         description
         url
       }
     }
+
     term {
       vaults(where: { curve_id: { _eq: "1" }, term_id: { _eq: $id } }) {
         current_share_price
