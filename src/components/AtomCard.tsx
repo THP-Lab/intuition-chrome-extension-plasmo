@@ -7,13 +7,13 @@ import TagCreator from "./TagCreator"
 import Tags from "./ui/Tags"
 
 interface AtomProps {
-  id: string
+  term_id: string
   data?: string | null
   type: string
   label?: string | null
   image?: string | null
   emoji?: string | null
-  value?: {
+  atom_value?: {
     thing?: {
       name?: string | null
       image?: string | null
@@ -21,26 +21,26 @@ interface AtomProps {
       url?: string | null
     } | null
   } | null
-  vault?: {
-    position_count?: number
-    total_shares?: string
+ term?: {
+  vaults?: {
+    curve_id: string
     current_share_price?: string
-    total?: {
+    market_cap?: string
+    total_assets?: string
+    total_shares?: string
+    positions_aggregate?: {
       aggregate?: {
         count?: number
-        sum?: {
-          shares?: string | number
-        } | null
-      } | null
+      }
     }
-  } | null
-  vault_id?: string
+  }[]
+}
 }
 
 interface AtomCardProps {
   atom: AtomProps
   tags?: string[]
-}
+} 
 
 export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
   try {
@@ -49,10 +49,10 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
       return <div className="text-xs text-gray-500">Invalid atom data</div>
     }
     const { atomPosition, isVoting, txHash } = useAtomPosition()
-    const thing = atom.value?.thing
+    const thing = atom.atom_value?.thing
     const navigate = useNavigate()
     const goToAtomPage = () => {
-      navigate(`/atoms/${atom.id || ''}`)
+      navigate(`/atoms/${atom.term_id || ''}`)
     }
 
     return (
@@ -83,12 +83,12 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
           <div className="flex items-center gap-4 ml-2">
             <p className="flex items-center text-sm text-white text-muted-foreground">
               <UserRound className="w-4 h-4 mr-1" />
-              {Math.max((atom.vault?.position_count ?? 0) - 1, 0)}
+              {Math.max((atom.term?.position_count ?? 0) - 1, 0)}
             </p>
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                atomPosition(BigInt(atom.id));
+                atomPosition(BigInt(atom.term_id));
               }}
               disabled={isVoting}
               className="border border-gray-400 text-white rounded-md px-2 py-1 text-sm
@@ -117,12 +117,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
         )}
 
         {tags && (
-          <div 
-            className="gap-2"
-            onClick={e => {
-              e.stopPropagation(); 
-            }}
-          >
+          <div className="gap-2">
             <Tags tags={tags} />
             <div onClick={(e) => e.stopPropagation()} className="pt-2">
               <TagCreator
