@@ -1,4 +1,38 @@
 # Main pagination query
+query GetTriplesByCreator($address: String) {
+  triples(where: { creator_id: { _eq: $address } }) {
+    term_id
+    creator_id
+    subject {
+      term_id
+      label
+      image
+      type
+    }
+    predicate {
+      term_id
+      label
+      image
+      type
+    }
+    object {
+      term_id
+      label
+      image
+      type
+    }
+    positions_aggregate {
+      aggregate {
+        count
+      }
+    }
+    counter_positions_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+}
 query GetTriples(
   $limit: Int
   $offset: Int

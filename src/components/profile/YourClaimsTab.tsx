@@ -1,7 +1,7 @@
 import React from "react";
 import { useStorage } from "@plasmohq/storage/hook";
-import { useGetTriplesByCreatorQuery } from "~src/graphql/src"
 import ClaimRowLite from "../ui/ClaimRowLite"
+import { useGetTriplesByCreatorQuery } from "~src/graphql/src";
 
 const YourClaimsTab = () => {
   const [account] = useStorage<string>("metamask-account")  
@@ -28,7 +28,7 @@ const YourClaimsTab = () => {
 
         return (
         <ClaimRowLite
-          key={`${triple.id}-${index}`}
+          key={`${triple.term_id}-${index}`}
           claim={triple}
         />     
         )
