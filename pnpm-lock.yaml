@@ -45,8 +45,8 @@ importers:
         specifier: ^0.175.0
         version: 0.175.0
       '@warzieram/graphql':
-        specifier: ^0.5.2
-        version: 0.5.2(react@18.2.0)
+        specifier: ^0.5.5
+        version: 0.5.5(react@18.2.0)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -3605,8 +3605,8 @@ packages:
   '@vue/shared@3.3.4':
     resolution: {integrity: sha512-7OjdcV8vQ74eiz1TZLzZP4JwqM5fA94K6yntPS5Z25r9HDuGNzaGdgvwKYq6S+MxwF0TFRwe50fIR/MYnakdkQ==}
 
-  '@warzieram/graphql@0.5.2':
-    resolution: {integrity: sha512-/Ma1WpsrkPIx9O0pNNRXFSsopTp9Sv5t3N8JZkEfLx4vU/97TBGOr3iMIEcaU+6Cr/akwLdyk9s//Kyx4hBTpg==}
+  '@warzieram/graphql@0.5.5':
+    resolution: {integrity: sha512-+/46R20BUQVhQ11+BRzmlkeadm5DQafw17YcKQ9h39X44Be8W53wJIWR20YlcIT4AMUSF4mPpbUZ/SjO8S25pQ==}
 
   '@webgpu/types@0.1.60':
     resolution: {integrity: sha512-8B/tdfRFKdrnejqmvq95ogp8tf52oZ51p3f4QD5m5Paey/qlX4Rhhy5Y8tgFMi7Ms70HzcMMw3EQjH/jdhTwlA==}
@@ -10533,7 +10533,7 @@ snapshots:
 
   '@vue/shared@3.3.4': {}
 
-  '@warzieram/graphql@0.5.2(react@18.2.0)':
+  '@warzieram/graphql@0.5.5(react@18.2.0)':
     dependencies:
       '@graphql-codegen/typescript-document-nodes': 4.0.15(graphql@16.10.0)
       '@tanstack/react-query': 5.69.0(react@18.2.0)
