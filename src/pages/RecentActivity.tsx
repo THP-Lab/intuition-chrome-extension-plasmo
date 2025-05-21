@@ -1,5 +1,5 @@
 import React from "react"
-import { useEventsSubscription } from "~src/graphql/src/generated/subscriptions"
+import { useEventsSubscription } from "@warzieram/graphql"
 import AtomCard from "~src/components/AtomCard"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import IntuitionIcon from "~src/components/icons/IntuitionIcon"

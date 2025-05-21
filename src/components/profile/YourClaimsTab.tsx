@@ -1,7 +1,7 @@
 import React from "react";
 import { useStorage } from "@plasmohq/storage/hook";
 import ClaimRowLite from "../ui/ClaimRowLite"
-import { useGetTriplesByCreatorQuery } from "~src/graphql/src";
+import { useGetTriplesByCreatorQuery } from "@warzieram/graphql";
 
 const YourClaimsTab = () => {
   const [account] = useStorage<string>("metamask-account")  

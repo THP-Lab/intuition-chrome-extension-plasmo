@@ -1,6 +1,6 @@
 import React from "react"
 import { useStorage } from "@plasmohq/storage/hook"
-import { useGetAtomsByCreatorQuery } from "~src/graphql/src"
+import { useGetAtomsByCreatorQuery } from "@warzieram/graphql"
 import AtomCard from "~src/components/AtomCard"
 
 const IdentityTab = () => {

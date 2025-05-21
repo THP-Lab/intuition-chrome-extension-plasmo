@@ -1,9 +1,0 @@
-fragment StatDetails on stats {
-  contract_balance
-  total_accounts
-  total_fees
-  total_atoms
-  total_triples
-  total_positions
-  total_signals
-}

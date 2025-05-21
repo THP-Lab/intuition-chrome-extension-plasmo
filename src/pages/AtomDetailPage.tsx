@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom"
 import { useStorage } from "@plasmohq/storage/hook"
 import AtomDisplay from "~src/components/ui/AtomDisplay"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
-import { useGetClaimsByAtomQuery } from "~src/graphql/src"
+import { useGetClaimsByAtomQuery } from "@warzieram/graphql"
 import TagCreator from "~src/components/TagCreator"
 import Tags from "~src/components/ui/Tags"
 import BackButton from '~/src/components/BackButton'
