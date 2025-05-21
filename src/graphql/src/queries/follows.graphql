@@ -406,3 +406,24 @@ query getFollowersFromAddress($address: String!) {
     }
   }
 }
+
+
+query GetFollowingsTriples($accountId: String!) {
+  triples(
+    where: {
+      predicate: { label: { _eq: "follow" } }
+      subject: { accounts: { id: { _eq: $accountId } }, type: { _eq: "Account" } }
+    }
+  ) {
+    term_id
+    object {
+      term_id
+      label
+      type
+      image
+      accounts {
+        id
+      }
+    }
+  }
+}

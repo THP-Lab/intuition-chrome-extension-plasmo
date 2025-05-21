@@ -31,7 +31,7 @@ const SubjectTag: React.FC = () => {
         const userFor    = Number(vault.positions?.[0]?.shares ?? 0)
         const userAgainst= Number(counter.positions?.[0]?.shares ?? 0)
         const userVoted = userFor > 0 || userAgainst > 0
-        const totalVotes = (vault.vaults.position_count ?? 0) + (counter.vaults.position_count ?? 0)
+        const totalVotes = (vault.vaults[0].position_count ?? 0) + (counter.vaults[0].position_count ?? 0)
         return { triple, userVoted, totalVotes }
       })
       .sort((a, b) => {
@@ -59,8 +59,8 @@ const SubjectTag: React.FC = () => {
             const vaultId = vault.id
             const counterVaultId = counterVault.id
 
-            const numPositionsFor = vault.vaults.position_count ?? 0
-            const numPositionsAgainst = counterVault.vaults.position_count ?? 0
+            const numPositionsFor = vault.vaults[0].position_count ?? 0
+            const numPositionsAgainst = counterVault.vaults[0].position_count ?? 0
 
             const userStake = Number(vault.positions?.[0]?.shares ?? 0)
             const userCounterStake = Number(counterVault.positions?.[0]?.shares ?? 0)

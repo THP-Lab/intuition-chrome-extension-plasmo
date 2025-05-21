@@ -16,8 +16,8 @@ const FollowersTab = () => {
   const followers =
   data?.triples
     ?.flatMap((t) => [
-      ...(t.vault?.positions ?? []),
-      ...(t.counter_vault?.positions ?? [])
+      ...(t.term?.positions ?? []),
+      ...(t.counter_term?.positions ?? [])
     ])
     ?.filter((p) => p.account?.id !== walletAddress)
     ?.map((p) => p.account) ?? []

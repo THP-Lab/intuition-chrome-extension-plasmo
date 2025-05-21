@@ -62,6 +62,18 @@ query GetAtomsWithPositions(
     creator {
       ...AccountMetadata
     }
+    as_subject_triples_aggregate {
+      nodes {
+        predicate {
+          label
+          term_id
+        }
+        object {
+          label
+          term_id
+        }
+      }
+    }
   }
 }
 
@@ -258,6 +270,47 @@ query GetAtomDetails($id: numeric!, $userPositionAddress: String!) {
       }
       aggregate {
         count
+      }
+    }
+  }
+}
+
+query GetAtomsByCreator($address: String!) {
+  atoms(where: { creator: { id: { _eq: $address } } }) {
+    term_id
+    data
+    image
+    label
+    type
+    block_number
+    block_timestamp
+    transaction_hash
+    creator_id
+    value {
+      thing {
+        name
+        image
+        description
+        url
+      }
+    }
+    term {
+      vaults {
+        position_count
+      }
+      total_market_cap
+    }
+
+    as_subject_triples_aggregate {
+      nodes {
+        predicate {
+          label
+          term_id
+        }
+        object {
+          label
+          term_id
+        }
       }
     }
   }
