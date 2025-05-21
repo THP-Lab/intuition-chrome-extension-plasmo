@@ -14580,6 +14580,24 @@ export type GetFollowingsTriplesQuery = {
   }>
 }
 
+export type GetPersonsByIdentifierQueryVariables = Exact<{
+  identifier: Scalars["String"]["input"]
+}>
+
+export type GetPersonsByIdentifierQuery = {
+  __typename?: "query_root"
+  persons: Array<{
+    __typename?: "persons"
+    id: any
+    name?: string | null
+    image?: string | null
+    description?: string | null
+    email?: string | null
+    url?: string | null
+    identifier?: string | null
+  }>
+}
+
 export type GetListsQueryVariables = Exact<{
   where?: InputMaybe<Predicate_Objects_Bool_Exp>
 }>
@@ -44528,6 +44546,153 @@ export type GetFollowingsTriplesSuspenseQueryHookResult = ReturnType<
 export type GetFollowingsTriplesQueryResult = Apollo.QueryResult<
   GetFollowingsTriplesQuery,
   GetFollowingsTriplesQueryVariables
+>
+export const GetPersonsByIdentifierDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetPersonsByIdentifier" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "identifier" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "persons" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "identifier" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_eq" },
+                            value: {
+                              kind: "Variable",
+                              name: { kind: "Name", value: "identifier" }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "url" } },
+                { kind: "Field", name: { kind: "Name", value: "identifier" } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+
+/**
+ * __useGetPersonsByIdentifierQuery__
+ *
+ * To run a query within a React component, call `useGetPersonsByIdentifierQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPersonsByIdentifierQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPersonsByIdentifierQuery({
+ *   variables: {
+ *      identifier: // value for 'identifier'
+ *   },
+ * });
+ */
+export function useGetPersonsByIdentifierQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetPersonsByIdentifierQuery,
+    GetPersonsByIdentifierQueryVariables
+  > &
+    (
+      | { variables: GetPersonsByIdentifierQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetPersonsByIdentifierQuery,
+    GetPersonsByIdentifierQueryVariables
+  >(GetPersonsByIdentifierDocument, options)
+}
+export function useGetPersonsByIdentifierLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPersonsByIdentifierQuery,
+    GetPersonsByIdentifierQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetPersonsByIdentifierQuery,
+    GetPersonsByIdentifierQueryVariables
+  >(GetPersonsByIdentifierDocument, options)
+}
+export function useGetPersonsByIdentifierSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetPersonsByIdentifierQuery,
+        GetPersonsByIdentifierQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetPersonsByIdentifierQuery,
+    GetPersonsByIdentifierQueryVariables
+  >(GetPersonsByIdentifierDocument, options)
+}
+export type GetPersonsByIdentifierQueryHookResult = ReturnType<
+  typeof useGetPersonsByIdentifierQuery
+>
+export type GetPersonsByIdentifierLazyQueryHookResult = ReturnType<
+  typeof useGetPersonsByIdentifierLazyQuery
+>
+export type GetPersonsByIdentifierSuspenseQueryHookResult = ReturnType<
+  typeof useGetPersonsByIdentifierSuspenseQuery
+>
+export type GetPersonsByIdentifierQueryResult = Apollo.QueryResult<
+  GetPersonsByIdentifierQuery,
+  GetPersonsByIdentifierQueryVariables
 >
 export const GetListsDocument = {
   kind: "Document",
