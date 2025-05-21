@@ -19,13 +19,13 @@ const IdentityTab = () => {
   const atoms = data.atoms
 
   const AtomsWithTags = atoms.map((atom) => {
-    const tags = atom.as_subject_claims_aggregate.nodes
+    const tags = atom.as_subject_triples_aggregate.nodes
     .filter(claim => claim.predicate.label === "has tag")
     .map(claim => claim.object)
     .filter(Boolean)
 
     const uniqueTags = Array.from(
-      new Map(tags.map(tag => [tag?.id, tag])).values()
+      new Map(tags.map(tag => [tag?.term_id, tag])).values()
     )
 
     return {
@@ -48,7 +48,7 @@ const IdentityTab = () => {
       </p>
 
       {AtomsWithTags.map((atom) => (
-        <AtomCard key={atom.id} atom={atom} tags={atom.tags} />
+        <AtomCard key={atom.term_id} atom={atom} tags={atom.tags} />
       ))}
     </div>
   )

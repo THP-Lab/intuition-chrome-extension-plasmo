@@ -12268,6 +12268,14 @@ export type GetAtomsWithPositionsQuery = {
       atom_id?: any | null
       type: any
     }
+    as_subject_triples_aggregate: {
+      __typename?: "triples_aggregate"
+      nodes: Array<{
+        __typename?: "triples"
+        predicate: { __typename?: "atoms"; label?: string | null; term_id: any }
+        object: { __typename?: "atoms"; label?: string | null; term_id: any }
+      }>
+    }
     value?: {
       __typename?: "atom_values"
       person?: {
@@ -12939,6 +12947,49 @@ export type GetAtomDetailsQuery = {
       } | null
     }
   } | null
+}
+
+export type GetAtomsByCreatorQueryVariables = Exact<{
+  address: Scalars["String"]["input"]
+}>
+
+export type GetAtomsByCreatorQuery = {
+  __typename?: "query_root"
+  atoms: Array<{
+    __typename?: "atoms"
+    term_id: any
+    data?: string | null
+    image?: string | null
+    label?: string | null
+    type: any
+    block_number: any
+    block_timestamp: any
+    transaction_hash: string
+    creator_id: string
+    value?: {
+      __typename?: "atom_values"
+      thing?: {
+        __typename?: "things"
+        name?: string | null
+        image?: string | null
+        description?: string | null
+        url?: string | null
+      } | null
+    } | null
+    term: {
+      __typename?: "terms"
+      total_market_cap?: any | null
+      vaults: Array<{ __typename?: "vaults"; position_count: number }>
+    }
+    as_subject_triples_aggregate: {
+      __typename?: "triples_aggregate"
+      nodes: Array<{
+        __typename?: "triples"
+        predicate: { __typename?: "atoms"; label?: string | null; term_id: any }
+        object: { __typename?: "atoms"; label?: string | null; term_id: any }
+      }>
+    }
+  }>
 }
 
 export type GetClaimsByAddressQueryVariables = Exact<{
@@ -32160,6 +32211,58 @@ export const GetAtomsWithPositionsDocument = {
                       }
                     ]
                   }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "as_subject_triples_aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "nodes" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "predicate" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "term_id" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "object" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "term_id" }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
                 }
               ]
             }
@@ -35575,6 +35678,285 @@ export type GetAtomDetailsSuspenseQueryHookResult = ReturnType<
 export type GetAtomDetailsQueryResult = Apollo.QueryResult<
   GetAtomDetailsQuery,
   GetAtomDetailsQueryVariables
+>
+export const GetAtomsByCreatorDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetAtomsByCreator" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "atoms" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "creator" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "id" },
+                            value: {
+                              kind: "ObjectValue",
+                              fields: [
+                                {
+                                  kind: "ObjectField",
+                                  name: { kind: "Name", value: "_eq" },
+                                  value: {
+                                    kind: "Variable",
+                                    name: { kind: "Name", value: "address" }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "term_id" } },
+                { kind: "Field", name: { kind: "Name", value: "data" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } },
+                { kind: "Field", name: { kind: "Name", value: "label" } },
+                { kind: "Field", name: { kind: "Name", value: "type" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "block_number" }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "block_timestamp" }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "transaction_hash" }
+                },
+                { kind: "Field", name: { kind: "Name", value: "creator_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "value" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "thing" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "image" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "url" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "term" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "vaults" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "position_count" }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "total_market_cap" }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "as_subject_triples_aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "nodes" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "predicate" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "term_id" }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "object" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "label" }
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "term_id" }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+
+/**
+ * __useGetAtomsByCreatorQuery__
+ *
+ * To run a query within a React component, call `useGetAtomsByCreatorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAtomsByCreatorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAtomsByCreatorQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetAtomsByCreatorQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetAtomsByCreatorQuery,
+    GetAtomsByCreatorQueryVariables
+  > &
+    (
+      | { variables: GetAtomsByCreatorQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetAtomsByCreatorQuery,
+    GetAtomsByCreatorQueryVariables
+  >(GetAtomsByCreatorDocument, options)
+}
+export function useGetAtomsByCreatorLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAtomsByCreatorQuery,
+    GetAtomsByCreatorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetAtomsByCreatorQuery,
+    GetAtomsByCreatorQueryVariables
+  >(GetAtomsByCreatorDocument, options)
+}
+export function useGetAtomsByCreatorSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAtomsByCreatorQuery,
+        GetAtomsByCreatorQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetAtomsByCreatorQuery,
+    GetAtomsByCreatorQueryVariables
+  >(GetAtomsByCreatorDocument, options)
+}
+export type GetAtomsByCreatorQueryHookResult = ReturnType<
+  typeof useGetAtomsByCreatorQuery
+>
+export type GetAtomsByCreatorLazyQueryHookResult = ReturnType<
+  typeof useGetAtomsByCreatorLazyQuery
+>
+export type GetAtomsByCreatorSuspenseQueryHookResult = ReturnType<
+  typeof useGetAtomsByCreatorSuspenseQuery
+>
+export type GetAtomsByCreatorQueryResult = Apollo.QueryResult<
+  GetAtomsByCreatorQuery,
+  GetAtomsByCreatorQueryVariables
 >
 export const GetClaimsByAddressDocument = {
   kind: "Document",
