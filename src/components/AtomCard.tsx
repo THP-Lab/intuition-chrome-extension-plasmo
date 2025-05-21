@@ -13,7 +13,7 @@ interface AtomProps {
   label?: string | null
   image?: string | null
   emoji?: string | null
-  atom_value?: {
+  value?: {
     thing?: {
       name?: string | null
       image?: string | null
@@ -55,6 +55,10 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
       navigate(`/atoms/${atom.term_id || ''}`)
     }
 
+    const proRataVault = atom.term?.vaults?.find(v => v.curve_id === "1")
+    const positionCount = proRataVault?.positions_aggregate?.aggregate?.count ?? 0
+
+
     return (
       <div
         className="border border-border/10 rounded-xl p-3 mt-3 cursor-pointer bg-[hsl(var(--claims-bg))] claims-hover-effect transition-all duration-200"
@@ -83,7 +87,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
           <div className="flex items-center gap-4 ml-2">
             <p className="flex items-center text-sm text-white text-muted-foreground">
               <UserRound className="w-4 h-4 mr-1" />
-              {Math.max((atom.term?.position_count ?? 0) - 1, 0)}
+               {Math.max(positionCount - 1, 0)}
             </p>
             <button
               onClick={(e) => {
