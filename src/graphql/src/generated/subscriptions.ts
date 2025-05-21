@@ -17255,6 +17255,54 @@ export type GetTaggedObjectsQuery = {
   }>
 }
 
+export type GetTriplesByCreatorQueryVariables = Exact<{
+  address?: InputMaybe<Scalars["String"]["input"]>
+}>
+
+export type GetTriplesByCreatorQuery = {
+  __typename?: "query_root"
+  triples: Array<{
+    __typename?: "triples"
+    term_id: any
+    creator_id: string
+    subject: {
+      __typename?: "atoms"
+      term_id: any
+      label?: string | null
+      image?: string | null
+      type: any
+    }
+    predicate: {
+      __typename?: "atoms"
+      term_id: any
+      label?: string | null
+      image?: string | null
+      type: any
+    }
+    object: {
+      __typename?: "atoms"
+      term_id: any
+      label?: string | null
+      image?: string | null
+      type: any
+    }
+    positions_aggregate: {
+      __typename?: "positions_aggregate"
+      aggregate?: {
+        __typename?: "positions_aggregate_fields"
+        count: number
+      } | null
+    }
+    counter_positions_aggregate: {
+      __typename?: "positions_aggregate"
+      aggregate?: {
+        __typename?: "positions_aggregate_fields"
+        count: number
+      } | null
+    }
+  }>
+}
+
 export type GetTriplesQueryVariables = Exact<{
   limit?: InputMaybe<Scalars["Int"]["input"]>
   offset?: InputMaybe<Scalars["Int"]["input"]>
@@ -55259,6 +55307,233 @@ export type GetTaggedObjectsSuspenseQueryHookResult = ReturnType<
 export type GetTaggedObjectsQueryResult = Apollo.QueryResult<
   GetTaggedObjectsQuery,
   GetTaggedObjectsQueryVariables
+>
+export const GetTriplesByCreatorDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetTriplesByCreator" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "triples" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "creator_id" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_eq" },
+                            value: {
+                              kind: "Variable",
+                              name: { kind: "Name", value: "address" }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "term_id" } },
+                { kind: "Field", name: { kind: "Name", value: "creator_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "subject" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "term_id" }
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "predicate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "term_id" }
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "object" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "term_id" }
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "positions_aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "aggregate" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "count" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "counter_positions_aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "aggregate" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "count" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+
+/**
+ * __useGetTriplesByCreatorQuery__
+ *
+ * To run a query within a React component, call `useGetTriplesByCreatorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTriplesByCreatorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTriplesByCreatorQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetTriplesByCreatorQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetTriplesByCreatorQuery,
+    GetTriplesByCreatorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetTriplesByCreatorQuery,
+    GetTriplesByCreatorQueryVariables
+  >(GetTriplesByCreatorDocument, options)
+}
+export function useGetTriplesByCreatorLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetTriplesByCreatorQuery,
+    GetTriplesByCreatorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetTriplesByCreatorQuery,
+    GetTriplesByCreatorQueryVariables
+  >(GetTriplesByCreatorDocument, options)
+}
+export function useGetTriplesByCreatorSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTriplesByCreatorQuery,
+        GetTriplesByCreatorQueryVariables
+      >
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetTriplesByCreatorQuery,
+    GetTriplesByCreatorQueryVariables
+  >(GetTriplesByCreatorDocument, options)
+}
+export type GetTriplesByCreatorQueryHookResult = ReturnType<
+  typeof useGetTriplesByCreatorQuery
+>
+export type GetTriplesByCreatorLazyQueryHookResult = ReturnType<
+  typeof useGetTriplesByCreatorLazyQuery
+>
+export type GetTriplesByCreatorSuspenseQueryHookResult = ReturnType<
+  typeof useGetTriplesByCreatorSuspenseQuery
+>
+export type GetTriplesByCreatorQueryResult = Apollo.QueryResult<
+  GetTriplesByCreatorQuery,
+  GetTriplesByCreatorQueryVariables
 >
 export const GetTriplesDocument = {
   kind: "Document",
