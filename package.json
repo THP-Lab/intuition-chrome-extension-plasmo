@@ -77,6 +77,7 @@
       "https://*/*",
       "https://analytics.thp.box/*",
       "https://prod.base.intuition-api.com/*",
+      "https://prod.base-sepolia-v-1-5.intuition.sh/v1/graphql",
       "chrome-extension://*/*",
       "ws://localhost:*",
       "wws://localhost:*"
@@ -102,7 +103,7 @@
       "sidePanel"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com/ https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org wss://prod.base.intuition-api.com/v1/graphql  ws://localhost:* wss://localhost:* https://dl.polyhaven.org https://www.gstatic.com;"
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com/ https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org https://prod.base-sepolia-v-1-5.intuition.sh/v1/graphql  ws://localhost:* wss://localhost:* https://dl.polyhaven.org https://www.gstatic.com;"
     }
   },
   "pnpm": {

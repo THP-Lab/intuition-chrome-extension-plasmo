@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { umami } from "../lib/umami"
-import Content from "~src/components/content"
+import Content from "~src/components/Content"
 import ParticlesCanvas from "~src/components/ui/ParticulBg/ParticlesCanvas"
 import GroupParticlesCanvas from "~src/components/ui/ParticulBg/GroupParticlesCanvas"
 import { ThemeProvider } from "~src/components/ThemeProvider"

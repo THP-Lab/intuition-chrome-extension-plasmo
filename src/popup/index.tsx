@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { umami } from "../lib/umami"
 
-import Content from "~src/components/content"
+import Content from "~src/components/Content"
 import IntuitionPortalPanel from "~src/components/icons/intuition_portal_panel"
 import ParticlesCanvas from "~src/components/ui/ParticulBg/ParticlesCanvas"
 import GroupParticlesCanvas from "~src/components/ui/ParticulBg/GroupParticlesCanvas"
