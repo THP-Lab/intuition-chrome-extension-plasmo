@@ -1,6 +1,6 @@
 import React from "react"
 import { useStorage } from "@plasmohq/storage/hook"
-import { useGetFollowingsFromAddressQuery, useGetFollowingsTriplesQuery } from "~src/graphql/src"
+import { useGetFollowingsFromAddressQuery, useGetFollowingsTriplesQuery } from "@warzieram/graphql"
 
 const FollowingTab = () => {
   //const walletAddress = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"

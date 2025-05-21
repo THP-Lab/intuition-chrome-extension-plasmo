@@ -1,7 +1,7 @@
 import React from "react"
 import { useStorage } from "@plasmohq/storage/hook"
 import ClaimRowLite from "../ui/ClaimRowLite"
-import { useGetClaimsByAddressQuery } from "~src/graphql/src"
+import { useGetClaimsByAddressQuery } from "@warzieram/graphql"
 
 const MyPositionsTab = () => {
   const [account] = useStorage<string>("metamask-account")

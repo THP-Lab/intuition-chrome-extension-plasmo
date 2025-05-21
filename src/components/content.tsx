@@ -9,7 +9,7 @@ import {
   Navigate
 } from "react-router-dom"
 
-import { configureClient } from "~src/graphql/src"
+import { configureClient } from "@warzieram/graphql"
 import PageForm from "~src/pages/PageForm"
 import Feed from "~src/pages/Feed"
 import Home from "~src/pages/Home"

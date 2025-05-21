@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useGetListsTagsQuery } from '~src/graphql/src'
+import { useGetListsTagsQuery } from '@warzieram/graphql'
 import { ImageWithFallback } from '../components/ui/ImageWithFallback'
 import { Fingerprint } from 'lucide-react'
 import { Tag } from 'lucide-react';

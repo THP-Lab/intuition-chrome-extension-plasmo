@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import { useStorage } from "@plasmohq/storage/dist/hook"
-import { useGetFollowingsFromAddressQuery } from "~src/graphql/src"
+import { useGetFollowingsFromAddressQuery } from "@warzieram/graphql"
 
 function Feed() {
   const [walletAddress] = useStorage<string>("metamask-account")
