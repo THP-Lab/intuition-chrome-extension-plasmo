@@ -14573,6 +14573,24 @@ export type GetAccountByIdQuery = {
   } | null
 }
 
+export type GetPersonsByIdentifierQueryVariables = Exact<{
+  identifier: Scalars["String"]["input"]
+}>
+
+export type GetPersonsByIdentifierQuery = {
+  __typename?: "query_root"
+  persons: Array<{
+    __typename?: "persons"
+    id: any
+    name?: string | null
+    image?: string | null
+    description?: string | null
+    email?: string | null
+    url?: string | null
+    identifier?: string | null
+  }>
+}
+
 export type GetListsQueryVariables = Exact<{
   where?: InputMaybe<Predicate_Objects_Bool_Exp>
 }>
@@ -17227,6 +17245,54 @@ export type GetTaggedObjectsQuery = {
       vaults: Array<{ __typename?: "vaults"; position_count: number }>
       positions: Array<{ __typename?: "positions"; shares: any }>
     } | null
+  }>
+}
+
+export type GetTriplesByCreatorQueryVariables = Exact<{
+  address?: InputMaybe<Scalars["String"]["input"]>
+}>
+
+export type GetTriplesByCreatorQuery = {
+  __typename?: "query_root"
+  triples: Array<{
+    __typename?: "triples"
+    term_id: any
+    creator_id: string
+    subject: {
+      __typename?: "atoms"
+      term_id: any
+      label?: string | null
+      image?: string | null
+      type: any
+    }
+    predicate: {
+      __typename?: "atoms"
+      term_id: any
+      label?: string | null
+      image?: string | null
+      type: any
+    }
+    object: {
+      __typename?: "atoms"
+      term_id: any
+      label?: string | null
+      image?: string | null
+      type: any
+    }
+    positions_aggregate: {
+      __typename?: "positions_aggregate"
+      aggregate?: {
+        __typename?: "positions_aggregate_fields"
+        count: number
+      } | null
+    }
+    counter_positions_aggregate: {
+      __typename?: "positions_aggregate"
+      aggregate?: {
+        __typename?: "positions_aggregate_fields"
+        count: number
+      } | null
+    }
   }>
 }
 
@@ -24074,6 +24140,104 @@ useGetAccountByIdQuery.fetcher = (
     options
   )
 
+export const GetPersonsByIdentifierDocument = `
+    query GetPersonsByIdentifier($identifier: String!) {
+  persons(where: {identifier: {_eq: $identifier}}) {
+    id
+    name
+    image
+    description
+    email
+    url
+    identifier
+  }
+}
+    `
+
+export const useGetPersonsByIdentifierQuery = <
+  TData = GetPersonsByIdentifierQuery,
+  TError = unknown
+>(
+  variables: GetPersonsByIdentifierQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetPersonsByIdentifierQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<
+      GetPersonsByIdentifierQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useQuery<GetPersonsByIdentifierQuery, TError, TData>({
+    queryKey: ["GetPersonsByIdentifier", variables],
+    queryFn: fetcher<
+      GetPersonsByIdentifierQuery,
+      GetPersonsByIdentifierQueryVariables
+    >(GetPersonsByIdentifierDocument, variables),
+    ...options
+  })
+}
+
+useGetPersonsByIdentifierQuery.document = GetPersonsByIdentifierDocument
+
+useGetPersonsByIdentifierQuery.getKey = (
+  variables: GetPersonsByIdentifierQueryVariables
+) => ["GetPersonsByIdentifier", variables]
+
+export const useInfiniteGetPersonsByIdentifierQuery = <
+  TData = InfiniteData<GetPersonsByIdentifierQuery>,
+  TError = unknown
+>(
+  variables: GetPersonsByIdentifierQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetPersonsByIdentifierQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetPersonsByIdentifierQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetPersonsByIdentifierQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? [
+          "GetPersonsByIdentifier.infinite",
+          variables
+        ],
+        queryFn: (metaData) =>
+          fetcher<
+            GetPersonsByIdentifierQuery,
+            GetPersonsByIdentifierQueryVariables
+          >(GetPersonsByIdentifierDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {})
+          })(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetPersonsByIdentifierQuery.getKey = (
+  variables: GetPersonsByIdentifierQueryVariables
+) => ["GetPersonsByIdentifier.infinite", variables]
+
+useGetPersonsByIdentifierQuery.fetcher = (
+  variables: GetPersonsByIdentifierQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetPersonsByIdentifierQuery, GetPersonsByIdentifierQueryVariables>(
+    GetPersonsByIdentifierDocument,
+    variables,
+    options
+  )
+
 export const GetListsDocument = `
     query GetLists($where: predicate_objects_bool_exp) {
   predicate_objects_aggregate(where: $where) {
@@ -26330,6 +26494,133 @@ useGetTaggedObjectsQuery.fetcher = (
 ) =>
   fetcher<GetTaggedObjectsQuery, GetTaggedObjectsQueryVariables>(
     GetTaggedObjectsDocument,
+    variables,
+    options
+  )
+
+export const GetTriplesByCreatorDocument = `
+    query GetTriplesByCreator($address: String) {
+  triples(where: {creator_id: {_eq: $address}}) {
+    term_id
+    creator_id
+    subject {
+      term_id
+      label
+      image
+      type
+    }
+    predicate {
+      term_id
+      label
+      image
+      type
+    }
+    object {
+      term_id
+      label
+      image
+      type
+    }
+    positions_aggregate {
+      aggregate {
+        count
+      }
+    }
+    counter_positions_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+}
+    `
+
+export const useGetTriplesByCreatorQuery = <
+  TData = GetTriplesByCreatorQuery,
+  TError = unknown
+>(
+  variables?: GetTriplesByCreatorQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetTriplesByCreatorQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseQueryOptions<
+      GetTriplesByCreatorQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useQuery<GetTriplesByCreatorQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ["GetTriplesByCreator"]
+        : ["GetTriplesByCreator", variables],
+    queryFn: fetcher<
+      GetTriplesByCreatorQuery,
+      GetTriplesByCreatorQueryVariables
+    >(GetTriplesByCreatorDocument, variables),
+    ...options
+  })
+}
+
+useGetTriplesByCreatorQuery.document = GetTriplesByCreatorDocument
+
+useGetTriplesByCreatorQuery.getKey = (
+  variables?: GetTriplesByCreatorQueryVariables
+) =>
+  variables === undefined
+    ? ["GetTriplesByCreator"]
+    : ["GetTriplesByCreator", variables]
+
+export const useInfiniteGetTriplesByCreatorQuery = <
+  TData = InfiniteData<GetTriplesByCreatorQuery>,
+  TError = unknown
+>(
+  variables: GetTriplesByCreatorQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetTriplesByCreatorQuery, TError, TData>,
+    "queryKey"
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetTriplesByCreatorQuery,
+      TError,
+      TData
+    >["queryKey"]
+  }
+) => {
+  return useInfiniteQuery<GetTriplesByCreatorQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ["GetTriplesByCreator.infinite"]
+            : ["GetTriplesByCreator.infinite", variables],
+        queryFn: (metaData) =>
+          fetcher<GetTriplesByCreatorQuery, GetTriplesByCreatorQueryVariables>(
+            GetTriplesByCreatorDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) }
+          )(),
+        ...restOptions
+      }
+    })()
+  )
+}
+
+useInfiniteGetTriplesByCreatorQuery.getKey = (
+  variables?: GetTriplesByCreatorQueryVariables
+) =>
+  variables === undefined
+    ? ["GetTriplesByCreator.infinite"]
+    : ["GetTriplesByCreator.infinite", variables]
+
+useGetTriplesByCreatorQuery.fetcher = (
+  variables?: GetTriplesByCreatorQueryVariables,
+  options?: RequestInit["headers"]
+) =>
+  fetcher<GetTriplesByCreatorQuery, GetTriplesByCreatorQueryVariables>(
+    GetTriplesByCreatorDocument,
     variables,
     options
   )
@@ -50121,6 +50412,78 @@ export const GetAccountById = {
     }
   ]
 } as unknown as DocumentNode
+export const GetPersonsByIdentifier = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetPersonsByIdentifier" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "identifier" }
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "persons" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "identifier" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_eq" },
+                            value: {
+                              kind: "Variable",
+                              name: { kind: "Name", value: "identifier" }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "image" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "url" } },
+                { kind: "Field", name: { kind: "Name", value: "identifier" } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
 export const GetLists = {
   kind: "Document",
   definitions: [
@@ -59377,6 +59740,162 @@ export const GetTaggedObjects = {
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "shares" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode
+export const GetTriplesByCreator = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetTriplesByCreator" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "address" }
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
+        }
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "triples" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "creator_id" },
+                      value: {
+                        kind: "ObjectValue",
+                        fields: [
+                          {
+                            kind: "ObjectField",
+                            name: { kind: "Name", value: "_eq" },
+                            value: {
+                              kind: "Variable",
+                              name: { kind: "Name", value: "address" }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "term_id" } },
+                { kind: "Field", name: { kind: "Name", value: "creator_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "subject" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "term_id" }
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "predicate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "term_id" }
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "object" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "term_id" }
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "positions_aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "aggregate" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "count" }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "counter_positions_aggregate" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "aggregate" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "count" }
                             }
                           ]
                         }
