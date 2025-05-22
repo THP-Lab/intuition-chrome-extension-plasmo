@@ -31,9 +31,11 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
     const vaultId = triple.term_id
     const counterVaultId = triple?.counter_term_id
 
-    const numPositionsFor = vault?.position_count
+    const numPositionsFor =
+      triple?.term?.positions_aggregate?.aggregate?.count
 
-    const numPositionsAgainst = counterVault?.position_count
+    const numPositionsAgainst =
+      triple?.counter_term?.positions_aggregate?.aggregate?.count
 
     const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
     const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
