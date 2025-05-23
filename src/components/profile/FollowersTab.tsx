@@ -8,9 +8,8 @@ const FollowersTab = () => {
 
   const isAddressReady = !!walletAddress
 
-  const { data, isLoading, isError, error } = useGetFollowersFromAddressQuery(
-    { address: walletAddress },
-    { enabled: isAddressReady } 
+  const { data, loading, error } = useGetFollowersFromAddressQuery(
+    {variables: { address: walletAddress || "" }},
   )
 
   const followers =
@@ -26,8 +25,8 @@ const FollowersTab = () => {
     "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
 
   if (!walletAddress) return <p>Connect your wallet</p>
-  if (isLoading) return <p>Loading your followers...</p>
-  if (isError) {
+  if (loading) return <p>Loading your followers...</p>
+  if (error) {
     console.error("GraphQL error", error)
     return <p>Error loading followers</p>
   }
@@ -41,7 +40,7 @@ const FollowersTab = () => {
         <ul className="space-y-2">
           {followers.map((follower) => (
             <li
-              key={follower.id}
+              key={follower?.id}
               className="border p-3 rounded flex items-center gap-3"
             >
               <img

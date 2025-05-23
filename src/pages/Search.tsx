@@ -1,10 +1,12 @@
+import { useGetTriplesWithPositionsQuery, type Triples } from "@warzieram/graphql"
 import React, { useEffect, useState } from "react"
-import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
-import TabSystem from "../components/TabSystem"
-import { useGetTriplesWithPositionsQuery } from "@warzieram/graphql"
-import ClaimRowLite from "~src/components/ui/ClaimRowLite";
+
 import { useStorage } from "@plasmohq/storage/dist/hook"
 
+import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
+import ClaimRowLite from "~src/components/ui/ClaimRowLite"
+
+import TabSystem from "../components/TabSystem"
 
 const Search: React.FC = () => {
   const [isSidePanel, setIsSidePanel] = useState(false)
@@ -29,68 +31,59 @@ const Search: React.FC = () => {
 
   const {
     data: triplesData,
-    isLoading,
+    loading,
     error
   } = useGetTriplesWithPositionsQuery({
-    where: {
-      _or: [
-        { subject: { label: { _ilike: `%${searchTerm}%` } } },
-        { predicate: { label: { _ilike: `%${searchTerm}%` } } },
-        { object: { label: { _ilike: `%${searchTerm}%` } } }
-      ]
-    },
-    address: walletAddress
-  }, {
-    enabled: !!searchTerm 
+    variables: {
+      where: {
+        _or: [
+          { subject: { label: { _ilike: `%${searchTerm}%` } } },
+          { predicate: { label: { _ilike: `%${searchTerm}%` } } },
+          { object: { label: { _ilike: `%${searchTerm}%` } } }
+        ]
+      },
+      address: walletAddress
+    }
   })
-
-  
+  console.log(triplesData)
   const triples = triplesData?.triples || []
 
+  const renderResults = () => {
+    console.log("Active tab:", activeTab)
+    console.log("All Triples:", triples)
 
-    const renderResults = () => {
-      console.log("Active tab:", activeTab)
-      console.log("All Triples:", triples)
-    
-      if (isLoading) return <p>Loading...</p>
-      if (error) return <p className="text-red-500">Error loading results.</p>
-      if (!triples.length) return <p>No results found.</p>
-    
-      const filterFunctions: Record<string, (triple: Triple) => boolean> = {
-        All: () => true,
-        Tag: (triple) => triple.predicate?.label?.toLowerCase().includes("tag"),
-        Organization: (triple) =>
-          triple.predicate?.label?.toLowerCase().includes("organization"),
-        User: (triple) => triple.predicate?.label?.toLowerCase().includes("follow")
-      }
-      
-      const filteredTriples = triples.filter(filterFunctions[activeTab] || filterFunctions.All)
-      
-    
-      console.log("Filtered triples:", filteredTriples)
+    if (loading) return <p>Loading...</p>
+    if (error) return <p className="text-red-500">Error loading results.</p>
+    if (!triples.length) return <p>No results found.</p>
 
-    
-      return (
-        <div className="space-y-2">
-          {filteredTriples.length === 0 && <p>No results found.</p>}
-          {filteredTriples.map((triple, index) => (
-            <ClaimRowLite
-              key={`${triple.id}-${index}`}
-              claim={triple}
-            />
-          ))}
-        </div>
-      )
+    const filterFunctions: Record<string, (triple: typeof triples[0]) => boolean> = {
+      All: () => true,
+      Tag: (triple) => triple.predicate?.label?.toLowerCase().includes("tag") || false,
+      Organization: (triple) =>
+        triple.predicate?.label?.toLowerCase().includes("organization") || false,
+      User: (triple) =>
+        triple.predicate?.label?.toLowerCase().includes("follow") || false
     }
-    
+
+    const filteredTriples = triples.filter(
+      filterFunctions[activeTab] || filterFunctions.All
+    )
+
+    console.log("Filtered triples:", filteredTriples)
+
+    return (
+      <div className="space-y-2">
+        {filteredTriples.length === 0 && <p>No results found.</p>}
+        {filteredTriples.map((triple, index) => (
+          <ClaimRowLite key={`${triple.term_id}-${index}`} claim={triple} />
+        ))}
+      </div>
+    )
+  }
 
   const tabs = ["All", "Tag", "Organization", "User"].map((label) => ({
     label,
-    content: (
-      <div>
-        {renderResults()}
-      </div>
-    )
+    content: <div>{renderResults()}</div>
   }))
 
   return (
@@ -111,7 +104,6 @@ const Search: React.FC = () => {
             activeTab={activeTab}
             onTabChange={setActiveTab}
           />
-
         </div>
       </div>
     </div>

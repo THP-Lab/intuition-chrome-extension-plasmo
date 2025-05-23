@@ -26,7 +26,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
     const creator = (triple as any)?.creator ?? (claim as any)?.creator
 
     const vault = triple?.term?.vaults?.find((v: any) => v.curve_id === "1") 
-    const counterVault = triple?.counter_term?.vaults?.find((v: any) => v.curve_id === "1") 
+    const counterVault = triple?.counter_term?.vaults?.find((v: any) => v.curve_id === "1")  //TODO : fix this curve_id doesn't exist
 
     const vaultId = triple.term_id ?? (claim as any).vault_id
     const counterVaultId = triple?.counter_term_id

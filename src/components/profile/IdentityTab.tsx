@@ -6,14 +6,13 @@ import AtomCard from "~src/components/AtomCard"
 const IdentityTab = () => {
   const [walletAddress] = useStorage<string>("metamask-account")
 
-  const { data, isLoading, isError, error } = useGetAtomsByCreatorQuery(
-    { address: walletAddress ?? "" },
-    { enabled: !!walletAddress }
+  const { data, loading, error } = useGetAtomsByCreatorQuery(
+    {variables: { address: walletAddress ?? "" }},
   )
 
   if (!walletAddress) return <div>No connected wallet</div>
-  if (isLoading) return <div>Loading your atoms...</div>
-  if (isError) return <div>Error: {(error as any)?.message}</div>
+  if (loading) return <div>Loading your atoms...</div>
+  if (error) return <div>Error: {(error as any)?.message}</div>
   if (!data?.atoms?.length) return <div>No atoms created yet.</div>
 
   const atoms = data.atoms
