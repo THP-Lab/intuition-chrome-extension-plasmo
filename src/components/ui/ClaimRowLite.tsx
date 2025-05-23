@@ -28,8 +28,8 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
     const vault = triple?.term?.vaults.at(0)
     const counterVault = triple.counter_term?.vaults.at(0)
 
-    const vaultId = triple.term_id
-    const counterVaultId = triple?.counter_term_id
+    const vaultId = triple.term_id ?? (triple as any).term.id
+    const counterVaultId = triple?.counter_term_id ?? (triple as any).counter_term.id
 
     const numPositionsFor =
       triple?.term?.positions_aggregate?.aggregate?.count
@@ -62,16 +62,16 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
           </div>
           {creator && (
             <p className="mt-2 text-xs text-gray-500">
-              Created by{' '}
-              <a
-                href={`https://portal.intuition.systems/app/atom/${creator.term_id}?tab=portfolio`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                {creator.label}
-              </a>
-            </p>
+            Created by{' '}
+            <a
+              href={`https://portal.intuition.systems/app/atom/${creator.id}?tab=portfolio`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              {creator.label}
+            </a>
+          </p>
           )}
         </div>
         <div>
