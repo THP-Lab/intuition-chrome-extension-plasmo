@@ -2,10 +2,11 @@ import React from "react"
 import { Link } from "react-router-dom"
 import { cn } from "~src/lib/utils"
 import { PopupAtom } from "./PopupAtom"
-import VoteButtons from "~src/components/VoteButtons"
+import VoteButtons, { type VoteChoice } from "~src/components/VoteButtons"
+import type { GetTriplesWithPositionsQuery, Triples } from "~node_modules/@warzieram/graphql/dist"
 
 interface ClaimRowLiteProps {
-  claim: any
+  claim: GetTriplesWithPositionsQuery['triples'][number]
 }
 
 export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
@@ -16,7 +17,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
       return <div className="text-xs text-gray-500">Invalid claim data</div>
     }
 
-    const triple = (claim.triple as any) ?? claim
+    const triple = claim
 
 
     const subject = triple.subject ?? claim.subject
@@ -25,21 +26,15 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
     const creator = (triple as any)?.creator ?? (claim as any)?.creator
 
-    const vault = triple?.term?.vaults?.find((v: any) => v.curve_id === "1") 
-    const counterVault = triple?.counter_term?.vaults?.find((v: any) => v.curve_id === "1")  //TODO : fix this curve_id doesn't exist
+    const vault = triple?.term?.vaults.at(0)
+    const counterVault = triple.counter_term?.vaults.at(0)
 
-    const vaultId = triple.term_id ?? (claim as any).vault_id
+    const vaultId = triple.term_id
     const counterVaultId = triple?.counter_term_id
 
-    const numPositionsFor =
-      vault.positions_aggregate?.aggregate?.count ??
-     
-      vault.positions?.length ?? 0
+    const numPositionsFor = vault?.position_count
 
-    const numPositionsAgainst =
-      counterVault.positions_aggregate?.aggregate?.count ??
- 
-      counterVault.positions?.length ?? 0
+    const numPositionsAgainst = counterVault?.position_count
 
     const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
     const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
