@@ -6,19 +6,18 @@ import { useGetClaimsByAddressQuery } from "@warzieram/graphql"
 const MyPositionsTab = () => {
   const [account] = useStorage<string>("metamask-account")
 
-  const { data, isLoading, isError, error } = useGetClaimsByAddressQuery(
-    { address: account ?? "" },
-    { enabled: !!account }
+  const { data, loading, error } = useGetClaimsByAddressQuery(
+    {variables: { address: account ?? "" }},
   )
 
   const claims = data?.claims_aggregate?.nodes ?? []
   const filteredClaims = claims.filter(
-    (c) => Number(c.shares) > 0 || Number(c.counter_shares) > 0
-  )
+    (c) => Number(c.position.shares) > 0 || Number(c.counter_shares) > 0 // TODO: fix this (change the request ?)
+   )
 
   if (!account) return <div>No connected wallet</div>
-  if (isLoading) return <div>Loading your positions...</div>
-  if (isError) return <div>Error: {(error as any)?.message}</div>
+  if ( loading) return <div>Loading your positions...</div>
+  if (error) return <div>Error: {(error as any)?.message}</div>
   if (filteredClaims.length === 0) return <div>No positions found</div>
 
   return (

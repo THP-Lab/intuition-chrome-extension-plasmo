@@ -43,10 +43,10 @@ function Home() {
     })
   }, [])
 
-  const { data, isLoading, error } = useGetClaimsByUriQuery({
+  const { data, loading, error } = useGetClaimsByUriQuery({variables: {
     uri: currentUrl,
     address: walletAddress
-  })
+  }})
   const atoms = data?.atoms ?? []
   console.log("current wallet address:", walletAddress)
   console.log("Data :", data)
@@ -87,7 +87,7 @@ function Home() {
       label: "Claims",
       content: (
         <div>
-          {isLoading ? (
+          {loading ? (
             "Chargement..."
           ) : typeof data !== "undefined" && claims.length !== 0 ? (
             claims.map(
@@ -122,7 +122,7 @@ function Home() {
       label: "Atoms",
       content: (
         <div>
-          {isLoading ? (
+          {loading ? (
             "Chargement..."
           ) : typeof data !== "undefined" && atoms.length != 0 ? (
             atomsWithTags.map((atom) => {

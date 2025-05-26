@@ -6,11 +6,11 @@ const FollowingTab = () => {
   //const walletAddress = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
   const [walletAddress] = useStorage<string>("metamask-account")
 
-  const { data, isLoading, isError} = useGetFollowingsFromAddressQuery({address: walletAddress});
+  const { data, loading, error} = useGetFollowingsFromAddressQuery({variables: {address: walletAddress || ''}});
 
   if (!walletAddress) return <p>Connect your wallet</p>
-  if (isLoading) return <p>Loading who you follow...</p>
-  if (isError) return <p>Error loading followings</p>
+  if (loading) return <p>Loading who you follow...</p>
+  if (error) return <p>Error loading followings</p>
 
   const followings = data?.following ?? []
   const default_img = "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000"

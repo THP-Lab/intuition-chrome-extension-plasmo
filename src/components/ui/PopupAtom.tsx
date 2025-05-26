@@ -2,17 +2,17 @@ import React, { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { HoverCard, HoverCardTrigger, HoverCardContent } from './HoverCard'
-import { useGetAtomQuery } from "@0xintuition/graphql"
 import { ImageWithFallback } from './ImageWithFallback'
 import { useAtomInteraction } from '~src/hooks/useAtomInteraction'
 import { Fingerprint } from "lucide-react"
+import { useGetAtomQuery } from '~node_modules/@warzieram/graphql/dist'
 
 
 interface PopupAtomProps {
   atom: {
-    term_id: string
-    label: string
-    image?: string
+    term_id: any
+    label?: string | null
+    image?: string | null
   }
 }
 
@@ -22,7 +22,7 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
   const atomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const { data, isLoading, error } = useGetAtomQuery({ term_id });
+  const { data, loading, error } = useGetAtomQuery({ variables: {term_id} });
   const { isHovered, setIsHovered, isOpen } = useAtomInteraction()
 
   const goToAtomPage = () => {
@@ -34,7 +34,7 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
       return (
         <ImageWithFallback
           src={image}
-          alt={label}
+          alt={label || ""}
           className="w-5 h-5 rounded-full object-cover"
         />
       )
@@ -60,23 +60,23 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
     )
 
     const renderAtomDescription = () =>
-      data?.atom?.atom_value?.thing?.description ? (
+      data?.atom?.value?.thing?.description ? (
         <p className="text-sm text-muted-foreground mt-2">
-          {data.atom.atom_value.thing.description}
+          {data.atom.value.thing.description}
         </p>
       ) : null
 
     const renderVaultInfo = () =>
-      data?.atom?.vault ? (
+      data?.atom?.term.vaults ? (
         <div className="mt-2 text-sm">
           <span className="text-muted-foreground">Positions: </span>
-          <span className="font-medium">{data.atom.vault.position_count}</span>
+          <span className="font-medium">{data.atom.term.positions_aggregate.aggregate?.count}</span>
         </div>
       ) : null
     
 
     const renderCardContent = () => {
-      if (isLoading) return <div className="p-4">Chargement...</div>
+      if (loading) return <div className="p-4">Chargement...</div>
       if (error) return <div className="p-4 text-red-500">Erreur de chargement</div>
       if (!data?.atom) return <div className="p-4">Aucune information disponible</div>
   
@@ -112,7 +112,7 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
               {renderAtomImage()}
               <span
                 className="truncate max-w-[120px] overflow-hidden whitespace-nowrap block"
-                title={label}
+                title={label || ""}
               >
                 {label}
               </span>

@@ -7,27 +7,27 @@ function Feed() {
   const [walletAddress] = useStorage<string>("metamask-account")
   const [filter, setFilter] = useState<"vote" | "create">("vote")
 
-  const { data, isLoading, isError } = useGetFollowingsFromAddressQuery({
-    address: walletAddress
-  })
+  const { data, loading, error } = useGetFollowingsFromAddressQuery({variables: {
+    address: walletAddress || ""
+  }})
 
   const default_img =
     "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000"
 
   if (!walletAddress) return <p>Connect your wallet</p>
-  if (isLoading) return <p>Loading who you follow...</p>
-  if (isError) return <p>Error loading followings</p>
+  if (loading) return <p>Loading who you follow...</p>
+  if (error) return <p>Error loading followings: {error.message}</p>
 
   const followings = data?.following ?? []
 
   const actions = followings.flatMap((user) => {
     const votes = user.positions_aggregate.nodes
-      .filter((pos) => pos.vault?.triple !== null)
+      .filter((pos) => pos.term.triple !== null)
       .map((pos) => ({
         type: "vote",
         user,
-        triple: pos.vault.triple,
-        isFor: pos.vault?.id === pos.vault.triple?.vault?.id
+        triple: pos.term.triple,
+        isFor: pos.term.id === pos.term.triple?.term_id
       }))
 
     const creations = (user.triples || []).map((triple) => ({
@@ -45,7 +45,6 @@ function Feed() {
     filter === "vote"
       ? sortedActions.filter((action) => action.type === "vote")
       : sortedActions.filter((action) => action.type === "create")
-
   return (
     <div className="p-4 space-y-6">
       <h1 className="text-xl font-bold mb-4">Your Feed</h1>
@@ -71,7 +70,7 @@ function Feed() {
 
       
       {filteredActions.map((action, index) => action.triple ? (
-        <div key={`${action.triple.id}-${index}`} className="border-b pb-3 mb-3">
+        <div key={`${action.triple.term_id}-${index}`} className="border-b pb-3 mb-3">
           <div className="flex items-center gap-2 mb-2">
             <img
               src={action.user.image ?? default_img}

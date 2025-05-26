@@ -6,14 +6,13 @@ import { useGetTriplesByCreatorQuery } from "@warzieram/graphql";
 const YourClaimsTab = () => {
   const [account] = useStorage<string>("metamask-account")  
 
-  const { data, isLoading, isError, error } = useGetTriplesByCreatorQuery(
-    { address: account ?? "" },
-    { enabled: !!account }
+  const { data,loading, error } = useGetTriplesByCreatorQuery(
+    {variables: { address: account ?? "" }},
   )
 
   if (!account) return <div>No connected wallet</div>
-  if (isLoading) return <div>Loading your claims...</div>
-  if (isError) return <div>Error: {(error as any)?.message}</div>
+  if (loading) return <div>Loading your claims...</div>
+  if (error) return <div>Error: {(error as any)?.message}</div>
   if (!data?.triples?.length) return <div>No claims created yet.</div>
 
   return (

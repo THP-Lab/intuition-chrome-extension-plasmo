@@ -1,11 +1,11 @@
 import React from "react"
-import { Link } from "react-router-dom"
 import { cn } from "~src/lib/utils"
 import { PopupAtom } from "./PopupAtom"
-import VoteButtons from "~src/components/VoteButtons"
+import VoteButtons, { type VoteChoice } from "~src/components/VoteButtons"
+import type { GetTriplesWithPositionsQuery } from "~node_modules/@warzieram/graphql/dist"
 
 interface ClaimRowLiteProps {
-  claim: any
+  claim: GetTriplesWithPositionsQuery['triples'][number]
 }
 
 export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
@@ -16,7 +16,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
       return <div className="text-xs text-gray-500">Invalid claim data</div>
     }
 
-    const triple = (claim.triple as any) ?? claim
+    const triple = claim
 
 
     const subject = triple.subject ?? claim.subject
@@ -25,21 +25,15 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
     const creator = (triple as any)?.creator ?? (claim as any)?.creator
 
-    const vault = triple?.term?.vaults?.find((v: any) => v.curve_id === "1") 
-    const counterVault = triple?.counter_term?.vaults?.find((v: any) => v.curve_id === "1") 
+    const vault = triple?.term?.vaults.at(0)
+    const counterVault = triple.counter_term?.vaults.at(0)
 
-    const vaultId = triple.term_id ?? (claim as any).vault_id
+    const vaultId = triple.term_id
     const counterVaultId = triple?.counter_term_id
 
-    const numPositionsFor =
-      vault.positions_aggregate?.aggregate?.count ??
-     
-      vault.positions?.length ?? 0
+    const numPositionsFor = vault?.position_count
 
-    const numPositionsAgainst =
-      counterVault.positions_aggregate?.aggregate?.count ??
- 
-      counterVault.positions?.length ?? 0
+    const numPositionsAgainst = counterVault?.position_count
 
     const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
     const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
@@ -48,9 +42,9 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
       userStake > 0
         ? "for"
         : userCounterStake > 0
-        ? "against"
-        : undefined
-        
+          ? "against"
+          : undefined
+
     return (
       <div
         className={cn(
@@ -59,39 +53,39 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
         <div className="flex flex-col">
           <div className="flex gap-1 items-center flex-wrap">
-            
-            <PopupAtom key={`${claim.id}-subject`} atom={subject} />
-            <PopupAtom key={`${claim.id}-predicate`} atom={predicate} />
-            <PopupAtom key={`${claim.id}-object`} atom={object} />
+
+            <PopupAtom key={`${claim.term_id}-subject`} atom={subject} />
+            <PopupAtom key={`${claim.term_id}-predicate`} atom={predicate} />
+            <PopupAtom key={`${claim.term_id}-object`} atom={object} />
           </div>
           {creator && (
             <p className="mt-2 text-xs text-gray-500">
-            Created by{' '}
-            <a
-              href={`https://portal.intuition.systems/app/atom/${creator.term_id}?tab=portfolio`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline"
-            >
-              {creator.label}
-            </a>
-          </p>
+              Created by{' '}
+              <a
+                href={`https://portal.intuition.systems/app/atom/${creator.term_id}?tab=portfolio`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {creator.label}
+              </a>
+            </p>
           )}
         </div>
         <div>
-        {vaultId && counterVaultId ? (
-          <div className="flex">
-            <VoteButtons
-              vaultId={BigInt(vaultId)}
-              counterVaultId={BigInt(counterVaultId)}
-              numPositionsFor={numPositionsFor}
-              numPositionsAgainst={numPositionsAgainst}
-              initialVote={initialVote}
-            />
-          </div>
-        ) : (
-          <div className="text-xs text-gray-500">Missing ID</div>
-        )}
+          {vaultId && counterVaultId ? (
+            <div className="flex">
+              <VoteButtons
+                vaultId={BigInt(vaultId)}
+                counterVaultId={BigInt(counterVaultId)}
+                numPositionsFor={numPositionsFor}
+                numPositionsAgainst={numPositionsAgainst}
+                initialVote={initialVote}
+              />
+            </div>
+          ) : (
+            <div className="text-xs text-gray-500">Missing ID</div>
+          )}
         </div>
       </div>
     )

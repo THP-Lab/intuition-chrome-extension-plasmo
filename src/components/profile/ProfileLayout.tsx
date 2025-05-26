@@ -20,13 +20,12 @@ const ProfileLayout = () => {
   const [editMode, setEditMode] = useState(false);
 
   const { data: personData } = useGetPersonsByIdentifierQuery(
-    { identifier: address || "" },
-    { enabled: !!address }
+    {variables: { identifier: address || "" }},
   );
   const person = personData?.persons?.[0];
 
-  const { data: accountData } = useGetAccountByIdQuery({ id: address || "" });
-  const { data: claimsData } = useGetClaimsByAddressQuery({ address: address || "" });
+  const { data: accountData } = useGetAccountByIdQuery({variables: { id: address || "" }});
+  const { data: claimsData } = useGetClaimsByAddressQuery({variables: { address: address || "" }});
 
   const account = accountData?.account;
 

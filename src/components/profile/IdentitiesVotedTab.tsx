@@ -1,16 +1,15 @@
+import { useGetAtomsWithPositionsQuery } from "@warzieram/graphql"
 import React from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
-
-import { useGetAtomsWithPositionsQuery } from "@warzieram/graphql"
 
 import AtomCard from "../AtomCard"
 
 const IdentitiesVotedTab = () => {
   const [account] = useStorage<string>("metamask-account")
 
-  const { data, isLoading, error } = useGetAtomsWithPositionsQuery(
-    {
+  const { data, loading, error } = useGetAtomsWithPositionsQuery({
+    variables: {
       address: account,
       where: {
         term: {
@@ -19,9 +18,8 @@ const IdentitiesVotedTab = () => {
           }
         }
       }
-    },
-    { enabled: !!account }
-  )
+    }
+  })
 
   const atomsWithTags = data?.atoms.map((atom) => {
     const tags = atom.as_subject_triples_aggregate?.nodes
@@ -30,7 +28,7 @@ const IdentitiesVotedTab = () => {
       .filter(Boolean)
 
     const uniqueTags = Array.from(
-      new Map(tags.map(tag => [tag.term_id, tag])).values()
+      new Map(tags.map((tag) => [tag.term_id, tag])).values()
     )
 
     return {
@@ -44,7 +42,7 @@ const IdentitiesVotedTab = () => {
   console.log("Atoms with Claims:", data?.atoms)
 
   if (!account) return <div>No connected wallet</div>
-  if (isLoading) return <div>Loading your voted identities...</div>
+  if (loading) return <div>Loading your voted identities...</div>
   if (error) return <div>Error: {(error as any)?.message}</div>
 
   const atoms = data?.atoms
@@ -61,7 +59,7 @@ const IdentitiesVotedTab = () => {
         </span>
       </div>
 
-      {atomsWithTags.map((atom) =>
+      { atomsWithTags && atomsWithTags.map((atom) =>
         atom?.term_id ? (
           <AtomCard key={atom.term_id} atom={atom} tags={atom.tags} />
         ) : null
