@@ -11,18 +11,29 @@ export const useClaimDetection = (
 
   const { data, isLoading } = useGetClaimsByUriQuery(
     { uri, address },
-    { enabled: Boolean(uri) }
+    { enabled: Boolean(uri) && Boolean(address) }
   )
 
   useEffect(() => {
+  
+
     if (isLoading) {
       setStatus("loading")
-    } else if (data?.atoms?.length > 0) {
-      setStatus("found")
     } else {
-      setStatus("not_found")
+      const atoms = data?.atoms ?? []
+
+      const foundClaim = atoms.some((atom) => {
+        const subjectCount =
+          atom?.as_subject_claims_aggregate?.aggregate?.count ?? 0
+        const objectCount =
+          atom?.as_object_claims_aggregate?.aggregate?.count ?? 0
+        return subjectCount > 0 || objectCount > 0
+      })
+
+      
+      setStatus(foundClaim ? "found" : "not_found")
     }
-  }, [isLoading, data])
+  }, [isLoading, data, uri, address])
 
   return { status }
 }

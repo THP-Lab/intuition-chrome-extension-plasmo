@@ -1,14 +1,14 @@
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect, useRef, useState } from "react"
 import {
+  ApolloProvider,
   gql,
-  useSubscription,
-  ApolloProvider
+  useSubscription
 } from "@apollo/client"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { apolloSubscriptionClient } from "~src/graphql/src/apollo-subscription-client"
 import { useGetFollowingsFromAddressQuery } from "~src/graphql/src"
-import FloatingIconStatus from "~src/components/FloatingIconStatus"
+import { useClaimDetection } from "~src/hooks/useClaimDetection"
 import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
 
 export const config: PlasmoCSConfig = {
@@ -50,7 +50,11 @@ const FloatingButton = ({ address }: { address: string }) => {
     variables: { limit: 1 }
   })
 
-  const followingIds = followData?.following?.map((f) => f.id).filter(Boolean) ?? []
+  const claimDetection = useClaimDetection(window.location.href, address)
+  const status = claimDetection?.status ?? "loading"
+
+  const followingIds =
+    followData?.following?.map((f) => f.id).filter(Boolean) ?? []
 
   useEffect(() => {
     const latestEvent = eventData?.events?.[0]
@@ -93,6 +97,56 @@ const FloatingButton = ({ address }: { address: string }) => {
     window.addEventListener("mouseup", handleMouseUp)
   }
 
+  const renderStatusBadge = () => {
+    const isLoading = status === "loading"
+    const color = status === "found"
+      ? "#22c55e"
+      : status === "not_found"
+      ? "#ef4444"
+      : "#3b82f6"
+
+    return (
+      <span
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "16px",
+          height: "16px",
+          borderRadius: "50%",
+          backgroundColor: isLoading ? "transparent" : color,
+          border: isLoading ? "2px solid #3b82f6" : "2px solid white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          pointerEvents: "none"
+        }}
+      >
+        {isLoading && (
+          <span
+            style={{
+              width: "8px",
+              height: "8px",
+              border: "2px solid #3b82f6",
+              borderTopColor: "transparent",
+              borderRadius: "9999px",
+              animation: "spin 1s linear infinite"
+            }}
+          />
+        )}
+        <style>
+          {`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}
+        </style>
+      </span>
+    )
+  }
+
   return (
     <div
       onMouseDown={handleMouseDown}
@@ -113,14 +167,14 @@ const FloatingButton = ({ address }: { address: string }) => {
       onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
       onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.4")}
     >
-      <div style={{ position: "relative", width: 35, height: 35 }}>
+      <div style={{ position: "relative" }}>
         <IntuitionSearchIcon
           onSearch={() => {}}
           size={35}
           position={{ x: 0, y: 0 }}
           className="hover:opacity-80 transition-opacity"
         />
-        <FloatingIconStatus />
+        {renderStatusBadge()}
         {hasNotification && (
           <span
             style={{
