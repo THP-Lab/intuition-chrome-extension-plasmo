@@ -45,8 +45,8 @@ importers:
         specifier: ^0.175.0
         version: 0.175.0
       '@warzieram/graphql':
-        specifier: ^0.5.14
-        version: 0.5.14(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+        specifier: ^0.5.15
+        version: 0.5.15(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -3605,8 +3605,8 @@ packages:
   '@vue/shared@3.3.4':
     resolution: {integrity: sha512-7OjdcV8vQ74eiz1TZLzZP4JwqM5fA94K6yntPS5Z25r9HDuGNzaGdgvwKYq6S+MxwF0TFRwe50fIR/MYnakdkQ==}
 
-  '@warzieram/graphql@0.5.14':
-    resolution: {integrity: sha512-QROiB219mby2wywUS4OITLmiHGvIjHMFTqacCSss7Y/h17Lipckda7DTAF21tMQCSfdRVjAkgX2pVUPNzJB6jA==}
+  '@warzieram/graphql@0.5.15':
+    resolution: {integrity: sha512-cXOSqnAL2WVy/LdD7TpqRnvMQ8+xMM3XWbgKcBbv61OoubJ4hDw/2/rM1XoT/17QhDmRuAcmuoRn+JiIBuQinw==}
 
   '@webgpu/types@0.1.60':
     resolution: {integrity: sha512-8B/tdfRFKdrnejqmvq95ogp8tf52oZ51p3f4QD5m5Paey/qlX4Rhhy5Y8tgFMi7Ms70HzcMMw3EQjH/jdhTwlA==}
@@ -7388,6 +7388,7 @@ snapshots:
       - '@types/node'
       - bufferutil
       - cosmiconfig-toml-loader
+      - crossws
       - encoding
       - enquirer
       - supports-color
@@ -7637,13 +7638,14 @@ snapshots:
       '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
       '@whatwg-node/disposablestack': 0.0.6
       graphql: 16.10.0
-      graphql-ws: 6.0.4(graphql@16.10.0)(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      graphql-ws: 6.0.5(graphql@16.10.0)(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       isomorphic-ws: 5.0.0(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       tslib: 2.8.1
       ws: 8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - '@fastify/websocket'
       - bufferutil
+      - crossws
       - uWebSockets.js
       - utf-8-validate
 
@@ -7793,6 +7795,7 @@ snapshots:
       - '@fastify/websocket'
       - '@types/node'
       - bufferutil
+      - crossws
       - encoding
       - supports-color
       - uWebSockets.js
@@ -7843,6 +7846,7 @@ snapshots:
       - '@fastify/websocket'
       - '@types/node'
       - bufferutil
+      - crossws
       - uWebSockets.js
       - utf-8-validate
 
@@ -10575,7 +10579,7 @@ snapshots:
 
   '@vue/shared@3.3.4': {}
 
-  '@warzieram/graphql@0.5.14(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
+  '@warzieram/graphql@0.5.15(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
     dependencies:
       '@apollo/client': 3.13.8(@types/react@18.2.48)(graphql-ws@6.0.5(graphql@16.10.0)(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)))(graphql@16.10.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@graphql-codegen/typescript-document-nodes': 4.0.15(graphql@16.10.0)
@@ -11657,6 +11661,7 @@ snapshots:
       - '@fastify/websocket'
       - '@types/node'
       - bufferutil
+      - crossws
       - typescript
       - uWebSockets.js
       - utf-8-validate
