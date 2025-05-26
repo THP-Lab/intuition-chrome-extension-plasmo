@@ -10,9 +10,9 @@ import { Fingerprint } from "lucide-react"
 
 interface PopupAtomProps {
   atom: {
-    term_id: string
-    label: string
-    image?: string
+    term_id: any
+    label?: string | null
+    image?: string | null
   }
 }
 

@@ -1,9 +1,8 @@
 import React from "react"
-import { Link } from "react-router-dom"
 import { cn } from "~src/lib/utils"
 import { PopupAtom } from "./PopupAtom"
 import VoteButtons, { type VoteChoice } from "~src/components/VoteButtons"
-import type { GetTriplesWithPositionsQuery, Triples } from "~node_modules/@warzieram/graphql/dist"
+import type { GetTriplesWithPositionsQuery } from "~node_modules/@warzieram/graphql/dist"
 
 interface ClaimRowLiteProps {
   claim: GetTriplesWithPositionsQuery['triples'][number]
@@ -43,9 +42,9 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
       userStake > 0
         ? "for"
         : userCounterStake > 0
-        ? "against"
-        : undefined
-        
+          ? "against"
+          : undefined
+
     return (
       <div
         className={cn(
@@ -54,39 +53,39 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
         <div className="flex flex-col">
           <div className="flex gap-1 items-center flex-wrap">
-            
-            <PopupAtom key={`${claim.id}-subject`} atom={subject} />
-            <PopupAtom key={`${claim.id}-predicate`} atom={predicate} />
-            <PopupAtom key={`${claim.id}-object`} atom={object} />
+
+            <PopupAtom key={`${claim.term_id}-subject`} atom={subject} />
+            <PopupAtom key={`${claim.term_id}-predicate`} atom={predicate} />
+            <PopupAtom key={`${claim.term_id}-object`} atom={object} />
           </div>
           {creator && (
             <p className="mt-2 text-xs text-gray-500">
-            Created by{' '}
-            <a
-              href={`https://portal.intuition.systems/app/atom/${creator.term_id}?tab=portfolio`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline"
-            >
-              {creator.label}
-            </a>
-          </p>
+              Created by{' '}
+              <a
+                href={`https://portal.intuition.systems/app/atom/${creator.term_id}?tab=portfolio`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {creator.label}
+              </a>
+            </p>
           )}
         </div>
         <div>
-        {vaultId && counterVaultId ? (
-          <div className="flex">
-            <VoteButtons
-              vaultId={BigInt(vaultId)}
-              counterVaultId={BigInt(counterVaultId)}
-              numPositionsFor={numPositionsFor}
-              numPositionsAgainst={numPositionsAgainst}
-              initialVote={initialVote}
-            />
-          </div>
-        ) : (
-          <div className="text-xs text-gray-500">Missing ID</div>
-        )}
+          {vaultId && counterVaultId ? (
+            <div className="flex">
+              <VoteButtons
+                vaultId={BigInt(vaultId)}
+                counterVaultId={BigInt(counterVaultId)}
+                numPositionsFor={numPositionsFor}
+                numPositionsAgainst={numPositionsAgainst}
+                initialVote={initialVote}
+              />
+            </div>
+          ) : (
+            <div className="text-xs text-gray-500">Missing ID</div>
+          )}
         </div>
       </div>
     )
