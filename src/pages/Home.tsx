@@ -87,7 +87,7 @@ function Home() {
       label: "Claims",
       content: (
         <div>
-          {isLoading ? (
+          {loading ? (
             "Loading..."
           ) : typeof data !== "undefined" && claims.length !== 0 ? (
             claims.map(
@@ -122,7 +122,7 @@ function Home() {
       label: "Atoms",
       content: (
         <div>
-          {isLoading ? (
+          {loading ? (
             "Loading..."
           ) : typeof data !== "undefined" && atoms.length != 0 ? (
             atomsWithTags.map((atom) => {

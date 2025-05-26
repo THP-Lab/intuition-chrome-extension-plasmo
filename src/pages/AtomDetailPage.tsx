@@ -110,17 +110,17 @@ const AtomDetailPage: React.FC = () => {
       <section>
         <div className="flex items-center mb-2">
           <h2 className="text-lg font-semibold flex-1">
-            Triples liés ({claims.length})
+            Triples ({claims.length})
           </h2>
-          {loadingTriples && <span className="text-sm">Chargement…</span>}
+          {loadingTriples && <span className="text-sm">Loading…</span>}
           {errorTriples && (
-            <span className="text-sm text-red-500">Erreur de chargement</span>
+            <span className="text-sm text-red-500">Error loading</span>
           )}
         </div>
 
         {claims.length === 0 ? (
           <p className="text-sm text-gray-500">
-            Aucun triple associé à cet atome.
+            No triple associated with this atom.
           </p>
         ) : (
           <div className="space-y-3">
