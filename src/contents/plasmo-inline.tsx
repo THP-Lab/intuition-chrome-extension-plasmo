@@ -8,9 +8,8 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { apolloSubscriptionClient } from "~src/graphql/src/apollo-subscription-client"
 import { useGetFollowingsFromAddressQuery } from "~src/graphql/src"
+import FloatingIconStatus from "~src/components/FloatingIconStatus"
 import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
-
-console.log("🚀 plasmo-inline.tsx LOADED !")
 
 export const config: PlasmoCSConfig = {
   matches: ["https://*/*"]
@@ -114,13 +113,14 @@ const FloatingButton = ({ address }: { address: string }) => {
       onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
       onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.4")}
     >
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", width: 35, height: 35 }}>
         <IntuitionSearchIcon
           onSearch={() => {}}
           size={35}
           position={{ x: 0, y: 0 }}
           className="hover:opacity-80 transition-opacity"
         />
+        <FloatingIconStatus />
         {hasNotification && (
           <span
             style={{
@@ -157,14 +157,6 @@ const FloatingButton = ({ address }: { address: string }) => {
           </span>
         )}
       </div>
-      <style>
-        {`@keyframes ping {
-          75%, 100% {
-            transform: scale(2);
-            opacity: 0;
-          }
-        }`}
-      </style>
     </div>
   )
 }
@@ -183,6 +175,8 @@ const Wrapper = () => {
       }
     })
   }, [])
+
+  console.log("🧪 Rendering Wrapper with address:", address)
 
   return (
     <ApolloProvider client={apolloSubscriptionClient}>
