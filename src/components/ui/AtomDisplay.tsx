@@ -8,7 +8,7 @@ interface AtomDisplayProps {
     term_id: string
     label?: string | null
     image?: string | null
-    atom_value?: {
+    value?: {
       thing?: {
         name?: string | null
         description?: string | null
@@ -29,7 +29,8 @@ interface AtomDisplayProps {
   const PRO_RATA_CURVE_ID = "1"
 
 const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom, tags, tagsSection }) => {
-  const thing = atom.atom_value?.thing
+
+  const thing = atom.value?.thing
   const vault = atom.term?.vaults?.find(v => v.curve_id === PRO_RATA_CURVE_ID)
 
   return (

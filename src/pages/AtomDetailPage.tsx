@@ -58,14 +58,14 @@ const AtomDetailPage: React.FC = () => {
       allTriples.map(t => ({
         ...t,
         vault: {
-          term_id:   t.term.term_id,
-          positions: t.term.positions,
-          positions_aggregate: t.term.positions_aggregate
+          term_id:   t.term?.id,
+          positions: t.term?.positions,
+          positions_aggregate: t.term?.positions_aggregate
         },
         counter_vault: {
-          term_id:   t.counter_term.term_id,
-          positions: t.counter_term.positions,
-          positions_aggregate: t.counter_term.positions_aggregate
+          term_id:   t.counter_term?.id,
+          positions: t.counter_term?.positions,
+          positions_aggregate: t.counter_term?.positions_aggregate
         }
       })),
     [allTriples]
