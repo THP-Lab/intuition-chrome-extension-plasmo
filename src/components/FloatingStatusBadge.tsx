@@ -1,11 +1,29 @@
-import { useClaimDetection } from "~src/hooks/useClaimDetection"
+import { useEffect, useState } from "react"
+import type { Status } from "~src/hooks/useClaimDetection"
 
-const FloatingIconStatus = () => {
-  const { status } = useClaimDetection(window.location.href)
+const FloatingStatusBadge = ({ status }: { status: Status }) => {
+  const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    if (status === "loading") {
+      setVisible(true)
+      return
+    }
+
+    setVisible(true)
+    const timeout = setTimeout(() => setVisible(false), 6000)
+    return () => clearTimeout(timeout)
+  }, [status])
+
+  if (!visible) return null
 
   const isLoading = status === "loading"
   const color =
-    status === "found" ? "#22c55e" : status === "not_found" ? "#ef4444" : "#3b82f6"
+    status === "found"
+      ? "#22c55e"
+      : status === "not_found"
+      ? "#ef4444"
+      : "#3b82f6"
 
   return (
     <span
@@ -49,4 +67,4 @@ const FloatingIconStatus = () => {
   )
 }
 
-export default FloatingIconStatus
+export default FloatingStatusBadge
