@@ -81,7 +81,7 @@ const AtomDetailPage: React.FC = () => {
   if (errorAtom) {
     return (
       <div className="p-4 text-red-500">
-        Erreur : {(error as any)?.message}
+        Error : {(error as any)?.message}
       </div>
     )
   }
