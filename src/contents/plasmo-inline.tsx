@@ -2,12 +2,15 @@ import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect, useRef, useState } from "react"
 import {
   gql,
-  useQuery,
   useSubscription,
   ApolloProvider
 } from "@apollo/client"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { apolloSubscriptionClient } from "~src/graphql/src/apollo-subscription-client"
+import { useGetFollowingsFromAddressQuery } from "~src/graphql/src"
 import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
+
+console.log("🚀 plasmo-inline.tsx LOADED !")
 
 export const config: PlasmoCSConfig = {
   matches: ["https://*/*"]
@@ -35,40 +38,20 @@ const EVENTS_SUBSCRIPTION = gql`
   }
 `
 
-const GET_FOLLOWINGS = gql`
-  query getFollowingsFromAddress($address: String!) {
-    triples(
-      where: {
-        predicate: { label: { _eq: "follow" } }
-        subject: { accounts: { id: { _eq: $address } } }
-      }
-    ) {
-      object {
-        id
-      }
-    }
-  }
-`
-
 const FloatingButton = ({ address }: { address: string }) => {
-  const [positionY, setPositionY] = useState<number>(50)
+  const [positionY, setPositionY] = useState(50)
   const [hasNotification, setHasNotification] = useState(false)
   const draggingRef = useRef(false)
 
-  const { data: followData } = useQuery(GET_FOLLOWINGS, {
-    variables: { address: address?.toLowerCase() },
-    skip: !address
+  const { data: followData } = useGetFollowingsFromAddressQuery({
+    address: address?.toLowerCase() || ""
   })
 
   const { data: eventData } = useSubscription(EVENTS_SUBSCRIPTION, {
     variables: { limit: 1 }
   })
 
-  const followingIds =
-    followData?.triples?.map((t) => t.object?.id).filter(Boolean) ?? []
-
-  console.log("🐛 Raw followData:", followData)
-  console.log("🎯 followings (from triples):", followingIds)
+  const followingIds = followData?.following?.map((f) => f.id).filter(Boolean) ?? []
 
   useEffect(() => {
     const latestEvent = eventData?.events?.[0]
@@ -80,7 +63,6 @@ const FloatingButton = ({ address }: { address: string }) => {
       followingIds.includes(actorId) &&
       ["ClaimCreated", "AtomCreated", "TripleCreated"].includes(eventType)
     ) {
-      console.log("🔔 Real event from followed account:", actorId)
       setHasNotification(true)
     }
   }, [eventData, followingIds])
@@ -187,24 +169,26 @@ const FloatingButton = ({ address }: { address: string }) => {
   )
 }
 
+const queryClient = new QueryClient()
+
 const Wrapper = () => {
-  const [address, setAddress] = useState<string>("")
+  const [address, setAddress] = useState("")
 
   useEffect(() => {
     chrome.storage.local.get("metamask-account", (res) => {
       const addr = res["metamask-account"]
       if (addr) {
-        console.log(" Metamask account loaded:", addr)
+        console.log("✅ Metamask account loaded:", addr)
         setAddress(addr)
-      } else {
-        console.warn(" No metamask-account found in storage")
       }
     })
   }, [])
 
   return (
     <ApolloProvider client={apolloSubscriptionClient}>
-      <FloatingButton address={address} />
+      <QueryClientProvider client={queryClient}>
+        <FloatingButton address={address} />
+      </QueryClientProvider>
     </ApolloProvider>
   )
 }
