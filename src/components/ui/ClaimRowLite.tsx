@@ -121,8 +121,8 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
               <VoteButtons
                 vaultId={BigInt(vaultId)}
                 counterVaultId={BigInt(counterVaultId)}
-                numPositionsFor={numPositionsFor}
-                numPositionsAgainst={numPositionsAgainst}
+                numPositionsFor={numPositionsFor || 0}
+                numPositionsAgainst={numPositionsAgainst || 0}
                 initialVote={initialVote}
               />
             </div>
