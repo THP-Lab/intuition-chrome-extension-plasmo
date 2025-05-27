@@ -4,130 +4,135 @@ import { useParams } from "react-router-dom"
 import { useStorage } from "@plasmohq/storage/hook"
 import AtomDisplay from "~src/components/ui/AtomDisplay"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
-import { useGetClaimsByAtomQuery } from "@warzieram/graphql"
+import { useGetTriplesByAtomQuery } from "@warzieram/graphql"
 import TagCreator from "~src/components/TagCreator"
 import Tags from "~src/components/ui/Tags"
-import BackButton from '~/src/components/BackButton'
+import BackButton from "~/src/components/BackButton"
 
-const AtomDetailPage = () => {
-  const params = useParams<{ id: string }>()
-  const [stableId, setStableId] = React.useState<string | undefined>(params.id)
+const HAS_TAG_PREDICATE_ID = 4
 
-  React.useEffect(() => {
-    if (params.id) {
-      setStableId(params.id)
-    }
-  }, [params.id])
-
-  const parsedAtomId = stableId ? Number(stableId) : null
+const AtomDetailPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>()
+  const parsedId = Number(id)
+  const shouldFetch = !isNaN(parsedId)
   const [walletAddress] = useStorage<string>("metamask-account")
-  const [hasRefetched, setHasRefetched] = React.useState(false)
 
-  const shouldRenderAtom = stableId !== null && !isNaN(Number(stableId))
-
-  const { data, isLoading, isError, error } = useGetAtomQuery(
-    { id: stableId ?? "" },
-    { enabled: shouldRenderAtom }
+  const {
+    data: atomData,
+    isLoading: loadingAtom,
+    isError: errorAtom,
+    error
+  } = useGetAtomQuery(
+    { term_id: parsedId },
+    { enabled: shouldFetch }
   )
 
   const {
-    data: claimsData,
-    isLoading: isLoadingClaims,
-    isError: isClaimsError,
-    refetch: refetchClaims
-  } = useGetClaimsByAtomQuery(
-    { id: parsedAtomId ?? 0, address: walletAddress },
-    { enabled: false }
+    data: triplesData,
+    isLoading: loadingTriples,
+    isError: errorTriples,
+    refetch: refetchTriples
+  } = useGetTriplesByAtomQuery(
+    {
+      term_id: parsedId,
+      address: walletAddress ?? ""
+    },
+    { enabled: shouldFetch && !!walletAddress }
   )
 
-  React.useEffect(() => {
-    setHasRefetched(false)
-  }, [parsedAtomId])
-
-  React.useEffect(() => {
-    if (shouldRenderAtom && walletAddress && !hasRefetched) {
-      console.log("🔁 Refetch claims triggered")
-      refetchClaims()
-      setHasRefetched(true)
-    }
-  }, [shouldRenderAtom, walletAddress, hasRefetched, refetchClaims])
-  
-
-  const claims =
-  claimsData?.claims_aggregate?.nodes.map((claim) => ({
-    ...claim,
-    ...claim.triple
-  })) ?? []
-
-  const claimsWithoutDuplicates = claims.filter((claim, index, self) => index === self.findIndex((c) => 
-    c.subject?.id === claim.subject?.id &&
-    c.predicate?.id === claim.predicate?.id &&
-    c.object?.id === claim.object?.id
-  )
- )
-
-  const rawTags = claimsWithoutDuplicates
-    .filter(c => c.predicate.label === "has tag")
-    .map(c => c.object)
-
-  const tags: typeof rawTags = Array.from(
-    new Map(rawTags.map(tag => [tag.id, tag])).values()
+  const allTriples = React.useMemo(
+    () => triplesData?.triples_aggregate?.nodes ?? [],
+    [triplesData]
   )
 
-  console.log("walletAddress:", walletAddress)
-  console.log("atomId:", stableId)
-  console.log("ClaimsData", claimsData?.claims_aggregate?.nodes)
-  console.log("Claims:", claims)
-  console.log("claimsWithoutDuplicates:", claimsWithoutDuplicates)
-  console.log("Tags :", tags);
+  const tags = React.useMemo(() => {
+    const raw = allTriples
+      .filter(t => t.predicate?.term_id === HAS_TAG_PREDICATE_ID)
+      .map(t => t.object)
+    return Array.from(new Map(raw.map(tag => [tag.term_id, tag])).values())
+  }, [allTriples])
 
 
-  if (!stableId || isNaN(parsedAtomId)) {
-  return <div className="p-4">Loading...</div>
-}
+  const claims = React.useMemo(
+    () =>
+      allTriples.map(t => ({
+        ...t,
+        vault: {
+          term_id:   t.term?.id,
+          positions: t.term?.positions,
+          positions_aggregate: t.term?.positions_aggregate
+        },
+        counter_vault: {
+          term_id:   t.counter_term?.id,
+          positions: t.counter_term?.positions,
+          positions_aggregate: t.counter_term?.positions_aggregate
+        }
+      })),
+    [allTriples]
+  )
 
-  if (isLoading) return <div className="p-4">Loading identity...</div>
-  if (isError) return <div className="p-4 text-red-500">Error: {(error as any)?.message}</div>
-  if (!data?.atom) return <div className="p-4">No identity found</div>
+
+  if (!shouldFetch) {
+    return <div className="p-4">Identifiant invalide</div>
+  }
+  if (loadingAtom) {
+    return <div className="p-4">Loading…</div>
+  }
+  if (errorAtom) {
+    return (
+      <div className="p-4 text-red-500">
+        Error : {(error as any)?.message}
+      </div>
+    )
+  }
+  if (!atomData?.atom) {
+    return <div className="p-4">No atoms found</div>
+  }
+
 
   return (
-    <div className="p-4">
+    <div className="p-4 space-y-6">
       <BackButton />
 
       <AtomDisplay
-        atom={data.atom}
+        atom={atomData.atom}
         tagsSection={
-          <div className="gap-2">
+          <div className="flex flex-wrap gap-2 items-center">
             <Tags tags={tags} />
-            <div className="pt-2">
-              <TagCreator 
-                subjectAtom={data.atom}
-                onTagCreated={() => refetchClaims()}
-              />
-            </div>
+            <TagCreator
+              subjectAtom={atomData.atom}
+              onTagCreated={() => refetchTriples()}
+            />
           </div>
         }
       />
-      
-      <div>
-        <div className="flex items-center mt-2 mb-1">
-          <span className="text-sm text-gray-400">Claims</span>
-          <span className="px-2 py-0.5 text-xs font semi-bold text-white bg-gray-700 rounded-full ml-2">
-            {claimsData?.claims_aggregate?.aggregate?.count ?? 0}
-          </span>
+
+      <section>
+        <div className="flex items-center mb-2">
+          <h2 className="text-lg font-semibold flex-1">
+            Triples ({claims.length})
+          </h2>
+          {loadingTriples && <span className="text-sm">Loading…</span>}
+          {errorTriples && (
+            <span className="text-sm text-red-500">Error loading</span>
+          )}
         </div>
-        {isLoadingClaims ? (
-          <p className="mt-2 text-sm text-muted-foreground">Loading related claims...</p>
-        ) : isClaimsError ? (
-          <p className="mt-2 text-sm text-red-500">Error loading claims</p>
+
+        {claims.length === 0 ? (
+          <p className="text-sm text-gray-500">
+            No triple associated with this atom.
+          </p>
         ) : (
-          <div className="mt-3 space-y-2">
-            {claimsWithoutDuplicates.map((claim, index) => (
-              <ClaimRowLite key={`${claim.id}-${index}`} claim={claim} />
+          <div className="space-y-3">
+            {claims.map((claim, idx) => (
+              <ClaimRowLite
+                key={`${claim.term_id}-${idx}`}
+                claim={claim}
+              />
             ))}
           </div>
         )}
-      </div>
+      </section>
     </div>
   )
 }

@@ -2,22 +2,63 @@ import React from "react"
 import { cn } from "~src/lib/utils"
 import { PopupAtom } from "./PopupAtom"
 import VoteButtons, { type VoteChoice } from "~src/components/VoteButtons"
-import type { GetTriplesWithPositionsQuery } from "~node_modules/@warzieram/graphql/dist"
+import type { AtomProps } from "~src/components/AtomCard"
+
+interface VaultProps {
+  total_shares?: string | null
+  position_count?: number | null
+  positions?: Array<{ shares?: string | null }>
+}
+
+interface TermWithVaults {
+  vaults?: VaultProps[] | null
+  positions_aggregate?: {
+    aggregate?: {
+      count?: number | null
+    }
+  } | null
+}
 
 interface ClaimRowLiteProps {
-  claim: GetTriplesWithPositionsQuery['triples'][number]
+  claim: {
+    term_id: string
+    counter_term_id?: string
+    subject: AtomProps
+    predicate: AtomProps
+    object: AtomProps
+    positions_aggregate?: {
+        aggregate?: {
+          count?: number | null
+        }
+      } | null
+      counter_positions_aggregate?: {
+        aggregate?: {
+          count?: number | null
+        }
+      } | null
+
+      positions?: Array<{ shares?: string | null }>
+      counter_positions?: Array<{ shares?: string | null }>
+
+      creator?: {
+        id: string
+        label?: string | null
+        type?: string | null
+      }
+      term?: TermWithVaults | null
+      counter_term?: TermWithVaults | null
+  }
 }
 
 export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   try {
-    // Guard against missing claim
     if (!claim) {
       console.error("ClaimRowLite: missing claim, raw data:", claim)
       return <div className="text-xs text-gray-500">Invalid claim data</div>
     }
 
     const triple = claim
-
+    console.log("VUE TRIPLE CLAIMROWLITE",triple)
 
     const subject = triple.subject ?? claim.subject
     const predicate = triple.predicate ?? claim.predicate
@@ -28,15 +69,17 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
     const vault = triple?.term?.vaults.at(0)
     const counterVault = triple.counter_term?.vaults.at(0)
 
-    const vaultId = triple.term_id
-    const counterVaultId = triple?.counter_term_id
+    const vaultId = triple.term_id ?? (triple as any).term.id
+    const counterVaultId = triple?.counter_term_id ?? (triple as any).counter_term.id
 
-    const numPositionsFor = vault?.position_count
+    const numPositionsFor =
+      triple?.term?.positions_aggregate?.aggregate?.count
 
-    const numPositionsAgainst = counterVault?.position_count
+    const numPositionsAgainst =
+      triple?.counter_term?.positions_aggregate?.aggregate?.count
 
-    const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
-    const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
+    const userStake = Number(triple?.positions?.[0]?.shares ?? 0)
+    const userCounterStake = Number(triple?.counter_positions?.[0]?.shares ?? 0)
 
     const initialVote: VoteChoice | undefined =
       userStake > 0
@@ -60,16 +103,16 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
           </div>
           {creator && (
             <p className="mt-2 text-xs text-gray-500">
-              Created by{' '}
-              <a
-                href={`https://portal.intuition.systems/app/atom/${creator.term_id}?tab=portfolio`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                {creator.label}
-              </a>
-            </p>
+            Created by{' '}
+            <a
+              href={`https://portal.intuition.systems/app/atom/${creator.id}?tab=portfolio`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              {creator.label}
+            </a>
+          </p>
           )}
         </div>
         <div>

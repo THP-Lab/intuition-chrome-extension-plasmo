@@ -60,13 +60,12 @@ const HashtagObjectsPage: React.FC = () => {
   return (
     <div className="p-4 space-y-4">
       <h1 className="text-xl font-bold">Tags list</h1>
-
       {items.map((atom) => {
         const count = atom.as_object_triples_aggregate.aggregate.count
         return (
           <Link
-            key={atom.id}
-            to={`/tags/${atom.id}`}
+            key={atom.term_id}
+            to={`/tags/${atom.term_id}`}
             className="flex justify-between gap-3 items-center p-3 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl mt-2 claims-hover-effect">
             <div className="flex items-center gap-3">
               {atom.image ? (

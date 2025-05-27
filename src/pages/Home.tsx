@@ -88,7 +88,7 @@ function Home() {
       content: (
         <div>
           {loading ? (
-            "Chargement..."
+            "Loading..."
           ) : typeof data !== "undefined" && claims.length !== 0 ? (
             claims.map(
               (claim, index) => (
@@ -123,7 +123,7 @@ function Home() {
       content: (
         <div>
           {loading ? (
-            "Chargement..."
+            "Loading..."
           ) : typeof data !== "undefined" && atoms.length != 0 ? (
             atomsWithTags.map((atom) => {
               return (
