@@ -16,10 +16,13 @@ const SubjectTag: React.FC = () => {
 
 
   const { data, isLoading, error } = useGetTaggedObjectsQuery({
-    objectId: Number(tagId),
-    predicateId: HASHTAG_PREDICATE_ID,
-    address: walletAddress!
+    variables: {
+      objectId: tagId!,
+      predicateId: HASHTAG_PREDICATE_ID,
+      address: walletAddress!
+    }
   })
+  console.log("LA DATA :", data)
 
   const triples = data?.triples ?? []
 
@@ -31,7 +34,7 @@ const SubjectTag: React.FC = () => {
         const userFor    = Number(vault.positions?.[0]?.shares ?? 0)
         const userAgainst= Number(counter.positions?.[0]?.shares ?? 0)
         const userVoted = userFor > 0 || userAgainst > 0
-        const totalVotes = (vault.vaults[0].position_count ?? 0) + (counter.vaults[0].position_count ?? 0)
+        const totalVotes = (vault.positions_aggregate.aggregate.count ?? 0) + (counter.positions_aggregate.aggregate.count ?? 0)
         return { triple, userVoted, totalVotes }
       })
       .sort((a, b) => {
@@ -43,6 +46,8 @@ const SubjectTag: React.FC = () => {
 
   if (isLoading) return <p>Loading…</p>
   if (error) return <p className="text-red-600">Error loading</p> 
+  if (error) return console.log("VOICI L'ERREUR :", error)
+
 
   return (
     <div className="mt-2 space-y-6">
@@ -59,8 +64,8 @@ const SubjectTag: React.FC = () => {
             const vaultId = vault.id
             const counterVaultId = counterVault.id
 
-            const numPositionsFor = vault.vaults[0].position_count ?? 0
-            const numPositionsAgainst = counterVault.vaults[0].position_count ?? 0
+            const numPositionsFor = vault.positions_aggregate.aggregate.count ?? 0
+            const numPositionsAgainst = counterVault.positions_aggregate.aggregate.count ?? 0
 
             const userStake = Number(vault.positions?.[0]?.shares ?? 0)
             const userCounterStake = Number(counterVault.positions?.[0]?.shares ?? 0)
