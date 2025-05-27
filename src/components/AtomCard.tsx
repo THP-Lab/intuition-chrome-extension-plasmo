@@ -6,7 +6,7 @@ import { useAtomPosition } from "../hooks/useAtomPosition"
 import TagCreator from "./TagCreator"
 import Tags from "./ui/Tags"
 
-interface AtomProps {
+export interface AtomProps {
   term_id: string
   data?: string | null
   type: string
@@ -49,7 +49,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
       return <div className="text-xs text-gray-500">Invalid atom data</div>
     }
     const { atomPosition, isVoting, txHash } = useAtomPosition()
-    const thing = atom.atom_value?.thing
+    const thing = atom.value?.thing
     const navigate = useNavigate()
     const goToAtomPage = () => {
       navigate(`/atoms/${atom.term_id || ''}`)

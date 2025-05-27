@@ -2,22 +2,63 @@ import React from "react"
 import { cn } from "~src/lib/utils"
 import { PopupAtom } from "./PopupAtom"
 import VoteButtons, { type VoteChoice } from "~src/components/VoteButtons"
-import type { GetTriplesWithPositionsQuery } from "~node_modules/@warzieram/graphql/dist"
+import type { AtomProps } from "~src/components/AtomCard"
+
+interface VaultProps {
+  total_shares?: string | null
+  position_count?: number | null
+  positions?: Array<{ shares?: string | null }>
+}
+
+interface TermWithVaults {
+  vaults?: VaultProps[] | null
+  positions_aggregate?: {
+    aggregate?: {
+      count?: number | null
+    }
+  } | null
+}
 
 interface ClaimRowLiteProps {
-  claim: GetTriplesWithPositionsQuery['triples'][number]
+  claim: {
+    term_id: string
+    counter_term_id?: string
+    subject: AtomProps
+    predicate: AtomProps
+    object: AtomProps
+    positions_aggregate?: {
+        aggregate?: {
+          count?: number | null
+        }
+      } | null
+      counter_positions_aggregate?: {
+        aggregate?: {
+          count?: number | null
+        }
+      } | null
+
+      positions?: Array<{ shares?: string | null }>
+      counter_positions?: Array<{ shares?: string | null }>
+
+      creator?: {
+        id: string
+        label?: string | null
+        type?: string | null
+      }
+      term?: TermWithVaults | null
+      counter_term?: TermWithVaults | null
+  }
 }
 
 export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   try {
-    // Guard against missing claim
     if (!claim) {
       console.error("ClaimRowLite: missing claim, raw data:", claim)
       return <div className="text-xs text-gray-500">Invalid claim data</div>
     }
 
     const triple = claim
-
+    console.log("VUE TRIPLE CLAIMROWLITE",triple)
 
     const subject = triple.subject ?? claim.subject
     const predicate = triple.predicate ?? claim.predicate
@@ -37,8 +78,8 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
     const numPositionsAgainst =
       triple?.counter_term?.positions_aggregate?.aggregate?.count
 
-    const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
-    const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
+    const userStake = Number(triple?.positions?.[0]?.shares ?? 0)
+    const userCounterStake = Number(triple?.counter_positions?.[0]?.shares ?? 0)
 
     const initialVote: VoteChoice | undefined =
       userStake > 0
