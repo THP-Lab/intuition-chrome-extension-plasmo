@@ -1,4 +1,8 @@
-import { useGetTriplesWithPositionsQuery, type Triples } from "@warzieram/graphql"
+import {
+  useGetTriplesWithPositionsLazyQuery,
+  useGetTriplesWithPositionsQuery,
+  type Triples
+} from "@warzieram/graphql"
 import React, { useEffect, useState } from "react"
 
 import { useStorage } from "@plasmohq/storage/dist/hook"
@@ -29,11 +33,7 @@ const Search: React.FC = () => {
     setSearchTerm(value)
   }
 
-  const {
-    data: triplesData,
-    loading,
-    error
-  } = useGetTriplesWithPositionsQuery({
+  const { data: triplesData, loading, error } = useGetTriplesWithPositionsQuery({
     variables: {
       where: {
         _or: [
@@ -43,10 +43,11 @@ const Search: React.FC = () => {
         ]
       },
       address: walletAddress
-    }
+    },
+    skip: searchTerm==="",
   })
-  console.log(triplesData)
-  const triples = triplesData?.triples || []
+
+  const triples = triplesData !== undefined ? triplesData.triples : []
 
   const renderResults = () => {
     console.log("Active tab:", activeTab)
@@ -56,11 +57,16 @@ const Search: React.FC = () => {
     if (error) return <p className="text-red-500">Error loading results.</p>
     if (!triples.length) return <p>No results found.</p>
 
-    const filterFunctions: Record<string, (triple: typeof triples[0]) => boolean> = {
+    const filterFunctions: Record<
+      string,
+      (triple: (typeof triples)[0]) => boolean
+    > = {
       All: () => true,
-      Tag: (triple) => triple.predicate?.label?.toLowerCase().includes("tag") || false,
+      Tag: (triple) =>
+        triple.predicate?.label?.toLowerCase().includes("tag") || false,
       Organization: (triple) =>
-        triple.predicate?.label?.toLowerCase().includes("organization") || false,
+        triple.predicate?.label?.toLowerCase().includes("organization") ||
+        false,
       User: (triple) =>
         triple.predicate?.label?.toLowerCase().includes("follow") || false
     }
