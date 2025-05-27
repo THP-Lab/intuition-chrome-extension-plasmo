@@ -18,6 +18,8 @@ const Search: React.FC = () => {
   const [activeTab, setActiveTab] = useState("All")
   const [walletAddress] = useStorage<string>("metamask-account", "")
 
+  const RESEARCH_LIMIT = 20;
+
   useEffect(() => {
     const checkWidth = () => {
       setIsSidePanel(window.innerWidth > 600)
@@ -42,6 +44,7 @@ const Search: React.FC = () => {
           { object: { label: { _ilike: `%${searchTerm}%` } } }
         ]
       },
+      limit: RESEARCH_LIMIT,
       address: walletAddress
     },
     skip: searchTerm==="",
