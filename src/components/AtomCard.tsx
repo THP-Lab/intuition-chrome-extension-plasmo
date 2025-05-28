@@ -21,20 +21,26 @@ export interface AtomProps {
       url?: string | null
     } | null
   } | null
- term?: {
-  vaults?: {
-    curve_id: string
-    current_share_price?: string
-    market_cap?: string
-    total_assets?: string
-    total_shares?: string
-    positions_aggregate?: {
-      aggregate?: {
-        count?: number
-      }
+  positions_aggregate?: {
+    aggregate?: {
+      count?: number
     }
-  }[]
-}
+  }
+  term?: {
+    vaults?: {
+      curve_id: string
+      current_share_price?: string
+      market_cap?: string
+      total_assets?: string
+      total_shares?: string
+      position_count?: number
+      positions_aggregate?: {
+        aggregate?: {
+          count?: number
+        }
+      }
+    }[]
+  }
 }
 
 interface AtomCardProps {
@@ -55,8 +61,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
       navigate(`/atoms/${atom.term_id || ''}`)
     }
 
-    const proRataVault = atom.term?.vaults?.find(v => v.curve_id === "1")
-    const positionCount = proRataVault?.positions_aggregate?.aggregate?.count ?? 0
+    const positionCount = atom?.term?.vaults[0]?.position_count ?? atom?.positions_aggregate?.aggregate?.count ?? 0
 
 
     return (
@@ -87,7 +92,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
           <div className="flex items-center gap-4 ml-2">
             <p className="flex items-center text-sm text-white text-muted-foreground">
               <UserRound className="w-4 h-4 mr-1" />
-               {Math.max(positionCount - 1, 0)}
+              {Math.max(positionCount - 1, 0)}
             </p>
             <button
               onClick={(e) => {

@@ -78,7 +78,6 @@ const RecentActivity: React.FC = () => {
         if (isDeposit && e.deposit && e.triple) {
           const senderImg = e.deposit.sender_assets_after_total_fees.image
           const senderLabel = e.deposit?.sender?.id
-        console.log("ID DU PREDICATE:", e.triple.predicate.term_id)
 
           return (
             <div key={idx} className="pt-2 pb-2 border-b">

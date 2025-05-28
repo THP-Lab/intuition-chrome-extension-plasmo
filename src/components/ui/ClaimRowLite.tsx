@@ -27,26 +27,26 @@ interface ClaimRowLiteProps {
     predicate: AtomProps
     object: AtomProps
     positions_aggregate?: {
-        aggregate?: {
-          count?: number | null
-        }
-      } | null
-      counter_positions_aggregate?: {
-        aggregate?: {
-          count?: number | null
-        }
-      } | null
-
-      positions?: Array<{ shares?: string | null }>
-      counter_positions?: Array<{ shares?: string | null }>
-
-      creator?: {
-        id: string
-        label?: string | null
-        type?: string | null
+      aggregate?: {
+        count?: number | null
       }
-      term?: TermWithVaults | null
-      counter_term?: TermWithVaults | null
+    } | null
+    counter_positions_aggregate?: {
+      aggregate?: {
+        count?: number | null
+      }
+    } | null
+
+    positions?: Array<{ shares?: string | null }>
+    counter_positions?: Array<{ shares?: string | null }>
+
+    creator?: {
+      id: string
+      label?: string | null
+      type?: string | null
+    }
+    term?: TermWithVaults | null
+    counter_term?: TermWithVaults | null
   }
 }
 
