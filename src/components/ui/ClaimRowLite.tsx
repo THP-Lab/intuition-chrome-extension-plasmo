@@ -66,11 +66,11 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
     const creator = (triple as any)?.creator ?? (claim as any)?.creator
 
-    const vault = triple?.term?.vaults.at(0)
-    const counterVault = triple.counter_term?.vaults.at(0)
 
     const vaultId = triple.term_id
     const counterVaultId = triple?.counter_term_id 
+    console.log("VAULT ID", vaultId)
+    console.log("COUNTER VAULT ID", counterVaultId)
 
     const numPositionsFor =
       triple?.term?.positions_aggregate?.aggregate?.count
