@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query"
+import { useGetClaimsByUriQuery } from "@warzieram/graphql"
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
@@ -8,7 +9,6 @@ import EyeComponent from "~/src/components/3D/EyeComponent"
 import { useTheme } from "~/src/components/ThemeProvider"
 import AtomCard from "~src/components/AtomCard"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
-import { useGetClaimsByUriQuery } from "@warzieram/graphql"
 
 import TabSystem from "../components/TabSystem"
 
@@ -17,10 +17,11 @@ function Home() {
   const [currentUrl, setCurrentUrl] = useState<string>("")
   const [walletAddress] = useStorage<string>("metamask-account", "")
   const [activeTab, setActiveTab] = useState("Claims")
+  const [startRequest, setStartRequest] = useState(false)
 
   const queryClient = useQueryClient()
-  console.log(queryClient);
-  
+  console.log(queryClient)
+
   const getCurrentUrl = async () => {
     const [tab] = await chrome.tabs.query({
       active: true,
@@ -34,19 +35,23 @@ function Home() {
   }
   useEffect(() => {
     refreshUrl()
-    chrome.tabs.onUpdated.addListener(() => {
-      refreshUrl()
-    })
+    chrome.tabs.onUpdated.addListener(refreshUrl)
+    chrome.tabs.onActivated.addListener(refreshUrl)
+    setStartRequest(true)
 
-    chrome.tabs.onActivated.addListener(() => {
-      refreshUrl()
-    })
+    return () => {
+      chrome.tabs.onUpdated.removeListener(refreshUrl)
+      chrome.tabs.onActivated.removeListener(refreshUrl)
+    }
   }, [])
 
-  const { data, loading, error } = useGetClaimsByUriQuery({variables: {
-    uri: currentUrl,
-    address: walletAddress
-  }})
+  const { data, loading, error } = useGetClaimsByUriQuery({
+    variables: {
+      uri: currentUrl,
+      address: walletAddress
+    },
+    skip: !startRequest
+  })
   const atoms = data?.atoms ?? []
   console.log("current wallet address:", walletAddress)
   console.log("Data :", data)
