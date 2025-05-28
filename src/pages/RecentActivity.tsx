@@ -54,9 +54,9 @@ const RecentActivity: React.FC = () => {
         const isDeposit = Boolean(e.deposit_id)
 
         // ------ DEPOSIT ATOM ------
-        if (isDeposit && e.deposit && !e.deposit.is_triple && e.atom) {
-          const senderImg = e.deposit.sender.image
-          const senderLabel = e.deposit.sender.label
+        if (isDeposit && e.deposit && e.atom) {
+          const senderImg = e.deposit.sender_assets_after_total_fees.image
+          const senderLabel = e.deposit?.sender?.id
 
           return (
             <div key={idx} className="pt-2 pb-3 border-b">
@@ -75,10 +75,10 @@ const RecentActivity: React.FC = () => {
         }
 
         // ------ DEPOSIT TRIPLE ------
-        if (isDeposit && e.deposit && e.deposit.is_triple && e.triple) {
-          const senderImg = e.deposit.sender.image
-          const senderLabel = e.deposit.sender.label
-        console.log("ID DU PREDICATE:", e.triple.predicate.id)
+        if (isDeposit && e.deposit && e.triple) {
+          const senderImg = e.deposit.sender_assets_after_total_fees.image
+          const senderLabel = e.deposit?.sender?.id
+        console.log("ID DU PREDICATE:", e.triple.predicate.term_id)
 
           return (
             <div key={idx} className="pt-2 pb-2 border-b">
