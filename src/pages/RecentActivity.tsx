@@ -15,7 +15,7 @@ const RecentActivity: React.FC = () => {
 
   const { data, loading, error } = useEventsSubscription({
     variables: {
-      addresses: walletAddress,
+      addresses: [walletAddress],
       limit: INITIAL_LIMIT
     }
   })
@@ -57,6 +57,7 @@ const RecentActivity: React.FC = () => {
         if (isDeposit && e.deposit && e.atom) {
           const senderImg = e.deposit.sender_assets_after_total_fees.image
           const senderLabel = e.deposit?.sender?.id
+          console.log("TRIPLE LIVE FEED ", e.atom)
 
           return (
             <div key={idx} className="pt-2 pb-3 border-b">
@@ -78,6 +79,7 @@ const RecentActivity: React.FC = () => {
         if (isDeposit && e.deposit && e.triple) {
           const senderImg = e.deposit.sender_assets_after_total_fees.image
           const senderLabel = e.deposit?.sender?.id
+          console.log("TRIPLE LIVE FEED ", e.triple)
 
           return (
             <div key={idx} className="pt-2 pb-2 border-b">
@@ -89,7 +91,6 @@ const RecentActivity: React.FC = () => {
                 />
                 <span className="text-sm font-medium">{renderSenderLink(senderLabel)}<strong> deposit</strong> :</span>
               </p>
-              
                 <ClaimRowLite claim={e.triple} />
               
             </div>
