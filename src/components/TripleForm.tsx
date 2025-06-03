@@ -14,7 +14,7 @@ import { umami } from "~src/lib/umami"
 interface Atom {
   id: string
   label: string
-  vault_id: string
+  term_id: string
 }
 
 type TripleWithVote = {
@@ -56,7 +56,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
     isLoading,
     error,
     txHash,
-    vaultIds
+    termIds
   } = useCreateTriples()
 
   useImperativeHandle(ref, () => ({
@@ -84,9 +84,9 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
 
     try {
       addTriple([
-        BigInt(subject.vault_id),
-        BigInt(predicate.vault_id),
-        BigInt(object.vault_id)
+        BigInt(subject.term_id),
+        BigInt(predicate.term_id),
+        BigInt(object.term_id)
       ])
       setLabeledTriples((prev) => [
         ...prev,
@@ -116,10 +116,10 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
       const totalTxCount = 1 + labeledTriples.length
 
       setProgressMessage(`Transaction 1/${totalTxCount}: Creating triples...`)
-      const { vaultIds: createdVaultIds } = await createTriples()
+      const { termIds: createdVaultIds } = await createTriples()
 
       umami("triples_created", {
-        vaultIds: createdVaultIds.join(",")
+        termIds: createdVaultIds.join(",")
       }).catch(console.error)
 
       if (!createdVaultIds || createdVaultIds.length !== labeledTriples.length) {
@@ -133,17 +133,17 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
 
       for (let i = 0; i < createdVaultIds.length; i++) {
         const { triple: [s, p, o], vote } = labeledTriples[i]
-        const vaultId = createdVaultIds[i]
+        const termId = createdVaultIds[i]
 
         setProgressMessage(
           `Transaction ${i + 2}/${totalTxCount}: Voting ${vote?.toUpperCase()} for "${s.label} → ${p.label} → ${o.label}"`
         )
 
 
-        let targetVaultId = vaultId
+        let targetVaultId = termId
 
         if (vote === "against") {
-          const counterId = await multivault.getCounterIdFromTriple(vaultId)
+          const counterId = await multivault.getCounterIdFromTriple(termId)
           if (!counterId) throw new Error("No counter vault for triple")
           targetVaultId = counterId
         }
@@ -162,6 +162,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
     }
   }
 
+          console.log(error)
 
   return (
     <div className="space-y-6">
@@ -243,7 +244,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
         </div>
 
         {txHash && <p className="text-green-600 text-sm">Tx: {txHash}</p>}
-        {vaultIds && <p className="text-green-600 text-sm">Vaults: {vaultIds.join(', ')}</p>}
+        {termIds && <p className="text-green-600 text-sm">Vaults: {termIds.join(', ')}</p>}
         {progressMessage && (
           <p
             className={`text-sm ${progressMessage.startsWith("Transaction")

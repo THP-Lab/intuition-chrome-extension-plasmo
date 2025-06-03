@@ -11,7 +11,7 @@ export const useCreateTriples = () => {
   const [txHash, setTxHash] = useState<`0x${string}` | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [receipt, setReceipt] = useState<any>(null)
-  const [vaultIds, setVaultIds] = useState<bigint[] | null>(null)
+  const [termIds, setTermIds] = useState<bigint[] | null>(null)
   const [triples, setTriples] = useState<TripleInput[]>([])
 
   const addTriple = (triple: TripleInput) => {
@@ -31,7 +31,7 @@ export const useCreateTriples = () => {
     setError(null)
     setTxHash(null)
     setReceipt(null)
-    setVaultIds(null)
+    setTermIds(null)
 
     try {
       const { walletClient, publicClient } = await getClients()
@@ -46,7 +46,6 @@ export const useCreateTriples = () => {
       const predicateIds = triples.map(([, p]) => p)
       const objectIds = triples.map(([, , o]) => o)
 
-      // Première transaction : création des triples
       const hash = await multivault.contract.write.batchCreateTriple(
         [subjectIds, predicateIds, objectIds],
         {
@@ -66,11 +65,11 @@ export const useCreateTriples = () => {
         throw new Error("Mismatch between created triples and local list")
       }
 
-      setVaultIds(createdVaultIds)
+      setTermIds(createdVaultIds)
       setTxHash(hash)
       setReceipt(parsed)
 
-      return { hash, vaultIds: createdVaultIds }
+      return { hash, termIds: createdVaultIds }
     } catch (err: any) {
       console.error(err)
       setError(err.message || 'Unknown error')
@@ -90,7 +89,7 @@ export const useCreateTriples = () => {
     error,
     txHash,
     receipt,
-    vaultIds,
+    termIds,
   }
 }
 
