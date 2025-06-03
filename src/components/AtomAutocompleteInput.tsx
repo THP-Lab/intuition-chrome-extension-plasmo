@@ -97,7 +97,6 @@ const { data, loading, error } = useGetAtomsQuery({
       <input
         ref={inputRef ? inputRef : internalInputRef}
         type="text"
-        placeholder="Add a tag"
         value={search}
         onChange={(e) => {
           setSearch(e.target.value);
