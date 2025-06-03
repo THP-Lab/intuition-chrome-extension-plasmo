@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDebounce } from 'use-debounce';
-import { useGetAtomsQuery } from '@0xintuition/graphql';
+import { useGetAtomsQuery } from '@warzieram/graphql';
 import { usePageMetadata } from "../hooks/usePageMetadata"
 import AtomForm from './AtomForm'
 import { Plus } from "lucide-react"
 import { UserRound } from "lucide-react"
 
 interface Atom {
-  term_id: string;
+  term_id?: string;
   label?: string | null;
   emoji?: string | null;
   image?: string | null;
-  vault?: string;
-  positionCount: number;
+  term?: {  
+    vaults?: {
+      position_count: number;
+    }[]
+  };
 }
 
 interface AtomAutocompleteInputProps {
@@ -52,33 +55,26 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
     };
   }, []);
 
-  const { data } = useGetAtomsQuery(
-    {
-      where: {
-        label: {
-          _ilike: `%${debouncedSearch}%`,
-        },
-      },
-      limit: 10,
-      orderBy: {
-        vault: {
-          position_count: 'desc',
-        },
-      },
-    },
-    {
-      enabled: debouncedSearch.length >= 2,
-    }
-  );
+const { data, loading, error } = useGetAtomsQuery({
+  variables: {
+    where: { label: { _ilike: `%${debouncedSearch}%` } },
+    limit: 10,
+    order_by: { vaults: { position_count: 'desc' } },
+  },
+  skip: debouncedSearch.length < 2
+})
 
-  const atoms: Atom[] =
-    data?.atoms.map(atom => ({
-      term_id: atom.term_id,
-      label: atom.label,
-      emoji: atom.emoji,
-      image: atom.image,
-      positionCount: atom.vault.position_count,
-    })) || [];
+ const atoms: Atom[] = data?.atoms.map(atom => ({
+    term_id: atom.term_id,
+    label: atom.label,
+    emoji: atom.emoji,
+    image: atom.image,
+    term: {
+      vaults: atom.term.vaults.map(v => ({
+        position_count: v.position_count
+      }))
+    }
+  })) || [];
 
   const handleSelect = (atom: Atom  ) => {
     onSelect(atom);
@@ -86,10 +82,10 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
     setCreatingAtom(false);
 
     setTimeout(() => {
-      const form = inputRef.current?.form;
-      if (!form || !inputRef.current) return;
+      const form = inputRef?.current?.form;
+      if (!form || !inputRef?.current) return;
       const elements = Array.from(form.elements) as HTMLElement[];
-      const index = elements.indexOf(inputRef.current);
+      const index = elements.indexOf(inputRef?.current);
       const nextInput = elements[index + 1];
       nextInput?.focus();
     }, 0);
@@ -97,10 +93,10 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
 
   return (
     <div className="relative" ref={wrapperRef}>
+      <label className="block text-sm font-medium mb-1">{label}</label>
       <input
         ref={inputRef ? inputRef : internalInputRef}
         type="text"
-        placeholder="Add a tag" 
         value={search}
         onChange={(e) => {
           setSearch(e.target.value);
@@ -134,7 +130,9 @@ const AtomAutocompleteInput: React.FC<AtomAutocompleteInputProps> = ({ label, on
               <span>{atom.label}</span>
               <span className="flex items-center text-xs text-muted-foreground ml-auto">
                 <UserRound className="w-4 h-4 mr-1" />
-                {atom.positionCount.toLocaleString()}
+                {typeof atom.term?.vaults?.[0]?.position_count === 'number'
+                ? atom.term.vaults![0].position_count.toLocaleString()
+                : '0'}
 
               </span>
             </li>
