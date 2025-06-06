@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query"
-import { useGetClaimsByUriQuery } from "@warzieram/graphql"
+import { useGetTriplesByUriQuery } from "@warzieram/graphql"
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
@@ -45,7 +45,7 @@ function Home() {
     }
   }, [])
 
-  const { data, loading, error } = useGetClaimsByUriQuery({
+  const { data, loading, error } = useGetTriplesByUriQuery({
     variables: {
       uri: currentUrl,
       address: walletAddress

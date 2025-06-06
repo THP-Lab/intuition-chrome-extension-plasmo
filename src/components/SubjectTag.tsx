@@ -12,17 +12,16 @@ const HASHTAG_PREDICATE_ID = 4
 
 const SubjectTag: React.FC = () => {
   const { tagId } = useParams<{ tagId: string }>()
-  const [walletAddress] = useStorage<string>('metamask-account')
+  const [walletAddress] = useStorage<string>('metamask-account', "")
 
 
-  const { data, isLoading, error } = useGetTaggedObjectsQuery({
+  const { data, loading, error } = useGetTaggedObjectsQuery({
     variables: {
       objectId: tagId!,
       predicateId: HASHTAG_PREDICATE_ID,
       address: walletAddress!
     }
   })
-  console.log("LA DATA :", data)
 
   const triples = data?.triples ?? []
 
@@ -34,7 +33,7 @@ const SubjectTag: React.FC = () => {
         const userFor    = Number(vault.positions?.[0]?.shares ?? 0)
         const userAgainst= Number(counter.positions?.[0]?.shares ?? 0)
         const userVoted = userFor > 0 || userAgainst > 0
-        const totalVotes = (vault?.positions_aggregate?.aggregate?.count ?? 0) + (counter.positions_aggregate.aggregate.count ?? 0)
+        const totalVotes = (vault?.positions_aggregate?.aggregate?.count ?? 0) + (counter.positions_aggregate?.aggregate?.count ?? 0)
         return { triple, userVoted, totalVotes }
       })
       .sort((a, b) => {
@@ -44,7 +43,7 @@ const SubjectTag: React.FC = () => {
       })
   }, [triples])
 
-  if (isLoading) return <p>Loading…</p>
+  if (loading) return <p>Loading…</p>
   if (error) return <p className="text-red-600">Error loading</p> 
   if (error) return console.log("VOICI L'ERREUR :", error)
 
