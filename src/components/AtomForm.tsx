@@ -71,22 +71,37 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
     }
   }, [description])
 
-  useEffect(() => {
-    if (!rawUrl) return;
+useEffect(() => {
+  if (!rawUrl) return;
 
-    try {
-      const input = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
-      const parsed = new URL(input);
+  try {
+    const input = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+    const parsed = new URL(input);
 
-      if (linkType === "domain") {
-        setUrl(`https://${parsed.hostname}/`);
-      } else {
-        setUrl(parsed.href);
-      }
-    } catch {
-      setUrl(rawUrl);
+    const hostnameWhithoutWWW = parsed.hostname.replace(/^www\./i, '');
+
+    let candidate: string;
+    if (linkType === "domain") {
+      candidate = `${parsed.protocol}//${hostnameWhithoutWWW}`;
+    } else {
+      candidate = 
+        `${parsed.protocol}//${hostnameWhithoutWWW}` +
+        `${parsed.pathname}${parsed.search}${parsed.hash}`;
     }
-  }, [rawUrl, linkType]);
+
+    if (candidate.endsWith("/") && !candidate.match(/^https?:\/\/[^/]+\/$/)) {
+      candidate = candidate.slice(0, -1);
+    }
+
+    setUrl(candidate);
+  } catch {
+    let fallback = rawUrl
+      .replace(/^https?:\/\/www\./i, match => match.replace(/www\./i, ""))
+      .replace(/\/$/, "");
+
+    setUrl(fallback);
+  }
+}, [rawUrl, linkType]);
 
 
   async function handleSubmit(e: React.FormEvent) {

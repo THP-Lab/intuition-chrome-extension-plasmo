@@ -9,6 +9,34 @@ import ClaimRowLite from "~src/components/ui/ClaimRowLite";
 import AtomCard from "~src/components/AtomCard";
 import EyeComponent from "~/src/components/3D/EyeComponent"
 
+function normalizeUrl(input: string): string {
+  try {
+    const u = new URL(input)
+    let hostname = u.hostname.toLowerCase()
+    if (hostname.startsWith("www.")) hostname = hostname.slice(4)
+    let pathname = u.pathname
+    if (pathname.endsWith("/") && pathname.length > 1) {
+      pathname = pathname.slice(0, -1)
+    }
+    return `https://${hostname}${pathname}${u.search}${u.hash}`
+  } catch {
+    return input
+  }
+}
+
+function buildUriRegex(rawUrl: string): string {
+  const canonical = normalizeUrl(rawUrl)  
+  let withoutProto = canonical.replace(/^https?:\/\//, "")
+
+  if (withoutProto.endsWith("/")) {
+    withoutProto = withoutProto.slice(0, -1)
+  }
+  const escaped = withoutProto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+
+  return `^https?:\\/\\/(?:www\\.)?${escaped}\\/?$`
+}
+
+
 function Home() {
   const { theme } = useTheme()
   const [currentUrl, setCurrentUrl] = useState<string>("")
@@ -25,21 +53,34 @@ function Home() {
     console.log(tab.url)
     return tab.url
   }
-  const refreshUrl = () => {
-    getCurrentUrl().then((url) => setCurrentUrl(url || ""))
-  }
-  useEffect(() => {
-    refreshUrl()
-    chrome.tabs.onUpdated.addListener(() => {
-      refreshUrl()
-    })
 
-    chrome.tabs.onActivated.addListener(() => {
-      refreshUrl()
+  const refreshUrl = () => {
+    getCurrentUrl().then((url) => {
+      if (url) {
+        setCurrentUrl(normalizeUrl(url))
+      } else {
+        setCurrentUrl("")
+      }
     })
+  }
+
+  useEffect(() => {
+    getCurrentUrl().then((url) => {
+      if (url) setCurrentUrl(normalizeUrl(url))
+    })
+    chrome.tabs.onUpdated.addListener(refreshUrl)
+    chrome.tabs.onActivated.addListener(refreshUrl)
+    return () => {
+      chrome.tabs.onUpdated.removeListener(refreshUrl)
+      chrome.tabs.onActivated.removeListener(refreshUrl)
+    }
   }, [])
 
-  const { data, isLoading, error } = useGetClaimsByUriQuery({uri: currentUrl, address: walletAddress })
+  const uriRegex = buildUriRegex(currentUrl)
+  console.log("normalized URL:", currentUrl)
+  console.log("uriRegex:", uriRegex)
+
+  const { data, isLoading, error } = useGetClaimsByUriQuery({uriRegex, address: walletAddress })
   const atoms = data?.atoms ?? []
   console.log("current wallet address:", walletAddress);
   console.log("Data :", data)

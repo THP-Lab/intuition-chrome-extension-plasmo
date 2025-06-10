@@ -11205,7 +11205,7 @@ export type GetClaimsByAddressQuery = {
 }
 
 export type GetClaimsByUriQueryVariables = Exact<{
-  uri?: InputMaybe<Scalars["String"]["input"]>
+  uriRegex?: InputMaybe<Scalars["String"]["input"]>
   address?: InputMaybe<Scalars["String"]["input"]>
 }>
 
@@ -15335,9 +15335,9 @@ useGetClaimsByAddressQuery.fetcher = (
   )
 
 export const GetClaimsByUriDocument = `
-    query GetClaimsByUri($uri: String, $address: String) {
+    query GetClaimsByUri($uriRegex: String, $address: String) {
   atoms(
-    where: {_or: [{data: {_eq: $uri}}, {value: {thing: {url: {_eq: $uri}}}}, {value: {person: {url: {_eq: $uri}}}}, {value: {organization: {url: {_eq: $uri}}}}, {value: {book: {url: {_eq: $uri}}}}]}
+    where: {_or: [{data: {_iregex: $uriRegex}}, {value: {thing: {url: {_iregex: $uriRegex}}}}, {value: {person: {url: {_iregex: $uriRegex}}}}, {value: {organization: {url: {_iregex: $uriRegex}}}}, {value: {book: {url: {_iregex: $uriRegex}}}}]}
   ) {
     as_object_claims_aggregate {
       aggregate {
@@ -25906,7 +25906,10 @@ export const GetClaimsByUri = {
       variableDefinitions: [
         {
           kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "uri" } },
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "uriRegex" }
+          },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } }
         },
         {
@@ -25948,10 +25951,13 @@ export const GetClaimsByUri = {
                                   fields: [
                                     {
                                       kind: "ObjectField",
-                                      name: { kind: "Name", value: "_eq" },
+                                      name: { kind: "Name", value: "_iregex" },
                                       value: {
                                         kind: "Variable",
-                                        name: { kind: "Name", value: "uri" }
+                                        name: {
+                                          kind: "Name",
+                                          value: "uriRegex"
+                                        }
                                       }
                                     }
                                   ]
@@ -25987,13 +25993,13 @@ export const GetClaimsByUri = {
                                                   kind: "ObjectField",
                                                   name: {
                                                     kind: "Name",
-                                                    value: "_eq"
+                                                    value: "_iregex"
                                                   },
                                                   value: {
                                                     kind: "Variable",
                                                     name: {
                                                       kind: "Name",
-                                                      value: "uri"
+                                                      value: "uriRegex"
                                                     }
                                                   }
                                                 }
@@ -26036,13 +26042,13 @@ export const GetClaimsByUri = {
                                                   kind: "ObjectField",
                                                   name: {
                                                     kind: "Name",
-                                                    value: "_eq"
+                                                    value: "_iregex"
                                                   },
                                                   value: {
                                                     kind: "Variable",
                                                     name: {
                                                       kind: "Name",
-                                                      value: "uri"
+                                                      value: "uriRegex"
                                                     }
                                                   }
                                                 }
@@ -26088,13 +26094,13 @@ export const GetClaimsByUri = {
                                                   kind: "ObjectField",
                                                   name: {
                                                     kind: "Name",
-                                                    value: "_eq"
+                                                    value: "_iregex"
                                                   },
                                                   value: {
                                                     kind: "Variable",
                                                     name: {
                                                       kind: "Name",
-                                                      value: "uri"
+                                                      value: "uriRegex"
                                                     }
                                                   }
                                                 }
@@ -26137,13 +26143,13 @@ export const GetClaimsByUri = {
                                                   kind: "ObjectField",
                                                   name: {
                                                     kind: "Name",
-                                                    value: "_eq"
+                                                    value: "_iregex"
                                                   },
                                                   value: {
                                                     kind: "Variable",
                                                     name: {
                                                       kind: "Name",
-                                                      value: "uri"
+                                                      value: "uriRegex"
                                                     }
                                                   }
                                                 }
