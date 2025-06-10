@@ -58,15 +58,15 @@ query GetClaimsByAddress($address: String) {
   }
 }
 
-query GetClaimsByUri($uri: String, $address: String) {
+query GetClaimsByUri($uriRegex: String, $address: String) {
   atoms(
     where: {
       _or: [
-        { data: { _eq: $uri } }
-        { value: { thing: { url: { _eq: $uri } } } }
-        { value: { person: { url: { _eq: $uri } } } }
-        { value: { organization: { url: { _eq: $uri } } } }
-        { value: { book: { url: { _eq: $uri } } } }
+        { data: { _iregex: $uriRegex } }
+        { value: { thing: { url: { _iregex: $uriRegex } } } }
+        { value: { person: { url: { _iregex: $uriRegex } } } }
+        { value: { organization: { url: { _iregex: $uriRegex } } } }
+        { value: { book: { url: { _iregex: $uriRegex } } } }
       ]
     }
   ) {
