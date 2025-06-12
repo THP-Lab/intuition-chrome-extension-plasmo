@@ -59,49 +59,86 @@ function Home() {
     }
   }, [])
 
-  useEffect(() => {
-    if (!currentUrl) return
+useEffect(() => {
+  // 1) Reset loading & données
+  setIsLoading(true)
+  setClaims([])
+  setAtomsWithTags([])
 
-    chrome.storage.local.get("claimByUriResult", ({ claimByUriResult }) => {
-      if (!claimByUriResult?.uri) return
+  // Clé utilisée dans le storage
+  const KEY = "claimByUriResult"
 
-      if (normalizeUrl(claimByUriResult.uri) === normalizeUrl(currentUrl)) {
-        const atoms = claimByUriResult.data?.atoms ?? []
-
-        const extractedClaims = Array.from(
-          new Map(
-            atoms
-              .flatMap((atom) => [
-                ...(atom.as_object_claims_aggregate?.nodes ?? []),
-                ...(atom.as_subject_claims_aggregate?.nodes ?? [])
-              ])
-              .map((claim) => [claim.triple_id, claim])
-          ).values()
-        )
-
-        const atomsWithTags = atoms.map((atom) => {
-          const tags = atom.as_subject_claims_aggregate?.nodes
-            ?.filter((claim) => claim.predicate?.label === "has tag")
-            .map((claim) => claim.object)
-            .filter(Boolean)
-
-          const uniqueTags = Array.from(
-            new Map(tags.map((tag) => [tag.id, tag])).values()
-          )
-
-          return {
-            ...atom,
-            tags: uniqueTags
-          }
-        })
-
-        setAtomsWithTags(atomsWithTags)
-        setClaims(extractedClaims)
-      }
-
+  // 2) Fonction de traitement commune (snapshot + onChanged)
+  const process = (uri: string, data: any) => {
+    if (normalizeUrl(uri) !== currentUrl) {
+      // URL ne matche pas → on vide
+      setClaims([])
+      setAtomsWithTags([])
       setIsLoading(false)
+      return
+    }
+
+    const atoms = data.atoms ?? []
+
+    // Extract claims
+    const extractedClaims = Array.from(
+      new Map(
+        atoms
+          .flatMap((atom) => [
+            ...(atom.as_object_claims_aggregate?.nodes ?? []),
+            ...(atom.as_subject_claims_aggregate?.nodes ?? []),
+          ])
+          .map((c) => [c.triple_id, c])
+      ).values()
+    )
+
+    // Build atomsWithTags
+    const withTags = atoms.map((atom) => {
+      const tags = atom.as_subject_claims_aggregate?.nodes
+        ?.filter((c) => c.predicate?.label === "has tag")
+        .map((c) => c.object)
+        .filter(Boolean) ?? []
+
+      const unique = Array.from(
+        new Map(tags.map((t) => [t.id, t])).values()
+      )
+
+      return { ...atom, tags: unique }
     })
-  }, [currentUrl])
+
+    setClaims(extractedClaims)
+    setAtomsWithTags(withTags)
+    setIsLoading(false)
+  }
+
+  // 3) Lecture initiale (“snapshot”)
+  chrome.storage.local.get(KEY, (items) => {
+    const stored = items[KEY]
+    if (stored && stored.uri && stored.data) {
+      process(stored.uri, stored.data)
+    } else {
+      // Pas de données pour cette URL
+      setIsLoading(false)
+    }
+  })
+
+  // 4) Écoute des changements futurs
+  const onChange = (
+    changes: Record<string, chrome.storage.StorageChange>,
+    areaName: string
+  ) => {
+    if (areaName !== "local" || !changes[KEY]) return
+    const { uri, data } = changes[KEY].newValue
+    process(uri, data)
+  }
+  chrome.storage.onChanged.addListener(onChange)
+
+  // 5) Cleanup
+  return () => {
+    chrome.storage.onChanged.removeListener(onChange)
+  }
+}, [currentUrl])
+
 
   console.log("Tags :", atomsWithTags)
 
