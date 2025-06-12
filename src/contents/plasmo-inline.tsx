@@ -46,22 +46,50 @@ function PlasmoInline() {
   const uri = normalizeUrl(window.location.href)
   const uriRegex = buildUriRegex(uri)
 
-  const { data, loading } = useGetClaimsByUriQuery({
+  const { data, loading, refetch } = useGetClaimsByUriQuery({
     uriRegex,
     address: "" 
   })
 
-  useEffect(() => {
+
+  // 1) déplace ton injection dans une fonction réutilisable
+  const inject = () => {
     if (!loading && data) {
-      chrome.storage.local.set({
-        claimByUriResult: {
-          uri,
-          data
+      chrome.storage.local.set(
+        {
+          claimByUriResult: { uri, data }
+        },
+        () => {
+          console.log("✅ Data injected from GraphQL", data);
         }
-      })
-      console.log("✅ Data injected from GraphQL", data)
+      );
     }
-  }, [loading, data])
+  };
+
+
+  useEffect(() => {
+    const listener = (msg: any) => {
+      if (msg.action === "REFRESH_CLAIMS") {
+        console.log("[PlasmoInline] → REFRESH_CLAIMS reçu");
+        // 1) refetch les données
+        refetch()
+          .then(() => {
+            // 2) puis inject dans le storage
+            inject();
+          })
+          .catch((e) =>
+            console.error("[PlasmoInline] refetch() error:", e)
+          );
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(listener);
+    return () => {
+      chrome.runtime.onMessage.removeListener(listener);
+    };
+  }, [refetch, loading, data, uri]);
+
+    useEffect(inject, [loading, data, uri]);
 
 
   const draggingRef = useRef(false)

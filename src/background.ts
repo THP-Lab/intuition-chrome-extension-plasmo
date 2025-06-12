@@ -10,3 +10,15 @@ chrome.runtime.onMessage.addListener((message, sender) => {
     chrome.sidePanel.open({ tabId, windowId })
   }
 })
+
+// 1️⃣ Quand l’onglet finit de charger ou change d’URL
+chrome.tabs.onUpdated.addListener((tabId, info) => {
+  if (info.status === "complete") {
+    chrome.tabs.sendMessage(tabId, { action: "REFRESH_CLAIMS" });
+  }
+});
+
+// 2️⃣ Quand un onglet devient actif
+chrome.tabs.onActivated.addListener(({ tabId }) => {
+  chrome.tabs.sendMessage(tabId, { action: "REFRESH_CLAIMS" });
+});
