@@ -6,22 +6,8 @@ import { useStorage } from "@plasmohq/storage/dist/hook"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import AtomCard from "~src/components/AtomCard"
 import EyeComponent from "~/src/components/3D/EyeComponent"
+import { normalizeUrl } from "../lib/url"
 
-// Garde uniquement normalizeUrl pour comparer les URLs
-function normalizeUrl(input: string): string {
-  try {
-    const u = new URL(input)
-    let hostname = u.hostname.toLowerCase()
-    if (hostname.startsWith("www.")) hostname = hostname.slice(4)
-    let pathname = u.pathname
-    if (pathname.endsWith("/") && pathname.length > 1) {
-      pathname = pathname.slice(0, -1)
-    }
-    return `https://${hostname}${pathname}${u.search}${u.hash}`
-  } catch {
-    return input
-  }
-}
 
 function Home() {
   const { theme } = useTheme()
@@ -32,46 +18,35 @@ function Home() {
   const [claims, setClaims] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const getCurrentUrl = async () => {
-    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
-    return tab.url
+const refreshActiveTab = async () => {
+  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
+  const url = tab?.url ? normalizeUrl(tab.url) : ""
+  setCurrentUrl(url)
+  if (tab?.id !== undefined) {
+    chrome.tabs.sendMessage(tab.id, { type: "REFRESH_CLAIMS" })
   }
-
-  const refreshUrl = () => {
-    getCurrentUrl().then((url) => {
-      if (url) {
-        setCurrentUrl(normalizeUrl(url))
-      } else {
-        setCurrentUrl("")
-      }
-    })
-  }
-
-  useEffect(() => {
-    getCurrentUrl().then((url) => {
-      if (url) setCurrentUrl(normalizeUrl(url))
-    })
-    chrome.tabs.onUpdated.addListener(refreshUrl)
-    chrome.tabs.onActivated.addListener(refreshUrl)
-    return () => {
-      chrome.tabs.onUpdated.removeListener(refreshUrl)
-      chrome.tabs.onActivated.removeListener(refreshUrl)
-    }
-  }, [])
+}
 
 useEffect(() => {
-  // 1) Reset loading & données
+  refreshActiveTab()
+  chrome.tabs.onActivated.addListener(refreshActiveTab)
+  chrome.tabs.onUpdated.addListener(refreshActiveTab)
+  return () => {
+    chrome.tabs.onActivated.removeListener(refreshActiveTab)
+    chrome.tabs.onUpdated.removeListener(refreshActiveTab)
+  }
+}, [])
+
+
+useEffect(() => {
   setIsLoading(true)
   setClaims([])
   setAtomsWithTags([])
 
-  // Clé utilisée dans le storage
   const KEY = "claimByUriResult"
 
-  // 2) Fonction de traitement commune (snapshot + onChanged)
   const process = (uri: string, data: any) => {
     if (normalizeUrl(uri) !== currentUrl) {
-      // URL ne matche pas → on vide
       setClaims([])
       setAtomsWithTags([])
       setIsLoading(false)
@@ -80,7 +55,6 @@ useEffect(() => {
 
     const atoms = data.atoms ?? []
 
-    // Extract claims
     const extractedClaims = Array.from(
       new Map(
         atoms
@@ -92,7 +66,6 @@ useEffect(() => {
       ).values()
     )
 
-    // Build atomsWithTags
     const withTags = atoms.map((atom) => {
       const tags = atom.as_subject_claims_aggregate?.nodes
         ?.filter((c) => c.predicate?.label === "has tag")
@@ -111,18 +84,15 @@ useEffect(() => {
     setIsLoading(false)
   }
 
-  // 3) Lecture initiale (“snapshot”)
   chrome.storage.local.get(KEY, (items) => {
     const stored = items[KEY]
     if (stored && stored.uri && stored.data) {
       process(stored.uri, stored.data)
     } else {
-      // Pas de données pour cette URL
       setIsLoading(false)
     }
   })
 
-  // 4) Écoute des changements futurs
   const onChange = (
     changes: Record<string, chrome.storage.StorageChange>,
     areaName: string
@@ -133,14 +103,11 @@ useEffect(() => {
   }
   chrome.storage.onChanged.addListener(onChange)
 
-  // 5) Cleanup
   return () => {
     chrome.storage.onChanged.removeListener(onChange)
   }
 }, [currentUrl])
 
-
-  console.log("Tags :", atomsWithTags)
 
   const tabs = [
     {
