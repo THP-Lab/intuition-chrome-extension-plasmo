@@ -4,6 +4,7 @@ import { apolloClient } from "../lib/apolo-client"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useRef, useState } from "react"
 import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
+import { useStorage } from "@plasmohq/storage/dist/hook"
 import { useGetClaimsByUriQuery } from "~src/graphql/src"
 const queryClient = new QueryClient()
 import { normalizeUrl, buildUriRegex } from "../lib/url"
@@ -21,12 +22,13 @@ export const getShadowHostId = () => "plasmo-inline-example-unique-id"
 function PlasmoInline() {
   const [positionY, setPositionY] = useState<number>(50)
 
+  const [walletAddress] = useStorage<string>("metamask-account", "")
   const uri = normalizeUrl(window.location.href)
   const uriRegex = buildUriRegex(uri)
 
   const { data, loading, refetch } = useGetClaimsByUriQuery({
     uriRegex,
-    address: "" 
+    address: walletAddress 
   })
 
 
