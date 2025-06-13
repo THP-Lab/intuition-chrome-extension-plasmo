@@ -1,116 +1,92 @@
 import React from "react"
-
 import { useTheme } from "~/src/components/ThemeProvider"
 import { cn } from "~/src/lib/utils"
 
-interface IntuitionSearchIconProps {
-  size?: number
+interface IntuitionButtonIconProps {
   className?: string
+  size?: number
+  position?: { x?: number | string; y?: number | string }
+  loading?: boolean
+  highlightColor?: string
+  onClick?: () => void
 }
 
-const IntuitionSearchIcon: React.FC<IntuitionSearchIconProps> = ({
-  size = 32,
-  className
+const IntuitionButtonIcon: React.FC<IntuitionButtonIconProps> = ({
+  className,
+  size = 50,
+  position = { x: "0px", y: "0px" },
+  loading = false,
+  highlightColor,
+  onClick
 }) => {
   const { theme } = useTheme()
-  const isDark = theme === "dark"
+  const defaultStroke = theme === "dark" ? "white" : "black"
+  const strokeColor = highlightColor ?? defaultStroke
+  const cursor = loading ? "wait" : "pointer"
 
   return (
     <div
       className={cn("relative", className)}
-      style={{ width: size, height: size }}>
+      style={{
+        width: size,
+        height: size,
+        transform: `translate(${position.x}, ${position.y})`,
+        cursor
+      }}
+      onClick={onClick}
+    >
       <svg
         viewBox="0 0 100 100"
         xmlns="http://www.w3.org/2000/svg"
-        style={{ width: "100%", height: "100%" }}>
+        style={{ width: size, height: size }}
+      >
         <circle
-          className="outer-circle"
+          className={cn("outer-circle", { loading })}
           cx="50"
           cy="50"
-          r="40"
+          r="42"
           strokeWidth="2.8"
           fill="none"
-          stroke={isDark ? "white" : "black"}
+          stroke={strokeColor}
         />
         <circle
-          className="middle-circle"
+          className={cn("middle-circle", { loading })}
           cx="50"
           cy="50"
-          r="36"
-          strokeWidth="2.8"
-          fill="none"
-          stroke={isDark ? "white" : "black"}
-        />
-        <circle
-          className="inner-circle"
-          cx="50"
-          cy="50"
-          r="32"
-          fill={isDark ? "black" : "white"}
-        />
-        <line
-          className="handle"
-          x1="78.3"
-          y1="78.3"
-          x2="98"
-          y2="98"
+          r="34"
           strokeWidth="6"
-          stroke={isDark ? "white" : "black"}
+          fill="none"
+          stroke={strokeColor}
         />
       </svg>
-
       <style>
         {`
-          .outer-circle {
-            transform-origin: 50% 50%;
-            stroke-linecap: round;
-            stroke-dasharray: 68.1 4.4 12.6 4.4 68.1 4.4 12.6 4.4 68.1 4.4;
-            animation: spinCW 12s linear infinite;
-          }
-
-          .middle-circle {
-            transform-origin: 50% 50%;
-            stroke-linecap: round;
-            stroke-dasharray: 68.1 4.4 12.6 4.4 68.1 4.4 12.6 4.4 68.1 4.4;
-            animation: spinCCW 12s linear infinite;
-          }
-
-          /* Au hover, accélération et inversion des rotations */
-          svg:hover .outer-circle {
-            animation: spinACW 2s linear infinite;
-          }
-
-          svg:hover .middle-circle {
-            animation: spinCWFast 2s linear infinite;
-          }
-
-          @keyframes spinCW {
-            from { transform: rotate(0deg) scale(1); }
-            to { transform: rotate(360deg) scale(1); }
-          }
-
-          @keyframes spinCCW {
-            from { transform: rotate(0deg) scale(1); }
-            to { transform: rotate(-360deg) scale(1); }
-          }
-
-          @keyframes spinACW {
-            from { transform: rotate(0deg) scale(1); }
-            to { transform: rotate(-360deg) scale(1); }
-          }
-
-          @keyframes spinCWFast {
-            from { transform: rotate(0deg) scale(1); }
-            to { transform: rotate(360deg) scale(1); }
-          }
-
-          .handle {
-            stroke-linecap: round;
-          }
-        `}
+        .outer-circle {
+          transform-origin: 50% 50%;
+          stroke-linecap: round;
+          stroke-dasharray: 64 8 12.6 8 64 8 12.6 8 64 8;
+          animation: spinCW 12s linear infinite;
+        }
+        .middle-circle {
+          transform-origin: 50% 50%;
+          stroke-linecap: round;
+          stroke-dasharray: 55 10 12 10 55 10 12 10 55 10;
+          animation: spinCCW 12s linear infinite;
+        }
+        .outer-circle.loading {
+          animation: spinACW 2s linear infinite;
+        }
+        .middle-circle.loading {
+          animation: spinCWFast 2s linear infinite;
+        }
+        @keyframes spinCW { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes spinCCW { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        @keyframes spinACW { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        @keyframes spinCWFast { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      `}
       </style>
     </div>
   )
 }
 
-export default IntuitionSearchIcon
+export default IntuitionButtonIcon

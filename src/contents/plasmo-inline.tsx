@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { apolloClient } from "../lib/apolo-client"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useRef, useState } from "react"
-import IntuitionButtonIcon  from "~src/components/icons/IntuitionSearchBar"
+import IntuitionButtonIcon  from "~src/components/icons/IntuitionButtonIcon"
 import { useStorage } from "@plasmohq/storage/dist/hook"
 import { useGetClaimsByUriQuery } from "~src/graphql/src"
 const queryClient = new QueryClient()
@@ -28,7 +28,7 @@ function PlasmoInline() {
   const uri = normalizeUrl(window.location.href)
   const uriRegex = buildUriRegex(uri)
 
-  const { data, loading, refetch } = useGetClaimsByUriQuery({
+  const { data, loading, isLoading, refetch } = useGetClaimsByUriQuery({
     uriRegex,
     address: walletAddress 
   })
@@ -69,6 +69,18 @@ function PlasmoInline() {
 
   useEffect(inject, [loading, data, uri]);
 
+  const atoms = data?.atoms ?? []
+  const allClaims = atoms.flatMap(atom => [
+    ...(atom.as_object_claims_aggregate?.nodes ?? []),
+    ...(atom.as_subject_claims_aggregate?.nodes ?? [])
+  ])
+  const hasScam = allClaims.some(
+    c => c.predicate?.label === "is" && c.object?.label === "Scam"
+  )
+  const hasTrustworthy = !hasScam && allClaims.some(
+    c => c.predicate?.label === "is" && c.object?.label === "Trustworthy"
+  )
+  const highlightColor = hasScam ? "red" : hasTrustworthy ? "green" : undefined
 
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -94,9 +106,8 @@ function PlasmoInline() {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("mouseup", handleMouseUp)
 
-      setIsHolding(false)    // ← on revient à grab
+      setIsHolding(false)
 
-      // si c'était juste un clic (pas un vrai drag), on ouvre
       if (!draggingRef.current) {
         chrome.runtime.sendMessage({ type: "open_sidepanel" })
       }
@@ -106,9 +117,6 @@ function PlasmoInline() {
     window.addEventListener("mouseup", handleMouseUp)
   }
 
-  const handleSidePanel = () => {
-    chrome.runtime.sendMessage({ type: "open_sidepanel" })
-  }
 
   return (
     <div>
@@ -138,6 +146,8 @@ function PlasmoInline() {
         <IntuitionButtonIcon
           onSearch={() => {}}
           size={35}
+          loading = {isLoading}
+          highlightColor={highlightColor}
           position={{ x: 0, y: 0 }}
           className="hover:opacity-80 transition-opacity"
         />
