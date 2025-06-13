@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { apolloClient } from "../lib/apolo-client"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useRef, useState } from "react"
-import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
+import IntuitionButtonIcon  from "~src/components/icons/IntuitionSearchBar"
 import { useStorage } from "@plasmohq/storage/dist/hook"
 import { useGetClaimsByUriQuery } from "~src/graphql/src"
 const queryClient = new QueryClient()
@@ -21,6 +21,8 @@ export const getShadowHostId = () => "plasmo-inline-example-unique-id"
 
 function PlasmoInline() {
   const [positionY, setPositionY] = useState<number>(50)
+  const [isHolding, setIsHolding] = useState(false)
+  const draggingRef = useRef(false)
 
   const [walletAddress] = useStorage<string>("metamask-account", "")
   const uri = normalizeUrl(window.location.href)
@@ -31,8 +33,6 @@ function PlasmoInline() {
     address: walletAddress 
   })
 
-
-  // 1) déplace ton injection dans une fonction réutilisable
   const inject = () => {
     if (!loading && data) {
       chrome.storage.local.set(
@@ -51,10 +51,8 @@ function PlasmoInline() {
     const listener = (msg: any) => {
       if (msg.action === "REFRESH_CLAIMS") {
         console.log("[PlasmoInline] → REFRESH_CLAIMS reçu");
-        // 1) refetch les données
         refetch()
           .then(() => {
-            // 2) puis inject dans le storage
             inject();
           })
           .catch((e) =>
@@ -69,22 +67,23 @@ function PlasmoInline() {
     };
   }, [refetch, loading, data, uri]);
 
-    useEffect(inject, [loading, data, uri]);
+  useEffect(inject, [loading, data, uri]);
 
 
-  const draggingRef = useRef(false)
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setIsHolding(true)      
+    draggingRef.current = false
+
     const startY = e.clientY
     const startPositionY = positionY
-    draggingRef.current = false
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaY = moveEvent.clientY - startY
       if (Math.abs(deltaY) > 5) {
         draggingRef.current = true
       }
-
       if (draggingRef.current) {
         const newY = startPositionY + (deltaY / window.innerHeight) * 100
         setPositionY(Math.min(90, Math.max(0, newY)))
@@ -95,8 +94,11 @@ function PlasmoInline() {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("mouseup", handleMouseUp)
 
+      setIsHolding(false)    // ← on revient à grab
+
+      // si c'était juste un clic (pas un vrai drag), on ouvre
       if (!draggingRef.current) {
-        handleSidePanel()
+        chrome.runtime.sendMessage({ type: "open_sidepanel" })
       }
     }
 
@@ -121,7 +123,7 @@ function PlasmoInline() {
           background: "black",
           color: "white",
           border: "1px solid #fff",
-          cursor: "grab",
+          cursor: isHolding ? "grabbing" : "grab",
           zIndex: 9999,
           opacity: 0.2,
           transition: "opacity 0.3s ease"
@@ -133,7 +135,7 @@ function PlasmoInline() {
           e.currentTarget.style.opacity = "0.2"
         }}
       >
-        <IntuitionSearchIcon
+        <IntuitionButtonIcon
           onSearch={() => {}}
           size={35}
           position={{ x: 0, y: 0 }}
