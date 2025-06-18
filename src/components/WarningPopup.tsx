@@ -36,6 +36,9 @@ const WarningPopup: React.FC<WarningPopupProps> = ({
     return () => clearTimeout(timer)
   }, [])
 
+  const textColor = bgColor === "red" ? "#ef4444" : "#22c55e" // rouge-500 ou green-500
+  const borderColor = bgColor === "red" ? "#dc2626" : "#16a34a" // rouge-600 ou green-600
+
   return (
     <div
       className={cn("warning-popup", { visible })}
@@ -45,21 +48,37 @@ const WarningPopup: React.FC<WarningPopupProps> = ({
         position: "absolute",
         top: offset,
         left: "50%",
-        transform: "translateX(-70%)",
-        background: bgColor,
-        color: "white",
-        padding: "4px 8px",
-        marginTop: "2px",
-        borderRadius: "4px",
-        fontSize: "0.75rem",
+        transform: "translateX(-80%)", 
+        background: "#0f0f0f", 
+        color: textColor,
+        padding: "4px",
+        marginTop: "8px",
+        borderRadius: "8px",
+        fontSize: "0.875rem", 
+        fontWeight: "500", 
         whiteSpace: "nowrap",
         opacity: visible ? 1 : 0,
-        transition: "opacity 150ms ease-in",
+        transition: "all 200ms ease-in-out",
         pointerEvents: "auto",
-        zIndex: 1000
+        zIndex: 1000,
+        border: `1px solid ${borderColor}`,
+        boxShadow: `0 4px 12px rgba(0, 0, 0, 0.3), 0 0 0 1px ${borderColor}20`,
+        textAlign: "center", // Texte centré
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+        letterSpacing: "0.025em",
+        backdropFilter: "blur(8px)",
+        minWidth: "140px"
       }}
     >
-      {message}
+        <div style={{ 
+          fontWeight: "600", 
+          marginBottom: "8px",
+          textTransform: "uppercase",
+          fontSize: "0.75rem",
+          letterSpacing: "0.05em"
+        }}>
+          {message}
+        </div>
 
         <VoteButtons
           vaultId={BigInt(vaultId)}
