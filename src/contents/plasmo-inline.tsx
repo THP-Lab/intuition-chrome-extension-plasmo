@@ -8,6 +8,7 @@ import { useStorage } from "@plasmohq/storage/dist/hook"
 import { useGetClaimsByUriQuery } from "~src/graphql/src"
 const queryClient = new QueryClient()
 import { normalizeUrl, buildUriRegex } from "../lib/url"
+import WarningPopup from "~/src/components/WarningPopup"
 
 
 export const config: PlasmoCSConfig = {
@@ -20,6 +21,7 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
 export const getShadowHostId = () => "plasmo-inline-example-unique-id"
 
 function PlasmoInline() {
+  const iconSize = 35
   const [positionY, setPositionY] = useState<number>(50)
   const [isHolding, setIsHolding] = useState(false)
   const draggingRef = useRef(false)
@@ -117,6 +119,31 @@ function PlasmoInline() {
     window.addEventListener("mouseup", handleMouseUp)
   }
 
+  const targetClaim = allClaims.find(
+    c => c.predicate?.label === (hasScam ? "is" : "is") &&
+        c.object?.label === (hasScam ? "Scam" : "Trustworthy")
+  )
+  console.log("DATA CLAIM SCAM OR TRUST", targetClaim)
+
+  const vaultId           = targetClaim?.vault?.id
+    ? BigInt(targetClaim.vault.id) 
+    : undefined
+  const counterVaultId    = targetClaim?.counter_vault?.id
+    ? BigInt(targetClaim.counter_vault.id)
+    : undefined
+  const numPositionsFor      = targetClaim?.vault?.positions_aggregate.aggregate?.count
+  const numPositionsAgainst  = targetClaim?.counter_vault?.positions_aggregate.aggregate?.count
+
+  const userStake = Number(targetClaim?.vault?.positions?.[0]?.shares ?? 0)
+  const userCounterStake = Number(targetClaim?.counter_vault?.positions?.[0]?.shares ?? 0)
+
+  const initialVote: VoteChoice | undefined =
+    userStake > 0
+      ? "for"
+      : userCounterStake > 0
+      ? "against"
+      : undefined
+
 
   return (
     <div>
@@ -145,12 +172,40 @@ function PlasmoInline() {
       >
         <IntuitionButtonIcon
           onSearch={() => {}}
-          size={35}
+          size={iconSize}
           loading = {isLoading}
           highlightColor={highlightColor}
           position={{ x: 0, y: 0 }}
           className="hover:opacity-80 transition-opacity"
         />
+
+        {highlightColor === "red" && (
+          <WarningPopup
+            message="Warning: Scam"
+            offset={iconSize + 15}
+            bgColor="red"
+            vaultId={vaultId}
+            counterVaultId={counterVaultId}
+            numPositionsFor={numPositionsFor}
+            numPositionsAgainst={numPositionsAgainst}
+            initialVote={initialVote}
+          />
+        )}
+
+        {highlightColor === "green" && (
+          <WarningPopup
+            message="Trustworthy"
+            offset={iconSize + 25}
+            bgColor="green"
+            vaultId={vaultId}
+            counterVaultId={counterVaultId}
+            numPositionsFor={numPositionsFor}
+            numPositionsAgainst={numPositionsAgainst}
+            initialVote={initialVote}
+          />
+        )}
+
+
       </div>
     </div>
   )
