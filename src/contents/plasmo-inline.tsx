@@ -9,7 +9,7 @@ import { useGetClaimsByUriQuery } from "~src/graphql/src"
 const queryClient = new QueryClient()
 import { normalizeUrl, buildUriRegex } from "../lib/url"
 import WarningPopup from "~/src/components/WarningPopup"
-
+import ReportDropdown from "~src/components/ReportDropdown"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://*/*"]
@@ -27,6 +27,8 @@ function PlasmoInline() {
   const draggingRef = useRef(false)
   const [hovered, setHovered] = useState(false)
   const [autoVisible, setAutoVisible] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
+  const hoverTimeout = useRef<NodeJS.Timeout | null>(null)
 
   const [walletAddress] = useStorage<string>("metamask-account", "")
   const uri = normalizeUrl(window.location.href)
@@ -54,6 +56,18 @@ function PlasmoInline() {
     const timer = setTimeout(() => setAutoVisible(false), 4000)
     return () => clearTimeout(timer)
   }, [])
+
+  const handleIntuitionMouseEnter = () => {
+    hoverTimeout.current = setTimeout(() => {
+      setShowDropdown(true)
+    }, 500)
+  }
+  const handleIntuitionMouseLeave = () => {
+    if (hoverTimeout.current) {
+      clearTimeout(hoverTimeout.current)
+      hoverTimeout.current = null
+    }
+  }
 
   useEffect(() => {
     const listener = (msg: any) => {
@@ -91,6 +105,7 @@ function PlasmoInline() {
   const highlightColor = hasScam ? "red" : hasTrustworthy ? "green" : undefined
   const showPopup = Boolean(highlightColor) && (hovered || autoVisible)
 
+  const isWarningPopupActive = (highlightColor === "red" || highlightColor === "green") && (hovered || autoVisible)
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -178,17 +193,26 @@ function PlasmoInline() {
         onMouseLeave={e => {
           setHovered(false)
           e.currentTarget.style.opacity = "0.2"
+          setShowDropdown(false)
         }}
       >
-        <IntuitionButtonIcon
-          onSearch={() => {}}
-          size={iconSize}
-          loading={isLoading}
-          highlightColor={highlightColor}
-          position={{ x: 0, y: 0 }}
-          className="hover:opacity-80 transition-opacity"
-        />
-
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {showDropdown && !isWarningPopupActive && <ReportDropdown />}
+          <div
+            onMouseEnter={handleIntuitionMouseEnter}
+            onMouseLeave={handleIntuitionMouseLeave}
+            style={{ display: "flex" }}
+          >
+            <IntuitionButtonIcon
+              onSearch={() => {}}
+              size={iconSize}
+              loading={isLoading}
+              highlightColor={highlightColor}
+              position={{ x: 0, y: 0 }}
+              className="hover:opacity-80 transition-opacity"
+            />
+          </div>
+        </div>
         {(highlightColor === "red" || highlightColor === "green") && (
           <WarningPopup
             message={highlightColor === "red" ? "Warning: Scam" : "Trustworthy"}
