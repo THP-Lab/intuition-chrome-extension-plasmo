@@ -25,6 +25,8 @@ function PlasmoInline() {
   const [positionY, setPositionY] = useState<number>(50)
   const [isHolding, setIsHolding] = useState(false)
   const draggingRef = useRef(false)
+  const [hovered, setHovered] = useState(false)
+  const [autoVisible, setAutoVisible] = useState(false)
 
   const [walletAddress] = useStorage<string>("metamask-account", "")
   const uri = normalizeUrl(window.location.href)
@@ -47,7 +49,11 @@ function PlasmoInline() {
       );
     }
   };
-
+  useEffect(() => {
+    setAutoVisible(true)
+    const timer = setTimeout(() => setAutoVisible(false), 4000)
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     const listener = (msg: any) => {
@@ -83,6 +89,7 @@ function PlasmoInline() {
     c => c.predicate?.label === "is" && c.object?.label === "Trustworthy"
   )
   const highlightColor = hasScam ? "red" : hasTrustworthy ? "green" : undefined
+  const showPopup = Boolean(highlightColor) && (hovered || autoVisible)
 
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -123,16 +130,17 @@ function PlasmoInline() {
     c => c.predicate?.label === (hasScam ? "is" : "is") &&
         c.object?.label === (hasScam ? "Scam" : "Trustworthy")
   )
+  
   console.log("DATA CLAIM SCAM OR TRUST", targetClaim)
 
-  const vaultId           = targetClaim?.vault?.id
+  const vaultId = targetClaim?.vault?.id
     ? BigInt(targetClaim.vault.id) 
     : undefined
-  const counterVaultId    = targetClaim?.counter_vault?.id
+  const counterVaultId = targetClaim?.counter_vault?.id
     ? BigInt(targetClaim.counter_vault.id)
     : undefined
-  const numPositionsFor      = targetClaim?.vault?.positions_aggregate.aggregate?.count
-  const numPositionsAgainst  = targetClaim?.counter_vault?.positions_aggregate.aggregate?.count
+  const numPositionsFor = targetClaim?.vault?.positions_aggregate.aggregate?.count
+  const numPositionsAgainst = targetClaim?.counter_vault?.positions_aggregate.aggregate?.count
 
   const userStake = Number(targetClaim?.vault?.positions?.[0]?.shares ?? 0)
   const userCounterStake = Number(targetClaim?.counter_vault?.positions?.[0]?.shares ?? 0)
@@ -163,49 +171,37 @@ function PlasmoInline() {
           opacity: 0.2,
           transition: "opacity 0.3s ease"
         }}
-        onMouseEnter={(e) => {
+        onMouseEnter={e => {
+          setHovered(true)
           e.currentTarget.style.opacity = "1"
         }}
-        onMouseLeave={(e) => {
+        onMouseLeave={e => {
+          setHovered(false)
           e.currentTarget.style.opacity = "0.2"
         }}
       >
         <IntuitionButtonIcon
           onSearch={() => {}}
           size={iconSize}
-          loading = {isLoading}
+          loading={isLoading}
           highlightColor={highlightColor}
           position={{ x: 0, y: 0 }}
           className="hover:opacity-80 transition-opacity"
         />
 
-        {highlightColor === "red" && (
+        {(highlightColor === "red" || highlightColor === "green") && (
           <WarningPopup
-            message="Warning: Scam"
-            offset={iconSize + 15}
-            bgColor="red"
+            message={highlightColor === "red" ? "Warning: Scam" : "Trustworthy"}
+            offset={iconSize + (highlightColor === "red" ? 15 : 25)}
+            bgColor={highlightColor}
             vaultId={vaultId}
             counterVaultId={counterVaultId}
             numPositionsFor={numPositionsFor}
             numPositionsAgainst={numPositionsAgainst}
             initialVote={initialVote}
+            forceVisible={hovered || autoVisible}
           />
         )}
-
-        {highlightColor === "green" && (
-          <WarningPopup
-            message="Trustworthy"
-            offset={iconSize + 25}
-            bgColor="green"
-            vaultId={vaultId}
-            counterVaultId={counterVaultId}
-            numPositionsFor={numPositionsFor}
-            numPositionsAgainst={numPositionsAgainst}
-            initialVote={initialVote}
-          />
-        )}
-
-
       </div>
     </div>
   )

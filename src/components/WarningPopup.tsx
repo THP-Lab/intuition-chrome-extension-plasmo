@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react"
 import { cn } from "~/src/lib/utils"
 import VoteButtons from "~src/components/VoteButtons"
 
-
 interface WarningPopupProps {
   message: string
   offset: number
@@ -12,13 +11,14 @@ interface WarningPopupProps {
   numPositionsFor?: number
   numPositionsAgainst?: number
   initialVote?: VoteChoice
+  forceVisible?: boolean
 }
 
 /**
  * A small popup to display status warnings or confirmations.
  * Appears below its parent icon at a given offset.
  */
-const WarningPopup: React.FC<WarningPopupProps> = ({   
+const WarningPopup: React.FC<WarningPopupProps> = ({
   message,
   offset,
   bgColor = "red",
@@ -26,67 +26,84 @@ const WarningPopup: React.FC<WarningPopupProps> = ({
   counterVaultId,
   numPositionsFor,
   numPositionsAgainst,
-  initialVote
+  initialVote,
+  forceVisible = false
 }) => {
+  const [visible, setVisible] = useState(forceVisible)
+  const [shouldRender, setShouldRender] = useState(forceVisible)
 
-  const [visible, setVisible] = useState(false)
+  const ANIMATION_DURATION = 500
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 10)
-    return () => clearTimeout(timer)
-  }, [])
+    if (forceVisible) {
+      setShouldRender(true)
+      setVisible(true)
+    } else {
+      setVisible(false)
+      const tm = setTimeout(() => setShouldRender(false), ANIMATION_DURATION)
+      return () => clearTimeout(tm)
+    }
+  }, [forceVisible])
 
-  const textColor = bgColor === "red" ? "#ef4444" : "#22c55e" // rouge-500 ou green-500
-  const borderColor = bgColor === "red" ? "#dc2626" : "#16a34a" // rouge-600 ou green-600
+  const textColor = bgColor === "red" ? "#b50606" : "#228e01"
+  const borderColor = bgColor === "red" ? "#b50606" : "#228e01"
+
+  if (!shouldRender) return null
 
   return (
     <div
       className={cn("warning-popup", { visible })}
-      onMouseDown={(e) => e.stopPropagation()}
-      onClick={(e) => e.stopPropagation()}
+      onMouseDown={e => e.stopPropagation()}
+      onClick={e => e.stopPropagation()}
       style={{
         position: "absolute",
         top: offset,
         left: "50%",
-        transform: "translateX(-80%)", 
-        background: "#0f0f0f", 
+        transform: `
+          translateX(-80%)
+          translateY(${visible ? 0 : '-5px'})
+        `,
+        background: "#0f0f0f",
         color: textColor,
         padding: "4px",
-        marginTop: "8px",
         borderRadius: "8px",
-        fontSize: "0.875rem", 
-        fontWeight: "500", 
+        fontSize: "0.875rem",
+        fontWeight: "500",
         whiteSpace: "nowrap",
-        opacity: visible ? 1 : 0,
-        transition: "all 200ms ease-in-out",
         pointerEvents: "auto",
-        zIndex: 1000,
+        zIndex: 9998,
         border: `1px solid ${borderColor}`,
         boxShadow: `0 4px 12px rgba(0, 0, 0, 0.3), 0 0 0 1px ${borderColor}20`,
-        textAlign: "center", // Texte centré
+        textAlign: "center",
         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
         letterSpacing: "0.025em",
         backdropFilter: "blur(8px)",
-        minWidth: "140px"
+        minWidth: "140px",
+        opacity: visible ? 1 : 0,
+        transition: `
+          opacity ${ANIMATION_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1),
+          transform ${ANIMATION_DURATION}ms cubic-bezier(0.34, 1.56, 0.64, 1)
+        `,
+        willChange: "transform, opacity"
       }}
     >
-        <div style={{ 
-          fontWeight: "600", 
-          marginBottom: "8px",
-          textTransform: "uppercase",
-          fontSize: "0.75rem",
-          letterSpacing: "0.05em"
-        }}>
-          {message}
-        </div>
+      <div style={{ 
+        fontWeight: "600", 
+        marginBottom: "8px",
+        textTransform: "uppercase",
+        fontSize: "0.75rem",
+        letterSpacing: "0.05em"
+      }}>
+        {message}
+      </div>
 
-        <VoteButtons
-          vaultId={BigInt(vaultId)}
-          counterVaultId={BigInt(counterVaultId)}
-          numPositionsFor={numPositionsFor}
-          numPositionsAgainst={numPositionsAgainst}
-          initialVote={initialVote}
-        />
+      <VoteButtons
+        vaultId={BigInt(vaultId)}
+        counterVaultId={BigInt(counterVaultId)}
+        numPositionsFor={numPositionsFor}
+        numPositionsAgainst={numPositionsAgainst}
+        initialVote={initialVote}
+      />
     </div>
   )
 }
