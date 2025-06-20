@@ -5,8 +5,13 @@ import ParticlesCanvas from "~src/components/ui/ParticulBg/ParticlesCanvas"
 import GroupParticlesCanvas from "~src/components/ui/ParticulBg/GroupParticlesCanvas"
 import { ThemeProvider } from "~src/components/ThemeProvider"
 import { NavigationProvider } from "~src/components/layout/NavigationProvider"
+import { BrowserRouter as Router } from "react-router-dom"
 
 function IndexSidepanel() {
+
+  useEffect(() => {
+    chrome.runtime.sendMessage({ action: "SIDEPANEL_READY" });
+  }, []);
 
   useEffect(() => {
     umami("Open Side Panel")
@@ -29,11 +34,13 @@ function IndexSidepanel() {
     <>
       <ThemeProvider defaultTheme="dark" storageKey="intuition-theme">
         <NavigationProvider>
-          <div className="flex min-h-screen flex-col bg-background text-foreground">
-            <ParticlesCanvas />
-            <GroupParticlesCanvas />
-            <Content />
-          </div>
+          <Router>
+            <div className="flex min-h-screen flex-col bg-background text-foreground">
+              <ParticlesCanvas />
+              <GroupParticlesCanvas />
+              <Content />
+            </div>
+          </Router>
         </NavigationProvider>
       </ThemeProvider>
     </>

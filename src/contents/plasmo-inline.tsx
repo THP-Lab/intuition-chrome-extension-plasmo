@@ -10,6 +10,8 @@ const queryClient = new QueryClient()
 import { normalizeUrl, buildUriRegex } from "../lib/url"
 import WarningPopup from "~/src/components/WarningPopup"
 import ReportDropdown from "~src/components/ReportDropdown"
+import "../styles/global.css"
+import IntuitionIconPlus from "~src/components/icons/intuition_icon_plus"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://*/*"]
@@ -196,13 +198,38 @@ function PlasmoInline() {
           setShowDropdown(false)
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
           {showDropdown && !isWarningPopupActive && <ReportDropdown />}
           <div
             onMouseEnter={handleIntuitionMouseEnter}
             onMouseLeave={handleIntuitionMouseLeave}
-            style={{ display: "flex" }}
+            style={{ display: "flex", position: "relative" }}
           >
+            {(!data || atoms.length === 0) && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: -20,
+                  right: -20,
+                  zIndex: 2,
+                  cursor: "pointer",
+                  background: "black",
+                  borderRadius: "50%",
+                  boxShadow: "0 2px 8px #0004"
+                }}
+                onClick={e => {
+                  e.stopPropagation();
+                  console.log("[INLINE] Click on IntuitionIconPlus: sending open_sidepanel with /page-form");
+                  chrome.runtime.sendMessage({ type: "open_sidepanel", route: "/page-form" }, (response) => {
+                    console.log("[INLINE] open_sidepanel message sent, response:", response);
+                  });
+                }}
+                onMouseDown={e => e.stopPropagation()}
+                title="Add your Intuition"
+              >
+                <IntuitionIconPlus size={25} />
+              </div>
+            )}
             <IntuitionButtonIcon
               onSearch={() => {}}
               size={iconSize}

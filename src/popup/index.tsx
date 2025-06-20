@@ -8,6 +8,8 @@ import GroupParticlesCanvas from "~src/components/ui/ParticulBg/GroupParticlesCa
 
 import { ThemeProvider } from "../components/ThemeProvider"
 import { NavigationProvider } from "~src/components/layout/NavigationProvider"
+import { BrowserRouter as Router } from "react-router-dom"
+
 
 import "../styles/global.css"
 
@@ -26,20 +28,22 @@ function IndexPopup() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="intuition-theme">
       <NavigationProvider>
-        <div className="min-w-[600px] min-h-[600px] p-4 bg-background text-foreground relative">
-          <ParticlesCanvas />
-          <GroupParticlesCanvas />
-          <div
-            style={{
-              position: "absolute",
-              left: `${portalX}px`,
-              top: `${portalY}px`
-            }}>
-            <IntuitionPortalPanel onClick={handleSidePanel} size={50} />
-          </div>
+        <Router>
+          <div className="min-w-[600px] min-h-[600px] p-4 bg-background text-foreground relative">
+            <ParticlesCanvas />
+            <GroupParticlesCanvas />
+            <div
+              style={{
+                position: "absolute",
+                left: `${portalX}px`,
+                top: `${portalY}px`
+              }}>
+              <IntuitionPortalPanel onClick={handleSidePanel} size={50} />
+            </div>
 
-          <Content></Content>
-        </div>
+            <Content></Content>
+          </div>
+        </Router>
       </NavigationProvider>
     </ThemeProvider>
   )
