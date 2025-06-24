@@ -101,11 +101,14 @@ function PlasmoInline() {
     ...(atom.as_object_claims_aggregate?.nodes ?? []),
     ...(atom.as_subject_claims_aggregate?.nodes ?? [])
   ])
+  const IS_ID = 877
+  const SCAM_ID = 1775
+  const TRUSTWORTHY_ID = 14
   const hasScam = allClaims.some(
-    c => c.predicate?.label === "is" && c.object?.label === "Scam"
+    c => c.predicate?.id == IS_ID && c.object?.id == SCAM_ID
   )
-  const hasTrustworthy = !hasScam && allClaims.some(
-    c => c.predicate?.label === "is" && c.object?.label === "Trustworthy"
+  const hasTrustworthy = allClaims.some(
+    c => c.predicate?.id == IS_ID && c.object?.id == TRUSTWORTHY_ID
   )
   const highlightColor = hasScam ? "red" : hasTrustworthy ? "green" : undefined
   const showPopup = Boolean(highlightColor) && (hovered || autoVisible)
@@ -147,8 +150,8 @@ function PlasmoInline() {
   }
 
   const targetClaim = allClaims.find(
-    c => c.predicate?.label === (hasScam ? "is" : "is") &&
-        c.object?.label === (hasScam ? "Scam" : "Trustworthy")
+    c => c.predicate?.id == IS_ID &&
+        (c.object?.id == SCAM_ID || c.object?.id == TRUSTWORTHY_ID)
   )
   
   console.log("DATA CLAIM SCAM OR TRUST", targetClaim)
