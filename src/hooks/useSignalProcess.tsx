@@ -1,13 +1,13 @@
-import { TripleInput, useCreateTriples } from "./useCreateTriples" // ton hook
+import { useCreateSingleTriple } from "./useCreateSingleTriple" // ton hook
 import { useCreatePosition } from "./useCreatePosition" // ton hook
 import { usePinThingMutation } from "@0xintuition/graphql" // pour créer un atom
-import { usePageMetadataContentScript as usePageMetadata } from "../contents/usePageMetadataContentScript"
+import { usePageMetadataContentScript as usePageMetadata } from "./usePageMetadataContentScript"
 import { Multivault } from "@0xintuition/protocol"
 import { getClients } from "../lib/viemClient"
 
 
 export function useSignalProcess({ atoms, uri, onSuccess, onError }) {
-  const { createTriples, addTriple } = useCreateTriples()
+  const { createSingleTriple } = useCreateSingleTriple()
   const { createPosition } = useCreatePosition()
   const { mutateAsync: pinThing } = usePinThingMutation()
   const pageMeta = usePageMetadata()
@@ -37,7 +37,6 @@ export function useSignalProcess({ atoms, uri, onSuccess, onError }) {
     if (!atom) {
       console.log("[SignalProcess] Création d'un nouvel atom avec les métadonnées :", pageMeta)
       try {
-        // 1. Pin sur IPFS
         const result = await pinThing({
           name: pageMeta.title || "Untitled",
           description: pageMeta.description || "",
@@ -50,7 +49,6 @@ export function useSignalProcess({ atoms, uri, onSuccess, onError }) {
           throw new Error("La mutation pinThing n'a pas retourné d'uri IPFS.")
         }
 
-        // 2. Création de l'atom sur la blockchain
         const { walletClient, publicClient } = await getClients()
         const multivault = new Multivault({ walletClient, publicClient })
         const deposit = await multivault.getAtomCost()
@@ -75,20 +73,16 @@ export function useSignalProcess({ atoms, uri, onSuccess, onError }) {
       let atom = await getOrCreateAtom()
       console.log("[SignalProcess] Atom utilisé pour le triple :", atom)
 
-      const tripleInput: TripleInput = [
+      const tripleInput: [bigint, bigint, bigint] = [
         BigInt(atom.id),
         877n,
         type === "scam" ? 1775n : 14n
       ]
       console.log("[SignalProcess] tripleInput :", tripleInput)
 
-      addTriple(tripleInput)
-      await new Promise(resolve => setTimeout(resolve, 0))
-      const { vaultIds } = await createTriples()
-      console.log("[SignalProcess] Triple créé, vaultIds :", vaultIds)
-
-      await createPosition({ vaultId: vaultIds[0] })
-      console.log("[SignalProcess] Position créée sur le vault :", vaultIds[0])
+      const { vaultId } = await createSingleTriple(tripleInput)
+      await createPosition({ vaultId })
+      console.log("[SignalProcess] Position créée sur le vault :", vaultId)
 
       onSuccess?.()
     } catch (e) {
