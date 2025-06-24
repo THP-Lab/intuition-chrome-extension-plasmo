@@ -80,11 +80,20 @@ export const useCreateTriples = () => {
     }
   }, [triples])
 
+  const createSingleTriple = async (triple: [bigint, bigint, bigint]) => {
+    addTriple(triple)
+    await new Promise(resolve => setTimeout(resolve, 0))
+    const result = await createTriples()
+    clearTriples() // <-- Ajoute cette ligne pour vider le state après
+    return result
+  }
+
   return {
     addTriple,
     removeTriple,
     clearTriples,
     createTriples,
+    createSingleTriple,
     triples,
     isLoading,
     error,

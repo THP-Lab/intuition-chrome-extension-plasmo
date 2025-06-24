@@ -8,7 +8,6 @@ chrome.runtime.onConnect.addListener((port) => {
     sidepanelPort = port;
     port.onMessage.addListener((msg) => {
       if (msg === "SIDEPANEL_READY" && pendingSidepanelRoute) {
-        console.log("[BG] Port: sending NAVIGATE_SIDEPANEL", pendingSidepanelRoute);
         port.postMessage({ action: "NAVIGATE_SIDEPANEL", route: pendingSidepanelRoute });
         pendingSidepanelRoute = null;
       }
@@ -20,7 +19,6 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender) => {
-  console.log("[BG] Received message:", message, "from", sender);
   if (message.type === "open_sidepanel") {
     const tabId = sender.tab?.id
     const windowId = sender.tab?.windowId

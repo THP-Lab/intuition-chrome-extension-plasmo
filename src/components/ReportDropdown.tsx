@@ -1,20 +1,22 @@
 // src/components/ReportDropdown.tsx
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import React from "react";
+import { useSignalProcess } from "../hooks/useSignalProcess"
 
-// Icône chevron bas (SVG inline, pas besoin de dépendance)
 const ChevronDown = () => (
   <svg width="16" height="16" fill="none">
     <path d="M5 8l5 5 5-5" stroke="currentColor" strokeWidth="2" fill="none" />
   </svg>
 );
 
-const options = [
-  { label: "Trustworthy", value: "trustworthy" },
-  { label: "Scam", value: "scam" },
-];
+const SignalDropdown = ({ atoms, uri }) => {
+  const { handleSignal } = useSignalProcess({
+    atoms,
+    uri,
+    onSuccess: () => {/* popup succès */},
+    onError: () => {/* popup erreur */}
+  })
 
-const ReportDropdown = () => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -24,33 +26,25 @@ const ReportDropdown = () => {
           onClick={e => e.stopPropagation()}
           onMouseDown={e => e.stopPropagation()}
         >
-          Report
+          Signal
           <span className="ml-1">
             <ChevronDown />
           </span>
         </button>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Portal container={null}>
+      <DropdownMenu.Portal container={window.document.body}>
         <DropdownMenu.Content
-          className="bg-white rounded shadow-lg p-1 border border-gray-200"
+          className="bg-white rounded shadow-lg p-1 border border-gray-200 z-[9999]"
           sideOffset={4}
           onClick={e => e.stopPropagation()}
           onMouseDown={e => e.stopPropagation()}
         >
-          {options.map((option) => (
-            <DropdownMenu.Item
-              key={option.value}
-              className="px-3 py-2 cursor-pointer rounded hover:bg-gray-100 text-black"
-              onClick={e => e.stopPropagation()}
-              onMouseDown={e => e.stopPropagation()}
-            >
-              {option.label}
-            </DropdownMenu.Item>
-          ))}
+          <DropdownMenu.Item onClick={() => handleSignal("scam")}>Scam</DropdownMenu.Item>
+          <DropdownMenu.Item onClick={() => handleSignal("trustworthy")}>Trustworthy</DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
   );
 };
 
-export default ReportDropdown;
+export default SignalDropdown;

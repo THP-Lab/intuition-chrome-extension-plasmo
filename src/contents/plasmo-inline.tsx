@@ -22,6 +22,8 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
 
 export const getShadowHostId = () => "plasmo-inline-example-unique-id"
 
+export const useShadowDom = false
+
 function PlasmoInline() {
   const iconSize = 35
   const [positionY, setPositionY] = useState<number>(50)
@@ -53,6 +55,7 @@ function PlasmoInline() {
       );
     }
   };
+
   useEffect(() => {
     setAutoVisible(true)
     const timer = setTimeout(() => setAutoVisible(false), 4000)
@@ -184,7 +187,7 @@ function PlasmoInline() {
           color: "white",
           border: "1px solid #fff",
           cursor: isHolding ? "grabbing" : "grab",
-          zIndex: 9999,
+          zIndex: 1,
           opacity: 0.2,
           transition: "opacity 0.3s ease"
         }}
@@ -199,13 +202,19 @@ function PlasmoInline() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
-          {showDropdown && !isWarningPopupActive && <ReportDropdown />}
+          {showDropdown && !isWarningPopupActive && (
+            <ReportDropdown 
+              atoms={atoms}
+              uri={uri}
+            />
+          )}
+
           <div
             onMouseEnter={handleIntuitionMouseEnter}
             onMouseLeave={handleIntuitionMouseLeave}
             style={{ display: "flex", position: "relative" }}
           >
-            {(!data || atoms.length === 0) && (
+            {(!data || atoms.length === 0) && !isLoading && (
               <div
                 style={{
                   position: "absolute",
