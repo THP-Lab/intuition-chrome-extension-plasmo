@@ -24,7 +24,7 @@
     "@radix-ui/react-slot": "^1.1.2",
     "@tanstack/react-query": "^5.69.0",
     "@types/three": "^0.175.0",
-    "@warzieram/graphql": "^0.5.24",
+    "@warzieram/graphql": "^0.5.27",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "graphql": "^16.10.0",
@@ -76,7 +76,7 @@
     "host_permissions": [
       "https://*/*",
       "https://analytics.thp.box/*",
-      "https://prod.base.intuition-api.com/*",
+      "https://prod.base-mainnet-v-1-0.intuition.sh/*",
       "chrome-extension://*/*",
       "ws://localhost:*",
       "wws://localhost:*"
@@ -102,7 +102,7 @@
       "sidePanel"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com/ https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org https://prod.base-sepolia.intuition-api.sh/v1/graphql https://prod.base-sepolia.intuition-api.com/v1/graphql wss://prod.base-sepolia.intuition-api.com/v1/graphql ws://localhost:* wss://localhost:* https://dl.polyhaven.org https://www.gstatic.com;"
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base-mainnet-v-1-0.intuition.sh https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org https://prod.base-sepolia-v-1-5.intuition.sh/v1/graphql wss://prod.base-mainnet-v-1-0.intuition.sh/v1/graphql ws://localhost:* wss://localhost:* https://dl.polyhaven.org https://www.gstatic.com;"
     }
   },
   "pnpm": {
