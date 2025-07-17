@@ -3,7 +3,7 @@ import { useStorage } from "@plasmohq/storage/hook";
 import ClaimRowLite from "../ui/ClaimRowLite"
 import { useGetTriplesByCreatorQuery } from "@warzieram/graphql";
 
-const YourClaimsTab = () => {
+const CreatedClaimsTab = () => {
   const [walletAddress] = useStorage<string>("metamask-account", "")
 
   const { data,loading, error } = useGetTriplesByCreatorQuery(
@@ -36,5 +36,5 @@ const YourClaimsTab = () => {
   )
 }
 
-  export default YourClaimsTab;
+  export default CreatedClaimsTab;
 
