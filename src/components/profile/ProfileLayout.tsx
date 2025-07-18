@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   useGetAccountByIdQuery,
-  useGetClaimsByAddressQuery,
   useGetPersonsByIdentifierQuery
 } from "@warzieram/graphql";
 
@@ -25,7 +24,6 @@ const ProfileLayout = () => {
   const person = personData?.persons?.[0];
 
   const { data: accountData } = useGetAccountByIdQuery({variables: { id: address || "" }});
-  const { data: claimsData } = useGetClaimsByAddressQuery({variables: { address: address || "" }});
 
   const account = accountData?.account;
 

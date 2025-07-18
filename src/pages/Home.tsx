@@ -47,7 +47,7 @@ function Home() {
 
   const { data, loading, error } = useGetTriplesByUriQuery({
     variables: {
-      uri: currentUrl,
+      uriRegex: currentUrl,
       address: walletAddress
     },
     skip: !startRequest

@@ -3,14 +3,14 @@ import { useStorage } from "@plasmohq/storage/hook";
 import ClaimRowLite from "../ui/ClaimRowLite"
 import { useGetTriplesByCreatorQuery } from "@warzieram/graphql";
 
-const YourClaimsTab = () => {
-  const [account] = useStorage<string>("metamask-account")  
+const CreatedClaimsTab = () => {
+  const [walletAddress] = useStorage<string>("metamask-account", "")
 
   const { data,loading, error } = useGetTriplesByCreatorQuery(
-    {variables: { address: account ?? "" }},
+    {variables: { address: walletAddress }},
   )
 
-  if (!account) return <div>No connected wallet</div>
+  if (!walletAddress) return <div>No connected wallet</div>
   if (loading) return <div>Loading your claims...</div>
   if (error) return <div>Error: {(error as any)?.message}</div>
   if (!data?.triples?.length) return <div>No claims created yet.</div>
@@ -36,5 +36,5 @@ const YourClaimsTab = () => {
   )
 }
 
-  export default YourClaimsTab;
+  export default CreatedClaimsTab;
 

@@ -6,15 +6,15 @@ import { useStorage } from "@plasmohq/storage/hook"
 import AtomCard from "../AtomCard"
 
 const IdentitiesVotedTab = () => {
-  const [account] = useStorage<string>("metamask-account")
+  const [walletAddress] = useStorage<string>("metamask-account")
 
   const { data, loading, error } = useGetAtomsWithPositionsQuery({
     variables: {
-      address: account,
+      address: walletAddress,
       where: {
         term: {
           positions: {
-            account_id: { _eq: account }
+            account_id: { _ilike: walletAddress }
           }
         }
       }
@@ -37,11 +37,11 @@ const IdentitiesVotedTab = () => {
     }
   })
 
-  console.log("Wallet:", account)
+  console.log("Wallet:", walletAddress)
   console.log("Data:", data)
   console.log("Atoms with Claims:", data?.atoms)
 
-  if (!account) return <div>No connected wallet</div>
+  if (!walletAddress) return <div>No connected wallet</div>
   if (loading) return <div>Loading your voted identities...</div>
   if (error) return <div>Error: {(error as any)?.message}</div>
 
