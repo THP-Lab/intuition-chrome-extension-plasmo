@@ -4,9 +4,9 @@ import { useGetFollowingsFromAddressQuery, useGetFollowingsTriplesQuery } from "
 
 const FollowingTab = () => {
   //const walletAddress = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
-  const [walletAddress] = useStorage<string>("metamask-account")
+  const [walletAddress] = useStorage<string>("metamask-account", "")
 
-  const { data, loading, error} = useGetFollowingsFromAddressQuery({variables: {address: walletAddress || ''}});
+  const { data, loading, error} = useGetFollowingsFromAddressQuery({variables: {address: walletAddress}});
 
   if (!walletAddress) return <p>Connect your wallet</p>
   if (loading) return <p>Loading who you follow...</p>
@@ -18,7 +18,6 @@ const FollowingTab = () => {
   console.log(followings)
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">People You Follow</h2>
       {followings.length === 0 ? (
         <p>You’re not following anyone yet.</p>
       ) : (

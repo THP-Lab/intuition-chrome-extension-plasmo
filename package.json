@@ -102,7 +102,7 @@
       "sidePanel"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base-mainnet-v-1-0.intuition.sh https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org https://prod.base-sepolia-v-1-5.intuition.sh/v1/graphql wss://prod.base-mainnet-v-1-0.intuition.sh/v1/graphql ws://localhost:* wss://localhost:* https://dl.polyhaven.org https://www.gstatic.com;"
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com https://prod.base-mainnet-v-1-0.intuition.sh https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org https://prod.base-sepolia-v-1-5.intuition.sh/v1/graphql wss://prod.base-mainnet-v-1-0.intuition.sh/v1/graphql ws://localhost:* wss://localhost:* https://dl.polyhaven.org https://www.gstatic.com;"
     }
   },
   "pnpm": {

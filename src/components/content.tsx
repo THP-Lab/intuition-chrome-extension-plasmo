@@ -66,7 +66,6 @@ const Content = ({ children }: ContentProps) => {
   const { navType } = useNavigation()
 
   console.log(queryClient);
-  console.log(queryClient);
   
   return (
     <ApolloProvider client={apolloClient}>

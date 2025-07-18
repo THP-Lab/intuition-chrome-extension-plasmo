@@ -6,8 +6,6 @@ const FollowersTab = () => {
   const [walletAddress] = useStorage<string>("metamask-account")
   //const walletAddress = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
 
-  const isAddressReady = !!walletAddress
-
   const { data, loading, error } = useGetFollowersFromAddressQuery(
     {variables: { address: walletAddress || "" }},
   )
@@ -33,7 +31,6 @@ const FollowersTab = () => {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Your Followers</h2>
       {followers.length === 0 ? (
         <p>You don’t have any followers yet.</p>
       ) : (
@@ -44,12 +41,12 @@ const FollowersTab = () => {
               className="border p-3 rounded flex items-center gap-3"
             >
               <img
-                src={follower.image || default_img}
-                alt={follower.label}
+                src={follower?.image || default_img}
+                alt={follower?.label}
                 className="w-8 h-8 rounded-full"
               />
               <span className="font-medium text-sm">
-                {follower.label || follower.id}
+                {follower?.label || follower?.id}
               </span>
             </li>
           ))}
