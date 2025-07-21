@@ -25,6 +25,7 @@ const IdentitiesVotedTab = () => {
     const tags = atom.as_subject_triples_aggregate?.nodes
       ?.filter((claim) => claim.predicate.label === "has tag")
       .map((claim) => claim.object)
+      .map((claim) => claim.object)
       .filter(Boolean)
 
     const uniqueTags = Array.from(

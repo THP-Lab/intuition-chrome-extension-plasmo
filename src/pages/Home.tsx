@@ -6,11 +6,34 @@ import { Link } from "react-router-dom"
 import { useStorage } from "@plasmohq/storage/dist/hook"
 
 import EyeComponent from "~/src/components/3D/EyeComponent"
-import { useTheme } from "~/src/components/ThemeProvider"
-import AtomCard from "~src/components/AtomCard"
-import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 
-import TabSystem from "../components/TabSystem"
+function normalizeUrl(input: string): string {
+  try {
+    const u = new URL(input)
+    let hostname = u.hostname.toLowerCase()
+    if (hostname.startsWith("www.")) hostname = hostname.slice(4)
+    let pathname = u.pathname
+    if (pathname.endsWith("/") && pathname.length > 1) {
+      pathname = pathname.slice(0, -1)
+    }
+    return `https://${hostname}${pathname}${u.search}${u.hash}`
+  } catch {
+    return input
+  }
+}
+
+function buildUriRegex(rawUrl: string): string {
+  const canonical = normalizeUrl(rawUrl)  
+  let withoutProto = canonical.replace(/^https?:\/\//, "")
+
+  if (withoutProto.endsWith("/")) {
+    withoutProto = withoutProto.slice(0, -1)
+  }
+  const escaped = withoutProto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+
+  return `^https?:\\/\\/(?:www\\.)?${escaped}\\/?$`
+}
+
 
 function Home() {
   const { theme } = useTheme()
@@ -30,28 +53,34 @@ function Home() {
     console.log(tab.url)
     return tab.url
   }
+
   const refreshUrl = () => {
-    getCurrentUrl().then((url) => setCurrentUrl(url || ""))
+    getCurrentUrl().then((url) => {
+      if (url) {
+        setCurrentUrl(normalizeUrl(url))
+      } else {
+        setCurrentUrl("")
+      }
+    })
   }
+
   useEffect(() => {
-    refreshUrl()
+    getCurrentUrl().then((url) => {
+      if (url) setCurrentUrl(normalizeUrl(url))
+    })
     chrome.tabs.onUpdated.addListener(refreshUrl)
     chrome.tabs.onActivated.addListener(refreshUrl)
-    setStartRequest(true)
-
     return () => {
       chrome.tabs.onUpdated.removeListener(refreshUrl)
       chrome.tabs.onActivated.removeListener(refreshUrl)
     }
   }, [])
 
-  const { data, loading, error } = useGetTriplesByUriQuery({
-    variables: {
-      uriRegex: currentUrl,
-      address: walletAddress
-    },
-    skip: !startRequest
-  })
+  const uriRegex = buildUriRegex(currentUrl)
+  console.log("normalized URL:", currentUrl)
+  console.log("uriRegex:", uriRegex)
+
+  const { data, isLoading, error } = useGetClaimsByUriQuery({uriRegex, address: walletAddress })
   const atoms = data?.atoms ?? []
   console.log("current wallet address:", walletAddress)
   console.log("Data :", data)
