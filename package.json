@@ -1,7 +1,7 @@
 {
   "name": "intuition-chrome-extension",
   "displayName": "Intuition Chrome Extension",
-  "version": "0.1.43",
+  "version": "0.1.46",
   "description": "",
   "author": "THP-Lab.org",
   "scripts": {
@@ -76,6 +76,7 @@
     "host_permissions": [
       "https://*/*",
       "https://analytics.thp.box/*",
+      "https://prod.base-sepolia-v-1-5.intuition.sh/v1/graphql",
       "https://prod.base-mainnet-v-1-0.intuition.sh/*",
       "chrome-extension://*/*",
       "ws://localhost:*",
