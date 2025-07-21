@@ -2,9 +2,11 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useGetTriplesByUriQuery } from "@warzieram/graphql"
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-
+import { useTheme } from "~/src/components/ThemeProvider"  
 import { useStorage } from "@plasmohq/storage/dist/hook"
-
+import TabSystem from "~/src/components/TabSystem"
+import ClaimRowLite from "~src/components/ui/ClaimRowLite";
+import AtomCard from "~src/components/AtomCard";
 import EyeComponent from "~/src/components/3D/EyeComponent"
 
 function normalizeUrl(input: string): string {
@@ -80,7 +82,7 @@ function Home() {
   console.log("normalized URL:", currentUrl)
   console.log("uriRegex:", uriRegex)
 
-  const { data, isLoading, error } = useGetClaimsByUriQuery({uriRegex, address: walletAddress })
+  const { data, loading, error } = useGetTriplesByUriQuery({variables : {uriRegex, address: walletAddress }})
   const atoms = data?.atoms ?? []
   console.log("current wallet address:", walletAddress)
   console.log("Data :", data)
