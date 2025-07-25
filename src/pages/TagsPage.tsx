@@ -3,7 +3,6 @@ import { Fingerprint, Tag } from "lucide-react"
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
-import { keepPreviousData } from "~node_modules/@tanstack/react-query/build/legacy"
 
 import { ImageWithFallback } from "../components/ui/ImageWithFallback"
 
