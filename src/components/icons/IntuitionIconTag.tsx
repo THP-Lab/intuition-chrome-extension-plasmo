@@ -2,12 +2,12 @@ import * as React from "react"
 import { useTheme } from "~/src/components/ThemeProvider"
 import { cn } from "~/src/lib/utils"
 
-interface IntuitionIconPlusProps {
+interface IntuitionIconTagProps {
   size?: number
   className?: string
 }
 
-const IntuitionIconPlus: React.FC<IntuitionIconPlusProps> = ({
+const IntuitionIconTag: React.FC<IntuitionIconTagProps> = ({
   size = 32,
   className= "",
 }) => {
@@ -116,4 +116,4 @@ const IntuitionIconPlus: React.FC<IntuitionIconPlusProps> = ({
   )
 }
 
-export default IntuitionIconPlus
+export default IntuitionIconTag
