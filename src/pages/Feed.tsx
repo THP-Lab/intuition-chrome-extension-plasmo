@@ -3,6 +3,7 @@ import ClaimRowLite from "~src/components/ui/ClaimRowLite";
 import { useStorage } from "@plasmohq/storage/dist/hook";
 import { useGetFollowingsFromAddressQuery, useGetEventsFeedQuery } from "@warzieram/graphql";
 import { getAddress } from "ethers"
+import { useInfiniteScroll } from "~src/hooks/useInfiniteScroll";
 
 const default_img =
   "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000";
@@ -14,6 +15,10 @@ function shortAddress(addr?: string) {
 function Feed() {
   const [walletAddress] = useStorage<string>("metamask-account", "");
   const [checksumAddress, setChecksumAddress] = useState<string | null>(null);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [items, setItems] = useState<any[]>([]);
+  const PAGE_SIZE = 100;
 
   useEffect(() => {
     if (!walletAddress) {
@@ -55,32 +60,44 @@ function Feed() {
   } = useGetEventsFeedQuery({
     skip: addresses.length === 0,
     variables: {
-      limit: 100,
-      offset: 0,
+      limit: PAGE_SIZE,
+      offset,
       addresses,
       address: checksumAddress!
     },
   });
 
+  // Ajout/concaténation des events comme dans TagsPage
+  useEffect(() => {
+    if (eventsData?.events) {
+      setItems((prev) =>
+        offset === 0 ? eventsData.events : [...prev, ...eventsData.events]
+      );
+      setHasMore(eventsData.events.length === PAGE_SIZE);
+    }
+  }, [eventsData, offset]);
+
+  useInfiniteScroll({
+    loading: eventsLoading,
+    hasMore,
+    onLoadMore: () => setOffset((prev) => prev + PAGE_SIZE),
+  });
+
   if (!walletAddress) return <p>Connect your wallet</p>;
-  if (loading || eventsLoading) return <p>Loading…</p>;
   if (error) return <p>Error loading followings: {error.message}</p>;
   if (eventsError) return <p>Error loading events: {eventsError.message}</p>;
-
-  const events = eventsData?.events ?? [];
-  console.log("Events data:", events);
 
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Feed followings</h1>
-      {events.length === 0 ? (
-        <p>Aucune activité trouvée pour vos followings.</p>
+      {items.length === 0 && !eventsLoading ? (
+        <p>No activity found.</p>
       ) : (
-        events
+        items
           .slice()
           .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
           .map((e) => {
-            if (!e.triple) return null; // <-- Ne pas afficher si pas de triple
+            if (!e.triple) return null;
             const isDeposit = e.type === "Deposited";
             const sender = isDeposit ? e.deposit?.sender : e.redemption?.sender;
             const senderImg = sender?.image ?? default_img;
@@ -109,7 +126,7 @@ function Feed() {
                   </span>
                 </div>
                 <ClaimRowLite claim={e.triple} />
-                <div className="text-xs text-gray-700 mt-2 flex flex-wrap gap-4">
+                <div className="text-xs text-gray-600 mt-2 flex flex-wrap gap-4">
                   <div>
                     <span className="font-semibold">Tx :</span>{" "}
                     <a
@@ -125,6 +142,12 @@ function Feed() {
               </div>
             );
           })
+      )}
+      {eventsLoading && hasMore && (
+        <p className="text-center text-sm text-gray-500">Loading...</p>
+      )}
+      {!hasMore && (
+        <p className="text-center text-sm text-gray-500">No more activity.</p>
       )}
     </div>
   );

@@ -12,6 +12,7 @@ interface VaultProps {
 
 interface TermWithVaults {
   vaults?: VaultProps[] | null
+  positions?: Array<{ shares?: string | null }>
   positions_aggregate?: {
     aggregate?: {
       count?: number | null
@@ -77,8 +78,8 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
     const numPositionsAgainst =
       triple?.counter_term?.positions_aggregate?.aggregate?.count
 
-    const userStake = Number(triple?.positions?.[0]?.shares ?? 0)
-    const userCounterStake = Number(triple?.counter_positions?.[0]?.shares ?? 0)
+    const userStake = Number(triple?.positions?.[0]?.shares ?? triple?.term?.positions?.[0]?.shares ?? 0)
+    const userCounterStake = Number(triple?.counter_positions?.[0]?.shares ?? triple?.counter_term?.positions?.[0]?.shares ?? 0)
 
     const initialVote: VoteChoice | undefined =
       userStake > 0
