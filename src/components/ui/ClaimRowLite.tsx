@@ -36,7 +36,6 @@ interface ClaimRowLiteProps {
         count?: number | null
       }
     } | null
-
     positions?: Array<{ shares?: string | null }>
     counter_positions?: Array<{ shares?: string | null }>
 
