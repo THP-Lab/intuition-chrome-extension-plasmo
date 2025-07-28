@@ -9,7 +9,9 @@ const default_img =
   "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000";
 
 function shortAddress(addr?: string) {
-  return addr ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : "";
+  if (!addr) return "";
+  if (addr.length < 25) return addr;
+  return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 }
 
 function Feed() {
@@ -67,7 +69,7 @@ function Feed() {
     },
   });
 
-  // Ajout/concaténation des events comme dans TagsPage
+  // Ajout/concaténation des events 
   useEffect(() => {
     if (eventsData?.events) {
       setItems((prev) =>
@@ -101,7 +103,7 @@ function Feed() {
             const isDeposit = e.type === "Deposited";
             const sender = isDeposit ? e.deposit?.sender : e.redemption?.sender;
             const senderImg = sender?.image ?? default_img;
-            const senderLabel = sender?.id;
+            const senderLabel = sender?.label;
             return (
               <div key={e.id} className="pt-2 pb-3 border-b">
                 <div className="flex items-center gap-2 mb-2">
