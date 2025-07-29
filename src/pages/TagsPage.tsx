@@ -43,7 +43,6 @@ const HashtagObjectsPage: React.FC = () => {
   })
 
   if (error) return <p className="text-red-600">Error: {String(error)}</p>
-  if (offset === 0 && loading) return <p>Loading…</p>
 
   return (
     <div className="p-4 space-y-4">

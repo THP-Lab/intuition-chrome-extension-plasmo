@@ -123,7 +123,7 @@ function Feed() {
                     </a>
                     <strong> {isDeposit ? "deposit" : "redeem"}</strong>
                   </span>
-                  <span className="ml-2 text-xs text-gray-500">
+                  <span className="ml-auto text-xs text-gray-500">
                     {new Date(e.created_at).toLocaleString()}
                   </span>
                 </div>
