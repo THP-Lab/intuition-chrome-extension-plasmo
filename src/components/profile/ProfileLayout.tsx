@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import {
   useGetAccountByIdQuery,
-  useGetClaimsByAddressQuery,
   useGetPersonsByIdentifierQuery
-} from "~src/graphql/src";
+} from "@warzieram/graphql";
 
 import WalletConnectionButton from "~src/components/WalletConnectionButton";
 import ProfileTabs from "~src/components/profile/ProfileTabs";
@@ -20,13 +19,11 @@ const ProfileLayout = () => {
   const [editMode, setEditMode] = useState(false);
 
   const { data: personData } = useGetPersonsByIdentifierQuery(
-    { identifier: address || "" },
-    { enabled: !!address }
+    {variables: { identifier: address || "" }},
   );
   const person = personData?.persons?.[0];
 
-  const { data: accountData } = useGetAccountByIdQuery({ id: address || "" });
-  const { data: claimsData } = useGetClaimsByAddressQuery({ address: address || "" });
+  const { data: accountData } = useGetAccountByIdQuery({variables: { id: address || "" }});
 
   const account = accountData?.account;
 

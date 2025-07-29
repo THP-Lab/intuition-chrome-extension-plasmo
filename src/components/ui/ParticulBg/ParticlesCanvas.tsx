@@ -130,19 +130,19 @@ const ParticlesCanvas: React.FC = () => {
     }
 
     // Mouse movement management
-    const handleMouseMove = (e: MouseEvent) => {
-      const prevX = mouse.current.x
-      const prevY = mouse.current.y
+    //const handleMouseMove = (e: MouseEvent) => {
+    //  const prevX = mouse.current.x
+    //  const prevY = mouse.current.y
 
-      mouse.current.x = e.x
-      mouse.current.y = e.y
+    //  mouse.current.x = e.x
+    //  mouse.current.y = e.y
 
       // Light parallax effect
-      particles.current.forEach((p) => {
-        p.x += (mouse.current.x - prevX) * 0.005
-        p.y += (mouse.current.y - prevY) * 0.005
-      })
-    }
+    //  particles.current.forEach((p) => {
+    //    p.x += (mouse.current.x - prevX) * 0.005
+    //    p.y += (mouse.current.y - prevY) * 0.005
+    //  })
+    //}
 
     // Animation of the canvas
     const animate = () => {
@@ -217,16 +217,15 @@ const ParticlesCanvas: React.FC = () => {
           particle.speedY += Math.sin(angle) * forceBase
         }
 
-        // Attraction towards the mouse
-        const dxMouse = mouse.current.x - particle.x
-        const dyMouse = mouse.current.y - particle.y
-        const distanceMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse)
-
-        if (distanceMouse < 150) {
-          const angle = Math.atan2(dyMouse, dxMouse)
-          particle.speedX += Math.cos(angle) * 0.1
-          particle.speedY += Math.sin(angle) * 0.1
-        }
+        // // Attraction towards the mouse
+        // const dxMouse = mouse.current.x - particle.x
+        // const dyMouse = mouse.current.y - particle.y
+        // const distanceMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse)
+        // if (distanceMouse < 150) {
+        //   const angle = Math.atan2(dyMouse, dxMouse)
+        //   particle.speedX += Math.cos(angle) * 0.1
+        //   particle.speedY += Math.sin(angle) * 0.1
+        // }
 
         // Update the position
         particle.x += particle.speedX
@@ -294,7 +293,7 @@ const ParticlesCanvas: React.FC = () => {
 
     // Configure the events
     window.addEventListener("resize", handleResize)
-    window.addEventListener("mousemove", handleMouseMove)
+    //window.addEventListener("mousemove", handleMouseMove)
 
     // Initialize and start the animation
     handleResize()
@@ -303,7 +302,7 @@ const ParticlesCanvas: React.FC = () => {
     // Cleaning
     return () => {
       window.removeEventListener("resize", handleResize)
-      window.removeEventListener("mousemove", handleMouseMove)
+      //window.removeEventListener("mousemove", handleMouseMove)
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current)
       }

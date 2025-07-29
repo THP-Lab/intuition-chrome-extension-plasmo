@@ -6,7 +6,7 @@ import { Multivault } from "@0xintuition/protocol"
 import { getClients } from "~src/lib/viemClient"
 
 interface AtomProps {
-  id: string
+  term_id: string
   label?: string | null
   vault_id?: string
 }

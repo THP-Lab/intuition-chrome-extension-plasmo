@@ -1,36 +1,35 @@
+import { useGetAtomsWithPositionsQuery } from "@warzieram/graphql"
 import React from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import { useGetAtomsWithPositionsQuery } from "~src/graphql/src"
-
 import AtomCard from "../AtomCard"
 
 const IdentitiesVotedTab = () => {
-  const [account] = useStorage<string>("metamask-account")
+  const [walletAddress] = useStorage<string>("metamask-account")
 
-  const { data, isLoading, error } = useGetAtomsWithPositionsQuery(
-    {
-      address: account,
+  const { data, loading, error } = useGetAtomsWithPositionsQuery({
+    variables: {
+      address: walletAddress,
       where: {
-        vault: {
+        term: {
           positions: {
-            account_id: { _eq: account }
+            account_id: { _ilike: walletAddress }
           }
         }
       }
-    },
-    { enabled: !!account }
-  )
+    }
+  })
 
   const atomsWithTags = data?.atoms.map((atom) => {
-    const tags = atom.as_subject_claims_aggregate?.nodes
+    const tags = atom.as_subject_triples_aggregate?.nodes
       ?.filter((claim) => claim.predicate.label === "has tag")
+      .map((claim) => claim.object)
       .map((claim) => claim.object)
       .filter(Boolean)
 
     const uniqueTags = Array.from(
-      new Map(tags.map(tag => [tag.id, tag])).values()
+      new Map(tags.map((tag) => [tag.term_id, tag])).values()
     )
 
     return {
@@ -39,12 +38,12 @@ const IdentitiesVotedTab = () => {
     }
   })
 
-  console.log("Wallet:", account)
+  console.log("Wallet:", walletAddress)
   console.log("Data:", data)
   console.log("Atoms with Claims:", data?.atoms)
 
-  if (!account) return <div>No connected wallet</div>
-  if (isLoading) return <div>Loading your voted identities...</div>
+  if (!walletAddress) return <div>No connected wallet</div>
+  if (loading) return <div>Loading your voted identities...</div>
   if (error) return <div>Error: {(error as any)?.message}</div>
 
   const atoms = data?.atoms
@@ -61,9 +60,9 @@ const IdentitiesVotedTab = () => {
         </span>
       </div>
 
-      {atomsWithTags.map((atom) =>
-        atom?.id ? (
-          <AtomCard key={atom.id} atom={atom} tags={atom.tags} />
+      { atomsWithTags && atomsWithTags.map((atom) =>
+        atom?.term_id ? (
+          <AtomCard key={atom.term_id} atom={atom} tags={atom.tags} />
         ) : null
       )}
     </div>

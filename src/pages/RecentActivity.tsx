@@ -1,5 +1,5 @@
 import React from "react"
-import { useEventsSubscription } from "~src/graphql/src/generated/subscriptions"
+import { useEventsSubscription } from "@warzieram/graphql"
 import AtomCard from "~src/components/AtomCard"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import IntuitionIcon from "~src/components/icons/IntuitionIcon"
@@ -15,7 +15,7 @@ const RecentActivity: React.FC = () => {
 
   const { data, loading, error } = useEventsSubscription({
     variables: {
-      addresses: walletAddress,
+      addresses: [walletAddress],
       limit: INITIAL_LIMIT
     }
   })
@@ -54,9 +54,10 @@ const RecentActivity: React.FC = () => {
         const isDeposit = Boolean(e.deposit_id)
 
         // ------ DEPOSIT ATOM ------
-        if (isDeposit && e.deposit && !e.deposit.is_triple && e.atom) {
-          const senderImg = e.deposit.sender.image
-          const senderLabel = e.deposit.sender.label
+        if (isDeposit && e.deposit && e.atom) {
+          const senderImg = e.deposit.sender_assets_after_total_fees.image
+          const senderLabel = e.deposit?.sender?.id
+          console.log("TRIPLE LIVE FEED ", e.atom)
 
           return (
             <div key={idx} className="pt-2 pb-3 border-b">
@@ -75,10 +76,10 @@ const RecentActivity: React.FC = () => {
         }
 
         // ------ DEPOSIT TRIPLE ------
-        if (isDeposit && e.deposit && e.deposit.is_triple && e.triple) {
-          const senderImg = e.deposit.sender.image
-          const senderLabel = e.deposit.sender.label
-        console.log("ID DU PREDICATE:", e.triple.predicate.id)
+        if (isDeposit && e.deposit && e.triple) {
+          const senderImg = e.deposit.sender_assets_after_total_fees.image
+          const senderLabel = e.deposit?.sender?.id
+          console.log("TRIPLE LIVE FEED ", e.triple)
 
           return (
             <div key={idx} className="pt-2 pb-2 border-b">
@@ -90,7 +91,6 @@ const RecentActivity: React.FC = () => {
                 />
                 <span className="text-sm font-medium">{renderSenderLink(senderLabel)}<strong> deposit</strong> :</span>
               </p>
-              
                 <ClaimRowLite claim={e.triple} />
               
             </div>

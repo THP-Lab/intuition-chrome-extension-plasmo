@@ -16,4 +16,5 @@
     left: 0;
     pointer-events: none;
     background-color: transparent;
+    filter: brightness(50%) contrast(80%);
   }

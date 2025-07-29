@@ -9,7 +9,7 @@ import {
   Navigate
 } from "react-router-dom"
 
-import { configureClient } from "~src/graphql/src"
+import { configureClient } from "@warzieram/graphql"
 import PageForm from "~src/pages/PageForm"
 import Feed from "~src/pages/Feed"
 import Home from "~src/pages/Home"
@@ -31,8 +31,8 @@ import NavbarUp from "./layout/NavbarUp"
 import FollowersTab from "./profile/FollowersTab"
 import FollowingTab from "./profile/FollowingTab"
 import IdentityTab from "./profile/IdentityTab"
-import YourClaimsTab from "./profile/YourClaimsTab"
-import MyPositionsTab from "./profile/MyPositionsTab"
+import CreatedClaimsTab from "./profile/CreatedClaimsTab"
+import AllClaimsPositionsTab from "./profile/AllClaimsPositionsTab"
 import IdentitiesVotedTab from "./profile/IdentitiesVotedTab"
 import ProfileLayout from "./profile/ProfileLayout"
 
@@ -41,7 +41,7 @@ import umamiScriptUrl from "url:../../assets/umami.js"
 
 import TagsPage from "~src/pages/TagsPage"
 
-const API_URL = "https://prod.base.intuition-api.com/v1/graphql"
+const API_URL = "https://prod.base-sepolia.intuition.sh/v1/graphql"
 configureClient({ apiUrl: API_URL })
 
 const queryClient = new QueryClient()
@@ -66,6 +66,8 @@ const Content = ({ children }: ContentProps) => {
 
   const { navType } = useNavigation()
 
+  console.log(queryClient);
+  
   return (
     <ApolloProvider client={apolloClient}>
       <QueryClientProvider client={queryClient}>
@@ -84,8 +86,8 @@ const Content = ({ children }: ContentProps) => {
                     <Route index element={<Navigate to="/profile/claims/all" />} />
                     <Route element={<ProfileLayout />}>
                       <Route path="claims">
-                        <Route path="all" element={<MyPositionsTab />} />
-                        <Route path="created" element={<YourClaimsTab />} />
+                        <Route path="all" element={<AllClaimsPositionsTab />} />
+                        <Route path="created" element={<CreatedClaimsTab />} />
                       </Route>
 
                       <Route path="identities">

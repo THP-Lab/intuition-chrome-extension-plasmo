@@ -1,13 +1,17 @@
+import { useQueryClient } from "@tanstack/react-query"
+import { useGetTriplesByUriQuery } from "@warzieram/graphql"
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { useQueryClient } from "@tanstack/react-query"
-import { useTheme } from "~/src/components/ThemeProvider"
-import TabSystem from '../components/TabSystem';
+import { useTheme } from "~/src/components/ThemeProvider"  
 import { useStorage } from "@plasmohq/storage/dist/hook"
-import { useGetClaimsByUriQuery } from "~src/graphql/src"
+import TabSystem from "~/src/components/TabSystem"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
 import AtomCard from "~src/components/AtomCard";
 import EyeComponent from "~/src/components/3D/EyeComponent"
+import AtomCard from "~src/components/AtomCard"
+import ClaimRowLite from "~src/components/ui/ClaimRowLite"
+
+import TabSystem from "../components/TabSystem"
 
 function normalizeUrl(input: string): string {
   try {
@@ -38,12 +42,13 @@ function buildUriRegex(rawUrl: string): string {
 
 
 function Home() {
-  const { theme } = useTheme()
   const [currentUrl, setCurrentUrl] = useState<string>("")
   const [walletAddress] = useStorage<string>("metamask-account", "")
   const [activeTab, setActiveTab] = useState("Claims")
+  const [startRequest, setStartRequest] = useState(false)
 
-  useQueryClient() 
+  const queryClient = useQueryClient()
+  console.log(queryClient)
 
   const getCurrentUrl = async () => {
     const [tab] = await chrome.tabs.query({
@@ -80,29 +85,32 @@ function Home() {
   console.log("normalized URL:", currentUrl)
   console.log("uriRegex:", uriRegex)
 
-  const { data, isLoading, error } = useGetClaimsByUriQuery({uriRegex, address: walletAddress })
+  const { data, loading, error } = useGetTriplesByUriQuery({variables: {uriRegex: uriRegex, address: walletAddress }})
   const atoms = data?.atoms ?? []
-  console.log("current wallet address:", walletAddress);
+  console.log("current wallet address:", walletAddress)
   console.log("Data :", data)
 
   const claims = Array.from(
     new Map(
-      atoms?.flatMap(atom => [...atom.as_object_claims_aggregate.nodes, ...atom.as_subject_claims_aggregate.nodes])
-        .map(claim => [claim.triple_id, claim])
-
+      atoms
+        ?.flatMap((atom) => [
+          ...atom.as_object_triples_aggregate.nodes,
+          ...atom.as_subject_triples_aggregate.nodes
+        ])
+        .map((claim) => [claim.term_id, claim])
     ).values()
   )
- 
-  console.log("Claims :", claims);
-  
-  const atomsWithTags = atoms.map(atom => {
-    const tags = atom.as_subject_claims_aggregate.nodes
-    .filter(claim => claim.predicate.label === "has tag")
-      .map(claim => claim.object)
+
+  console.log("Claims :", claims)
+
+  const atomsWithTags = atoms.map((atom) => {
+    const tags = atom.as_subject_triples_aggregate.nodes
+      .filter((claim) => claim.predicate.label === "has tag")
+      .map((claim) => claim.object)
       .filter(Boolean)
 
     const uniqueTags = Array.from(
-      new Map(tags.map(tag => [tag.id, tag])).values()
+      new Map(tags.map((tag) => [tag.term_id, tag])).values()
     )
 
     return {
@@ -110,81 +118,85 @@ function Home() {
       tags: uniqueTags
     }
   })
-      
+
   console.log("Tags :", atomsWithTags)
 
   const tabs = [
     {
-      label: 'Claims',
-      content: 
-      <div>        
-        {isLoading ? "Chargement..." : (typeof data !== "undefined" && claims.length !== 0)? 
-        ( claims.map((claim, index) => (
-          console.log(claim),
-        
-        <ClaimRowLite
-          key={`${claim.id}-${index}`}
-          claim={claim}
-        />
-
-          
-            ))
-        ) : (
-          <div className="p-4 rounded text-center space-y-2">
-            <p className="text-sm text-foreground">No claims found for this URL.</p>
-            <p className="text-sm text-foreground">
-              
-
-              <Link to="/page-form"
-                className="text-blue-600 hover:underline font-medium">
-                Be the first
-              </Link>
-              
-            </p>
-          </div>
-        )}
-      </div>
+      label: "Claims",
+      content: (
+        <div>
+          {loading ? (
+            "Loading..."
+          ) : typeof data !== "undefined" && claims.length !== 0 ? (
+            claims.map(
+              (claim, index) => (
+                console.log(claim),
+                (
+                  <ClaimRowLite
+                    key={`${claim.term_id}-${index}`}
+                    claim={claim}
+                  />
+                )
+              )
+            )
+          ) : (
+            <div className="p-4 rounded text-center space-y-2">
+              <p className="text-sm text-foreground">
+                No claims found for this URL.
+              </p>
+              <p className="text-sm text-foreground">
+                <Link
+                  to="/page-form"
+                  className="text-blue-600 hover:underline font-medium">
+                  Be the first
+                </Link>
+              </p>
+            </div>
+          )}
+        </div>
+      )
     },
     {
-      label: 'Atoms',
-      content: 
-      <div>
-        {isLoading ? "Chargement...": (typeof data !== "undefined" &&  atoms.length != 0)?
-          (atomsWithTags.map((atom) => {
-            return (
-              <AtomCard key={atom.id} atom={atom} tags={atom.tags} />
-            );
-          })):
-          (
-          <div className="p-4 rounded text-center space-y-2">
-            <p className="text-sm text-foreground">No atoms found for this URL.</p>
-            <p className="text-sm text-foreground">
-              
-
-              <Link to="/page-form"
-                className="text-blue-600 hover:underline font-medium">
-                Be the first
-              </Link>
-              
-            </p>
-          </div>
-          )
-
-        }
-        
-      </div>
-      
-    },
-  ];
-
+      label: "Atoms",
+      content: (
+        <div>
+          {loading ? (
+            "Loading..."
+          ) : typeof data !== "undefined" && atoms.length != 0 ? (
+            atomsWithTags.map((atom) => {
+              return (
+                <AtomCard key={atom.term_id} atom={atom} tags={atom.tags} />
+              )
+            })
+          ) : (
+            <div className="p-4 rounded text-center space-y-2">
+              <p className="text-sm text-foreground">
+                No atoms found for this URL.
+              </p>
+              <p className="text-sm text-foreground">
+                <Link
+                  to="/page-form"
+                  className="text-blue-600 hover:underline font-medium">
+                  Be the first
+                </Link>
+              </p>
+            </div>
+          )}
+        </div>
+      )
+    }
+  ]
 
   return (
     <div className="space-y-6">
       <div className="relative w-full" style={{ height: "280px" }}>
-        <h1 className="light-sweep-heading text-center relative z-10 mt-[10px]">INTUITION</h1>
+        <h1 className="light-sweep-heading text-center relative z-10 mt-[10px]">
+          INTUITION
+        </h1>
         <EyeComponent
           style={{
-            width: "500px",
+            width: "250px",
             height: "500px",
             position: "absolute",
             top: "-90px",
@@ -196,14 +208,19 @@ function Home() {
           }}
         />
 
-<p className="text-muted-foreground text-center relative z-10 mt-[220px]">
-  "Intuition lets you explore, vote, and debate verifiable facts — all directly from your browser."
-</p>
+        <p className="text-muted-foreground text-center relative z-10 mt-[220px]">
+          "Intuition lets you explore, vote, and debate verifiable facts — all
+          directly from your browser."
+        </p>
       </div>
-  
+
       <div className="mt-1">
-        {error && <p className="text-red-500">An error occurred while requesting this page.</p>}
-  
+        {error && (
+          <p className="text-red-500">
+            An error occurred while requesting this page.
+          </p>
+        )}
+
         <TabSystem
           tabs={tabs}
           activeTab={activeTab}

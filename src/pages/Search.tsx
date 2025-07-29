@@ -1,16 +1,28 @@
+import {
+  useGetTriplesWithPositionsLazyQuery,
+  useGetTriplesWithPositionsQuery,
+  type GetTriplesWithPositionsQuery,
+} from "@warzieram/graphql"
 import React, { useEffect, useState } from "react"
-import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
-import TabSystem from "../components/TabSystem"
-import { useGetTriplesWithPositionsQuery } from "~src/graphql/src"
-import ClaimRowLite from "~src/components/ui/ClaimRowLite";
+
 import { useStorage } from "@plasmohq/storage/dist/hook"
 
+import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
+import ClaimRowLite from "~src/components/ui/ClaimRowLite"
+
+import TabSystem from "../components/TabSystem"
 
 const Search: React.FC = () => {
   const [isSidePanel, setIsSidePanel] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("All")
+  const [offset, setOffset] = useState(0)
+  const [items, setItems] = useState<GetTriplesWithPositionsQuery['triples']>(
+    []
+  )
   const [walletAddress] = useStorage<string>("metamask-account", "")
+
+  const PAGE_SIZE = 20
 
   useEffect(() => {
     const checkWidth = () => {
@@ -29,68 +41,95 @@ const Search: React.FC = () => {
 
   const {
     data: triplesData,
-    isLoading,
+    loading,
     error
   } = useGetTriplesWithPositionsQuery({
-    where: {
-      _or: [
-        { subject: { label: { _ilike: `%${searchTerm}%` } } },
-        { predicate: { label: { _ilike: `%${searchTerm}%` } } },
-        { object: { label: { _ilike: `%${searchTerm}%` } } }
-      ]
+    variables: {
+      where: {
+        _or: [
+          { subject: { label: { _ilike: `%${searchTerm}%` } } },
+          { predicate: { label: { _ilike: `%${searchTerm}%` } } },
+          { object: { label: { _ilike: `%${searchTerm}%` } } }
+        ]
+      },
+      limit: PAGE_SIZE,
+      address: walletAddress,
+      offset
     },
-    address: walletAddress
-  }, {
-    enabled: !!searchTerm 
+    skip: searchTerm.length < 2
   })
 
-  
-  const triples = triplesData?.triples || []
-
-
-    const renderResults = () => {
-      console.log("Active tab:", activeTab)
-      console.log("All Triples:", triples)
-    
-      if (isLoading) return <p>Loading...</p>
-      if (error) return <p className="text-red-500">Error loading results.</p>
-      if (!triples.length) return <p>No results found.</p>
-    
-      const filterFunctions: Record<string, (triple: Triple) => boolean> = {
-        All: () => true,
-        Tag: (triple) => triple.predicate?.label?.toLowerCase().includes("tag"),
-        Organization: (triple) =>
-          triple.predicate?.label?.toLowerCase().includes("organization"),
-        User: (triple) => triple.predicate?.label?.toLowerCase().includes("follow")
-      }
-      
-      const filteredTriples = triples.filter(filterFunctions[activeTab] || filterFunctions.All)
-      
-    
-      console.log("Filtered triples:", filteredTriples)
-
-    
-      return (
-        <div className="space-y-2">
-          {filteredTriples.length === 0 && <p>No results found.</p>}
-          {filteredTriples.map((triple, index) => (
-            <ClaimRowLite
-              key={`${triple.id}-${index}`}
-              claim={triple}
-            />
-          ))}
-        </div>
-      )
+  // append the new data to the existing one when it changes
+  useEffect(() => {
+    if (!triplesData) return
+    if (offset === 0) {
+      setItems(triplesData.triples)
+    } else {
+      setItems((prev) => [...prev, ...triplesData.triples])
     }
-    
+  }, [triplesData])
+
+  // adding a listener to adjust the offset on scroll
+  useEffect(() => {
+    const onScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 10
+      ) {
+        setOffset((prev) => prev + PAGE_SIZE)
+      }
+    }
+    window.addEventListener("scroll", onScroll)
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  // reset the research when the user types
+  useEffect(() => {
+    setItems([])
+    setOffset(0)
+  }, [searchTerm])
+
+  const renderResults = () => {
+    console.log("Active tab:", activeTab)
+    console.log("All Triples:", items)
+
+    if (error) return <p className="text-red-500">Error loading results.</p>
+    if (!items.length) return <p>No results found.</p>
+
+    const filterFunctions: Record<
+      string,
+      (triple: GetTriplesWithPositionsQuery['triples'][number] ) => boolean
+    > = {
+      All: () => true,
+      Tag: (triple) =>
+        triple.predicate?.label?.toLowerCase().includes("tag") || false,
+      Organization: (triple) =>
+        triple.predicate?.label?.toLowerCase().includes("organization") ||
+        false,
+      User: (triple) =>
+        triple.predicate?.label?.toLowerCase().includes("follow") || false
+    }
+
+    const filteredTriples = items.filter(
+      filterFunctions[activeTab] || filterFunctions.All
+    )
+
+    console.log("Filtered triples:", filteredTriples)
+
+    return (
+      <div className="space-y-2">
+        {filteredTriples.length === 0 && <p>No results found.</p>}
+        {filteredTriples.map((triple, index) => (
+          <ClaimRowLite key={`${triple.term_id}-${index}`} claim={triple} />
+        ))}
+        {loading && <p>Loading...</p>}
+      </div>
+    )
+  }
 
   const tabs = ["All", "Tag", "Organization", "User"].map((label) => ({
     label,
-    content: (
-      <div>
-        {renderResults()}
-      </div>
-    )
+    content: <div>{renderResults()}</div>
   }))
 
   return (
@@ -111,7 +150,6 @@ const Search: React.FC = () => {
             activeTab={activeTab}
             onTabChange={setActiveTab}
           />
-
         </div>
       </div>
     </div>
