@@ -5,7 +5,7 @@ import Tags from "./Tags"
 
 interface AtomDisplayProps {
   atom: {
-    id: string
+    term_id: string
     label?: string | null
     image?: string | null
     value?: {
@@ -15,16 +15,23 @@ interface AtomDisplayProps {
         url?: string | null
       } | null
     } | null
-    vault?: {
-      position_count?: number | string | null
-    } | null
+    term?: {
+      vaults?: {
+        curve_id: string
+        position_count?: number
+      }[]
+    }
   }
   tags?: string[]
   tagsSection?: React.ReactNode
   }
 
+  const PRO_RATA_CURVE_ID = "1"
+
 const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom, tags, tagsSection }) => {
+
   const thing = atom.value?.thing
+  const vault = atom.term?.vaults?.find(v => v.curve_id === PRO_RATA_CURVE_ID)
 
   return (
     <div className="border border-border-atom rounded-xl p-6 bg-background">
@@ -47,11 +54,11 @@ const AtomDisplay: React.FC<AtomDisplayProps> = ({ atom, tags, tagsSection }) =>
           </h1>
         </div>
 
-        {atom.vault?.position_count && (
+        {vault?.position_count && (
           <div className="flex items-center gap-1 text-muted-foreground">
             <UserRound className="w-4 h-4" />
             <span className="text-sm">
-              {Math.max((atom.vault?.position_count ?? 0) - 1, 0)}
+              {Math.max((vault.position_count ?? 0) - 1, 0)}
             </span>
           </div>
         )}

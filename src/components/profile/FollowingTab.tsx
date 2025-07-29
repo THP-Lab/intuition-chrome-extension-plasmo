@@ -1,47 +1,63 @@
-import React from "react"
-import { useStorage } from "@plasmohq/storage/hook"
-import { useGetFollowingsFromAddressQuery, useGetFollowingsTriplesQuery } from "~src/graphql/src"
+import React, { useEffect, useState } from "react"
+import { useStorage } from "@plasmohq/storage/dist/hook"
+import { useGetFollowingsFromAddressQuery } from "@warzieram/graphql"
+import { getAddress } from "ethers"
 
-const FollowingTab = () => {
-  //const walletAddress = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
-  const [walletAddress] = useStorage<string>("metamask-account")
+const FollowingTab: React.FC = () => {
+  const [walletAddress] = useStorage<string>("metamask-account", "")
+  const [checksumAddress, setChecksumAddress] = useState<string | null>(null)
 
-  const { data, isLoading, isError} = useGetFollowingsFromAddressQuery({address: walletAddress});
+  useEffect(() => {
+    if (!walletAddress) {
+      setChecksumAddress(null)
+      return
+    }
+    try {
+      setChecksumAddress(getAddress(walletAddress))
+    } catch (err) {
+      console.error("Adresse invalide :", err)
+      setChecksumAddress(null)
+    }
+  }, [walletAddress])
 
-  if (!walletAddress) return <p>Connect your wallet</p>
-  if (isLoading) return <p>Loading who you follow...</p>
-  if (isError) return <p>Error loading followings</p>
+  const { data, loading, error } = useGetFollowingsFromAddressQuery({
+    variables:  { address: checksumAddress! },
+    skip: !checksumAddress
+  })
+
+  if (!walletAddress) {
+    return <p>Connect your wallet</p>
+  }
+  if (loading) {
+    return <p>Loading who you follow…</p>
+  }
+  if (error) {
+    return <p>Error loading followings: {error.message}</p>
+  }
 
   const followings = data?.following ?? []
-  const default_img = "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000"
+  if (followings.length === 0) {
+    return <p>You’re not following anyone yet.</p>
+  }
 
-  console.log(followings)
+  const defaultImg =
+    "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000"
+
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold">People You Follow</h2>
-      {followings.length === 0 ? (
-        <p>You’re not following anyone yet.</p>
-      ) : (
-        <ul className="space-y-2">
-          {followings.map((following) => {
-            return (
-              <li key={following.id} className="border p-3 rounded">
-                <p className="font-semibold">
-                  {following?.label || following.id}
-                </p>
-                {(
-                  <img
-                    src={following.image || default_img}
-                    alt="avatar"
-                    className="w-8 h-8 rounded-full mt-1"
-                  />
-                )}
-              </li>
-            )
-          })}
-        </ul>
-      )}
-    </div>
+    <ul className="space-y-2">
+      {followings.map((f) => (
+        <li key={f.id} className="flex items-center gap-2 p-2 border rounded">
+          <img
+            src={f.image || defaultImg}
+            alt={f.label || f.id}
+            className="w-8 h-8 rounded-full"
+          />
+          <span className="font-medium text-sm">
+            {f.label || f.id}
+          </span>
+        </li>
+      ))}
+    </ul>
   )
 }
 

@@ -6,8 +6,8 @@ import { useAtomPosition } from "../hooks/useAtomPosition"
 import TagCreator from "./TagCreator"
 import Tags from "./ui/Tags"
 
-interface AtomProps {
-  id: string
+export interface AtomProps {
+  term_id: string
   data?: string | null
   type: string
   label?: string | null
@@ -21,26 +21,32 @@ interface AtomProps {
       url?: string | null
     } | null
   } | null
-  vault?: {
-    position_count?: number
-    total_shares?: string
-    current_share_price?: string
-    total?: {
-      aggregate?: {
-        count?: number
-        sum?: {
-          shares?: string | number
-        } | null
-      } | null
+  positions_aggregate?: {
+    aggregate?: {
+      count?: number
     }
-  } | null
-  vault_id?: string
+  }
+  term?: {
+    vaults?: {
+      curve_id: string
+      current_share_price?: string
+      market_cap?: string
+      total_assets?: string
+      total_shares?: string
+      position_count?: number
+      positions_aggregate?: {
+        aggregate?: {
+          count?: number
+        }
+      }
+    }[]
+  }
 }
 
 interface AtomCardProps {
   atom: AtomProps
   tags?: string[]
-}
+} 
 
 export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
   try {
@@ -52,8 +58,11 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
     const thing = atom.value?.thing
     const navigate = useNavigate()
     const goToAtomPage = () => {
-      navigate(`/atoms/${atom.id || ''}`)
+      navigate(`/atoms/${atom.term_id || ''}`)
     }
+
+    const positionCount = atom?.term?.vaults[0]?.position_count ?? atom?.positions_aggregate?.aggregate?.count ?? 0
+
 
     return (
       <div
@@ -83,12 +92,12 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
           <div className="flex items-center gap-4 ml-2">
             <p className="flex items-center text-sm text-white text-muted-foreground">
               <UserRound className="w-4 h-4 mr-1" />
-              {Math.max((atom.vault?.position_count ?? 0) - 1, 0)}
+              {Math.max(positionCount - 1, 0)}
             </p>
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                atomPosition(BigInt(atom.id));
+                atomPosition(BigInt(atom.term_id));
               }}
               disabled={isVoting}
               className="border border-gray-400 text-white rounded-md px-2 py-1 text-sm
@@ -118,7 +127,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
 
         {tags && (
           <div 
-            className="gap-2"
+            className="gap-2 mt-2"
             onClick={e => {
               e.stopPropagation(); 
             }}

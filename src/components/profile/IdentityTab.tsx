@@ -1,31 +1,31 @@
 import React from "react"
 import { useStorage } from "@plasmohq/storage/hook"
-import { useGetAtomsByCreatorQuery } from "~src/graphql/src"
+import { useGetAtomsByCreatorQuery } from "@warzieram/graphql"
 import AtomCard from "~src/components/AtomCard"
 
 const IdentityTab = () => {
   const [walletAddress] = useStorage<string>("metamask-account")
 
-  const { data, isLoading, isError, error } = useGetAtomsByCreatorQuery(
-    { address: walletAddress ?? "" },
-    { enabled: !!walletAddress }
+  const { data, loading, error } = useGetAtomsByCreatorQuery(
+    {variables: { address: walletAddress ?? "" }},
   )
 
   if (!walletAddress) return <div>No connected wallet</div>
-  if (isLoading) return <div>Loading your atoms...</div>
-  if (isError) return <div>Error: {(error as any)?.message}</div>
+  if (loading) return <div>Loading your atoms...</div>
+  if (error) return <div>Error: {(error as any)?.message}</div>
   if (!data?.atoms?.length) return <div>No atoms created yet.</div>
 
   const atoms = data.atoms
 
   const AtomsWithTags = atoms.map((atom) => {
-    const tags = atom.as_subject_claims_aggregate.nodes
+    const tags = atom.as_subject_triples_aggregate.nodes
     .filter(claim => claim.predicate.label === "has tag")
+    .map(claim => claim.object)
     .map(claim => claim.object)
     .filter(Boolean)
 
     const uniqueTags = Array.from(
-      new Map(tags.map(tag => [tag?.id, tag])).values()
+      new Map(tags.map(tag => [tag?.term_id, tag])).values()
     )
 
     return {
@@ -48,7 +48,7 @@ const IdentityTab = () => {
       </p>
 
       {AtomsWithTags.map((atom) => (
-        <AtomCard key={atom.id} atom={atom} tags={atom.tags} />
+        <AtomCard key={atom.term_id} atom={atom} tags={atom.tags} />
       ))}
     </div>
   )

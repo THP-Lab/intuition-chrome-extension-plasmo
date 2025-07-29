@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { HoverCard, HoverCardTrigger, HoverCardContent } from './HoverCard'
-import { useGetAtomQuery } from "@0xintuition/graphql"
+import { useGetAtomQuery } from "@warzieram/graphql"
 import { ImageWithFallback } from './ImageWithFallback'
 import { useAtomInteraction } from '~src/hooks/useAtomInteraction'
 import { Fingerprint } from "lucide-react"
@@ -10,23 +10,23 @@ import { Fingerprint } from "lucide-react"
 
 interface PopupAtomProps {
   atom: {
-    id: string
-    label: string
-    image?: string
+    term_id: any
+    label?: string | null
+    image?: string | null
   }
 }
 
 export const PopupAtom = ({ atom }: PopupAtomProps) => {
   if (!atom) return null
-  const { id, label, image } = atom;
+  const { term_id, label, image } = atom;
   const atomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const { data, isLoading, error } = useGetAtomQuery({ id });
+  const { data, isLoading, error } = useGetAtomQuery({ variables: {term_id} });
   const { isHovered, setIsHovered, isOpen } = useAtomInteraction()
 
   const goToAtomPage = () => {
-    navigate(`/atoms/${id}`)
+    navigate(`/atoms/${term_id}`)
   };
 
   const renderAtomImage = () => {
@@ -34,7 +34,7 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
       return (
         <ImageWithFallback
           src={image}
-          alt={label}
+          alt={label || ""}
           className="w-5 h-5 rounded-full object-cover"
         />
       )
@@ -67,18 +67,18 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
       ) : null
 
     const renderVaultInfo = () =>
-      data?.atom?.vault ? (
+      data?.atom?.term ? (
         <div className="mt-2 text-sm">
           <span className="text-muted-foreground">Positions: </span>
-          <span className="font-medium">{data.atom.vault.position_count}</span>
+          <span className="font-medium">{data.atom.term.positions_aggregate.aggregate.count}</span>
         </div>
       ) : null
     
 
     const renderCardContent = () => {
-      if (isLoading) return <div className="p-4">Chargement...</div>
-      if (error) return <div className="p-4 text-red-500">Erreur de chargement</div>
-      if (!data?.atom) return <div className="p-4">Aucune information disponible</div>
+      if (isLoading) return <div className="p-4">Loading...</div>
+      if (error) return <div className="p-4 text-red-500">Error Loading</div>
+      if (!data?.atom) return <div className="p-4">No information available</div>
   
       return (
         <div className="flex flex-col gap-2 p-4">
@@ -112,7 +112,7 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
               {renderAtomImage()}
               <span
                 className="truncate max-w-[120px] overflow-hidden whitespace-nowrap block"
-                title={label}
+                title={label || ""}
               >
                 {label}
               </span>

@@ -1,17 +1,48 @@
+import { useQueryClient } from "@tanstack/react-query"
+import { useGetTriplesByUriQuery } from "@warzieram/graphql"
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { useTheme } from "~/src/components/ThemeProvider"
-import TabSystem from '../components/TabSystem'
+import { useTheme } from "~/src/components/ThemeProvider"  
 import { useStorage } from "@plasmohq/storage/dist/hook"
-import ClaimRowLite from "~src/components/ui/ClaimRowLite"
-import AtomCard from "~src/components/AtomCard"
+import TabSystem from "~/src/components/TabSystem"
+import ClaimRowLite from "~src/components/ui/ClaimRowLite";
+import AtomCard from "~src/components/AtomCard";
 import EyeComponent from "~/src/components/3D/EyeComponent"
-import { normalizeUrl } from "../lib/url"
+import AtomCard from "~src/components/AtomCard"
+import ClaimRowLite from "~src/components/ui/ClaimRowLite"
+
+import TabSystem from "../components/TabSystem"
+
+function normalizeUrl(input: string): string {
+  try {
+    const u = new URL(input)
+    let hostname = u.hostname.toLowerCase()
+    if (hostname.startsWith("www.")) hostname = hostname.slice(4)
+    let pathname = u.pathname
+    if (pathname.endsWith("/") && pathname.length > 1) {
+      pathname = pathname.slice(0, -1)
+    }
+    return `https://${hostname}${pathname}${u.search}${u.hash}`
+  } catch {
+    return input
+  }
+}
+
+function buildUriRegex(rawUrl: string): string {
+  const canonical = normalizeUrl(rawUrl)  
+  let withoutProto = canonical.replace(/^https?:\/\//, "")
+
+  if (withoutProto.endsWith("/")) {
+    withoutProto = withoutProto.slice(0, -1)
+  }
+  const escaped = withoutProto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+
+  return `^https?:\\/\\/(?:www\\.)?${escaped}\\/?$`
+}
 
 
 function Home() {
-  const { theme } = useTheme()
-  const [currentUrl, setCurrentUrl] = useState("")
+  const [currentUrl, setCurrentUrl] = useState<string>("")
   const [walletAddress] = useStorage<string>("metamask-account", "")
   const [activeTab, setActiveTab] = useState("Claims")
   const [atomsWithTags, setAtomsWithTags] = useState([])
@@ -111,58 +142,80 @@ useEffect(() => {
 
   const tabs = [
     {
-      label: 'Claims',
-      content: 
-      <div>        
-        {isLoading ? "Loading..." : claims.length > 0 ? (
-          claims.map((claim, index) => (
-            <ClaimRowLite
-              key={`${claim.id}-${index}`}
-              claim={claim}
-            />
-          ))
-        ) : (
-          <div className="p-4 rounded text-center space-y-2">
-            <p className="text-sm text-foreground">No claims found for this URL.</p>
-            <p className="text-sm text-foreground">
-              <Link to="/page-form" className="text-blue-600 hover:underline font-medium">
-                Be the first
-              </Link>
-            </p>
-          </div>
-        )}
-      </div>
+      label: "Claims",
+      content: (
+        <div>
+          {loading ? (
+            "Loading..."
+          ) : typeof data !== "undefined" && claims.length !== 0 ? (
+            claims.map(
+              (claim, index) => (
+                console.log(claim),
+                (
+                  <ClaimRowLite
+                    key={`${claim.term_id}-${index}`}
+                    claim={claim}
+                  />
+                )
+              )
+            )
+          ) : (
+            <div className="p-4 rounded text-center space-y-2">
+              <p className="text-sm text-foreground">
+                No claims found for this URL.
+              </p>
+              <p className="text-sm text-foreground">
+                <Link
+                  to="/page-form"
+                  className="text-blue-600 hover:underline font-medium">
+                  Be the first
+                </Link>
+              </p>
+            </div>
+          )}
+        </div>
+      )
     },
     {
-      label: 'Atoms',
-      content: 
-      <div>
-        {isLoading ? "Loading..." : atomsWithTags.length > 0 ? (
-          atomsWithTags.map((atom) => (
-            <AtomCard key={atom.id} atom={atom} tags={atom.tags} />
-          ))
-        ) : (
-          <div className="p-4 rounded text-center space-y-2">
-            <p className="text-sm text-foreground">No atoms found for this URL.</p>
-            <p className="text-sm text-foreground">
-              <Link to="/page-form" className="text-blue-600 hover:underline font-medium">
-                Be the first
-              </Link>
-            </p>
-          </div>
-        )}
-      </div>
-    },
-  ];
-
+      label: "Atoms",
+      content: (
+        <div>
+          {loading ? (
+            "Loading..."
+          ) : typeof data !== "undefined" && atoms.length != 0 ? (
+            atomsWithTags.map((atom) => {
+              return (
+                <AtomCard key={atom.term_id} atom={atom} tags={atom.tags} />
+              )
+            })
+          ) : (
+            <div className="p-4 rounded text-center space-y-2">
+              <p className="text-sm text-foreground">
+                No atoms found for this URL.
+              </p>
+              <p className="text-sm text-foreground">
+                <Link
+                  to="/page-form"
+                  className="text-blue-600 hover:underline font-medium">
+                  Be the first
+                </Link>
+              </p>
+            </div>
+          )}
+        </div>
+      )
+    }
+  ]
 
   return (
     <div className="space-y-6">
       <div className="relative w-full" style={{ height: "280px" }}>
-        <h1 className="light-sweep-heading text-center relative z-10 mt-[10px]">INTUITION</h1>
+        <h1 className="light-sweep-heading text-center relative z-10 mt-[10px]">
+          INTUITION
+        </h1>
         <EyeComponent
           style={{
-            width: "500px",
+            width: "250px",
             height: "500px",
             position: "absolute",
             top: "-90px",
@@ -174,11 +227,12 @@ useEffect(() => {
           }}
         />
 
-<p className="text-muted-foreground text-center relative z-10 mt-[220px]">
-  "Intuition lets you explore, vote, and debate verifiable facts — all directly from your browser."
-</p>
+        <p className="text-muted-foreground text-center relative z-10 mt-[220px]">
+          "Intuition lets you explore, vote, and debate verifiable facts — all
+          directly from your browser."
+        </p>
       </div>
-  
+
       <div className="mt-1">
   
         <TabSystem

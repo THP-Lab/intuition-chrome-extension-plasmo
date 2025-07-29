@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import { Link } from "react-router-dom"
 import { useParams } from 'react-router-dom'
-import { useGetTaggedObjectsQuery } from '~src/graphql/src'
+import { useGetTaggedObjectsQuery } from '@warzieram/graphql'
 import { useStorage } from '@plasmohq/storage/hook'
 import { ImageWithFallback } from '../components/ui/ImageWithFallback'
 import { Fingerprint } from 'lucide-react'
@@ -12,13 +12,15 @@ const HASHTAG_PREDICATE_ID = 4
 
 const SubjectTag: React.FC = () => {
   const { tagId } = useParams<{ tagId: string }>()
-  const [walletAddress] = useStorage<string>('metamask-account')
+  const [walletAddress] = useStorage<string>('metamask-account', "")
 
 
-  const { data, isLoading, error } = useGetTaggedObjectsQuery({
-    objectId: Number(tagId),
-    predicateId: HASHTAG_PREDICATE_ID,
-    address: walletAddress!
+  const { data, loading, error } = useGetTaggedObjectsQuery({
+    variables: {
+      objectId: tagId!,
+      predicateId: HASHTAG_PREDICATE_ID,
+      address: walletAddress!
+    }
   })
 
   const triples = data?.triples ?? []
@@ -26,12 +28,12 @@ const SubjectTag: React.FC = () => {
   const sorted = useMemo(() => {
     return triples
       .map(triple => {
-        const vault = triple.vault!
-        const counter = triple.counter_vault!
+        const vault = triple.term!
+        const counter = triple.counter_term!
         const userFor    = Number(vault.positions?.[0]?.shares ?? 0)
         const userAgainst= Number(counter.positions?.[0]?.shares ?? 0)
         const userVoted = userFor > 0 || userAgainst > 0
-        const totalVotes = (vault.position_count ?? 0) + (counter.position_count ?? 0)
+        const totalVotes = (vault?.positions_aggregate?.aggregate?.count ?? 0) + (counter.positions_aggregate?.aggregate?.count ?? 0)
         return { triple, userVoted, totalVotes }
       })
       .sort((a, b) => {
@@ -41,8 +43,10 @@ const SubjectTag: React.FC = () => {
       })
   }, [triples])
 
-  if (isLoading) return <p>Loading…</p>
+  if (loading) return <p>Loading…</p>
   if (error) return <p className="text-red-600">Error loading</p> 
+  if (error) return console.log("VOICI L'ERREUR :", error)
+
 
   return (
     <div className="mt-2 space-y-6">
@@ -53,14 +57,14 @@ const SubjectTag: React.FC = () => {
         <div className="space-y-4 mt-2">
           {sorted.map(({ triple }) => {
             const subject = triple.subject
-            const vault = triple.vault!
-            const counterVault = triple.counter_vault!
+            const vault = triple.term!
+            const counterVault = triple.counter_term!
 
             const vaultId = vault.id
             const counterVaultId = counterVault.id
 
-            const numPositionsFor = vault.position_count ?? 0
-            const numPositionsAgainst = counterVault.position_count ?? 0
+            const numPositionsFor = vault?.positions_aggregate?.aggregate?.count ?? 0
+            const numPositionsAgainst = counterVault?.positions_aggregate?.aggregate?.count ?? 0
 
             const userStake = Number(vault.positions?.[0]?.shares ?? 0)
             const userCounterStake = Number(counterVault.positions?.[0]?.shares ?? 0)
@@ -74,10 +78,10 @@ const SubjectTag: React.FC = () => {
             return (
               <div
                 
-                key={subject.id}
+                key={subject.term_id}
                 className="flex justify-between items-center p-1 border border-border/10 bg-[hsl(var(--claims-bg))] rounded-xl claims-hover-effect"
               >
-                <Link to={`/atoms/${subject.id}`} className="flex items-center gap-4">
+                <Link to={`/atoms/${subject.term_id}`} className="flex items-center gap-4">
                   {subject.image ? (
                     <ImageWithFallback
                       src={subject.image}

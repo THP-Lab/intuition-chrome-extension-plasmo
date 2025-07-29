@@ -1,23 +1,64 @@
 import React from "react"
-import { Link } from "react-router-dom"
 import { cn } from "~src/lib/utils"
 import { PopupAtom } from "./PopupAtom"
-import VoteButtons from "~src/components/VoteButtons"
+import VoteButtons, { type VoteChoice } from "~src/components/VoteButtons"
+import type { AtomProps } from "~src/components/AtomCard"
+
+interface VaultProps {
+  total_shares?: string | null
+  position_count?: number | null
+  positions?: Array<{ shares?: string | null }>
+}
+
+interface TermWithVaults {
+  vaults?: VaultProps[] | null
+  positions?: Array<{ shares?: string | null }>
+  positions_aggregate?: {
+    aggregate?: {
+      count?: number | null
+    }
+  } | null
+}
 
 interface ClaimRowLiteProps {
-  claim: any
+  claim: {
+    term_id: string
+    counter_term_id?: string
+    subject: AtomProps
+    predicate: AtomProps
+    object: AtomProps
+    positions_aggregate?: {
+      aggregate?: {
+        count?: number | null
+      }
+    } | null
+    counter_positions_aggregate?: {
+      aggregate?: {
+        count?: number | null
+      }
+    } | null
+    positions?: Array<{ shares?: string | null }>
+    counter_positions?: Array<{ shares?: string | null }>
+
+    creator?: {
+      id: string
+      label?: string | null
+      type?: string | null
+    }
+    term?: TermWithVaults | null
+    counter_term?: TermWithVaults | null
+  }
 }
 
 export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
   try {
-    // Guard against missing claim
     if (!claim) {
       console.error("ClaimRowLite: missing claim, raw data:", claim)
       return <div className="text-xs text-gray-500">Invalid claim data</div>
     }
 
-    const triple = (claim.triple as any) ?? claim
-
+    const triple = claim
+    console.log("VUE TRIPLE CLAIMROWLITE",triple)
 
     const subject = triple.subject ?? claim.subject
     const predicate = triple.predicate ?? claim.predicate
@@ -25,32 +66,28 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
     const creator = (triple as any)?.creator ?? (claim as any)?.creator
 
-    const vault = claim.vault ?? (claim.triple as any)?.vault ?? {}
-    const counterVault = claim.counter_vault ?? (claim.triple as any)?.counter_vault ?? {}
 
-    const vaultId = vault.id ?? (claim as any).vault_id
-    const counterVaultId = counterVault.id ?? (claim as any).counter_vault_id
+    const vaultId = triple.term_id
+    const counterVaultId = triple?.counter_term_id 
+    console.log("VAULT ID", vaultId)
+    console.log("COUNTER VAULT ID", counterVaultId)
 
     const numPositionsFor =
-      vault.positions_aggregate?.aggregate?.count ??
-      vault.position_count ??
-      vault.positions?.length ?? 0
+      triple?.term?.positions_aggregate?.aggregate?.count
 
     const numPositionsAgainst =
-      counterVault.positions_aggregate?.aggregate?.count ??
-      counterVault.position_count ??
-      counterVault.positions?.length ?? 0
+      triple?.counter_term?.positions_aggregate?.aggregate?.count
 
-    const userStake = Number(vault?.positions?.[0]?.shares ?? 0)
-    const userCounterStake = Number(counterVault?.positions?.[0]?.shares ?? 0)
+    const userStake = Number(triple?.positions?.[0]?.shares ?? triple?.term?.positions?.[0]?.shares ?? 0)
+    const userCounterStake = Number(triple?.counter_positions?.[0]?.shares ?? triple?.counter_term?.positions?.[0]?.shares ?? 0)
 
     const initialVote: VoteChoice | undefined =
       userStake > 0
         ? "for"
         : userCounterStake > 0
-        ? "against"
-        : undefined
-        
+          ? "against"
+          : undefined
+
     return (
       <div
         className={cn(
@@ -59,10 +96,10 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
 
         <div className="flex flex-col">
           <div className="flex gap-1 items-center flex-wrap">
-            
-            <PopupAtom key={`${claim.id}-subject`} atom={subject} />
-            <PopupAtom key={`${claim.id}-predicate`} atom={predicate} />
-            <PopupAtom key={`${claim.id}-object`} atom={object} />
+
+            <PopupAtom key={`${claim.term_id}-subject`} atom={subject} />
+            <PopupAtom key={`${claim.term_id}-predicate`} atom={predicate} />
+            <PopupAtom key={`${claim.term_id}-object`} atom={object} />
           </div>
           {creator && (
             <p className="mt-2 text-xs text-gray-500">
@@ -79,19 +116,19 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
           )}
         </div>
         <div>
-        {vaultId && counterVaultId ? (
-          <div className="flex">
-            <VoteButtons
-              vaultId={BigInt(vaultId)}
-              counterVaultId={BigInt(counterVaultId)}
-              numPositionsFor={numPositionsFor}
-              numPositionsAgainst={numPositionsAgainst}
-              initialVote={initialVote}
-            />
-          </div>
-        ) : (
-          <div className="text-xs text-gray-500">Missing ID</div>
-        )}
+          {vaultId && counterVaultId ? (
+            <div className="flex">
+              <VoteButtons
+                vaultId={BigInt(vaultId)}
+                counterVaultId={BigInt(counterVaultId)}
+                numPositionsFor={numPositionsFor || 0}
+                numPositionsAgainst={numPositionsAgainst || 0}
+                initialVote={initialVote}
+              />
+            </div>
+          ) : (
+            <div className="text-xs text-gray-500">Missing ID</div>
+          )}
         </div>
       </div>
     )
