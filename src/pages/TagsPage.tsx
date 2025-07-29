@@ -2,17 +2,15 @@ import { useGetListsTagsQuery } from "@warzieram/graphql"
 import { Fingerprint, Tag } from "lucide-react"
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-
-import { keepPreviousData } from "~node_modules/@tanstack/react-query/build/legacy"
-
 import { ImageWithFallback } from "../components/ui/ImageWithFallback"
+import { useInfiniteScroll } from "../hooks/useInfiniteScroll"
 
 const HASHTAG_PREDICATE_ID = 4
 const PAGE_SIZE = 18
 
 const HashtagObjectsPage: React.FC = () => {
   const [offset, setOffset] = useState(0)
-  const [items, setItems] = useState<(typeof data)["atoms"]>([])
+  const [items, setItems] = useState<any[]>([])
   const [hasMore, setHasMore] = useState(true)
 
   const { data, loading, error } = useGetListsTagsQuery({
@@ -29,33 +27,22 @@ const HashtagObjectsPage: React.FC = () => {
     }
   })
 
-  // accumulate pages
   useEffect(() => {
-    if (!data) return
-    if (offset === 0) {
-      setItems(data.atoms)
-    } else {
-      setItems((prev) => [...prev, ...data.atoms])
+    if (data?.atoms) {
+      setItems((prev) =>
+        offset === 0 ? data.atoms : [...prev, ...data.atoms]
+      )
+      setHasMore(data.atoms.length === PAGE_SIZE)
     }
-    setHasMore(data.atoms.length === PAGE_SIZE)
   }, [data, offset])
 
-  useEffect(() => {
-    const onScroll = () => {
-      if (loading || !hasMore) return
-      if (
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 100
-      ) {
-        setOffset((prev) => prev + PAGE_SIZE)
-      }
-    }
-    window.addEventListener("scroll", onScroll)
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [loading, hasMore])
+  useInfiniteScroll({
+    loading,
+    hasMore,
+    onLoadMore: () => setOffset((prev) => prev + PAGE_SIZE)
+  })
 
   if (error) return <p className="text-red-600">Error: {String(error)}</p>
-  if (offset === 0 && loading) return <p>Loading…</p>
 
   return (
     <div className="p-4 space-y-4">

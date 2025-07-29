@@ -8,6 +8,10 @@ import TabSystem from "~/src/components/TabSystem"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
 import AtomCard from "~src/components/AtomCard";
 import EyeComponent from "~/src/components/3D/EyeComponent"
+import AtomCard from "~src/components/AtomCard"
+import ClaimRowLite from "~src/components/ui/ClaimRowLite"
+
+import TabSystem from "../components/TabSystem"
 
 function normalizeUrl(input: string): string {
   try {
@@ -38,7 +42,6 @@ function buildUriRegex(rawUrl: string): string {
 
 
 function Home() {
-  const { theme } = useTheme()
   const [currentUrl, setCurrentUrl] = useState<string>("")
   const [walletAddress] = useStorage<string>("metamask-account", "")
   const [activeTab, setActiveTab] = useState("Claims")
@@ -82,7 +85,7 @@ function Home() {
   console.log("normalized URL:", currentUrl)
   console.log("uriRegex:", uriRegex)
 
-  const { data, loading, error } = useGetTriplesByUriQuery({variables : {uriRegex, address: walletAddress }})
+  const { data, loading, error } = useGetTriplesByUriQuery({variables: {uriRegex: uriRegex, address: walletAddress }})
   const atoms = data?.atoms ?? []
   console.log("current wallet address:", walletAddress)
   console.log("Data :", data)
@@ -193,7 +196,7 @@ function Home() {
         </h1>
         <EyeComponent
           style={{
-            width: "500px",
+            width: "250px",
             height: "500px",
             position: "absolute",
             top: "-90px",
