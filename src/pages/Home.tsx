@@ -5,48 +5,18 @@ import { Link } from "react-router-dom"
 import { useTheme } from "~/src/components/ThemeProvider"  
 import { useStorage } from "@plasmohq/storage/dist/hook"
 import TabSystem from "~/src/components/TabSystem"
-import ClaimRowLite from "~src/components/ui/ClaimRowLite";
-import AtomCard from "~src/components/AtomCard";
 import EyeComponent from "~/src/components/3D/EyeComponent"
 import AtomCard from "~src/components/AtomCard"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
-
-import TabSystem from "../components/TabSystem"
-
-function normalizeUrl(input: string): string {
-  try {
-    const u = new URL(input)
-    let hostname = u.hostname.toLowerCase()
-    if (hostname.startsWith("www.")) hostname = hostname.slice(4)
-    let pathname = u.pathname
-    if (pathname.endsWith("/") && pathname.length > 1) {
-      pathname = pathname.slice(0, -1)
-    }
-    return `https://${hostname}${pathname}${u.search}${u.hash}`
-  } catch {
-    return input
-  }
-}
-
-function buildUriRegex(rawUrl: string): string {
-  const canonical = normalizeUrl(rawUrl)  
-  let withoutProto = canonical.replace(/^https?:\/\//, "")
-
-  if (withoutProto.endsWith("/")) {
-    withoutProto = withoutProto.slice(0, -1)
-  }
-  const escaped = withoutProto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-
-  return `^https?:\\/\\/(?:www\\.)?${escaped}\\/?$`
-}
+import { normalizeUrl } from "../lib/url"
 
 
 function Home() {
   const [currentUrl, setCurrentUrl] = useState<string>("")
   const [walletAddress] = useStorage<string>("metamask-account", "")
   const [activeTab, setActiveTab] = useState("Claims")
-  const [atomsWithTags, setAtomsWithTags] = useState([])
-  const [claims, setClaims] = useState([])
+  const [claims, setClaims] = useState<any[]>([])
+  const [atomsWithTags, setAtomsWithTags] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
 const refreshActiveTab = async () => {
@@ -89,22 +59,22 @@ useEffect(() => {
     const extractedClaims = Array.from(
       new Map(
         atoms
-          .flatMap((atom) => [
-            ...(atom.as_object_claims_aggregate?.nodes ?? []),
-            ...(atom.as_subject_claims_aggregate?.nodes ?? []),
+          .flatMap((atom: any) => [
+            ...(atom.as_object_triples_aggregate?.nodes ?? []),
+            ...(atom.as_subject_triples_aggregate?.nodes ?? []),
           ])
-          .map((c) => [c.triple_id, c])
+          .map((c: any) => [c.term_id, c])
       ).values()
     )
 
-    const withTags = atoms.map((atom) => {
+    const withTags = atoms.map((atom: any) => {
       const tags = atom.as_subject_claims_aggregate?.nodes
-        ?.filter((c) => c.predicate?.label === "has tag")
-        .map((c) => c.object)
+        ?.filter((c: any) => c.predicate?.label === "has tag")
+        .map((c: any) => c.object)
         .filter(Boolean) ?? []
 
       const unique = Array.from(
-        new Map(tags.map((t) => [t.id, t])).values()
+        new Map(tags.map((t: any) => [t.id, t])).values()
       )
 
       return { ...atom, tags: unique }
@@ -145,18 +115,15 @@ useEffect(() => {
       label: "Claims",
       content: (
         <div>
-          {loading ? (
+          {isLoading ? (
             "Loading..."
-          ) : typeof data !== "undefined" && claims.length !== 0 ? (
+          ) : claims.length !== 0 ? (
             claims.map(
               (claim, index) => (
-                console.log(claim),
-                (
-                  <ClaimRowLite
-                    key={`${claim.term_id}-${index}`}
-                    claim={claim}
-                  />
-                )
+                <ClaimRowLite
+                  key={`${claim.term_id}-${index}`}
+                  claim={claim}
+                />
               )
             )
           ) : (
@@ -180,14 +147,12 @@ useEffect(() => {
       label: "Atoms",
       content: (
         <div>
-          {loading ? (
+          {isLoading ? (
             "Loading..."
-          ) : typeof data !== "undefined" && atoms.length != 0 ? (
-            atomsWithTags.map((atom) => {
-              return (
-                <AtomCard key={atom.term_id} atom={atom} tags={atom.tags} />
-              )
-            })
+          ) : atomsWithTags.length !== 0 ? (
+            atomsWithTags.map((atom) => (
+              <AtomCard key={atom.term_id} atom={atom} tags={atom.tags} />
+            ))
           ) : (
             <div className="p-4 rounded text-center space-y-2">
               <p className="text-sm text-foreground">

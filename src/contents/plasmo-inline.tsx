@@ -5,20 +5,26 @@ import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useRef, useState } from "react"
 import IntuitionButtonIcon  from "~src/components/icons/IntuitionButtonIcon"
 import { useStorage } from "@plasmohq/storage/dist/hook"
-import { useGetClaimsByUriQuery } from "~src/graphql/src"
-const queryClient = new QueryClient()
+import { useGetTriplesByUriQuery } from "@warzieram/graphql"
 import { normalizeUrl, buildUriRegex } from "../lib/url"
 import WarningPopup from "~/src/components/WarningPopup"
 import ReportDropdown from "~src/components/ReportDropdown"
 import "../styles/global.css"
 import IntuitionIconPlus from "~src/components/icons/intuition_icon_plus"
 
+const queryClient = new QueryClient()
+
 export const config: PlasmoCSConfig = {
   matches: ["https://*/*"]
 }
 
-export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
-  document.querySelector("body")
+export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
+  const body = document.querySelector("body")
+  if (!body) {
+    throw new Error("Body element not found")
+  }
+  return body
+}
 
 export const getShadowHostId = () => "plasmo-inline-example-unique-id"
 
@@ -38,10 +44,10 @@ function PlasmoInline() {
   const uri = normalizeUrl(window.location.href)
   const uriRegex = buildUriRegex(uri)
 
-  const { data, loading, isLoading, refetch } = useGetClaimsByUriQuery({
+  const { data, loading, refetch } = useGetTriplesByUriQuery({ variables: {
     uriRegex,
     address: walletAddress 
-  })
+  }})
 
   const inject = () => {
     if (!loading && data) {
@@ -98,17 +104,17 @@ function PlasmoInline() {
 
   const atoms = data?.atoms ?? []
   const allClaims = atoms.flatMap(atom => [
-    ...(atom.as_object_claims_aggregate?.nodes ?? []),
-    ...(atom.as_subject_claims_aggregate?.nodes ?? [])
+    ...(atom.as_object_triples_aggregate?.nodes ?? []),
+    ...(atom.as_subject_triples_aggregate?.nodes ?? [])
   ])
   const IS_ID = 877
   const SCAM_ID = 1775
   const TRUSTWORTHY_ID = 14
   const hasScam = allClaims.some(
-    c => c.predicate?.id == IS_ID && c.object?.id == SCAM_ID
+    c => c.predicate?.term_id == IS_ID && c.object?.term_id == SCAM_ID
   )
   const hasTrustworthy = allClaims.some(
-    c => c.predicate?.id == IS_ID && c.object?.id == TRUSTWORTHY_ID
+    c => c.predicate?.term_id == IS_ID && c.object?.term_id == TRUSTWORTHY_ID
   )
   const highlightColor = hasScam ? "red" : hasTrustworthy ? "green" : undefined
   const showPopup = Boolean(highlightColor) && (hovered || autoVisible)
@@ -150,23 +156,23 @@ function PlasmoInline() {
   }
 
   const targetClaim = allClaims.find(
-    c => c.predicate?.id == IS_ID &&
-        (c.object?.id == SCAM_ID || c.object?.id == TRUSTWORTHY_ID)
+    c => c.predicate?.term_id == IS_ID &&
+        (c.object?.term_id == SCAM_ID || c.object?.term_id == TRUSTWORTHY_ID)
   )
   
   console.log("DATA CLAIM SCAM OR TRUST", targetClaim)
 
-  const vaultId = targetClaim?.vault?.id
-    ? BigInt(targetClaim.vault.id) 
+  const vaultId = targetClaim?.term_id
+    ? BigInt(targetClaim.term_id) 
     : undefined
-  const counterVaultId = targetClaim?.counter_vault?.id
-    ? BigInt(targetClaim.counter_vault.id)
+  const counterVaultId = targetClaim?.counter_term_id
+    ? BigInt(targetClaim.counter_term_id)
     : undefined
-  const numPositionsFor = targetClaim?.vault?.positions_aggregate.aggregate?.count
-  const numPositionsAgainst = targetClaim?.counter_vault?.positions_aggregate.aggregate?.count
+  const numPositionsFor = targetClaim?.term?.positions_aggregate.aggregate?.count
+  const numPositionsAgainst = targetClaim?.counter_term?.positions_aggregate.aggregate?.count
 
-  const userStake = Number(targetClaim?.vault?.positions?.[0]?.shares ?? 0)
-  const userCounterStake = Number(targetClaim?.counter_vault?.positions?.[0]?.shares ?? 0)
+    const userStake = Number(targetClaim?.positions?.[0]?.shares ?? 0)
+    const userCounterStake = Number(targetClaim?.counter_positions?.[0]?.shares ?? 0)
 
   const initialVote: VoteChoice | undefined =
     userStake > 0
@@ -217,7 +223,7 @@ function PlasmoInline() {
             onMouseLeave={handleIntuitionMouseLeave}
             style={{ display: "flex", position: "relative" }}
           >
-            {(!data || atoms.length === 0) && !isLoading && (
+            {(!data || atoms.length === 0) && !loading && (
               <div
                 style={{
                   position: "absolute",
@@ -245,7 +251,7 @@ function PlasmoInline() {
             <IntuitionButtonIcon
               onSearch={() => {}}
               size={iconSize}
-              loading={isLoading}
+              loading={loading}
               highlightColor={highlightColor}
               position={{ x: 0, y: 0 }}
               className="hover:opacity-80 transition-opacity"
