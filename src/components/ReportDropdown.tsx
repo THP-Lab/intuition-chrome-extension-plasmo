@@ -33,14 +33,14 @@ const SignalDropdown = ({ atoms, uri }) => {
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal container={window.document.body}>
         <DropdownMenu.Content
-          className="bg-white rounded shadow-lg p-1 border border-gray-200 z-[9999]"
+          className="bg-white pt-3 rounded shadow-lg p-1 border border-gray-200 z-[9999]"
           sideOffset={4}
           onClick={e => e.stopPropagation()}
           onMouseDown={e => e.stopPropagation()}
         >
           <DropdownMenu.Item onClick={() => handleSignal("scam")}>
             <button
-              className="w-full p-1 pt-2 text-black hover:bg-gray-300"
+              className="w-full p-1  text-black hover:bg-gray-300"
             >
               Scam
             </button>

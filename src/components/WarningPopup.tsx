@@ -78,7 +78,8 @@ const WarningPopup: React.FC<WarningPopupProps> = ({
         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
         letterSpacing: "0.025em",
         backdropFilter: "blur(8px)",
-        minWidth: "140px",
+        width: "180px",
+        minWidth: undefined,
         opacity: visible ? 1 : 0,
         transition: `
           opacity ${ANIMATION_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1),
@@ -91,19 +92,21 @@ const WarningPopup: React.FC<WarningPopupProps> = ({
         fontWeight: "600", 
         marginBottom: "8px",
         textTransform: "uppercase",
-        fontSize: "0.75rem",
+        fontSize: "1rem",
         letterSpacing: "0.05em"
       }}>
         {message}
       </div>
 
-      <VoteButtons
-        vaultId={BigInt(vaultId)}
-        counterVaultId={BigInt(counterVaultId)}
-        numPositionsFor={numPositionsFor}
-        numPositionsAgainst={numPositionsAgainst}
-        initialVote={initialVote}
-      />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <VoteButtons
+          vaultId={BigInt(vaultId)}
+          counterVaultId={BigInt(counterVaultId)}
+          numPositionsFor={numPositionsFor}
+          numPositionsAgainst={numPositionsAgainst}
+          initialVote={initialVote}
+        />
+      </div>
     </div>
   )
 }

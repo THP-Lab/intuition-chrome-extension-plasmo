@@ -265,8 +265,8 @@ function PlasmoInline() {
         </div>
         {(highlightColor === "red" || highlightColor === "green") && (
           <WarningPopup
-            message={highlightColor === "red" ? "Warning: Scam" : "Trustworthy"}
-            offset={iconSize + (highlightColor === "red" ? 15 : 25)}
+            message={highlightColor === "red" ? "Scam" : "Trustworthy"}
+            offset={iconSize + 25}
             bgColor={highlightColor}
             vaultId={vaultId}
             counterVaultId={counterVaultId}

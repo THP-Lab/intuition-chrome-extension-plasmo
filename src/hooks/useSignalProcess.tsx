@@ -14,7 +14,7 @@ export function useSignalProcess({ atoms, uri, onSuccess, onError }) {
 
   const getAtomWithMostVotes = (atoms) => {
     if (!atoms.length) {
-      console.log("[SignalProcess] Aucun atom existant trouvé pour cette URL.")
+      console.log("[SignalProcess] No existing atom found for this URL.")
       return null
     }
     const best = atoms.reduce((mostVotedAtom, currentAtom) => {
@@ -28,14 +28,14 @@ export function useSignalProcess({ atoms, uri, onSuccess, onError }) {
       ) || 0
       return currentVotes > mostVotes ? currentAtom : mostVotedAtom
     })
-    console.log("[SignalProcess] Atom avec le plus de votes sélectionné :", best)
+    console.log("[SignalProcess] Atom with the most votes selected:", best)
     return best
   }
 
   const getOrCreateAtom = async () => {
     let atom = getAtomWithMostVotes(atoms)
     if (!atom) {
-      console.log("[SignalProcess] Création d'un nouvel atom avec les métadonnées :", pageMeta)
+      console.log("[SignalProcess] Creating a new atom with metadata:", pageMeta)
       try {
         const result = await pinThing({
           name: pageMeta.title || "Untitled",
@@ -43,10 +43,10 @@ export function useSignalProcess({ atoms, uri, onSuccess, onError }) {
           image: pageMeta.favicon || "",
           url: pageMeta.url || uri
         })
-        console.log("[SignalProcess] Résultat de la mutation pinThing :", result)
+        console.log("[SignalProcess] pinThing mutation result:", result)
         const ipfsUri = result?.pinThing?.uri
         if (!ipfsUri) {
-          throw new Error("La mutation pinThing n'a pas retourné d'uri IPFS.")
+          throw new Error("pinThing mutation did not return an IPFS uri.")
         }
 
         const { walletClient, publicClient } = await getClients()
@@ -58,9 +58,9 @@ export function useSignalProcess({ atoms, uri, onSuccess, onError }) {
           wait: true
         })
         atom = { id: vaultId.toString() }
-        console.log("[SignalProcess] Nouvel atom créé sur la blockchain :", atom)
+        console.log("[SignalProcess] New atom created on the blockchain:", atom)
       } catch (err) {
-        console.error("[SignalProcess] Erreur lors de la création de l'atom :", err)
+        console.error("[SignalProcess] Error while creating atom:", err)
         throw err
       }
     }
@@ -69,24 +69,24 @@ export function useSignalProcess({ atoms, uri, onSuccess, onError }) {
 
   const handleSignal = async (type: "scam" | "trustworthy") => {
     try {
-      console.log("[SignalProcess] Début du process de signal :", type)
+      console.log("[SignalProcess] Starting signal process:", type)
       let atom = await getOrCreateAtom()
-      console.log("[SignalProcess] Atom utilisé pour le triple :", atom)
+      console.log("[SignalProcess] Atom used for triple:", atom)
 
       const tripleInput: [bigint, bigint, bigint] = [
-        BigInt(atom.id),
+        BigInt(atom.term_id),
         877n,
         type === "scam" ? 1775n : 14n
       ]
-      console.log("[SignalProcess] tripleInput :", tripleInput)
+      console.log("[SignalProcess] tripleInput:", tripleInput)
 
       const { vaultId } = await createSingleTriple(tripleInput)
       await createPosition({ vaultId })
-      console.log("[SignalProcess] Position créée sur le vault :", vaultId)
+      console.log("[SignalProcess] Position created on vault:", vaultId)
 
       onSuccess?.()
     } catch (e) {
-      console.error("[SignalProcess] Erreur dans handleSignal :", e)
+      console.error("[SignalProcess] Error in handleSignal:", e)
       onError?.(e)
     }
   }
