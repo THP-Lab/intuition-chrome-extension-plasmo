@@ -1,4 +1,3 @@
-// src/components/ReportDropdown.tsx
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import React from "react";
 import { useSignalProcess } from "../hooks/useSignalProcess"
@@ -21,13 +20,13 @@ const SignalDropdown = ({ atoms, uri }) => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
-          className="flex items-center px-3 py-1 rounded bg-white text-black border border-gray-300 hover:bg-gray-100"
+          className="flex items-center p-1 rounded bg-white text-black border border-gray-300 hover:bg-gray-400"
           style={{ fontWeight: 500, boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}
           onClick={e => e.stopPropagation()}
           onMouseDown={e => e.stopPropagation()}
         >
           Signal
-          <span className="ml-1">
+          <span className="ml-3">
             <ChevronDown />
           </span>
         </button>
@@ -39,8 +38,20 @@ const SignalDropdown = ({ atoms, uri }) => {
           onClick={e => e.stopPropagation()}
           onMouseDown={e => e.stopPropagation()}
         >
-          <DropdownMenu.Item onClick={() => handleSignal("scam")}>Scam</DropdownMenu.Item>
-          <DropdownMenu.Item onClick={() => handleSignal("trustworthy")}>Trustworthy</DropdownMenu.Item>
+          <DropdownMenu.Item onClick={() => handleSignal("scam")}>
+            <button
+              className="w-full p-1 pt-2 text-black hover:bg-gray-300"
+            >
+              Scam
+            </button>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item onClick={() => handleSignal("trustworthy")}>
+            <button 
+              className="w-full p-1 text-black hover:bg-gray-300"
+            >
+              Trustworthy
+            </button>
+          </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

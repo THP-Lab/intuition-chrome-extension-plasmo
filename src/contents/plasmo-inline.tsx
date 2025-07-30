@@ -1,7 +1,7 @@
 import { ApolloProvider } from "@apollo/client"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { apolloClient } from "../lib/apolo-client"
-import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
+import type { PlasmoGetStyle, PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useRef, useState } from "react"
 import IntuitionButtonIcon  from "~src/components/icons/IntuitionButtonIcon"
 import { useStorage } from "@plasmohq/storage/dist/hook"
@@ -10,6 +10,7 @@ import { normalizeUrl, buildUriRegex } from "../lib/url"
 import WarningPopup from "~/src/components/WarningPopup"
 import ReportDropdown from "~src/components/ReportDropdown"
 import "../styles/global.css"
+import styleText from "data-text:../styles/global.css"
 import IntuitionIconPlus from "~src/components/icons/intuition_icon_plus"
 
 const queryClient = new QueryClient()
@@ -28,7 +29,11 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () => {
 
 export const getShadowHostId = () => "plasmo-inline-example-unique-id"
 
-export const useShadowDom = false
+export const getStyle: PlasmoGetStyle = () => {
+  const style = document.createElement("style")
+  style.textContent = styleText
+  return style
+}
 
 function PlasmoInline() {
   const iconSize = 35
