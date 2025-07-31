@@ -12,8 +12,8 @@ const SignalDropdown = ({ atoms, uri }) => {
   const { handleSignal } = useSignalProcess({
     atoms,
     uri,
-    onSuccess: () => {/* popup succès */},
-    onError: () => {/* popup erreur */}
+    onSuccess: () => {/* popup success */},
+    onError: () => {/* popup error */}
   })
 
   const shadowRoot = document.getElementById("plasmo-inline-example-unique-id")?.shadowRoot
