@@ -166,26 +166,6 @@ function PlasmoInline() {
   
   console.log("DATA CLAIM SCAM OR TRUST", targetClaim)
 
-  const vaultId = targetClaim?.term_id
-    ? BigInt(targetClaim.term_id) 
-    : undefined
-  const counterVaultId = targetClaim?.counter_term_id
-    ? BigInt(targetClaim.counter_term_id)
-    : undefined
-  const numPositionsFor = targetClaim?.term?.positions_aggregate.aggregate?.count
-  const numPositionsAgainst = targetClaim?.counter_term?.positions_aggregate.aggregate?.count
-
-    const userStake = Number(targetClaim?.positions?.[0]?.shares ?? 0)
-    const userCounterStake = Number(targetClaim?.counter_positions?.[0]?.shares ?? 0)
-
-  const initialVote: VoteChoice | undefined =
-    userStake > 0
-      ? "for"
-      : userCounterStake > 0
-      ? "against"
-      : undefined
-
-
   return (
     <div>
       <div
