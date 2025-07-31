@@ -16,6 +16,8 @@ const SignalDropdown = ({ atoms, uri }) => {
     onError: () => {/* popup erreur */}
   })
 
+  const shadowRoot = document.getElementById("plasmo-inline-example-unique-id")?.shadowRoot
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -31,7 +33,7 @@ const SignalDropdown = ({ atoms, uri }) => {
           </span>
         </button>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Portal container={window.document.body}>
+      <DropdownMenu.Portal container={shadowRoot}>
         <DropdownMenu.Content
           className="bg-white pt-3 rounded shadow-lg p-1 border border-gray-200 z-[9999]"
           sideOffset={4}

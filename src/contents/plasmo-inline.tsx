@@ -9,7 +9,6 @@ import { useGetTriplesByUriQuery } from "@warzieram/graphql"
 import { normalizeUrl, buildUriRegex } from "../lib/url"
 import WarningPopup from "~/src/components/WarningPopup"
 import ReportDropdown from "~src/components/ReportDropdown"
-import "../styles/global.css"
 import styleText from "data-text:../styles/global.css"
 import IntuitionIconPlus from "~src/components/icons/intuition_icon_plus"
 
