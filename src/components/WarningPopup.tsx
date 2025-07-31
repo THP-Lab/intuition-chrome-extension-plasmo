@@ -6,11 +6,7 @@ interface WarningPopupProps {
   message: string
   offset: number
   bgColor?: string
-  vaultId?: bigint
-  counterVaultId?: bigint 
-  numPositionsFor?: number
-  numPositionsAgainst?: number
-  initialVote?: VoteChoice
+  targetClaim?: any
   forceVisible?: boolean
 }
 
@@ -22,11 +18,7 @@ const WarningPopup: React.FC<WarningPopupProps> = ({
   message,
   offset,
   bgColor = "red",
-  vaultId,
-  counterVaultId,
-  numPositionsFor,
-  numPositionsAgainst,
-  initialVote,
+  targetClaim,
   forceVisible = false
 }) => {
   const [visible, setVisible] = useState(forceVisible)
@@ -47,6 +39,25 @@ const WarningPopup: React.FC<WarningPopupProps> = ({
 
   const textColor = bgColor === "red" ? "#b50606" : "#228e01"
   const borderColor = bgColor === "red" ? "#b50606" : "#228e01"
+
+  const vaultId = targetClaim?.term_id
+    ? BigInt(targetClaim.term_id) 
+    : undefined
+  const counterVaultId = targetClaim?.counter_term_id
+    ? BigInt(targetClaim.counter_term_id)
+    : undefined
+  const numPositionsFor = targetClaim?.term?.positions_aggregate?.aggregate?.count
+  const numPositionsAgainst = targetClaim?.counter_term?.positions_aggregate?.aggregate?.count
+
+  const userStake = Number(targetClaim?.positions?.[0]?.shares ?? 0)
+  const userCounterStake = Number(targetClaim?.counter_positions?.[0]?.shares ?? 0)
+
+  const initialVote: VoteChoice | undefined =
+    userStake > 0
+      ? "for"
+      : userCounterStake > 0
+      ? "against"
+      : undefined
 
   if (!shouldRender) return null
 
@@ -100,8 +111,8 @@ const WarningPopup: React.FC<WarningPopupProps> = ({
 
       <div style={{ display: "flex", justifyContent: "center" }}>
         <VoteButtons
-          vaultId={BigInt(vaultId)}
-          counterVaultId={BigInt(counterVaultId)}
+          vaultId={vaultId}
+          counterVaultId={counterVaultId}
           numPositionsFor={numPositionsFor}
           numPositionsAgainst={numPositionsAgainst}
           initialVote={initialVote}

@@ -267,11 +267,7 @@ function PlasmoInline() {
             message={highlightColor === "red" ? "Scam" : "Trustworthy"}
             offset={iconSize + 25}
             bgColor={highlightColor}
-            vaultId={vaultId}
-            counterVaultId={counterVaultId}
-            numPositionsFor={numPositionsFor}
-            numPositionsAgainst={numPositionsAgainst}
-            initialVote={initialVote}
+            targetClaim={targetClaim}
             forceVisible={hovered || autoVisible}
           />
         )}
