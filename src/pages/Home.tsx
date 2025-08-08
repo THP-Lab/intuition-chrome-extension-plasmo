@@ -5,139 +5,125 @@ import { Link } from "react-router-dom"
 import { useTheme } from "~/src/components/ThemeProvider"  
 import { useStorage } from "@plasmohq/storage/dist/hook"
 import TabSystem from "~/src/components/TabSystem"
-import ClaimRowLite from "~src/components/ui/ClaimRowLite";
-import AtomCard from "~src/components/AtomCard";
 import EyeComponent from "~/src/components/3D/EyeComponent"
 import AtomCard from "~src/components/AtomCard"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
-
-import TabSystem from "../components/TabSystem"
-
-function normalizeUrl(input: string): string {
-  try {
-    const u = new URL(input)
-    let hostname = u.hostname.toLowerCase()
-    if (hostname.startsWith("www.")) hostname = hostname.slice(4)
-    let pathname = u.pathname
-    if (pathname.endsWith("/") && pathname.length > 1) {
-      pathname = pathname.slice(0, -1)
-    }
-    return `https://${hostname}${pathname}${u.search}${u.hash}`
-  } catch {
-    return input
-  }
-}
-
-function buildUriRegex(rawUrl: string): string {
-  const canonical = normalizeUrl(rawUrl)  
-  let withoutProto = canonical.replace(/^https?:\/\//, "")
-
-  if (withoutProto.endsWith("/")) {
-    withoutProto = withoutProto.slice(0, -1)
-  }
-  const escaped = withoutProto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-
-  return `^https?:\\/\\/(?:www\\.)?${escaped}\\/?$`
-}
+import { normalizeUrl } from "../lib/url"
 
 
 function Home() {
   const [currentUrl, setCurrentUrl] = useState<string>("")
   const [walletAddress] = useStorage<string>("metamask-account", "")
   const [activeTab, setActiveTab] = useState("Claims")
-  const [startRequest, setStartRequest] = useState(false)
+  const [claims, setClaims] = useState<any[]>([])
+  const [atomsWithTags, setAtomsWithTags] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  const queryClient = useQueryClient()
-  console.log(queryClient)
-
-  const getCurrentUrl = async () => {
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      lastFocusedWindow: true
-    })
-    console.log(tab.url)
-    return tab.url
+const refreshActiveTab = async () => {
+  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
+  const url = tab?.url ? normalizeUrl(tab.url) : ""
+  setCurrentUrl(url)
+  if (tab?.id !== undefined) {
+    chrome.tabs.sendMessage(tab.id, { type: "REFRESH_CLAIMS" })
   }
+}
 
-  const refreshUrl = () => {
-    getCurrentUrl().then((url) => {
-      if (url) {
-        setCurrentUrl(normalizeUrl(url))
-      } else {
-        setCurrentUrl("")
-      }
-    })
+useEffect(() => {
+  refreshActiveTab()
+  chrome.tabs.onActivated.addListener(refreshActiveTab)
+  chrome.tabs.onUpdated.addListener(refreshActiveTab)
+  return () => {
+    chrome.tabs.onActivated.removeListener(refreshActiveTab)
+    chrome.tabs.onUpdated.removeListener(refreshActiveTab)
   }
+}, [])
 
-  useEffect(() => {
-    getCurrentUrl().then((url) => {
-      if (url) setCurrentUrl(normalizeUrl(url))
-    })
-    chrome.tabs.onUpdated.addListener(refreshUrl)
-    chrome.tabs.onActivated.addListener(refreshUrl)
-    return () => {
-      chrome.tabs.onUpdated.removeListener(refreshUrl)
-      chrome.tabs.onActivated.removeListener(refreshUrl)
+
+useEffect(() => {
+  setIsLoading(true)
+  setClaims([])
+  setAtomsWithTags([])
+
+  const KEY = "claimByUriResult"
+
+  const process = (uri: string, data: any) => {
+    if (normalizeUrl(uri) !== currentUrl) {
+      setClaims([])
+      setAtomsWithTags([])
+      setIsLoading(false)
+      return
     }
-  }, [])
 
-  const uriRegex = buildUriRegex(currentUrl)
-  console.log("normalized URL:", currentUrl)
-  console.log("uriRegex:", uriRegex)
+    const atoms = data.atoms ?? []
 
-  const { data, loading, error } = useGetTriplesByUriQuery({variables: {uriRegex: uriRegex, address: walletAddress }})
-  const atoms = data?.atoms ?? []
-  console.log("current wallet address:", walletAddress)
-  console.log("Data :", data)
-
-  const claims = Array.from(
-    new Map(
-      atoms
-        ?.flatMap((atom) => [
-          ...atom.as_object_triples_aggregate.nodes,
-          ...atom.as_subject_triples_aggregate.nodes
-        ])
-        .map((claim) => [claim.term_id, claim])
-    ).values()
-  )
-
-  console.log("Claims :", claims)
-
-  const atomsWithTags = atoms.map((atom) => {
-    const tags = atom.as_subject_triples_aggregate.nodes
-      .filter((claim) => claim.predicate.label === "has tag")
-      .map((claim) => claim.object)
-      .filter(Boolean)
-
-    const uniqueTags = Array.from(
-      new Map(tags.map((tag) => [tag.term_id, tag])).values()
+    const extractedClaims = Array.from(
+      new Map(
+        atoms
+          .flatMap((atom: any) => [
+            ...(atom.as_object_triples_aggregate?.nodes ?? []),
+            ...(atom.as_subject_triples_aggregate?.nodes ?? []),
+          ])
+          .map((c: any) => [c.term_id, c])
+      ).values()
     )
 
-    return {
-      ...atom,
-      tags: uniqueTags
+    const withTags = atoms.map((atom: any) => {
+      const tags = atom.as_subject_claims_aggregate?.nodes
+        ?.filter((c: any) => c.predicate?.label === "has tag")
+        .map((c: any) => c.object)
+        .filter(Boolean) ?? []
+
+      const unique = Array.from(
+        new Map(tags.map((t: any) => [t.id, t])).values()
+      )
+
+      return { ...atom, tags: unique }
+    })
+
+    setClaims(extractedClaims)
+    setAtomsWithTags(withTags)
+    setIsLoading(false)
+  }
+
+  chrome.storage.local.get(KEY, (items) => {
+    const stored = items[KEY]
+    if (stored && stored.uri && stored.data) {
+      process(stored.uri, stored.data)
+    } else {
+      setIsLoading(false)
     }
   })
 
-  console.log("Tags :", atomsWithTags)
+  const onChange = (
+    changes: Record<string, chrome.storage.StorageChange>,
+    areaName: string
+  ) => {
+    if (areaName !== "local" || !changes[KEY]) return
+    const { uri, data } = changes[KEY].newValue
+    process(uri, data)
+  }
+  chrome.storage.onChanged.addListener(onChange)
+
+  return () => {
+    chrome.storage.onChanged.removeListener(onChange)
+  }
+}, [currentUrl])
+
 
   const tabs = [
     {
       label: "Claims",
       content: (
         <div>
-          {loading ? (
+          {isLoading ? (
             "Loading..."
-          ) : typeof data !== "undefined" && claims.length !== 0 ? (
+          ) : claims.length !== 0 ? (
             claims.map(
               (claim, index) => (
-                console.log(claim),
-                (
-                  <ClaimRowLite
-                    key={`${claim.term_id}-${index}`}
-                    claim={claim}
-                  />
-                )
+                <ClaimRowLite
+                  key={`${claim.term_id}-${index}`}
+                  claim={claim}
+                />
               )
             )
           ) : (
@@ -161,14 +147,12 @@ function Home() {
       label: "Atoms",
       content: (
         <div>
-          {loading ? (
+          {isLoading ? (
             "Loading..."
-          ) : typeof data !== "undefined" && atoms.length != 0 ? (
-            atomsWithTags.map((atom) => {
-              return (
-                <AtomCard key={atom.term_id} atom={atom} tags={atom.tags} />
-              )
-            })
+          ) : atomsWithTags.length !== 0 ? (
+            atomsWithTags.map((atom) => (
+              <AtomCard key={atom.term_id} atom={atom} tags={atom.tags} />
+            ))
           ) : (
             <div className="p-4 rounded text-center space-y-2">
               <p className="text-sm text-foreground">
@@ -215,12 +199,7 @@ function Home() {
       </div>
 
       <div className="mt-1">
-        {error && (
-          <p className="text-red-500">
-            An error occurred while requesting this page.
-          </p>
-        )}
-
+  
         <TabSystem
           tabs={tabs}
           activeTab={activeTab}

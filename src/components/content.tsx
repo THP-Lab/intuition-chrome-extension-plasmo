@@ -4,9 +4,9 @@ import { apolloClient } from '~src/lib/apolo-client'
 import React, { type ReactNode, useEffect } from "react"
 import {
   Route,
-  BrowserRouter as Router,
   Routes,
-  Navigate
+  Navigate,
+  useNavigate
 } from "react-router-dom"
 
 import { configureClient } from "@warzieram/graphql"
@@ -39,9 +39,7 @@ import ProfileLayout from "./profile/ProfileLayout"
 import "../styles/global.css"
 import umamiScriptUrl from "url:../../assets/umami.js"
 
-import TagsPage from "~src/pages/TagsPage"
-
-const API_URL = "https://prod.base-sepolia.intuition.sh/v1/graphql"
+const API_URL = "https://prod.base.intuition-api.com/v1/graphql"
 configureClient({ apiUrl: API_URL })
 
 const queryClient = new QueryClient()
@@ -65,22 +63,32 @@ const Content = ({ children }: ContentProps) => {
   }, [])
 
   const { navType } = useNavigation()
+  const navigate = useNavigate();
 
-  console.log(queryClient);
-  
+  useEffect(() => {
+    const port = chrome.runtime.connect({ name: "sidepanel-nav" });
+    port.postMessage("SIDEPANEL_READY");
+    port.onMessage.addListener((msg) => {
+      if (msg.action === "NAVIGATE_SIDEPANEL" && msg.route) {
+        console.log("[SIDEPANEL] NAVIGATE_SIDEPANEL received via port, navigating to:", msg.route);
+        navigate(msg.route);
+      }
+    });
+    return () => port.disconnect();
+  }, [navigate]);
+
   return (
     <ApolloProvider client={apolloClient}>
       <QueryClientProvider client={queryClient}>
         <AtomSelectionProvider>
-          <Router>
-            <PageViewTracker />
-            {navType === "classic" && <NavbarUp />}
-            <main className="flex-1 overflow-auto pb-24 pt-14">
-              {children}
-              <div className="container mx-auto space-y-8 p-2">
-                <Routes>
-                  <Route path="*" element={<Home />} />
-                  <Route path="/" element={<Home />} />
+          <PageViewTracker />
+          {navType === "classic" && <NavbarUp />}
+          <main className="flex-1 overflow-auto pb-24 pt-14">
+            {children}
+            <div className="container mx-auto space-y-8 p-2">
+              <Routes>
+                <Route path="*" element={<Home />} />
+                <Route path="/" element={<Home />} />
 
                   <Route path="/profile" element={<Profile />}>
                     <Route index element={<Navigate to="/profile/claims/all" />} />
@@ -90,34 +98,33 @@ const Content = ({ children }: ContentProps) => {
                         <Route path="created" element={<CreatedClaimsTab />} />
                       </Route>
 
-                      <Route path="identities">
-                        <Route path="all" element={<IdentitiesVotedTab />} />
-                        <Route path="created" element={<IdentityTab />} />
-                      </Route>
-
-                      <Route path="followers" element={<FollowersTab />} />
-                      <Route path="following" element={<FollowingTab />} />
+                    <Route path="identities">
+                      <Route path="all" element={<IdentitiesVotedTab />} />
+                      <Route path="created" element={<IdentityTab />} />
                     </Route>
-                  </Route>
 
-                  <Route path="/feed" element={<Feed />} />
-                  <Route path="/page-form" element={<PageForm />} />
-                  <Route path="/recent-activity" element={<RecentActivity />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/atoms/:id" element={<AtomDetailPage />} />
-                  <Route path="/tags" element={<TagsPage />} />
-                  <Route path="/tags/:tagId" element={<TagsDetailPage />} />
-                </Routes>
-              </div>
-            </main>
-            {navType === "classic" ? (
-              <Navbar />
-            ) : (
-              <>
-                <NavArc />
-              </>
-            )}
-          </Router>
+                    <Route path="followers" element={<FollowersTab />} />
+                    <Route path="following" element={<FollowingTab />} />
+                  </Route>
+                </Route>
+
+                <Route path="/feed" element={<Feed />} />
+                <Route path="/page-form" element={<PageForm />} />
+                <Route path="/recent-activity" element={<RecentActivity />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/atoms/:id" element={<AtomDetailPage />} />
+                <Route path="/tags" element={<TagsPage />} />
+                <Route path="/tags/:tagId" element={<TagsDetailPage />} />
+              </Routes>
+            </div>
+          </main>
+          {navType === "classic" ? (
+            <Navbar />
+          ) : (
+            <>
+              <NavArc />
+            </>
+          )}
         </AtomSelectionProvider>
       </QueryClientProvider>
     </ApolloProvider>
