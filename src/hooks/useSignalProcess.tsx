@@ -2,7 +2,7 @@ import { useCreateSingleTriple } from "./useCreateSingleTriple" // ton hook
 import { useCreatePosition } from "./useCreatePosition" // ton hook
 import { usePinThingMutation } from "@0xintuition/graphql" // pour créer un atom
 import { usePageMetadataContentScript as usePageMetadata } from "./usePageMetadataContentScript"
-import { Multivault } from "@0xintuition/protocol"
+import { EthMultiVault } from "@0xintuition/protocol"
 import { getClients } from "../lib/viemClient"
 
 
@@ -50,7 +50,7 @@ export function useSignalProcess({ atoms, uri, onSuccess, onError }) {
         }
 
         const { walletClient, publicClient } = await getClients()
-        const multivault = new Multivault({ walletClient, publicClient })
+        const multivault = new EthMultiVault({ walletClient, publicClient })
         const deposit = await multivault.getAtomCost()
         const { vaultId, hash } = await multivault.createAtom({
           uri: ipfsUri,

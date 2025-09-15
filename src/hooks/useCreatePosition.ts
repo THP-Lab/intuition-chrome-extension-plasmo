@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { Multivault } from "@0xintuition/protocol"
+import { EthMultiVault } from "@0xintuition/protocol"
 import { getClients } from "~src/lib/viemClient"
 
 export function useCreatePosition() {
@@ -20,7 +20,7 @@ export function useCreatePosition() {
 
 
 
-        const multivault = new Multivault({ walletClient, publicClient })
+        const multivault = new EthMultiVault({ walletClient, publicClient })
         
         const { minDeposit } = await multivault.getGeneralConfig()
         const amount = minDeposit

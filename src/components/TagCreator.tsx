@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useLayoutEffect } from "react"
 import AtomAutocompleteInput from "./AtomAutocompleteInput"
 import { useCreateTriples } from "~src/hooks/useCreateTriples"
 import { useCreatePosition } from "~src/hooks/useCreatePosition"
-import { Multivault } from "@0xintuition/protocol"
+import { MultiVaultAbi } from "@0xintuition/protocol"
 import { getClients } from "~src/lib/viemClient"
 
 interface AtomProps {
@@ -46,8 +46,8 @@ const TagCreator: React.FC<TagCreatorProps> = ( {subjectAtom, onTagCreated} ) =>
   const handleSubmit = async () => {
     if (!selectedTag || !vote) return 
 
-    const subjectVault = subjectAtom.vault_id ?? subjectAtom.id;
-    const objectVault = selectedTag.vault_id ?? selectedTag.id;
+    const subjectVault = subjectAtom.vault_id ?? subjectAtom.term_id;
+    const objectVault = selectedTag.vault_id ?? selectedTag.term_id;
 
     if (!subjectVault || !objectVault) {
       setError("Missing vault_id");
@@ -67,7 +67,7 @@ const TagCreator: React.FC<TagCreatorProps> = ( {subjectAtom, onTagCreated} ) =>
       const { vaultIds } = await createTriples()
 
       const { walletClient, publicClient } = await getClients()
-      const multivault = new Multivault({ walletClient, publicClient })
+      const multivault = new MultiVaultAbi({ walletClient, publicClient })
 
       let targetVaultId = vaultIds[0]
       if (vote === "against") {

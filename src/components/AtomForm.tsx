@@ -1,5 +1,5 @@
 import { usePinThingMutation } from "@0xintuition/graphql"
-import { Multivault } from "@0xintuition/protocol"
+import { EthMultiVault } from "@0xintuition/protocol"
 import { parseEther } from "viem"
 import { Link, useNavigate } from "react-router-dom"
 
@@ -113,7 +113,7 @@ useEffect(() => {
     try {
       const { walletClient, publicClient } = await getClients()
 
-      const multivault = new Multivault({ walletClient, publicClient })
+      const multivault = new EthMultiVault({ walletClient, publicClient })
 
       const result = await pinThing({
         name,

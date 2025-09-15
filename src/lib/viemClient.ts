@@ -8,8 +8,12 @@ export const getClients = async () => {
   
   const accounts = await provider.request({
     method: 'eth_requestAccounts',
-  })
-  const address = accounts[0]
+  }) as string[] | undefined
+
+  if (!accounts || accounts.length === 0) {
+    throw new Error("No accounts returned from MetaMask provider.")
+  }
+  const address = accounts[0] as `0x${string}`
 
   const walletClient = createWalletClient({
     account: address,

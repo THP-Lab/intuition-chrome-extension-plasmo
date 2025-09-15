@@ -1,6 +1,6 @@
 // src/hooks/useCreateSingleTriple.ts
 import { useCallback, useState } from "react"
-import { Multivault } from "@0xintuition/protocol"
+import { EthMultiVault } from "@0xintuition/protocol"
 import { getClients } from "../lib/viemClient"
 
 export function useCreateSingleTriple() {
@@ -17,7 +17,7 @@ export function useCreateSingleTriple() {
       setVaultId(null)
       try {
         const { walletClient, publicClient } = await getClients()
-        const multivault = new Multivault({ walletClient, publicClient })
+        const multivault = new EthMultiVault({ walletClient, publicClient })
         const cost = await multivault.getTripleCost()
         const { vaultId, hash } = await multivault.createTriple({
           subjectId: tripleInput[0],

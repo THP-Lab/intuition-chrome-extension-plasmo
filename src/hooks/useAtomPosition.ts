@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { Multivault } from "@0xintuition/protocol"
+import { EthMultiVault } from "@0xintuition/protocol"
 import { getClients } from "~src/lib/viemClient"
 
 export function useAtomPosition() {
@@ -18,7 +18,7 @@ export function useAtomPosition() {
         console.log("🔵 Starting atom position creation")
 
         const { walletClient, publicClient } = await getClients()
-        const multivault = new Multivault({ walletClient, publicClient })
+        const multivault = new EthMultiVault({ walletClient, publicClient })
         const address = walletClient.account.address
 
         const config = await multivault.getGeneralConfig()

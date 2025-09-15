@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { Multivault } from '@0xintuition/protocol'
+import { EthMultiVault } from '@0xintuition/protocol'
 import { getClients } from '../lib/viemClient'
 import { parseEventLogs } from 'viem'
 import { abi } from '@0xintuition/protocol'
@@ -35,7 +35,7 @@ export const useCreateTriples = () => {
 
     try {
       const { walletClient, publicClient } = await getClients()
-      const multivault = new Multivault({ walletClient, publicClient })
+      const multivault = new EthMultiVault({ walletClient, publicClient })
 
       if (triples.length === 0) throw new Error("No triples to create")
 

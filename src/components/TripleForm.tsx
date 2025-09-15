@@ -8,7 +8,7 @@ import AtomAutocompleteInput from './AtomAutocompleteInput'
 import { useCreateTriples } from '~src/hooks/useCreateTriples'
 import { useCreatePosition } from '~src/hooks/useCreatePosition'
 import { getClients } from "~src/lib/viemClient"
-import { Multivault } from "@0xintuition/protocol"
+import { EthMultiVault } from "@0xintuition/protocol"
 import { umami } from "~src/lib/umami"
 
 interface Atom {
@@ -129,7 +129,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
       setProgressMessage("Triples created. Preparing to vote...")
 
       const { walletClient, publicClient } = await getClients()
-      const multivault = new Multivault({ walletClient, publicClient })
+      const multivault = new EthMultiVault({ walletClient, publicClient })
 
       for (let i = 0; i < createdVaultIds.length; i++) {
         const { triple: [s, p, o], vote } = labeledTriples[i]
