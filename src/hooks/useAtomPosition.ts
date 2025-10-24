@@ -1,62 +1,137 @@
-import { useCallback, useState } from "react"
-import { EthMultiVault } from "@0xintuition/protocol"
-import { getClients } from "~src/lib/viemClient"
+import { useCallback, useState } from "react";
+import { getClients } from "~src/lib/viemClient";
+import { MultiVaultAbi } from "@0xintuition/protocol";
+import { getMultiVaultAddressFromChainId } from "@0xintuition/sdk";
+
+type Hex32 = `0x${string}`;
+type Address = `0x${string}`;
+
+type AtomPositionOpts = {
+  /** Montant (assets) à déposer en wei. Si absent, on tente minDeposit, sinon 0n. */
+  assets?: bigint;
+  /** Curve ID (par défaut 0n si tu utilises la courbe par défaut) */
+  curveId?: bigint;
+  /** Protection de slippage : minShares (par défaut 0n) */
+  minShares?: bigint;
+  /** Receiver des parts (par défaut: l’adresse appelante) */
+  receiver?: Address;
+  /** Attendre le receipt (par défaut: false) */
+  wait?: boolean;
+};
 
 export function useAtomPosition() {
-  const [isVoting, setIsVoting] = useState(false)
-  const [txHash, setTxHash] = useState<`0x${string}` | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [isVoting, setIsVoting] = useState(false);
+  const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-
+  /**
+   * Dépose sur un ATOM (v2: term) → crée/augmente une position.
+   * @param termId  bytes32 (0x…32 bytes) de l'atom/triple (== term_id)
+   * @param opts    options (assets, curveId, minShares, receiver, wait)
+   * @returns       hash de transaction
+   */
   const atomPosition = useCallback(
-    async (vaultId: bigint) => {
-      setIsVoting(true)
-      setTxHash(null)
-      setError(null)
+    async (termId: Hex32, opts: AtomPositionOpts = {}) => {
+      setIsVoting(true);
+      setTxHash(null);
+      setError(null);
 
       try {
-        console.log("🔵 Starting atom position creation")
+        const { walletClient, publicClient } = await getClients();
+        if (!walletClient || !publicClient) {
+          throw new Error("Wallet not connected");
+        }
+        const caller = walletClient.account?.address as Address;
+        if (!caller) throw new Error("No wallet account");
 
-        const { walletClient, publicClient } = await getClients()
-        const multivault = new EthMultiVault({ walletClient, publicClient })
-        const address = walletClient.account.address
+        const chainId = publicClient.chain?.id;
+        if (!chainId) throw new Error("Unknown chain id");
 
-        const config = await multivault.getGeneralConfig()
-        const amount = config.minDeposit
+        // Adresse MultiVault selon la chaîne active
+        const mvAddress = getMultiVaultAddressFromChainId(chainId);
 
-        const balance = await publicClient.getBalance({ address })
-        if (balance < amount) {
-          throw new Error("Insufficient balance")
+        // Paramètres (avec défauts sûrs)
+        const receiver = (opts.receiver ?? caller) as Address;
+        const curveId = opts.curveId ?? 0n;
+        const minShares = opts.minShares ?? 0n;
+
+        // Déterminer le montant à déposer (assets)
+        let assets = opts.assets;
+        if (assets === undefined) {
+          // Essaye de lire minDeposit depuis le contrat. Si échec → 0n.
+          try {
+            // Beaucoup de build exposent generalConfig() en lecture
+            const generalConfig = await publicClient.readContract({
+              address: mvAddress,
+              abi: MultiVaultAbi,
+              functionName: "generalConfig",
+            });
+            const minDeposit: bigint | undefined =
+              Array.isArray(generalConfig) ? (generalConfig[4] as bigint | undefined) : undefined;
+
+            assets = minDeposit ?? 0n;
+          } catch {
+            assets = 0n; // fallback si l’ABI diffère
+          }
         }
 
+        // Vérifie le solde natif si on envoie des assets > 0
+        if (assets > 0n) {
+          const balance = await publicClient.getBalance({ address: caller });
+          if (balance < assets) {
+            throw new Error("Insufficient balance");
+          }
+        }
 
-        await multivault.contract.simulate.depositAtom([address, vaultId], {
-          value: amount,
-          account: address,
-        })
+        // Simulate (sécurité gas + validation)
+        await publicClient.simulateContract({
+          address: mvAddress,
+          abi: MultiVaultAbi,
+          functionName: "deposit",
+          account: caller,
+          args: [receiver, termId, curveId, minShares],
+          value: assets,
+        });
 
-        const txHash = await multivault.contract.write.depositAtom(
-          [address, vaultId], { 
-            value: amount,
-            account: address,
-          })
+        // Write
+        const hash = await walletClient.writeContract({
+          address: mvAddress,
+          abi: MultiVaultAbi,
+          functionName: "deposit",
+          account: caller,
+          args: [receiver, termId, curveId, minShares],
+          value: assets,
+        });
 
-        console.log("Atom vote submitted. Tx:", txHash)
-        return txHash
+        setTxHash(hash);
+
+        // Optionnel: attendre le receipt ici
+        if (opts.wait) {
+          await publicClient.waitForTransactionReceipt({ hash });
+        }
+
+        return hash;
       } catch (err: any) {
-        console.error("Error voting on atom:", err)
-        throw err
+        const msg = err?.shortMessage || err?.message || "Transaction failed";
+        setError(msg);
+        throw err;
       } finally {
-        setIsVoting(false)
+        setIsVoting(false);
       }
     },
     []
-  )
+  );
 
   return {
     atomPosition,
     isVoting,
     txHash,
-    error
-  }
+    error,
+    /** helper pour reset l’état si besoin */
+    reset() {
+      setIsVoting(false);
+      setTxHash(null);
+      setError(null);
+    },
+  };
 }

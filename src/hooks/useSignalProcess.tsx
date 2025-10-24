@@ -1,95 +1,116 @@
-import { useCreateSingleTriple } from "./useCreateSingleTriple" // ton hook
-import { useCreatePosition } from "./useCreatePosition" // ton hook
-import { usePinThingMutation } from "@0xintuition/graphql" // pour créer un atom
-import { usePageMetadataContentScript as usePageMetadata } from "./usePageMetadataContentScript"
-import { EthMultiVault } from "@0xintuition/protocol"
-import { getClients } from "../lib/viemClient"
+// src/hooks/useSignalProcess.ts
+import { useCreateSingleTriple } from "./useCreateSingleTriple";
+import { useCreatePosition } from "./useCreatePosition";
+import { usePinThingMutation } from "@0xintuition/graphql";
+import { usePageMetadataContentScript as usePageMetadata } from "./usePageMetadataContentScript";
 
+import { getClients } from "../lib/viemClient";
+import { createAtomFromThing, getMultiVaultAddressFromChainId } from "@0xintuition/sdk";
 
-export function useSignalProcess({ atoms, uri, onSuccess, onError }) {
-  const { createSingleTriple } = useCreateSingleTriple()
-  const { createPosition } = useCreatePosition()
-  const { mutateAsync: pinThing } = usePinThingMutation()
-  const pageMeta = usePageMetadata()
+type Hex32 = `0x${string}`;
 
-  const getAtomWithMostVotes = (atoms) => {
-    if (!atoms.length) {
-      console.log("[SignalProcess] No existing atom found for this URL.")
-      return null
+type SignalIds = {
+  /** Predicate term_id pour "IS" (ou équivalent), bytes32 */
+  predicateId: Hex32;
+  /** Object term_id pour "SCAM", bytes32 */
+  scamId: Hex32;
+  /** Object term_id pour "TRUSTWORTHY", bytes32 */
+  trustworthyId: Hex32;
+};
+
+type UseSignalProcessParams = {
+  /** Liste d’atomes potentiellement déjà associés à l’URL courante (GraphQL v2) */
+  atoms: Array<any>;
+  /** URL de fallback si pageMeta ne renvoie pas d’URL */
+  uri?: string;
+  /** Callbacks */
+  onSuccess?: () => void;
+  onError?: (e: unknown) => void;
+  /** IDs nécessaires côté v2 (predicate+objects) */
+  ids: SignalIds;
+};
+
+export function useSignalProcess({ atoms, uri, onSuccess, onError, ids }: UseSignalProcessParams) {
+  const { createSingleTriple } = useCreateSingleTriple();   // v2: prend des Hex32
+  const { createPosition } = useCreatePosition();           // v2: deposit(termId, ...)
+  const { mutateAsync: pinThing } = usePinThingMutation();  // optionnel, conserve ta trace backend
+  const pageMeta = usePageMetadata();
+
+  /** Heuristique: sélectionne l’atome avec le plus de "votes" (selon tes agrégats) */
+  const getAtomWithMostVotes = (atomsList: any[]) => {
+    if (!atomsList?.length) return null;
+
+    const countVotes = (a: any) => {
+      // Essaie v2 (triples) puis fallback v1 (claims) si ton schéma est mixte
+      const sTriples = a.as_subject_triples_aggregate?.aggregate?.count ?? a.as_subject_claims_aggregate?.nodes?.length ?? 0;
+      const oTriples = a.as_object_triples_aggregate?.aggregate?.count ?? a.as_object_claims_aggregate?.nodes?.length ?? 0;
+      return Number(sTriples) + Number(oTriples);
+    };
+
+    return atomsList.reduce((best, cur) => (countVotes(cur) > countVotes(best) ? cur : best), atomsList[0]);
+  };
+
+  /** Crée un atome on-chain si rien d’existant; sinon renvoie le meilleur candidat */
+  const getOrCreateAtom = async (): Promise<{ term_id: Hex32 }> => {
+    // 1) essaie de réutiliser
+    const best = getAtomWithMostVotes(atoms);
+    if (best?.term_id) {
+      return { term_id: best.term_id as Hex32 };
     }
-    const best = atoms.reduce((mostVotedAtom, currentAtom) => {
-      const currentVotes = (
-        currentAtom.as_object_claims_aggregate?.nodes.length +
-        currentAtom.as_subject_claims_aggregate?.nodes.length
-      ) || 0
-      const mostVotes = (
-        mostVotedAtom.as_object_claims_aggregate?.nodes.length +
-        mostVotedAtom.as_subject_claims_aggregate?.nodes.length
-      ) || 0
-      return currentVotes > mostVotes ? currentAtom : mostVotedAtom
-    })
-    console.log("[SignalProcess] Atom with the most votes selected:", best)
-    return best
-  }
 
-  const getOrCreateAtom = async () => {
-    let atom = getAtomWithMostVotes(atoms)
-    if (!atom) {
-      console.log("[SignalProcess] Creating a new atom with metadata:", pageMeta)
-      try {
-        const result = await pinThing({
-          name: pageMeta.title || "Untitled",
-          description: pageMeta.description || "",
-          image: pageMeta.favicon || "",
-          url: pageMeta.url || uri
-        })
-        console.log("[SignalProcess] pinThing mutation result:", result)
-        const ipfsUri = result?.pinThing?.uri
-        if (!ipfsUri) {
-          throw new Error("pinThing mutation did not return an IPFS uri.")
-        }
+    // 2) crée un nouvel atome (pin côté backend + on-chain via SDK)
+    const metaUrl = pageMeta.url || uri || "";
+    const name = pageMeta.title || "Untitled";
+    const description = pageMeta.description || "";
+    const image = pageMeta.favicon || "";
 
-        const { walletClient, publicClient } = await getClients()
-        const multivault = new EthMultiVault({ walletClient, publicClient })
-        const deposit = await multivault.getAtomCost()
-        const { vaultId, hash } = await multivault.createAtom({
-          uri: ipfsUri,
-          initialDeposit: deposit,
-          wait: true
-        })
-        atom = { id: vaultId.toString() }
-        console.log("[SignalProcess] New atom created on the blockchain:", atom)
-      } catch (err) {
-        console.error("[SignalProcess] Error while creating atom:", err)
-        throw err
-      }
+    // Optionnel: garde ta mutation pinThing si tu veux garder une trace Côté GraphQL/analytics
+    try {
+      await pinThing({ name, description, image, url: metaUrl });
+    } catch (e) {
+      // non-bloquant pour la tx on-chain
+      console.warn("[SignalProcess] pinThing failed (non-blocking):", e);
     }
-    return atom
-  }
 
+    const { walletClient, publicClient } = await getClients();
+    if (!walletClient || !publicClient) throw new Error("Wallet not connected");
+    const chainId = publicClient.chain?.id;
+    if (!chainId) throw new Error("Unknown chain id");
+
+    const address = getMultiVaultAddressFromChainId(chainId);
+
+    const data = await createAtomFromThing(
+      { walletClient, publicClient, address },
+      { url: metaUrl, name, description, image }
+    );
+
+    const termIdHex = data.state.termId as Hex32;
+    return { term_id: termIdHex };
+  };
+
+  /** type: "scam" | "trustworthy" → crée triple (atom — IS — [SCAM|TRUSTWORTHY]) puis dépose une position */
   const handleSignal = async (type: "scam" | "trustworthy") => {
     try {
-      console.log("[SignalProcess] Starting signal process:", type)
-      let atom = await getOrCreateAtom()
-      console.log("[SignalProcess] Atom used for triple:", atom)
+      // 1) sujet = atome (exist. ou créé)
+      const atom = await getOrCreateAtom();
+      const subjectId = atom.term_id as Hex32;
 
-      const tripleInput: [bigint, bigint, bigint] = [
-        BigInt(atom.term_id),
-        877n,
-        type === "scam" ? 1775n : 14n
-      ]
-      console.log("[SignalProcess] tripleInput:", tripleInput)
+      // 2) prédicat = ids.predicateId ; objet = ids.scamId / ids.trustworthyId
+      const predicateId = ids.predicateId;
+      const objectId = type === "scam" ? ids.scamId : ids.trustworthyId;
 
-      const { vaultId } = await createSingleTriple(tripleInput)
-      await createPosition({ vaultId })
-      console.log("[SignalProcess] Position created on vault:", vaultId)
+      // 3) crée le triple (SDK v2 → Hex32 partout)
+      const { termId } = await createSingleTriple([subjectId, predicateId, objectId]);
 
-      onSuccess?.()
+      // 4) crée la position (dépôt sur le triple fraichement créé)
+      await createPosition(termId);
+
+      onSuccess?.();
     } catch (e) {
-      console.error("[SignalProcess] Error in handleSignal:", e)
-      onError?.(e)
+      console.error("[SignalProcess] Error in handleSignal:", e);
+      onError?.(e);
     }
-  }
+  };
 
-  return { handleSignal }
+  return { handleSignal };
 }

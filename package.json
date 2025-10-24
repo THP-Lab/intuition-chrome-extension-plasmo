@@ -14,7 +14,8 @@
   "dependencies": {
     "@0xintuition/1ui": "^0.3.6",
     "@0xintuition/graphql": "2.0.0-alpha.0",
-    "@0xintuition/protocol": "2.0.0-alpha.0",
+    "@0xintuition/protocol": "2.0.0-alpha.2",
+    "@0xintuition/sdk": "2.0.0-alpha.2",
     "@apollo/client": "^3.13.8",
     "@floating-ui/react-dom": "^2.1.2",
     "@graphql-codegen/typescript-document-nodes": "^4.0.11",

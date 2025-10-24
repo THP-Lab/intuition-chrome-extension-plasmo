@@ -15,8 +15,11 @@ importers:
         specifier: 2.0.0-alpha.0
         version: 2.0.0-alpha.0(react@18.2.0)
       '@0xintuition/protocol':
-        specifier: 2.0.0-alpha.0
-        version: 2.0.0-alpha.0(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))
+        specifier: 2.0.0-alpha.2
+        version: 2.0.0-alpha.2(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))
+      '@0xintuition/sdk':
+        specifier: 2.0.0-alpha.2
+        version: 2.0.0-alpha.2(react@18.2.0)(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))
       '@apollo/client':
         specifier: ^3.13.8
         version: 3.14.0(@types/react@18.2.48)(graphql-ws@6.0.6(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -218,8 +221,16 @@ packages:
   '@0xintuition/graphql@2.0.0-alpha.0':
     resolution: {integrity: sha512-HxtfAnhmowkybnl6A3sMTW93wmNum9kJCGfDna3rXATmCW/rpSzlqbwimy6X3QwloP74nFI3xRP8QPPo/smP1A==}
 
-  '@0xintuition/protocol@2.0.0-alpha.0':
-    resolution: {integrity: sha512-+v6IJDIrvDIhd6adyDWGixGrERTVq0NG5BWOQ+vDWXGuMa43ayTjZTRm6aNHts2zeciZMx7vWe3rfm4fCMR/4A==}
+  '@0xintuition/graphql@2.0.0-alpha.2':
+    resolution: {integrity: sha512-BF6FDrI21GR2wpAKJYkfAuLphadsmqyydOwogBemJKmW5wAwt+/McBAxtmWzX/Ar0eMDxYoWvsOgduVbSYOVrA==}
+
+  '@0xintuition/protocol@2.0.0-alpha.2':
+    resolution: {integrity: sha512-ty+RUqYgAxZ6upPT/8Do8MNJGxkyxGJeZbjins6FwUs8y39dGm1DWiO79V/43MiC21fFBXagOUfvHl7+FNOiZg==}
+    peerDependencies:
+      viem: ^2.0.0
+
+  '@0xintuition/sdk@2.0.0-alpha.2':
+    resolution: {integrity: sha512-PU1XIuTYdHenVQ+dMJ8GsCpNVyRiAMKdDFiOcfAmmnWgEkKs/fzupDbZ0pqKIpRREoQ9zBs4N6OLtkBSH3yGmw==}
     peerDependencies:
       viem: ^2.0.0
 
@@ -6470,9 +6481,28 @@ snapshots:
       - encoding
       - react
 
-  '@0xintuition/protocol@2.0.0-alpha.0(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))':
+  '@0xintuition/graphql@2.0.0-alpha.2(react@18.2.0)':
+    dependencies:
+      '@graphql-codegen/typescript-document-nodes': 4.0.16(graphql@16.11.0)
+      '@tanstack/react-query': 5.87.4(react@18.2.0)
+      graphql: 16.11.0
+      graphql-request: 7.2.0(graphql@16.11.0)
+    transitivePeerDependencies:
+      - encoding
+      - react
+
+  '@0xintuition/protocol@2.0.0-alpha.2(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))':
     dependencies:
       viem: 2.37.5(typescript@5.9.2)(zod@3.25.76)
+
+  '@0xintuition/sdk@2.0.0-alpha.2(react@18.2.0)(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))':
+    dependencies:
+      '@0xintuition/graphql': 2.0.0-alpha.2(react@18.2.0)
+      '@0xintuition/protocol': 2.0.0-alpha.2(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))
+      viem: 2.37.5(typescript@5.9.2)(zod@3.25.76)
+    transitivePeerDependencies:
+      - encoding
+      - react
 
   '@adraffy/ens-normalize@1.10.1': {}
 
