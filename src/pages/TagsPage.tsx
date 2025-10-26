@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import { ImageWithFallback } from "../components/ui/ImageWithFallback"
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll"
 
-const HASHTAG_PREDICATE_ID = 4
+const HASHTAG_PREDICATE_ID = "0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d"
 const PAGE_SIZE = 18
 
 const HashtagObjectsPage: React.FC = () => {

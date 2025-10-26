@@ -54,8 +54,8 @@ importers:
         specifier: ^0.175.0
         version: 0.175.0
       '@warzieram/graphql':
-        specifier: ^0.5.31
-        version: 0.5.31(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.3)
+        specifier: ^0.5.32
+        version: 0.5.32(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.3)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -3499,8 +3499,8 @@ packages:
   '@vue/shared@3.3.4':
     resolution: {integrity: sha512-7OjdcV8vQ74eiz1TZLzZP4JwqM5fA94K6yntPS5Z25r9HDuGNzaGdgvwKYq6S+MxwF0TFRwe50fIR/MYnakdkQ==}
 
-  '@warzieram/graphql@0.5.31':
-    resolution: {integrity: sha512-SosNLmu0qykhjoI2ca0hvQIASVQNLz2NoC/D+N/2kDAmqaCWjkQXino5WOHO9aYDLJQ2BDIupvNLKn299cwFjQ==}
+  '@warzieram/graphql@0.5.32':
+    resolution: {integrity: sha512-hjRsyB1dpKcQZDkIhP3xnejP254lFZEi6S67TUrIlhQ/vmZfll7D/cZIy3AkYEHMNBYRdlGG3DVaaFJ3DzTYqA==}
 
   '@webgpu/types@0.1.64':
     resolution: {integrity: sha512-84kRIAGV46LJTlJZWxShiOrNL30A+9KokD7RB3dRCIqODFjodS5tCD5yyiZ8kIReGVZSDfA3XkkwyyOIF6K62A==}
@@ -10296,7 +10296,7 @@ snapshots:
 
   '@vue/shared@3.3.4': {}
 
-  '@warzieram/graphql@0.5.31(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.3)':
+  '@warzieram/graphql@0.5.32(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.3)':
     dependencies:
       '@apollo/client': 3.14.0(@types/react@18.2.48)(graphql-ws@6.0.6(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@graphql-codegen/typescript-document-nodes': 4.0.16(graphql@16.11.0)

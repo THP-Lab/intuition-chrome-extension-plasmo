@@ -10,7 +10,7 @@ import { Fingerprint } from "lucide-react"
 
 interface PopupAtomProps {
   atom: {
-    term_id: any
+    term_id: string
     label?: string | null
     image?: string | null
   }
@@ -22,7 +22,7 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
   const atomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const { data, isLoading, error } = useGetAtomQuery({ variables: {term_id} });
+  const { data, loading, error } = useGetAtomQuery({ variables: {term_id} });
   const { isHovered, setIsHovered, isOpen } = useAtomInteraction()
 
   const goToAtomPage = () => {
@@ -67,7 +67,7 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
       ) : null
 
     const renderVaultInfo = () =>
-      data?.atom?.term ? (
+      data?.atom?.term?.positions_aggregate?.aggregate ? (
         <div className="mt-2 text-sm">
           <span className="text-muted-foreground">Positions: </span>
           <span className="font-medium">{data.atom.term.positions_aggregate.aggregate.count}</span>
@@ -76,7 +76,7 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
     
 
     const renderCardContent = () => {
-      if (isLoading) return <div className="p-4">Loading...</div>
+      if (loading) return <div className="p-4">Loading...</div>
       if (error) return <div className="p-4 text-red-500">Error Loading</div>
       if (!data?.atom) return <div className="p-4">No information available</div>
   

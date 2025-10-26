@@ -3,7 +3,7 @@ import { usePinPersonMutation } from "@warzieram/graphql"
 import { Button } from "~src/components/ui/button"
 import { useStorage } from "@plasmohq/storage/hook";
 import { parseEther } from 'viem';
-import { MultiVaultAbi } from '@0xintuition/protocol'
+import { EthMultiVault } from '@0xintuition/protocol'
 import { getClients } from '../lib/viemClient';
 import { MULTIVAULT_CONTRACT_ADDRESS } from "../lib/config"
 import { useQueryClient } from "@tanstack/react-query"
@@ -83,8 +83,10 @@ const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
 
       const { walletClient, publicClient } = await getClients()      
 
-      const multivault = new MultiVaultAbi({ walletClient, publicClient })
+      
+      const multivault = new MultiVaultAbi({ walletClient, publicClient }) 
 
+      
       const result = await pinPerson({
     
           name: form.name,

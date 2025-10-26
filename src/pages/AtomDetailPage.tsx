@@ -10,12 +10,12 @@ import AtomDisplay from "~src/components/ui/AtomDisplay"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import Tags from "~src/components/ui/Tags"
 
-const HAS_TAG_PREDICATE_ID = 4
+const HAS_TAG_PREDICATE_ID = "0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d"
 
 const AtomDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const parsedId = Number(id)
-  const shouldFetch = !isNaN(parsedId)
+  const termId = id ?? "" 
+  const shouldFetch = Boolean(termId) 
   const [walletAddress] = useStorage<string>("metamask-account")
 
   const {
@@ -23,7 +23,7 @@ const AtomDetailPage: React.FC = () => {
     loading: loadingAtom,
     error: errorAtom
   } = useGetAtomQuery({
-    variables: { term_id: parsedId },
+    variables: { term_id: termId },
     skip: !shouldFetch
   })
 
@@ -34,7 +34,7 @@ const AtomDetailPage: React.FC = () => {
     refetch: refetchTriples
   } = useGetTriplesByAtomQuery({
     variables: {
-      term_id: parsedId,
+      term_id: termId,
       address: walletAddress ?? ""
     }
   })
@@ -82,7 +82,7 @@ const AtomDetailPage: React.FC = () => {
     )
   }
   if (!atomData?.atom) {
-    return <div className="p-4">No atoms found</div>
+    return <div className="p-4">No atom found</div>
   }
 
   return (

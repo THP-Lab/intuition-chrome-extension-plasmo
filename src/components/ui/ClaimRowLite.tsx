@@ -105,7 +105,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
             <p className="mt-2 text-xs text-gray-500">
             Created by{' '}
             <a
-              href={`https://portal.intuition.systems/app/atom/${creator.id}?tab=portfolio`}
+              href={`https://beta.portal.intuition.systems/explore/atom/${creator.id}`}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline"

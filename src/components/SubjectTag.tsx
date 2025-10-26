@@ -8,7 +8,7 @@ import { Fingerprint } from 'lucide-react'
 import VoteButtons from '~src/components/VoteButtons'
 import type { VoteChoice } from '~src/components/VoteButtons'
 
-const HASHTAG_PREDICATE_ID = 4
+const HASHTAG_PREDICATE_ID = "0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d"
 
 const SubjectTag: React.FC = () => {
   const { tagId } = useParams<{ tagId: string }>()
@@ -44,8 +44,10 @@ const SubjectTag: React.FC = () => {
   }, [triples])
 
   if (loading) return <p>Loading…</p>
-  if (error) return <p className="text-red-600">Error loading</p> 
-  if (error) return console.log("VOICI L'ERREUR :", error)
+  if (error) {
+    console.log("VOICI L'ERREUR :", error)
+    return <p className="text-red-600">Error loading</p>
+  }
 
 
   return (
