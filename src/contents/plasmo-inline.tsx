@@ -111,9 +111,9 @@ function PlasmoInline() {
     ...(atom.as_object_triples_aggregate?.nodes ?? []),
     ...(atom.as_subject_triples_aggregate?.nodes ?? [])
   ])
-  const IS_ID = 877
-  const SCAM_ID = 1775
-  const TRUSTWORTHY_ID = 14
+  const IS_ID = "0x2af261bce70c2fc3a1abf882e3e89b23066fcd150bfda27fab69f9f55ed2d9d0"
+  const SCAM_ID = "0x1e0264e4bcb4a3d9a853dd509fc3165f08b2fe324ca6208596ae077922936793"
+  const TRUSTWORTHY_ID = "0xdec680ce2024ff9e4d6fdf2064fc2856af9efe8dc11178a1a0a0a304b1bb6e38"
   const hasScam = allClaims.some(
     c => c.predicate?.term_id == IS_ID && c.object?.term_id == SCAM_ID
   )

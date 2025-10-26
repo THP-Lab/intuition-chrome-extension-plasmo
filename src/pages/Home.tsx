@@ -112,7 +112,7 @@ useEffect(() => {
 
   const tabs = [
     {
-      label: "Claims",
+      label: "Triples",
       content: (
         <div>
           {isLoading ? (
