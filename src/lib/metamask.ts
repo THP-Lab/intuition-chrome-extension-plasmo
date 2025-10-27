@@ -13,8 +13,11 @@ export const connectWallet = async () => {
     console.log(provider)
     const accounts = await provider.request({
       method: "eth_requestAccounts"
-    })
+    }) as string[]
     console.log("accounts", accounts)
+    if (!accounts || accounts.length === 0) {
+      throw new Error("No accounts found")
+    }
     return accounts[0]
   } catch (error) {
     console.error("Error connecting to wallet", error)

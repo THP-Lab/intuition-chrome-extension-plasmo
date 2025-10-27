@@ -11,8 +11,8 @@ export function VoteButtons({
   numPositionsAgainst,
   initialVote
 }: {
-  vaultId: bigint
-  counterVaultId: bigint
+  vaultId: `0x${string}`
+  counterVaultId: `0x${string}`
   numPositionsFor?: number
   numPositionsAgainst?: number
   initialVote?: VoteChoice
@@ -32,7 +32,7 @@ export function VoteButtons({
     setError(null)
     try {
       const targetVault = isFor ? vaultId : counterVaultId
-      await createPosition({ vaultId: targetVault })
+      await createPosition(targetVault)
       setVoteChoice(isFor ? "for" : "against")
     } catch (err: any) {
       setError(err.message || "Error when voting")

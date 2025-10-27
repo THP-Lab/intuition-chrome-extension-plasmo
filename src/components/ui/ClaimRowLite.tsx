@@ -119,8 +119,8 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
           {vaultId && counterVaultId ? (
             <div className="flex">
               <VoteButtons
-                vaultId={BigInt(vaultId)}
-                counterVaultId={BigInt(counterVaultId)}
+                vaultId={vaultId as `0x${string}`}
+                counterVaultId={counterVaultId as `0x${string}`}
                 numPositionsFor={numPositionsFor || 0}
                 numPositionsAgainst={numPositionsAgainst || 0}
                 initialVote={initialVote}

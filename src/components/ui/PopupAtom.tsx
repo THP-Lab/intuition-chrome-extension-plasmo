@@ -22,8 +22,9 @@ export const PopupAtom = ({ atom }: PopupAtomProps) => {
   const atomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const { data, loading, error } = useGetAtomQuery({ variables: {term_id} });
   const { isHovered, setIsHovered, isOpen } = useAtomInteraction()
+  const { data, loading, error } = useGetAtomQuery({ variables: {term_id}, skip: !isOpen, fetchPolicy: "cache-first" });
+
 
   const goToAtomPage = () => {
     navigate(`/atoms/${term_id}`)
