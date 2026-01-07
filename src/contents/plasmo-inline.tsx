@@ -4,13 +4,13 @@ import { apolloClient } from "../lib/apolo-client"
 import type { PlasmoGetStyle, PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useRef, useState } from "react"
 import IntuitionButtonIcon  from "~src/components/icons/IntuitionButtonIcon"
-import { useStorage } from "@plasmohq/storage/dist/hook"
 import { useGetTriplesByUriQuery } from "@warzieram/graphql"
 import { normalizeUrl, buildUriRegex } from "../lib/url"
 import WarningPopup from "~/src/components/WarningPopup"
 import ReportDropdown from "~src/components/ReportDropdown"
 import styleText from "data-text:../styles/global.css"
 import IntuitionIconPlus from "~src/components/icons/intuition_icon_plus"
+import { useWalletAddress } from "~src/hooks/useWalletAddress"
 
 const queryClient = new QueryClient()
 
@@ -44,14 +44,20 @@ function PlasmoInline() {
   const [showDropdown, setShowDropdown] = useState(false)
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null)
 
-  const [walletAddress] = useStorage<string>("metamask-account", "")
+const walletAddress = useWalletAddress();
+
+  
   const uri = normalizeUrl(window.location.href)
   const uriRegex = buildUriRegex(uri)
 
-  const { data, loading, refetch } = useGetTriplesByUriQuery({ variables: {
-    uriRegex,
-    address: walletAddress 
-  }})
+
+  const { data, loading, refetch } = useGetTriplesByUriQuery({
+    variables: {
+      uriRegex,
+      address: walletAddress ?? "" 
+    },
+    skip: !walletAddress 
+  })
 
   const inject = () => {
     if (!loading && data) {
@@ -65,6 +71,10 @@ function PlasmoInline() {
       );
     }
   };
+
+  useEffect(() => {
+  if (walletAddress) refetch()
+}, [walletAddress, refetch])
 
   useEffect(() => {
     setAutoVisible(true)

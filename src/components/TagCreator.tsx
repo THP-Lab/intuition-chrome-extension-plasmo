@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react"
 import AtomAutocompleteInput from "./AtomAutocompleteInput"
 import { useCreateTriples } from "~src/hooks/useCreateTriples"
-import { useCreatePosition } from "~src/hooks/useCreatePosition"
+import { useDepositTerm } from "~src/hooks/useDepositTerm"
 import { MultiVaultAbi } from "@0xintuition/protocol"
 import { getClients } from "~src/lib/viemClient"
 
@@ -27,7 +27,7 @@ const TagCreator: React.FC<TagCreatorProps> = ( {subjectAtom, onTagCreated} ) =>
   const [error, setError] = useState<string | null>(null)
 
   const { addTriple, createTriples, clearTriples } = useCreateTriples()
-  const { createPosition } = useCreatePosition()
+  const { depositTerm } = useDepositTerm()
 
   useLayoutEffect(() => {
     if (isOpen && inputRef.current) {
@@ -76,8 +76,8 @@ const TagCreator: React.FC<TagCreatorProps> = ( {subjectAtom, onTagCreated} ) =>
         targetVaultId = counterId
       }
       
-      console.log("▶️ TagCreator: calling createPosition on vault", targetVaultId); 
-      await createPosition({ vaultId: targetVaultId })
+      console.log("▶️ TagCreator: calling depositTerm on vault", targetVaultId); 
+      await depositTerm({ vaultId: targetVaultId })
 
       // Reset local state
       setIsOpen(false)

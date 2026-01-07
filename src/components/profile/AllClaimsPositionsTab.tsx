@@ -2,11 +2,12 @@ import React from "react"
 import {
   useGetTriplesWithPositionsQuery
 } from "@warzieram/graphql"
-import { useStorage } from "@plasmohq/storage/hook"
+
 import ClaimRowLite from "../ui/ClaimRowLite"
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
 const AllClaimsPositionsTab: React.FC = () => {
-  const [walletAddress] = useStorage<string>("metamask-account")
+  const walletAddress = useWalletAddress()
 
   const { data, loading, error } = useGetTriplesWithPositionsQuery({
     variables: {

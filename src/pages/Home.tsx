@@ -3,7 +3,6 @@ import { useGetTriplesByUriQuery } from "@warzieram/graphql"
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useTheme } from "~/src/components/ThemeProvider"  
-import { useStorage } from "@plasmohq/storage/dist/hook"
 import TabSystem from "~/src/components/TabSystem"
 import EyeComponent from "~/src/components/3D/EyeComponent"
 import AtomCard from "~src/components/AtomCard"
@@ -13,8 +12,7 @@ import { normalizeUrl } from "../lib/url"
 
 function Home() {
   const [currentUrl, setCurrentUrl] = useState<string>("")
-  const [walletAddress] = useStorage<string>("metamask-account", "")
-  const [activeTab, setActiveTab] = useState("Claims")
+  const [activeTab, setActiveTab] = useState("Triples")
   const [claims, setClaims] = useState<any[]>([])
   const [atomsWithTags, setAtomsWithTags] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)

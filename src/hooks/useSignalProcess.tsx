@@ -1,6 +1,6 @@
 // src/hooks/useSignalProcess.ts
 import { useCreateSingleTriple } from "./useCreateSingleTriple";
-import { useCreatePosition } from "./useCreatePosition";
+import { useDepositTerm } from "./useDepositTerm";
 import { usePinThingMutation } from "@0xintuition/graphql";
 import { usePageMetadataContentScript as usePageMetadata } from "./usePageMetadataContentScript";
 
@@ -32,7 +32,7 @@ type UseSignalProcessParams = {
 
 export function useSignalProcess({ atoms, uri, onSuccess, onError, ids }: UseSignalProcessParams) {
   const { createSingleTriple } = useCreateSingleTriple();   // v2: prend des Hex32
-  const { createPosition } = useCreatePosition();           // v2: deposit(termId, ...)
+  const { depositTerm } = useDepositTerm();           // v2: deposit(termId, ...)
   const { mutateAsync: pinThing } = usePinThingMutation();  // optionnel, conserve ta trace backend
   const pageMeta = usePageMetadata();
 
@@ -103,8 +103,7 @@ export function useSignalProcess({ atoms, uri, onSuccess, onError, ids }: UseSig
       const { termId } = await createSingleTriple([subjectId, predicateId, objectId]);
 
       // 4) crée la position (dépôt sur le triple fraichement créé)
-      await createPosition(termId);
-
+      await depositTerm(termId);
       onSuccess?.();
     } catch (e) {
       console.error("[SignalProcess] Error in handleSignal:", e);

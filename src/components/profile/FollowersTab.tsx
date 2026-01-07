@@ -1,9 +1,9 @@
 import React from "react"
-import { useStorage } from "@plasmohq/storage/hook"
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 import { useGetFollowersFromAddressQuery } from "@warzieram/graphql"
 
 const FollowersTab = () => {
-  const [walletAddress] = useStorage<string>("metamask-account")
+  const walletAddress = useWalletAddress();
   //const walletAddress = "0x25d5c9dbc1e12163b973261a08739927e4f72ba8"
 
   const { data, loading, error } = useGetFollowersFromAddressQuery(

@@ -6,7 +6,7 @@ import React, {
 } from "react";
 import AtomAutocompleteInput from "./AtomAutocompleteInput";
 import { useCreateTriples } from "~src/hooks/useCreateTriples";   // v2 (Hex32)
-import { useCreatePosition } from "~src/hooks/useCreatePosition"; // v2 (deposit)
+import { useDepositTerm } from "~src/hooks/useDepositTerm"; // v2 (deposit)
 import { getClients } from "~src/lib/viemClient";
 import { umami } from "~src/lib/umami";
 import { MultiVaultAbi } from "@0xintuition/protocol";
@@ -38,7 +38,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
   const [progressMessage, setProgressMessage] = useState<string | null>(null);
   const [labeledTriples, setLabeledTriples] = useState<TripleWithVote[]>([]);
 
-  const { createPosition } = useCreatePosition();
+  const { depositTerm } = useDepositTerm();
   const {
     addTriple,
     clearTriples,
@@ -171,7 +171,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
         }
 
         // Dépôt (position) sur la term choisie
-        await createPosition(targetTermId);
+        await depositTerm(targetTermId);
       }
 
       setProgressMessage("✅ All votes submitted!");

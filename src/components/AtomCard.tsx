@@ -2,7 +2,7 @@ import { Fingerprint, UserRound } from "lucide-react"
 import React from "react"
 import { Link, useNavigate } from "react-router-dom"
 
-import { useAtomPosition } from "../hooks/useAtomPosition"
+import { useDepositTerm } from "../hooks/useDepositTerm"
 import TagCreator from "./TagCreator"
 import Tags from "./ui/Tags"
 
@@ -22,9 +22,7 @@ export interface AtomProps {
     } | null
   } | null
   positions_aggregate?: {
-    aggregate?: {
-      count?: number
-    }
+    aggregate?: { count?: number }
   }
   term?: {
     vaults?: {
@@ -34,11 +32,7 @@ export interface AtomProps {
       total_assets?: string
       total_shares?: string
       position_count?: number
-      positions_aggregate?: {
-        aggregate?: {
-          count?: number
-        }
-      }
+      positions_aggregate?: { aggregate?: { count?: number } }
     }[]
   }
 }
@@ -46,7 +40,7 @@ export interface AtomProps {
 interface AtomCardProps {
   atom: AtomProps
   tags?: string[]
-} 
+}
 
 export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
   try {
@@ -54,15 +48,19 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
       console.error("AtomCard: missing atom, raw data:", atom)
       return <div className="text-xs text-gray-500">Invalid atom data</div>
     }
-    const { atomPosition, isVoting, txHash } = useAtomPosition()
+
+    const { depositTerm, isDepositing, txHash, error } = useDepositTerm()
     const thing = atom.value?.thing
     const navigate = useNavigate()
+
     const goToAtomPage = () => {
-      navigate(`/atoms/${atom.term_id || ''}`)
+      navigate(`/atoms/${atom.term_id || ""}`)
     }
 
-    const positionCount = atom?.term?.vaults[0]?.position_count ?? atom?.positions_aggregate?.aggregate?.count ?? 0
-
+    const positionCount =
+      atom?.term?.vaults?.[0]?.position_count ??
+      atom?.positions_aggregate?.aggregate?.count ??
+      0
 
     return (
       <div
@@ -82,6 +80,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
                 <Fingerprint className="w-6 h-6" />
               </div>
             )}
+
             <div className="flex-1 min-w-0">
               <h2 className="text-base font-semibold leading-snug line-clamp-2 break-words">
                 {atom.label}
@@ -94,16 +93,18 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
               <UserRound className="w-4 h-4 mr-1" />
               {Math.max(positionCount - 1, 0)}
             </p>
+
             <button
               onClick={(e) => {
-                e.stopPropagation();
-                atomPosition(BigInt(atom.term_id));
+                e.stopPropagation()
+                depositTerm(atom.term_id) // ✅ hook unique
               }}
-              disabled={isVoting}
+              disabled={isDepositing}
               className="border border-gray-400 text-white rounded-md px-2 py-1 text-sm
               hover:bg-gray-400 hover:text-black hover:scale-110
               transition-all duration-200 ease-in-out"
-              title="Vote for this atom">
+              title="Vote for this atom"
+            >
               ↑
             </button>
           </div>
@@ -120,27 +121,23 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
             to={thing.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-xs text-blue-400 underline mt-1 inline-block max-w-[200px] overflow-hidden whitespace-nowrap truncate">
+            className="block text-xs text-blue-400 underline mt-1 inline-block max-w-[200px] overflow-hidden whitespace-nowrap truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
             {thing.url}
           </Link>
         )}
 
         {tags && (
-          <div 
-            className="gap-2 mt-2"
-            onClick={e => {
-              e.stopPropagation(); 
-            }}
-          >
+          <div className="gap-2 mt-2" onClick={(e) => e.stopPropagation()}>
             <Tags tags={tags} />
             <div onClick={(e) => e.stopPropagation()} className="pt-2">
-              <TagCreator
-                subjectAtom={atom}
-              />
+              <TagCreator subjectAtom={atom} />
             </div>
           </div>
         )}
 
+        {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
         {txHash && <p className="text-green-500 text-xs mt-2">Tx: {txHash}</p>}
       </div>
     )

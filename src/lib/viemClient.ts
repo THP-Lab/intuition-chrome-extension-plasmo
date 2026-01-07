@@ -1,28 +1,27 @@
 // ~src/lib/viemClient.ts
 import createMetaMaskProvider from "metamask-extension-provider"
 import { createWalletClient, createPublicClient, custom, http } from "viem"
-import { SELECTED_CHAIN } from "./config"
+import { SELECTED_CHAIN, MULTIVAULT_ADDRESS } from "./config"
 
 export const getClients = async () => {
-  // 1) Provider MetaMask (EIP-1193)
   const provider = await createMetaMaskProvider()
 
-  // 2) Comptes: privilégie eth_accounts, puis demande si vide
+  // Comptes
   let accounts = (await provider.request({ method: "eth_accounts" })) as string[] | undefined
   if (!accounts || accounts.length === 0) {
     accounts = (await provider.request({ method: "eth_requestAccounts" })) as string[] | undefined
   }
   if (!accounts || accounts.length === 0) throw new Error("No accounts returned from MetaMask provider.")
-  const address = accounts[0] as `0x${string}`
+  const account = accounts[0] as `0x${string}`
 
-  // 3) WalletClient (writes ONLY) via MetaMask
+  // WalletClient (writes)
   let walletClient = createWalletClient({
-    account: address,
+    account,
     chain: SELECTED_CHAIN,
     transport: custom(provider),
   })
 
-  // 4) S’assurer qu’on est sur la bonne chain (switch ou add)
+  // Switch chain si besoin
   const currentChainIdHex = (await provider.request({ method: "eth_chainId" })) as `0x${string}`
   const currentChainId = parseInt(currentChainIdHex, 16)
   if (currentChainId !== SELECTED_CHAIN.id) {
@@ -32,7 +31,6 @@ export const getClients = async () => {
         params: [{ chainId: `0x${SELECTED_CHAIN.id.toString(16)}` }],
       })
     } catch (e: any) {
-      // 4902 = chain non ajoutée
       if (e?.code === 4902 || /Unrecognized chain ID/i.test(e?.message)) {
         await provider.request({
           method: "wallet_addEthereumChain",
@@ -50,19 +48,20 @@ export const getClients = async () => {
         throw e
       }
     }
-    // Recrée le walletClient après switch
+
     walletClient = createWalletClient({
-      account: address,
+      account,
       chain: SELECTED_CHAIN,
       transport: custom(provider),
     })
   }
 
-  // 5) PublicClient (reads & simulate) via HTTP RPC (PAS MetaMask)
+  // PublicClient (reads & simulate) via HTTP RPC
   const publicClient = createPublicClient({
     chain: SELECTED_CHAIN,
-    transport: http(SELECTED_CHAIN.rpcUrls.default.http[0]), // ✅ HTTP pur → plus de -32603 MetaMask en console
+    transport: http(SELECTED_CHAIN.rpcUrls.default.http[0]),
   })
 
-  return { walletClient, publicClient }
+  // ✅ on retourne l’adresse MultiVault à utiliser dans le SDK / protocol
+  return { walletClient, publicClient, multivaultAddress: MULTIVAULT_ADDRESS, account }
 }

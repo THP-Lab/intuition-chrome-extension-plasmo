@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useCreatePosition } from "~src/hooks/useCreatePosition"
+import { useDepositTerm } from "~src/hooks/useDepositTerm"
 import { cn } from "~src/lib/utils"
 
 export type VoteChoice = "for" | "against"
@@ -9,33 +9,36 @@ export function VoteButtons({
   counterVaultId,
   numPositionsFor,
   numPositionsAgainst,
-  initialVote
+  initialVote,
 }: {
-  vaultId: `0x${string}`
+  vaultId: `0x${string}` // en réalité term_id bytes32
   counterVaultId: `0x${string}`
   numPositionsFor?: number
   numPositionsAgainst?: number
   initialVote?: VoteChoice
 }) {
-  const { createPosition } = useCreatePosition()
+  const { depositTerm } = useDepositTerm()
 
   const [voteChoice, setVoteChoice] = useState<VoteChoice | null>(initialVote ?? null)
+  const [hasLocalVote, setHasLocalVote] = useState(false)
   const [isVoting, setIsVoting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    setVoteChoice(initialVote ?? null)
-  }, [initialVote])
+    // ✅ n’écrase pas un vote local tant que GraphQL n’est pas à jour
+    if (!hasLocalVote) setVoteChoice(initialVote ?? null)
+  }, [initialVote, hasLocalVote])
 
   const handleVote = async (isFor: boolean) => {
     setIsVoting(true)
     setError(null)
     try {
-      const targetVault = isFor ? vaultId : counterVaultId
-      await createPosition(targetVault)
+      const targetTerm = isFor ? vaultId : counterVaultId
+      await depositTerm(targetTerm)
+      setHasLocalVote(true)
       setVoteChoice(isFor ? "for" : "against")
     } catch (err: any) {
-      setError(err.message || "Error when voting")
+      setError(err?.message || "Error when voting")
     } finally {
       setIsVoting(false)
     }

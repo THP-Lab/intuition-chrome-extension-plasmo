@@ -1,32 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useGetAccountByIdQuery,
   useGetPersonsByIdentifierQuery
 } from "@warzieram/graphql";
 
-import WalletConnectionButton from "~src/components/WalletConnectionButton";
+import  WalletConnectionButton from "~src/components/WalletConnectionButton";
 import ProfileTabs from "~src/components/profile/ProfileTabs";
 import { Outlet } from "react-router-dom";
-import { useStorage } from "@plasmohq/storage/hook";
 import AccountSection from "~src/components/profile/AccountSection";
 import PreferenceSection from "~src/components/profile/PreferenceSection";
 import AtomProfileSection from "~src/components/profile/AtomProfileSection";
-
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
 const ProfileLayout = () => {
   const [position, setPosition] = useState({ x: 0, y: -3 });
-  const [address] = useStorage<string>("metamask-account");
   const [editMode, setEditMode] = useState(false);
+  const address = useWalletAddress();
 
-  const { data: personData } = useGetPersonsByIdentifierQuery(
-    {variables: { identifier: address || "" }},
-  );
+
+
+  const { data: personData } = useGetPersonsByIdentifierQuery({
+    variables: { identifier: address || "" },
+    skip: !address
+  });
   const person = personData?.persons?.[0];
 
-  const { data: accountData } = useGetAccountByIdQuery({variables: { id: address || "" }});
+  const { data: accountData } = useGetAccountByIdQuery({
+    variables: { id: address || "" },
+    skip: !address
+  });
 
   const account = accountData?.account;
-
 
   if (!address) {
     return (
@@ -64,5 +68,6 @@ const ProfileLayout = () => {
     </div>
   );
 };
+
 
 export default ProfileLayout;

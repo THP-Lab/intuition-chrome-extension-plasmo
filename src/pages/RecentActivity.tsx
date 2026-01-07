@@ -3,12 +3,12 @@ import { useEventsSubscription } from "@warzieram/graphql"
 import AtomCard from "~src/components/AtomCard"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import IntuitionIcon from "~src/components/icons/IntuitionIcon"
-import { useStorage } from "@plasmohq/storage/dist/hook"
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
 const INITIAL_LIMIT = 20;
 
 const RecentActivity: React.FC = () => {
-  const [walletAddress] = useStorage<string>("metamask-account", "")
+  const walletAddress = useWalletAddress();
 
   const default_img =
       "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000"

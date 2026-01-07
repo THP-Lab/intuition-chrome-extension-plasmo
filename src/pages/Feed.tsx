@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from "react";
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
-import { useStorage } from "@plasmohq/storage/dist/hook";
 import { useGetFollowingsFromAddressQuery, useGetEventsFeedQuery } from "@warzieram/graphql";
 import { getAddress } from "ethers"
 import { useInfiniteScroll } from "~src/hooks/useInfiniteScroll";
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
 const default_img =
   "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000";
@@ -15,7 +15,7 @@ function shortAddress(addr?: string) {
 }
 
 function Feed() {
-  const [walletAddress] = useStorage<string>("metamask-account", "");
+  const walletAddress = useWalletAddress();
   const [checksumAddress, setChecksumAddress] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);

@@ -1,10 +1,10 @@
 import React from "react"
-import { useStorage } from "@plasmohq/storage/hook"
 import { useGetAtomsByCreatorQuery } from "@warzieram/graphql"
 import AtomCard from "~src/components/AtomCard"
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
 const IdentityTab = () => {
-  const [walletAddress] = useStorage<string>("metamask-account")
+  const walletAddress = useWalletAddress();
 
   const { data, loading, error } = useGetAtomsByCreatorQuery(
     {variables: { address: walletAddress ?? "" }},

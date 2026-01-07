@@ -2,7 +2,7 @@ import React, {useMemo} from 'react'
 import { Link } from "react-router-dom"
 import { useParams } from 'react-router-dom'
 import { useGetTaggedObjectsQuery } from '@warzieram/graphql'
-import { useStorage } from '@plasmohq/storage/hook'
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 import { ImageWithFallback } from '../components/ui/ImageWithFallback'
 import { Fingerprint } from 'lucide-react'
 import VoteButtons from '~src/components/VoteButtons'
@@ -12,14 +12,14 @@ const HASHTAG_PREDICATE_ID = "0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc31
 
 const SubjectTag: React.FC = () => {
   const { tagId } = useParams<{ tagId: string }>()
-  const [walletAddress] = useStorage<string>('metamask-account', "")
+  const address = useWalletAddress();
 
 
   const { data, loading, error } = useGetTaggedObjectsQuery({
     variables: {
       objectId: tagId!,
       predicateId: HASHTAG_PREDICATE_ID,
-      address: walletAddress!
+      address: address!
     }
   })
 

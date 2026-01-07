@@ -1,29 +1,30 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Button } from "~src/components/ui/button"
-import { connectWallet, disconnectWallet } from "../lib/metamask"
-import { useStorage } from "@plasmohq/storage/hook"
+import { connectWallet, disconnectWallet, setupMetaMaskListeners  } from "../lib/metamask"
 import { PowerOff } from 'lucide-react';
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
+
 
 const WalletConnectionButton = () => {
-  const [account, setAccount] = useStorage<string>("metamask-account")
+  const address = useWalletAddress();
 
   const handleConnect = async () => {
-    try {
-      const accountAddress = await connectWallet()
-      setAccount(accountAddress)
-    } catch (error) {
-      console.error("Failed to connect to wallet: ", error)
-    }
+    const accountAddress = (await connectWallet()).toLowerCase()
+    chrome.storage.sync.set({ "metamask-account": accountAddress })
   }
 
-  const handleDisconnect = () => {
-    setAccount("");
-    disconnectWallet()
+  const handleDisconnect = async () => {
+    chrome.storage.sync.set({ "metamask-account": "" })
+    await disconnectWallet()
   }
+
+    useEffect(() => {
+    setupMetaMaskListeners()
+  }, [])
 
   return (
     <div>
-      {!account ? (
+      {!address ? (
         <Button variant="successOutline" onClick={handleConnect}>Connect to Metamask</Button>
       ) : (
         <div>

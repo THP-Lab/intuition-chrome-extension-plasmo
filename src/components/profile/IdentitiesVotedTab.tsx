@@ -1,13 +1,11 @@
 import { useGetAtomsWithPositionsQuery } from "@warzieram/graphql"
 import React from "react"
 
-import { useStorage } from "@plasmohq/storage/hook"
-
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 import AtomCard from "../AtomCard"
 
 const IdentitiesVotedTab = () => {
-  const [walletAddress] = useStorage<string>("metamask-account")
-
+  const walletAddress = useWalletAddress();
   const { data, loading, error } = useGetAtomsWithPositionsQuery({
     variables: {
       address: walletAddress,

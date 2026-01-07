@@ -12,8 +12,8 @@ importers:
         specifier: ^0.3.6
         version: 0.3.6(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(tailwindcss@3.3.0(postcss@8.4.31))
       '@0xintuition/graphql':
-        specifier: 2.0.0-alpha.0
-        version: 2.0.0-alpha.0(react@18.2.0)
+        specifier: 2.0.0-alpha.2
+        version: 2.0.0-alpha.2(react@18.2.0)
       '@0xintuition/protocol':
         specifier: 2.0.0-alpha.2
         version: 2.0.0-alpha.2(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))
@@ -54,8 +54,8 @@ importers:
         specifier: ^0.175.0
         version: 0.175.0
       '@warzieram/graphql':
-        specifier: ^0.5.32
-        version: 0.5.32(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.3)
+        specifier: ^0.5.34
+        version: 0.5.34(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.3)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -217,9 +217,6 @@ packages:
 
   '@0xintuition/graphql@0.5.0':
     resolution: {integrity: sha512-yRe8jSqd3QaJRj1UkYTyOlBuTh5qWhEQTe1wmDuCnkc4eW65ehdlVgW+IRFTi82eEXV4AMgdCBroG5p39Syfow==}
-
-  '@0xintuition/graphql@2.0.0-alpha.0':
-    resolution: {integrity: sha512-HxtfAnhmowkybnl6A3sMTW93wmNum9kJCGfDna3rXATmCW/rpSzlqbwimy6X3QwloP74nFI3xRP8QPPo/smP1A==}
 
   '@0xintuition/graphql@2.0.0-alpha.2':
     resolution: {integrity: sha512-BF6FDrI21GR2wpAKJYkfAuLphadsmqyydOwogBemJKmW5wAwt+/McBAxtmWzX/Ar0eMDxYoWvsOgduVbSYOVrA==}
@@ -3499,8 +3496,8 @@ packages:
   '@vue/shared@3.3.4':
     resolution: {integrity: sha512-7OjdcV8vQ74eiz1TZLzZP4JwqM5fA94K6yntPS5Z25r9HDuGNzaGdgvwKYq6S+MxwF0TFRwe50fIR/MYnakdkQ==}
 
-  '@warzieram/graphql@0.5.32':
-    resolution: {integrity: sha512-hjRsyB1dpKcQZDkIhP3xnejP254lFZEi6S67TUrIlhQ/vmZfll7D/cZIy3AkYEHMNBYRdlGG3DVaaFJ3DzTYqA==}
+  '@warzieram/graphql@0.5.34':
+    resolution: {integrity: sha512-dQdqSoPdNE+fqJ5u0ngM9UycAQu2Av1Fx5em/4dpYvuchpHB0hwixxELmuVNMuYzyEPNrQnIOdNuR8t4e31RaA==}
 
   '@webgpu/types@0.1.64':
     resolution: {integrity: sha512-84kRIAGV46LJTlJZWxShiOrNL30A+9KokD7RB3dRCIqODFjodS5tCD5yyiZ8kIReGVZSDfA3XkkwyyOIF6K62A==}
@@ -6462,16 +6459,6 @@ snapshots:
       - tailwindcss
 
   '@0xintuition/graphql@0.5.0(react@18.2.0)':
-    dependencies:
-      '@graphql-codegen/typescript-document-nodes': 4.0.16(graphql@16.11.0)
-      '@tanstack/react-query': 5.87.4(react@18.2.0)
-      graphql: 16.11.0
-      graphql-request: 7.2.0(graphql@16.11.0)
-    transitivePeerDependencies:
-      - encoding
-      - react
-
-  '@0xintuition/graphql@2.0.0-alpha.0(react@18.2.0)':
     dependencies:
       '@graphql-codegen/typescript-document-nodes': 4.0.16(graphql@16.11.0)
       '@tanstack/react-query': 5.87.4(react@18.2.0)
@@ -10296,7 +10283,7 @@ snapshots:
 
   '@vue/shared@3.3.4': {}
 
-  '@warzieram/graphql@0.5.32(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.3)':
+  '@warzieram/graphql@0.5.34(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(ws@8.18.3)':
     dependencies:
       '@apollo/client': 3.14.0(@types/react@18.2.48)(graphql-ws@6.0.6(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@graphql-codegen/typescript-document-nodes': 4.0.16(graphql@16.11.0)

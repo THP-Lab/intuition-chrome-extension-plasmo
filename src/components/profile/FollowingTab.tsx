@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react"
-import { useStorage } from "@plasmohq/storage/dist/hook"
 import { useGetFollowingsFromAddressQuery } from "@warzieram/graphql"
 import { getAddress } from "ethers"
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
 const FollowingTab: React.FC = () => {
-  const [walletAddress] = useStorage<string>("metamask-account", "")
+  const walletAddress = useWalletAddress();
   const [checksumAddress, setChecksumAddress] = useState<string | null>(null)
 
   useEffect(() => {

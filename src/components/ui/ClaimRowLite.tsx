@@ -82,11 +82,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
     const userCounterStake = Number(triple?.counter_positions?.[0]?.shares ?? triple?.counter_term?.positions?.[0]?.shares ?? 0)
 
     const initialVote: VoteChoice | undefined =
-      userStake > 0
-        ? "for"
-        : userCounterStake > 0
-          ? "against"
-          : undefined
+      userStake > 0 ? "for" : userCounterStake > 0 ? "against" : undefined
 
     return (
       <div

@@ -40,3 +40,22 @@ chrome.tabs.onUpdated.addListener((tabId, info) => {
 chrome.tabs.onActivated.addListener(({ tabId }) => {
   chrome.tabs.sendMessage(tabId, { action: "REFRESH_CLAIMS" });
 });
+
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message?.type === "GET_WALLET_ADDRESS") {
+    chrome.storage.local.get(["metamask-account"], (localRes) => {
+      const localAddr = localRes["metamask-account"]
+      console.log("[BG] local metamask-account =", localAddr)
+
+      chrome.storage.sync.get(["metamask-account"], (syncRes) => {
+        const syncAddr = syncRes["metamask-account"]
+        console.log("[BG] sync metamask-account =", syncAddr)
+
+        sendResponse({ address: localAddr || syncAddr || "" })
+      })
+    })
+    return true
+  }
+})
+

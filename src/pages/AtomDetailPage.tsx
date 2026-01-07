@@ -2,13 +2,12 @@ import { useGetAtomQuery, useGetTriplesByAtomQuery } from "@warzieram/graphql"
 import React from "react"
 import { useParams } from "react-router-dom"
 
-import { useStorage } from "@plasmohq/storage/hook"
-
 import BackButton from "~/src/components/BackButton"
 import TagCreator from "~src/components/TagCreator"
 import AtomDisplay from "~src/components/ui/AtomDisplay"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import Tags from "~src/components/ui/Tags"
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
 const HAS_TAG_PREDICATE_ID = "0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d"
 
@@ -16,7 +15,7 @@ const AtomDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const termId = id ?? "" 
   const shouldFetch = Boolean(termId) 
-  const [walletAddress] = useStorage<string>("metamask-account")
+  const walletAddress = useWalletAddress();
 
   const {
     data: atomData,
