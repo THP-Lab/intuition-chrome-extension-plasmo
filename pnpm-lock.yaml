@@ -12,14 +12,14 @@ importers:
         specifier: ^0.3.6
         version: 0.3.6(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(tailwindcss@3.3.0(postcss@8.4.31))
       '@0xintuition/graphql':
-        specifier: 2.0.0-alpha.2
-        version: 2.0.0-alpha.2(react@18.2.0)
+        specifier: 2.0.0-alpha.4
+        version: 2.0.0-alpha.4(react@18.2.0)
       '@0xintuition/protocol':
-        specifier: 2.0.0-alpha.2
-        version: 2.0.0-alpha.2(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))
+        specifier: 2.0.0-alpha.4
+        version: 2.0.0-alpha.4(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))
       '@0xintuition/sdk':
-        specifier: 2.0.0-alpha.2
-        version: 2.0.0-alpha.2(react@18.2.0)(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))
+        specifier: 2.0.0-alpha.4
+        version: 2.0.0-alpha.4(react@18.2.0)(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))
       '@apollo/client':
         specifier: ^3.13.8
         version: 3.14.0(@types/react@18.2.48)(graphql-ws@6.0.6(graphql@16.11.0)(ws@8.18.3))(graphql@16.11.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -218,16 +218,16 @@ packages:
   '@0xintuition/graphql@0.5.0':
     resolution: {integrity: sha512-yRe8jSqd3QaJRj1UkYTyOlBuTh5qWhEQTe1wmDuCnkc4eW65ehdlVgW+IRFTi82eEXV4AMgdCBroG5p39Syfow==}
 
-  '@0xintuition/graphql@2.0.0-alpha.2':
-    resolution: {integrity: sha512-BF6FDrI21GR2wpAKJYkfAuLphadsmqyydOwogBemJKmW5wAwt+/McBAxtmWzX/Ar0eMDxYoWvsOgduVbSYOVrA==}
+  '@0xintuition/graphql@2.0.0-alpha.4':
+    resolution: {integrity: sha512-4LPmtW4tRrnu8JcvtzRAHpFVIOXMI0fnN5ISn5KmWKHUGcMgtfHIYB0OE28sFh/LzpLZ1Sscvyc554T9M2mAYQ==}
 
-  '@0xintuition/protocol@2.0.0-alpha.2':
-    resolution: {integrity: sha512-ty+RUqYgAxZ6upPT/8Do8MNJGxkyxGJeZbjins6FwUs8y39dGm1DWiO79V/43MiC21fFBXagOUfvHl7+FNOiZg==}
+  '@0xintuition/protocol@2.0.0-alpha.4':
+    resolution: {integrity: sha512-A0tA4MO4PPp6sO6in8HmyELoI1FINf42pxTYQUkTBCCzssF7Hy4Tp/HvGPzvSjg1SjkIHTK1QVX2cP4BySv1gA==}
     peerDependencies:
       viem: ^2.0.0
 
-  '@0xintuition/sdk@2.0.0-alpha.2':
-    resolution: {integrity: sha512-PU1XIuTYdHenVQ+dMJ8GsCpNVyRiAMKdDFiOcfAmmnWgEkKs/fzupDbZ0pqKIpRREoQ9zBs4N6OLtkBSH3yGmw==}
+  '@0xintuition/sdk@2.0.0-alpha.4':
+    resolution: {integrity: sha512-jQpYlGeQrOJW192Qm5QKX45+H5paeEr44KbOKpz5LeyP7/q0zdd/K9wWCbvTzGxc3TrpVLVSwk1iuY/TQQDAbQ==}
     peerDependencies:
       viem: ^2.0.0
 
@@ -6468,7 +6468,7 @@ snapshots:
       - encoding
       - react
 
-  '@0xintuition/graphql@2.0.0-alpha.2(react@18.2.0)':
+  '@0xintuition/graphql@2.0.0-alpha.4(react@18.2.0)':
     dependencies:
       '@graphql-codegen/typescript-document-nodes': 4.0.16(graphql@16.11.0)
       '@tanstack/react-query': 5.87.4(react@18.2.0)
@@ -6478,14 +6478,14 @@ snapshots:
       - encoding
       - react
 
-  '@0xintuition/protocol@2.0.0-alpha.2(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))':
+  '@0xintuition/protocol@2.0.0-alpha.4(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))':
     dependencies:
       viem: 2.37.5(typescript@5.9.2)(zod@3.25.76)
 
-  '@0xintuition/sdk@2.0.0-alpha.2(react@18.2.0)(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))':
+  '@0xintuition/sdk@2.0.0-alpha.4(react@18.2.0)(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))':
     dependencies:
-      '@0xintuition/graphql': 2.0.0-alpha.2(react@18.2.0)
-      '@0xintuition/protocol': 2.0.0-alpha.2(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))
+      '@0xintuition/graphql': 2.0.0-alpha.4(react@18.2.0)
+      '@0xintuition/protocol': 2.0.0-alpha.4(viem@2.37.5(typescript@5.9.2)(zod@3.25.76))
       viem: 2.37.5(typescript@5.9.2)(zod@3.25.76)
     transitivePeerDependencies:
       - encoding

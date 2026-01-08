@@ -62,6 +62,5 @@ export const getClients = async () => {
     transport: http(SELECTED_CHAIN.rpcUrls.default.http[0]),
   })
 
-  // ✅ on retourne l’adresse MultiVault à utiliser dans le SDK / protocol
   return { walletClient, publicClient, multivaultAddress: MULTIVAULT_ADDRESS, account }
 }

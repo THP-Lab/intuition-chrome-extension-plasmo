@@ -8,10 +8,9 @@ import React, {
 import { Link } from "react-router-dom";
 
 import { usePinThingMutation } from "@0xintuition/graphql";
-import { createAtomFromThing, getMultiVaultAddressFromChainId } from "@0xintuition/sdk";
+import { createAtomFromThing } from "@0xintuition/sdk";
 import { getClients } from "../lib/viemClient";
 import { LinkTypeSelector } from "./LinkTypeSelector";
-import { umami } from "~src/lib/umami";
 
 export interface AtomFormHandle {
   resetForm(): void;
@@ -125,7 +124,7 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
     setErrorMessage(null);
 
     try {
-      const { walletClient, publicClient } = await getClients();
+      const { walletClient, publicClient, multivaultAddress } = await getClients();
       if (!walletClient || !publicClient) throw new Error("Wallet not connected");
 
       // explorer dynamique
@@ -141,7 +140,7 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
       // 2) Adresse MultiVault selon la chain active
       const chainId = publicClient.chain?.id;
       if (!chainId) throw new Error("Unknown chain id");
-      const address = getMultiVaultAddressFromChainId(chainId);
+      const address = multivaultAddress as Hex32;
 
       // 3) Création on-chain via SDK v2
       setProgressMessage("Submitting on-chain transaction...");
@@ -155,10 +154,22 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
           // (optionnels: tags, twitter, github…)
         }
       );
-
-      // SDK v2 → { uri, transactionHash, state: { termId, atomWallet, creator, atomData } }
+    
       const termIdHex = data.state.termId as Hex32;
       const txHash = data.transactionHash as Hex32;
+
+
+      setProgressMessage("Waiting for confirmation...");
+      const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
+      console.log("receipt.status", receipt.status);
+      console.log("receipt.to", receipt.to);
+      console.log("logs", receipt.logs);
+
+
+
+      console.log("chainId", chainId);
+      console.log("multivault", address);
+      console.log("txHash", txHash);
 
       setProgressMessage("Atom created!");
       setCreated({ termIdHex, txHash });
@@ -171,7 +182,6 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
         tx_hash: txHash,
       });
 
-      umami("atom_created", { termId: termIdHex, txHash });
     } catch (error: any) {
       console.error(error);
       setErrorMessage(error?.message || "Transaction failed");
@@ -179,6 +189,7 @@ const AtomForm = forwardRef<AtomFormHandle, AtomFormProps>(function AtomForm(
       setIsSubmitting(false);
     }
   }
+
 
   return (
     <form className="space-y-4 p-4 bg-background rounded">

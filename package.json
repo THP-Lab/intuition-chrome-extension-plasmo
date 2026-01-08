@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "@0xintuition/1ui": "^0.3.6",
-    "@0xintuition/graphql": "2.0.0-alpha.2",
-    "@0xintuition/protocol": "2.0.0-alpha.2",
-    "@0xintuition/sdk": "2.0.0-alpha.2",
+    "@0xintuition/graphql": "2.0.0-alpha.4",
+    "@0xintuition/protocol": "2.0.0-alpha.4",
+    "@0xintuition/sdk": "2.0.0-alpha.4",
     "@apollo/client": "^3.13.8",
     "@floating-ui/react-dom": "^2.1.2",
     "@graphql-codegen/typescript-document-nodes": "^4.0.11",
@@ -80,12 +80,12 @@
     "host_permissions": [
       "https://*/*",
       "https://analytics.thp.box/*",
-      "https://prod.base-sepolia.intuition-api.com/v1/graphql",
-      "https://prod.base-mainnet-v-1-0.intuition.sh/*",
+      "https://testnet.rpc.intuition.systems",
+      "https://rpc.intuition.systems",
       "https://testnet.intuition.sh/v1/graphql",
       "chrome-extension://*/*",
-      "ws://localhost:*",
-      "wws://localhost:*"
+      "ws://localhost:*/*",
+      "wss://localhost:*/*"
     ],
     "web_accessible_resources": [
       {
@@ -108,7 +108,7 @@
       "sidePanel"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://testnet.intuition.sh/v1/graphql https://testnet.rpc.intuition.systems/http https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org http://localhost:* wss://testnet.intuition.sh/v1/graphql ws://localhost:* wss://localhost:* https://dl.polyhaven.org https://www.gstatic.com;"
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://rpc.intuition.systems https://testnet.rpc.intuition.systems/http https://testnet.intuition.sh/v1/graphql https://mainnet.intuition.sh/v1/graphql wss://testnet.intuition.sh/v1/graphql wss://mainnet.intuition.sh/v1/graphql wss://testnet.rpc.intuition.systems wss://rpc.intuition.systems https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org http://localhost:* ws://localhost:* wss://localhost:* https://dl.polyhaven.org https://www.gstatic.com;"
     }
   },
   "pnpm": {

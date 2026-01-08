@@ -72,12 +72,12 @@ export function useSignalProcess({ atoms, uri, onSuccess, onError, ids }: UseSig
       console.warn("[SignalProcess] pinThing failed (non-blocking):", e);
     }
 
-    const { walletClient, publicClient } = await getClients();
+    const { walletClient, publicClient, multivaultAddress } = await getClients();
     if (!walletClient || !publicClient) throw new Error("Wallet not connected");
     const chainId = publicClient.chain?.id;
     if (!chainId) throw new Error("Unknown chain id");
 
-    const address = getMultiVaultAddressFromChainId(chainId);
+    const address = multivaultAddress as Hex32;
 
     const data = await createAtomFromThing(
       { walletClient, publicClient, address },

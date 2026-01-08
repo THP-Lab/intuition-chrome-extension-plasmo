@@ -24,7 +24,7 @@ const FollowingTab: React.FC = () => {
     variables:  { address: checksumAddress! },
     skip: !checksumAddress
   })
-
+  console.log("Followings data:", data)
   if (!walletAddress) {
     return <p>Connect your wallet</p>
   }
