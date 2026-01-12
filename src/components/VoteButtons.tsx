@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useDepositTerm } from "~src/hooks/useDepositTerm"
+import { useDepositWithRefresh } from "~src/hooks/useDepositWithRefresh"
 import { cn } from "~src/lib/utils"
 
 export type VoteChoice = "for" | "against"
@@ -17,7 +17,7 @@ export function VoteButtons({
   numPositionsAgainst?: number
   initialVote?: VoteChoice
 }) {
-  const { depositTerm } = useDepositTerm()
+  const { depositTerm } = useDepositWithRefresh()
 
   const [voteChoice, setVoteChoice] = useState<VoteChoice | null>(initialVote ?? null)
   const [hasLocalVote, setHasLocalVote] = useState(false)

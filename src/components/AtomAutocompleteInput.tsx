@@ -48,12 +48,22 @@ const { data, loading, error } = useGetAtomsQuery({
   variables: {
     where: { label: { _ilike: `%${debouncedSearch}%` } },
     limit: 10,
-    orderBy: { vaults: { position_count: 'desc' } },
+    // orderBy sera géré côté client
   },
   skip: debouncedSearch.length < 2
 })
 
- const atoms: Atom[] = data?.atoms.map(atom => ({
+  console.log('[AtomAutocomplete] Query state:', {
+    search: debouncedSearch,
+    loading,
+    hasError: !!error,
+    error: error?.message,
+    hasData: !!data,
+    atomsCount: data?.atoms?.length,
+    atoms: data?.atoms
+  });
+
+ let atoms: Atom[] = data?.atoms.map(atom => ({
     term_id: atom.term_id,
     label: atom.label,
     emoji: atom.emoji,
@@ -64,6 +74,15 @@ const { data, loading, error } = useGetAtomsQuery({
       }))
     } : undefined
   })) || [];
+  
+  // Trier côté client par position_count
+  atoms = atoms.sort((a, b) => {
+    const countA = a.term?.vaults?.[0]?.position_count ?? 0;
+    const countB = b.term?.vaults?.[0]?.position_count ?? 0;
+    return countB - countA;
+  });
+  
+  console.log('[AtomAutocomplete] Mapped atoms:', atoms);
 
   const handleSelect = (atom: Atom  ) => {
     onSelect(atom);
@@ -100,6 +119,15 @@ const { data, loading, error } = useGetAtomsQuery({
       
       {isOpen && (
         <ul className="absolute z-10 bg-[hsl(var(--navbar-bg))] text-foreground border border-border rounded w-full max-h-60 overflow-y-auto shadow-md">
+          {loading && (
+            <li className="p-2 text-muted-foreground text-sm">Loading...</li>
+          )}
+          {error && (
+            <li className="p-2 text-red-500 text-sm">Error: {error.message}</li>
+          )}
+          {!loading && !error && atoms.length === 0 && debouncedSearch.length >= 2 && (
+            <li className="p-2 text-muted-foreground text-sm">No atoms found</li>
+          )}
           {atoms.map((atom) => (
             <li
               key={atom.term_id}

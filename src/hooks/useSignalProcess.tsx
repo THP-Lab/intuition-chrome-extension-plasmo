@@ -1,6 +1,6 @@
 // src/hooks/useSignalProcess.ts
 import { useCreateSingleTriple } from "./useCreateSingleTriple";
-import { useDepositTerm } from "./useDepositTerm";
+import { useDepositWithRefresh } from "./useDepositWithRefresh";
 import { usePinThingMutation } from "@0xintuition/graphql";
 import { usePageMetadataContentScript as usePageMetadata } from "./usePageMetadataContentScript";
 
@@ -32,7 +32,7 @@ type UseSignalProcessParams = {
 
 export function useSignalProcess({ atoms, uri, onSuccess, onError, ids }: UseSignalProcessParams) {
   const { createSingleTriple } = useCreateSingleTriple();   // v2: prend des Hex32
-  const { depositTerm } = useDepositTerm();           // v2: deposit(termId, ...)
+  const { depositTerm } = useDepositWithRefresh();           // v2: deposit(termId, ...) avec auto-refresh
   const { mutateAsync: pinThing } = usePinThingMutation();  // optionnel, conserve ta trace backend
   const pageMeta = usePageMetadata();
 

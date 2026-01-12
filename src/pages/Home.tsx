@@ -17,10 +17,24 @@ function Home() {
   const [atomsWithTags, setAtomsWithTags] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
+const isWebUrl = (url?: string) =>
+  !!url && (url.startsWith("http://") || url.startsWith("https://"))
+
 const refreshActiveTab = async () => {
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
-  const url = tab?.url ? normalizeUrl(tab.url) : ""
-  setCurrentUrl(url)
+  
+  console.log("[Home] 🔍 Active tab url:", tab?.url)
+  
+  // ✅ Si MetaMask/popup/extension devient "active", on ignore
+  if (!isWebUrl(tab?.url)) {
+    console.log("[Home] ⚠️ Ignored non-web tab url:", tab?.url)
+    return
+  }
+
+  const url = normalizeUrl(tab!.url!)
+  console.log("[Home] 🌐 Setting currentUrl to:", url)
+  setCurrentUrl((prev) => (prev === url ? prev : url))
+
   if (tab?.id !== undefined) {
     chrome.tabs.sendMessage(tab.id, { type: "REFRESH_CLAIMS" })
   }
@@ -29,30 +43,56 @@ const refreshActiveTab = async () => {
 useEffect(() => {
   refreshActiveTab()
   chrome.tabs.onActivated.addListener(refreshActiveTab)
-  chrome.tabs.onUpdated.addListener(refreshActiveTab)
+  
+  // ✅ Filtrer onUpdated pour ne réagir que quand la page est complètement chargée
+  const onUpdatedListener = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
+    if (changeInfo.status !== "complete") return
+    refreshActiveTab()
+  }
+  
+  chrome.tabs.onUpdated.addListener(onUpdatedListener)
   return () => {
     chrome.tabs.onActivated.removeListener(refreshActiveTab)
-    chrome.tabs.onUpdated.removeListener(refreshActiveTab)
+    chrome.tabs.onUpdated.removeListener(onUpdatedListener)
   }
 }, [])
 
 
 useEffect(() => {
+  console.log("[Home] 🔄 useEffect[currentUrl] triggered:", { currentUrl })
+  
   setIsLoading(true)
-  setClaims([])
-  setAtomsWithTags([])
+  // ✅ Ne pas vider l'UI ici, on garde l'ancien écran jusqu'aux nouvelles data
 
   const KEY = "claimByUriResult"
 
   const process = (uri: string, data: any) => {
-    if (normalizeUrl(uri) !== currentUrl) {
-      setClaims([])
-      setAtomsWithTags([])
+    console.log("[Home] 📦 process() appelé:", { 
+      receivedUri: uri, 
+      currentUrl, 
+      normalized: normalizeUrl(uri),
+      match: normalizeUrl(uri) === currentUrl,
+      currentUrlEmpty: currentUrl === "",
+      hasData: !!data,
+      atomsCount: data?.atoms?.length ?? 0
+    });
+    
+    // Si currentUrl n'est pas encore défini, on accepte les données
+    // Sinon on vérifie que l'URL correspond
+    if (currentUrl !== "" && normalizeUrl(uri) !== currentUrl) {
+      console.log("[Home] ⚠️ URL mismatch, ignoring update", { 
+        receivedUri: uri,
+        normalized: normalizeUrl(uri), 
+        currentUrl 
+      });
       setIsLoading(false)
       return
     }
 
     const atoms = data.atoms ?? []
+    console.log("[Home] 🔍 Extraction des données:", {
+      atomsCount: atoms.length
+    });
 
     const extractedClaims = Array.from(
       new Map(
@@ -78,6 +118,11 @@ useEffect(() => {
       return { ...atom, tags: unique }
     })
 
+    console.log("[Home] ✅ Données traitées:", {
+      claimsCount: extractedClaims.length,
+      atomsWithTagsCount: withTags.length
+    });
+
     setClaims(extractedClaims)
     setAtomsWithTags(withTags)
     setIsLoading(false)
@@ -85,9 +130,18 @@ useEffect(() => {
 
   chrome.storage.local.get(KEY, (items) => {
     const stored = items[KEY]
+    console.log("[Home] 📂 Lecture initiale du storage:", {
+      hasStored: !!stored,
+      storedUri: stored?.uri,
+      currentUrl,
+      hasData: !!stored?.data,
+      atomsCount: stored?.data?.atoms?.length ?? 0
+    });
+    
     if (stored && stored.uri && stored.data) {
       process(stored.uri, stored.data)
     } else {
+      console.log("[Home] ⚠️ Pas de données dans le storage");
       setIsLoading(false)
     }
   })
@@ -96,8 +150,26 @@ useEffect(() => {
     changes: Record<string, chrome.storage.StorageChange>,
     areaName: string
   ) => {
+    console.log("[Home] 🔔 onChange event:", {
+      areaName,
+      hasKeyChange: !!changes[KEY],
+      allKeys: Object.keys(changes)
+    });
+    
     if (areaName !== "local" || !changes[KEY]) return
-    const { uri, data } = changes[KEY].newValue
+    
+    const newValue = changes[KEY].newValue
+    console.log("[Home] 📨 newValue reçu:", {
+      hasNewValue: !!newValue,
+      newValueUri: newValue?.uri,
+      hasData: !!newValue?.data
+    });
+    
+    if (!newValue || !newValue.uri || !newValue.data) {
+      console.log("[Home] ⚠️ Storage cleared or invalid data:", newValue)
+      return
+    }
+    const { uri, data } = newValue
     process(uri, data)
   }
   chrome.storage.onChanged.addListener(onChange)
@@ -114,16 +186,19 @@ useEffect(() => {
       content: (
         <div>
           {isLoading ? (
-            "Loading..."
+            <div className="p-4 text-center">Loading...</div>
           ) : claims.length !== 0 ? (
-            claims.map(
-              (claim, index) => (
-                <ClaimRowLite
-                  key={`${claim.term_id}-${index}`}
-                  claim={claim}
-                />
-              )
-            )
+            <div>
+              {console.log("[Home] 🎨 Rendu des claims:", claims.length)}
+              {claims.map(
+                (claim, index) => (
+                  <ClaimRowLite
+                    key={`${claim.term_id}-${index}`}
+                    claim={claim}
+                  />
+                )
+              )}
+            </div>
           ) : (
             <div className="p-4 rounded text-center space-y-2">
               <p className="text-sm text-foreground">

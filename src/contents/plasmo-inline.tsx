@@ -56,19 +56,46 @@ const walletAddress = useWalletAddress();
       uriRegex,
       address: walletAddress ?? "" 
     },
-    skip: !walletAddress 
+    skip: !walletAddress
   })
 
+  console.log("🟡 [PlasmoInline] Render state:", {
+    loading,
+    hasData: !!data,
+    atomsCount: data?.atoms?.length ?? 0,
+    uri,
+    uriRegex,
+    walletAddress
+  });
+
   const inject = () => {
+    console.log("📦 [PlasmoInline] inject() called - State:", {
+      loading,
+      hasData: !!data,
+      atomsCount: data?.atoms?.length ?? 0,
+      atoms: data?.atoms,
+      uri
+    });
+    
     if (!loading && data) {
+      const payload = { uri, data };
+      console.log("💾 [PlasmoInline] Mise à jour du storage avec:", payload);
+      
       chrome.storage.local.set(
-        {
-          claimByUriResult: { uri, data }
-        },
+        { claimByUriResult: payload },
         () => {
-          console.log("✅ Data injected from GraphQL", data);
+          console.log("✅ [PlasmoInline] Storage mis à jour avec succès");
+          // Vérifier que c'est bien enregistré
+          chrome.storage.local.get("claimByUriResult", (items) => {
+            console.log("🔍 [PlasmoInline] Vérification storage:", items);
+          });
         }
       );
+    } else {
+      console.log("⏳ [PlasmoInline] inject() skipped:", {
+        loading,
+        hasData: !!data
+      });
     }
   };
 
@@ -97,14 +124,31 @@ const walletAddress = useWalletAddress();
   useEffect(() => {
     const listener = (msg: any) => {
       if (msg.action === "REFRESH_CLAIMS") {
-        console.log("[PlasmoInline] → REFRESH_CLAIMS reçu");
-        refetch()
-          .then(() => {
-            inject();
-          })
-          .catch((e) =>
-            console.error("[PlasmoInline] refetch() error:", e)
-          );
+        console.log("🔄 [PlasmoInline] REFRESH_CLAIMS reçu");
+        console.log("📊 [PlasmoInline] État avant refetch:", {
+          loading,
+          hasData: !!data,
+          atomsCount: data?.atoms?.length ?? 0,
+          uri,
+          walletAddress
+        });
+        
+        // Attendre 2 secondes pour l'indexation GraphQL
+        setTimeout(() => {
+          console.log("🚀 [PlasmoInline] Lancement du refetch...");
+          refetch()
+            .then((result) => {
+              console.log("✅ [PlasmoInline] Refetch terminé:", {
+                hasData: !!result.data,
+                atomsCount: result.data?.atoms?.length ?? 0,
+                atoms: result.data?.atoms
+              });
+              inject();
+            })
+            .catch((e) => {
+              console.error("❌ [PlasmoInline] Erreur refetch:", e);
+            });
+        }, 2000);
       }
     };
 
@@ -114,13 +158,28 @@ const walletAddress = useWalletAddress();
     };
   }, [refetch, loading, data, uri]);
 
-  useEffect(inject, [loading, data, uri]);
+  useEffect(() => {
+    console.log("🔄 [PlasmoInline] useEffect[inject] triggered:", {
+      loading,
+      hasData: !!data,
+      atomsCount: data?.atoms?.length ?? 0,
+      uri
+    });
+    inject();
+  }, [loading, data, uri]);
 
   const atoms = data?.atoms ?? []
   const allClaims = atoms.flatMap(atom => [
     ...(atom.as_object_triples_aggregate?.nodes ?? []),
     ...(atom.as_subject_triples_aggregate?.nodes ?? [])
   ])
+
+  console.log("📊 [PlasmoInline] Computed data:", {
+    atomsCount: atoms.length,
+    allClaimsCount: allClaims.length,
+    loading
+  });
+  
   const IS_ID = "0x2af261bce70c2fc3a1abf882e3e89b23066fcd150bfda27fab69f9f55ed2d9d0"
   const SCAM_ID = "0x1e0264e4bcb4a3d9a853dd509fc3165f08b2fe324ca6208596ae077922936793"
   const TRUSTWORTHY_ID = "0xdec680ce2024ff9e4d6fdf2064fc2856af9efe8dc11178a1a0a0a304b1bb6e38"
@@ -243,7 +302,6 @@ const walletAddress = useWalletAddress();
               </div>
             )}
             <IntuitionButtonIcon
-              onSearch={() => {}}
               size={iconSize}
               loading={loading}
               highlightColor={highlightColor}

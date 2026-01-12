@@ -2,7 +2,7 @@ import { Fingerprint, UserRound } from "lucide-react"
 import React from "react"
 import { Link, useNavigate } from "react-router-dom"
 
-import { useDepositTerm } from "../hooks/useDepositTerm"
+import { useDepositWithRefresh } from "../hooks/useDepositWithRefresh"
 import TagCreator from "./TagCreator"
 import Tags from "./ui/Tags"
 
@@ -49,7 +49,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
       return <div className="text-xs text-gray-500">Invalid atom data</div>
     }
 
-    const { depositTerm, isDepositing, txHash, error } = useDepositTerm()
+    const { depositTerm, isDepositing, txHash, error } = useDepositWithRefresh()
     const thing = atom.value?.thing
     const navigate = useNavigate()
 

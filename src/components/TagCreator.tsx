@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react"
 import AtomAutocompleteInput from "./AtomAutocompleteInput"
 import { useCreateTriples } from "~src/hooks/useCreateTriples"
-import { useDepositTerm } from "~src/hooks/useDepositTerm"
+import { useDepositWithRefresh } from "~src/hooks/useDepositWithRefresh"
 import { MultiVaultAbi } from "@0xintuition/protocol"
 import { getClients } from "~src/lib/viemClient"
 
@@ -27,7 +27,7 @@ const TagCreator: React.FC<TagCreatorProps> = ( {subjectAtom, onTagCreated} ) =>
   const [error, setError] = useState<string | null>(null)
 
   const { addTriple, createTriples, clearTriples } = useCreateTriples()
-  const { depositTerm } = useDepositTerm()
+  const { depositTerm } = useDepositWithRefresh()
 
   useLayoutEffect(() => {
     if (isOpen && inputRef.current) {
