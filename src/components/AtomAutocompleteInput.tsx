@@ -5,18 +5,7 @@ import { usePageMetadata } from "../hooks/usePageMetadata"
 import AtomForm from './AtomForm'
 import { Plus } from "lucide-react"
 import { UserRound } from "lucide-react"
-
-interface Atom {
-  term_id?: string;
-  label?: string | null;
-  emoji?: string | null;
-  image?: string | null;
-  term?: {  
-    vaults?: {
-      position_count: number;
-    }[]
-  };
-}
+import type { Atom } from '~src/types/atoms';
 
 interface AtomAutocompleteInputProps {
   label: string;
@@ -59,7 +48,7 @@ const { data, loading, error } = useGetAtomsQuery({
   variables: {
     where: { label: { _ilike: `%${debouncedSearch}%` } },
     limit: 10,
-    order_by: { vaults: { position_count: 'desc' } },
+    orderBy: { vaults: { position_count: 'desc' } },
   },
   skip: debouncedSearch.length < 2
 })
@@ -69,11 +58,11 @@ const { data, loading, error } = useGetAtomsQuery({
     label: atom.label,
     emoji: atom.emoji,
     image: atom.image,
-    term: {
+    term: atom.term ? {
       vaults: atom.term.vaults.map(v => ({
         position_count: v.position_count
       }))
-    }
+    } : undefined
   })) || [];
 
   const handleSelect = (atom: Atom  ) => {

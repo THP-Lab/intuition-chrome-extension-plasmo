@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useGetFollowingsFromAddressQuery } from "@warzieram/graphql"
-import { getAddress } from "ethers"
+import { getAddress } from "viem"
 import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
 const FollowingTab: React.FC = () => {

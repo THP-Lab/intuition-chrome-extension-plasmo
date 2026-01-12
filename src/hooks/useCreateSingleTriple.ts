@@ -1,7 +1,7 @@
 // src/hooks/useCreateSingleTriple.ts
 import { useCallback, useState } from "react";
 import { getClients } from "../lib/viemClient";
-import { createTripleStatement, getMultiVaultAddressFromChainId } from "@0xintuition/sdk";
+import { createTripleStatement } from "@0xintuition/sdk";
 import { MultiVaultAbi } from "@0xintuition/protocol";
 
 type Hex32 = `0x${string}`;
@@ -35,13 +35,13 @@ export function useCreateSingleTriple() {
       try {
         const [subjectId, predicateId, objectId] = tripleInput;
 
-        const { walletClient, publicClient } = await getClients();
+        const { walletClient, publicClient, multivaultAddress } = await getClients();
         if (!walletClient || !publicClient) throw new Error("Wallet not connected");
 
         const chainId = publicClient.chain?.id;
         if (!chainId) throw new Error("Unknown chain id");
 
-        const address = getMultiVaultAddressFromChainId(chainId);
+        const address = multivaultAddress as Hex32;
 
         // Détermination du coût (assets) si non fourni
         let assets = opts.assets;
@@ -69,10 +69,45 @@ export function useCreateSingleTriple() {
           }
         );
 
-        // Pattern de retour du SDK v2 :
-        // { transactionHash, state: { termId, subjectId, predicateId, objectId } }
-        const createdTermId = data.state.termId as Hex32;
         const hash = data.transactionHash as `0x${string}`;
+
+        // data.state est un tableau d'events parsés par viem
+        // Cherchons l'event TripleCreated qui contient le termId
+        let createdTermId: Hex32 | null = null;
+        for (const log of data.state as any[]) {
+          if (log.eventName === "TripleCreated" && log.args?.termId) {
+            createdTermId = log.args.termId as Hex32;
+            break;
+          }
+        }
+
+        if (!createdTermId) {
+          // Fallback: attendre le receipt et parser manuellement
+          const rcpt = await publicClient.waitForTransactionReceipt({ hash });
+          const parsed = await publicClient.getLogs({
+            address: multivaultAddress as Hex32,
+            event: {
+              type: "event",
+              name: "TripleCreated",
+              inputs: [
+                { name: "creator", type: "address", indexed: true },
+                { name: "termId", type: "bytes32", indexed: false },
+                { name: "subjectId", type: "bytes32", indexed: false },
+                { name: "predicateId", type: "bytes32", indexed: false },
+                { name: "objectId", type: "bytes32", indexed: false },
+              ],
+            },
+            fromBlock: rcpt.blockNumber,
+            toBlock: rcpt.blockNumber,
+          });
+          if (parsed.length > 0 && (parsed[0] as any).args?.termId) {
+            createdTermId = (parsed[0] as any).args.termId as Hex32;
+          }
+        }
+
+        if (!createdTermId) {
+          throw new Error("Failed to extract termId from TripleCreated event");
+        }
 
         setTxHash(hash);
         setTermId(createdTermId);

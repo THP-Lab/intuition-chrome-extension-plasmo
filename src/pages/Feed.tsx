@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
 import { useGetFollowingsFromAddressQuery, useGetEventsFeedQuery } from "@warzieram/graphql";
-import { getAddress } from "ethers"
+import { getAddress } from "viem"
 import { useInfiniteScroll } from "~src/hooks/useInfiniteScroll";
 import { useWalletAddress } from "~src/hooks/useWalletAddress";
 

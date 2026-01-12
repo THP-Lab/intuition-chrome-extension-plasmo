@@ -5,25 +5,11 @@ import React, {
   type ForwardRefRenderFunction,
 } from "react";
 import AtomAutocompleteInput from "./AtomAutocompleteInput";
-import { useCreateTriples } from "~src/hooks/useCreateTriples";   // v2 (Hex32)
-import { useDepositTerm } from "~src/hooks/useDepositTerm"; // v2 (deposit)
-import { getClients } from "~src/lib/viemClient";
+import { useCreateTriples } from "~src/hooks/useCreateTriples";
 import { umami } from "~src/lib/umami";
-import { MultiVaultAbi } from "@0xintuition/protocol";
-import { getMultiVaultAddressFromChainId } from "@0xintuition/sdk";
+import type { Atom, Hex32 } from "~src/types/atoms";
 
-type Hex32 = `0x${string}`;
-
-interface Atom {
-  id: string;
-  label: string;
-  term_id: Hex32; // v2: bytes32 hex
-}
-
-type TripleWithVote = {
-  triple: [Atom, Atom, Atom];
-  vote: "for" | "against" | null;
-};
+type Triple = [Atom, Atom, Atom];
 
 export type TripleFormRef = {
   resetForm: () => void;
@@ -36,9 +22,8 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [progressMessage, setProgressMessage] = useState<string | null>(null);
-  const [labeledTriples, setLabeledTriples] = useState<TripleWithVote[]>([]);
+  const [labeledTriples, setLabeledTriples] = useState<Triple[]>([]);
 
-  const { depositTerm } = useDepositTerm();
   const {
     addTriple,
     clearTriples,
@@ -63,14 +48,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
     },
   }));
 
-  const updateVote = (index: number, newVote: "for" | "against") => {
-    setLabeledTriples((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, vote: newVote } : item))
-    );
-  };
-
-  const canSubmit =
-    labeledTriples.length > 0 && labeledTriples.every((t) => t.vote !== null);
+  const canSubmit = labeledTriples.length > 0;
 
   const handleRemoveTriple = (index: number) => {
     setLabeledTriples((prev) => prev.filter((_, i) => i !== index));
@@ -83,13 +61,18 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
       return;
     }
 
+    if (!subject.term_id || !predicate.term_id || !object.term_id) {
+      setErrorMessage("All atoms must have valid term IDs.");
+      return;
+    }
+
     try {
       // v2 : on pousse directement les Hex32 (pas de BigInt)
-      addTriple([subject.term_id, predicate.term_id, object.term_id]);
+      addTriple([subject.term_id as Hex32, predicate.term_id as Hex32, object.term_id as Hex32]);
 
       setLabeledTriples((prev) => [
         ...prev,
-        { triple: [subject, predicate, object], vote: null },
+        [subject, predicate, object],
       ]);
 
       setSubject(null);
@@ -101,33 +84,6 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
     }
   };
 
-  // Helper: récupérer le counter_term on-chain (v2).
-  // On utilise "getCounterIdFromTripleId(termId)" qui est disponible dans l'ABI.
-  const getCounterTermId = async (termId: Hex32): Promise<Hex32> => {
-    const { publicClient } = await getClients();
-    if (!publicClient) throw new Error("Wallet not connected");
-    const chainId = publicClient.chain?.id;
-    if (!chainId) throw new Error("Unknown chain id");
-    const address = getMultiVaultAddressFromChainId(chainId);
-
-    // Utilisation de getCounterIdFromTripleId
-    try {
-      const res = await publicClient.readContract({
-        address,
-        abi: MultiVaultAbi,
-        functionName: "getCounterIdFromTripleId",
-        args: [termId],
-      });
-      if (res && typeof res === "string" && res.startsWith("0x")) {
-        return res as Hex32;
-      }
-    } catch (error) {
-      throw new Error(`Failed to get counter term: ${error}`);
-    }
-
-    throw new Error("Counter term not available");
-  };
-
   const handleSubmitAll = async () => {
     setErrorMessage(null);
 
@@ -137,9 +93,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
         return;
       }
 
-      const totalTxCount = 1 + labeledTriples.length;
-
-      setProgressMessage(`Transaction 1/${totalTxCount}: Creating triples...`);
+      setProgressMessage("Creating triples...");
       const { termIds: createdTermIds = [] } = await createTriples();
 
       await umami("triples_created", {
@@ -150,31 +104,9 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
         throw new Error("Mismatch between created triples and local list");
       }
 
-      setProgressMessage("Triples created. Preparing to vote...");
-
-      for (let i = 0; i < createdTermIds.length; i++) {
-        const {
-          triple: [s, p, o],
-          vote,
-        } = labeledTriples[i];
-        const tripleTermId = createdTermIds[i] as Hex32;
-
-        setProgressMessage(
-          `Transaction ${i + 2}/${totalTxCount}: Voting ${vote?.toUpperCase()} for "${s.label} → ${p.label} → ${o.label}"`
-        );
-
-        let targetTermId: Hex32 = tripleTermId;
-        if (vote === "against") {
-          // v2 : contre = dépôt sur le counter_term
-          targetTermId = await getCounterTermId(tripleTermId);
-          if (!targetTermId) throw new Error("No counter term for triple");
-        }
-
-        // Dépôt (position) sur la term choisie
-        await depositTerm(targetTermId);
-      }
-
-      setProgressMessage("✅ All votes submitted!");
+      setProgressMessage("✅ Triples created successfully!");
+      
+      // Reset form
       setLabeledTriples([]);
       clearTriples();
       setSubject(null);
@@ -190,52 +122,32 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
 
   return (
     <div className="space-y-6">
-      {labeledTriples.map((item, i) => {
-        const triple = item.triple ?? [null, null, null];
-        const vote = item.vote ?? null;
-        const [s, p, o] = triple as [Atom, Atom, Atom];
+      {labeledTriples.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-sm font-medium">Triples to create:</h3>
+          <ul className="space-y-2">
+            {labeledTriples.map((triple, i) => {
+              const [s, p, o] = triple;
 
-        if (!s || !p || !o) return null;
+              if (!s || !p || !o) return null;
 
-        return (
-          <li key={i} className="flex flex-col gap-2 border-b pb-2">
-            <div className="flex justify-between items-center">
-              <span>
-                {s.label} → {p.label} → {o.label}
-              </span>
-              <button
-                onClick={() => handleRemoveTriple(i)}
-                className="text-red-500 hover:text-red-700 text-sm"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="flex gap-4 pl-4">
-              <label className="flex items-center gap-1 text-sm">
-                <input
-                  type="radio"
-                  name={`vote-${i}`}
-                  value="for"
-                  checked={vote === "for"}
-                  onChange={() => updateVote(i, "for")}
-                />
-                FOR
-              </label>
-              <label className="flex items-center gap-1 text-sm">
-                <input
-                  type="radio"
-                  name={`vote-${i}`}
-                  value="against"
-                  checked={vote === "against"}
-                  onChange={() => updateVote(i, "against")}
-                />
-                AGAINST
-              </label>
-            </div>
-          </li>
-        );
-      })}
+              return (
+                <li key={i} className="flex justify-between items-center border-b pb-2">
+                  <span className="text-sm">
+                    {s.label} → {p.label} → {o.label}
+                  </span>
+                  <button
+                    onClick={() => handleRemoveTriple(i)}
+                    className="text-red-500 hover:text-red-700 text-sm"
+                  >
+                    ✕
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
 
       <form
         className="space-y-4 p-4 bg-background rounded"
