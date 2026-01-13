@@ -71,31 +71,32 @@ function Feed() {
     () =>
       followings
         .map((u) => {
-          if (!u?.label) return null;
+          if (!u) return null;
           
           console.log("Feed - Processing user:", {
             term_id: u.term_id,
             label: u.label,
+            accounts: (u as any).accounts,
           });
           
-          // Le label contient l'adresse ou l'ENS du wallet suivi
-          const label = u.label;
+          // Extraire l'ID du wallet depuis accounts[0].id
+          const accounts = (u as any).accounts;
+          const walletId = accounts?.[0]?.id;
           
-          // Si c'est une adresse 0x, on normalise avec getAddress
-          if (label.startsWith("0x") && label.length === 42) {
-            try {
-              const addr = getAddress(label);
-              console.log("Feed - Using address:", label, "->", addr);
-              return addr;
-            } catch (err) {
-              console.log("Feed - Invalid address:", label, err);
-              return null;
-            }
+          if (!walletId) {
+            console.log("Feed - No wallet ID found for:", u.label);
+            return null;
           }
           
-          // Si c'est un ENS ou autre format, on le retourne tel quel
-          console.log("Feed - Using label (ENS or other):", label);
-          return label;
+          // Normaliser l'adresse avec getAddress
+          try {
+            const addr = getAddress(walletId);
+            console.log("Feed - Using wallet address:", walletId, "->", addr);
+            return addr;
+          } catch (err) {
+            console.log("Feed - Invalid wallet address:", walletId, err);
+            return null;
+          }
         })
         .filter((addr): addr is string => addr !== null && addr !== undefined),
     [followings]
