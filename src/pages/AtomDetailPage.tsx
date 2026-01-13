@@ -9,7 +9,7 @@ import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import Tags from "~src/components/ui/Tags"
 import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
-const HAS_TAG_PREDICATE_ID = "0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d"
+const HAS_TAG_PREDICATE_ID = "0x7ec36d201c842dc787b45cb5bb753bea4cf849be3908fb1b0a7d067c3c3cc1f5"
 
 const AtomDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
