@@ -1,0 +1,7 @@
+query GetAccountById($id: String!) {
+  account(id: $id) {
+    id
+    label
+    image
+  }
+}

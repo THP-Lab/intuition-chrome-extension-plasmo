@@ -1,0 +1,138 @@
+fragment EventDetails on events {
+  block_number
+  created_at
+  type
+  transaction_hash
+  atom_id
+  triple_id
+  deposit_id
+  redemption_id
+  ...DepositEventFragment
+  ...RedemptionEventFragment
+  atom {
+    ...AtomMetadata
+    term {
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        total_shares
+        position_count
+        positions {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+  }
+  triple {
+    ...TripleMetadata
+    term {
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        total_shares
+        position_count
+        positions {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+    counter_term {
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        total_shares
+        position_count
+        positions {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+  }
+}
+
+
+fragment EventDetailsSubscription on events {
+  block_number
+  created_at
+  type
+  transaction_hash
+  atom_id
+  triple_id
+  deposit_id
+  redemption_id
+  ...DepositEventFragment
+  ...RedemptionEventFragment
+  atom {
+    ...AtomMetadata
+    term_id
+    term {
+      id
+      total_market_cap
+      vaults {
+        position_count
+      }
+      
+      positions {
+        account_id
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
+  }
+  triple {
+    ...TripleMetadataSubscription
+    term_id
+    counter_term_id
+    term {
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        ...VaultDetailsWithFilteredPositions
+      }
+    }
+    counter_term {
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        ...VaultDetailsWithFilteredPositions
+      }
+    }
+  }
+}

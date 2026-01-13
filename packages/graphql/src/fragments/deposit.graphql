@@ -1,0 +1,12 @@
+fragment DepositEventFragment on events {
+  deposit {
+    term_id
+    curve_id
+    receiver {
+      id
+    }
+    sender {
+      id
+    }
+  }
+}

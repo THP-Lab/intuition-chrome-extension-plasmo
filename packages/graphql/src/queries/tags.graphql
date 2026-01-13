@@ -1,0 +1,118 @@
+query GetTags($subjectId: String!, $predicateId: String!) {
+  triples(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+      ]
+    }
+  ) {
+    ...TripleMetadata
+  }
+}
+
+query GetTagsCustom($where: triples_bool_exp) {
+  triples(where: $where) {
+    ...TripleMetadata
+  }
+}
+
+query GetListsTags(
+  $where: atoms_bool_exp
+  $triplesWhere: triples_bool_exp
+  $limit: Int
+  $offset: Int
+  $orderBy: [atoms_order_by!]
+) {
+  atoms_aggregate(where: $where) {
+    aggregate { count }
+  }
+  atoms(
+    where: $where
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
+    term_id
+    label
+    image
+    value {
+      thing { description }
+    }
+    as_object_triples_aggregate(where: $triplesWhere) {
+      aggregate { count }
+    }
+    as_object_triples(
+      where: $triplesWhere
+      limit: 10
+      order_by: { term: { total_market_cap: desc } }
+    ) {
+      subject { label image }
+    }
+  }
+}
+
+
+query GetTaggedObjects(
+  $objectId: String!,
+  $predicateId: String!,
+  $address: String
+) {
+  triples(
+    where: {
+      object_id:    { _eq: $objectId }
+      predicate_id: { _eq: $predicateId }
+    }
+  ) {
+    term_id
+    subject {
+      term_id
+      label
+      image
+      value {
+        thing {
+          name
+          description
+          url
+        }
+        person {
+          description
+        }
+      }
+      term {
+        vaults {
+          position_count
+        }
+      }
+    }
+    term {
+      id
+      vaults {
+        position_count
+      }
+      positions (where: { account_id: { _ilike: $address } }){
+        shares
+      }
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+
+    counter_term {
+      id
+      vaults {
+        position_count
+      }
+        positions (where: { account_id: { _ilike: $address } }){
+          shares
+        }
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+}
