@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "prebuild": "pnpm codegen:build",
-    "build": "tsup",
+    "build": "pnpm codegen:build && tsup",
     "dev": "concurrently \"pnpm codegen:watch\" \"tsup --watch\"",
     "publish-dry": "pnpm build && pnpm publish --dry-run --no-git-checks --ignore-scripts",
     "publish-next": "pnpm build && pnpm publish --tag next --no-git-checks --ignore-scripts",

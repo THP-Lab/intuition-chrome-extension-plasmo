@@ -5,11 +5,10 @@
   "description": "",
   "author": "THP-Lab.org",
   "scripts": {
-    "dev": "plasmo dev --hmr-host=0.0.0.0 --hmr-port=1815 --serve-host=0.0.0.0 --serve-port=1012",
-    "build": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3 ",
-    "build:firefox": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2 ",
-    "package": "plasmo package",
-    "graphql:build": " cd src/graphql && NODE_ENV=production graphql-codegen --config codegen.ts"
+    "prebuild": "pnpm --filter @warzieram/graphql build",
+    "build": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3",
+    "prebuild:firefox": "pnpm --filter @warzieram/graphql build",
+    "build:firefox": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2"
   },
   "dependencies": {
     "@0xintuition/1ui": "^0.3.6",
