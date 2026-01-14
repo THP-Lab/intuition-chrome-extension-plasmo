@@ -33,3 +33,5 @@ dist/
 
 # typescript
 .tsbuildinfo
+**/node_modules
+**/dist
