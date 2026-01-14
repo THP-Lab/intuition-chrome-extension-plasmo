@@ -4,13 +4,11 @@ import { useGetTriplesWithPositionsQuery, useGetEventsFeedQuery } from "@warzier
 import { getAddress } from "viem"
 import { useInfiniteScroll } from "~src/hooks/useInfiniteScroll";
 import { useWalletAddress } from "~src/hooks/useWalletAddress";
+import defaultImg from "~src/assets/User.jpg"
 
 // IDs du protocole Intuition pour les triples "follows"
 const I_SUBJECT_ID = "0x7ab197b346d386cd5926dbfeeb85dade42f113c7ed99ff2046a5123bb5cd016b"
 const FOLLOWS_PREDICATE_ID = "0xffd07650dc7ab341184362461ebf52144bf8bcac5a19ef714571de15f1319260"
-
-const default_img =
-  "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000";
 
 function shortAddress(addr?: string) {
   if (!addr) return "";
@@ -159,7 +157,7 @@ function Feed() {
             if (!e.triple) return null;
             const isDeposit = e.type === "Deposited";
             const sender = isDeposit ? e.deposit?.sender : e.redemption?.sender;
-            const senderImg = sender?.image ?? default_img;
+            const senderImg = sender?.image ?? defaultImg;
             const senderLabel = sender?.label;
             return (
               <div key={e.id} className="pt-2 pb-3 border-b">
