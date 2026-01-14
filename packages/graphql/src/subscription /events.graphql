@@ -1,11 +1,5 @@
 subscription Events($addresses: [String!]!, $limit: Int!) {
   events(
-    where: {
-      _or: [
-        { deposit: { created_at: { _eq: false } } }
-
-      ]
-    }
     order_by: [{ block_number: desc }] 
     limit: $limit) {
     ...EventDetailsSubscription

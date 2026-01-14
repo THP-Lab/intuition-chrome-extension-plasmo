@@ -4,9 +4,13 @@ fragment DepositEventFragment on events {
     curve_id
     receiver {
       id
+      label
+      image
     }
     sender {
       id
+      label
+      image
     }
   }
 }

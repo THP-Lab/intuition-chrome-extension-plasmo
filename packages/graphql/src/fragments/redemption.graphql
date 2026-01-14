@@ -3,5 +3,15 @@ fragment RedemptionEventFragment on events {
     term_id
     curve_id
     receiver_id
+    receiver {
+      id
+      label
+      image
+    }
+    sender {
+      id
+      label
+      image
+    }
   }
 }

@@ -12174,8 +12174,18 @@ export type DepositEventFragmentFragment = {
     __typename?: "deposits"
     term_id: string
     curve_id: any
-    receiver?: { __typename?: "accounts"; id: string } | null
-    sender?: { __typename?: "accounts"; id: string } | null
+    receiver?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
+    sender?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
 }
 
@@ -12477,14 +12487,36 @@ export type EventDetailsFragment = {
     __typename?: "deposits"
     term_id: string
     curve_id: any
-    receiver?: { __typename?: "accounts"; id: string } | null
-    sender?: { __typename?: "accounts"; id: string } | null
+    receiver?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
+    sender?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
   redemption?: {
     __typename?: "redemptions"
     term_id: string
     curve_id: any
     receiver_id: string
+    receiver?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
+    sender?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
 }
 
@@ -12719,14 +12751,36 @@ export type EventDetailsSubscriptionFragment = {
     __typename?: "deposits"
     term_id: string
     curve_id: any
-    receiver?: { __typename?: "accounts"; id: string } | null
-    sender?: { __typename?: "accounts"; id: string } | null
+    receiver?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
+    sender?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
   redemption?: {
     __typename?: "redemptions"
     term_id: string
     curve_id: any
     receiver_id: string
+    receiver?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
+    sender?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
 }
 
@@ -12998,6 +13052,18 @@ export type RedemptionEventFragmentFragment = {
     term_id: string
     curve_id: any
     receiver_id: string
+    receiver?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
+    sender?: {
+      __typename?: "accounts"
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
 }
 
@@ -16179,14 +16245,36 @@ export type GetEventsWithAggregatesQuery = {
         __typename?: "deposits"
         term_id: string
         curve_id: any
-        receiver?: { __typename?: "accounts"; id: string } | null
-        sender?: { __typename?: "accounts"; id: string } | null
+        receiver?: {
+          __typename?: "accounts"
+          id: string
+          label: string
+          image?: string | null
+        } | null
+        sender?: {
+          __typename?: "accounts"
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
       redemption?: {
         __typename?: "redemptions"
         term_id: string
         curve_id: any
         receiver_id: string
+        receiver?: {
+          __typename?: "accounts"
+          id: string
+          label: string
+          image?: string | null
+        } | null
+        sender?: {
+          __typename?: "accounts"
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }>
   }
@@ -22101,14 +22189,36 @@ export type EventsSubscription = {
       __typename?: "deposits"
       term_id: string
       curve_id: any
-      receiver?: { __typename?: "accounts"; id: string } | null
-      sender?: { __typename?: "accounts"; id: string } | null
+      receiver?: {
+        __typename?: "accounts"
+        id: string
+        label: string
+        image?: string | null
+      } | null
+      sender?: {
+        __typename?: "accounts"
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
     redemption?: {
       __typename?: "redemptions"
       term_id: string
       curve_id: any
       receiver_id: string
+      receiver?: {
+        __typename?: "accounts"
+        id: string
+        label: string
+        image?: string | null
+      } | null
+      sender?: {
+        __typename?: "accounts"
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   }>
 }
@@ -23887,7 +23997,9 @@ export const DepositEventFragmentFragmentDoc = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 },
@@ -23897,7 +24009,9 @@ export const DepositEventFragmentFragmentDoc = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -23930,7 +24044,31 @@ export const RedemptionEventFragmentFragmentDoc = {
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "term_id" } },
                 { kind: "Field", name: { kind: "Name", value: "curve_id" } },
-                { kind: "Field", name: { kind: "Name", value: "receiver_id" } }
+                { kind: "Field", name: { kind: "Name", value: "receiver_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "receiver" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "sender" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                }
               ]
             }
           }
@@ -25216,7 +25354,9 @@ export const EventDetailsFragmentDoc = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 },
@@ -25226,7 +25366,9 @@ export const EventDetailsFragmentDoc = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -25330,7 +25472,31 @@ export const EventDetailsFragmentDoc = {
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "term_id" } },
                 { kind: "Field", name: { kind: "Name", value: "curve_id" } },
-                { kind: "Field", name: { kind: "Name", value: "receiver_id" } }
+                { kind: "Field", name: { kind: "Name", value: "receiver_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "receiver" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "sender" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                }
               ]
             }
           }
@@ -26562,7 +26728,9 @@ export const EventDetailsSubscriptionFragmentDoc = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 },
@@ -26572,7 +26740,9 @@ export const EventDetailsSubscriptionFragmentDoc = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -26643,7 +26813,31 @@ export const EventDetailsSubscriptionFragmentDoc = {
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "term_id" } },
                 { kind: "Field", name: { kind: "Name", value: "curve_id" } },
-                { kind: "Field", name: { kind: "Name", value: "receiver_id" } }
+                { kind: "Field", name: { kind: "Name", value: "receiver_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "receiver" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "sender" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                }
               ]
             }
           }
@@ -40352,7 +40546,9 @@ export const GetEventsWithAggregatesDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 },
@@ -40362,7 +40558,9 @@ export const GetEventsWithAggregatesDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -40866,7 +41064,31 @@ export const GetEventsWithAggregatesDocument = {
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "term_id" } },
                 { kind: "Field", name: { kind: "Name", value: "curve_id" } },
-                { kind: "Field", name: { kind: "Name", value: "receiver_id" } }
+                { kind: "Field", name: { kind: "Name", value: "receiver_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "receiver" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "sender" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                }
               ]
             }
           }
@@ -63482,61 +63704,6 @@ export const EventsDocument = {
             arguments: [
               {
                 kind: "Argument",
-                name: { kind: "Name", value: "where" },
-                value: {
-                  kind: "ObjectValue",
-                  fields: [
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "_or" },
-                      value: {
-                        kind: "ListValue",
-                        values: [
-                          {
-                            kind: "ObjectValue",
-                            fields: [
-                              {
-                                kind: "ObjectField",
-                                name: { kind: "Name", value: "deposit" },
-                                value: {
-                                  kind: "ObjectValue",
-                                  fields: [
-                                    {
-                                      kind: "ObjectField",
-                                      name: {
-                                        kind: "Name",
-                                        value: "created_at"
-                                      },
-                                      value: {
-                                        kind: "ObjectValue",
-                                        fields: [
-                                          {
-                                            kind: "ObjectField",
-                                            name: {
-                                              kind: "Name",
-                                              value: "_eq"
-                                            },
-                                            value: {
-                                              kind: "BooleanValue",
-                                              value: false
-                                            }
-                                          }
-                                        ]
-                                      }
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                kind: "Argument",
                 name: { kind: "Name", value: "order_by" },
                 value: {
                   kind: "ListValue",
@@ -63703,7 +63870,9 @@ export const EventsDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 },
@@ -63713,7 +63882,9 @@ export const EventsDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -64062,7 +64233,31 @@ export const EventsDocument = {
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "term_id" } },
                 { kind: "Field", name: { kind: "Name", value: "curve_id" } },
-                { kind: "Field", name: { kind: "Name", value: "receiver_id" } }
+                { kind: "Field", name: { kind: "Name", value: "receiver_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "receiver" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "sender" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                }
               ]
             }
           }
@@ -66141,7 +66336,9 @@ export const DepositEventFragment = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 },
@@ -66151,7 +66348,9 @@ export const DepositEventFragment = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -66184,7 +66383,31 @@ export const RedemptionEventFragment = {
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "term_id" } },
                 { kind: "Field", name: { kind: "Name", value: "curve_id" } },
-                { kind: "Field", name: { kind: "Name", value: "receiver_id" } }
+                { kind: "Field", name: { kind: "Name", value: "receiver_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "receiver" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "sender" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                }
               ]
             }
           }
@@ -67470,7 +67693,9 @@ export const EventDetails = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 },
@@ -67480,7 +67705,9 @@ export const EventDetails = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -67584,7 +67811,31 @@ export const EventDetails = {
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "term_id" } },
                 { kind: "Field", name: { kind: "Name", value: "curve_id" } },
-                { kind: "Field", name: { kind: "Name", value: "receiver_id" } }
+                { kind: "Field", name: { kind: "Name", value: "receiver_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "receiver" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "sender" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                }
               ]
             }
           }
@@ -68816,7 +69067,9 @@ export const EventDetailsSubscription = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 },
@@ -68826,7 +69079,9 @@ export const EventDetailsSubscription = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -68897,7 +69152,31 @@ export const EventDetailsSubscription = {
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "term_id" } },
                 { kind: "Field", name: { kind: "Name", value: "curve_id" } },
-                { kind: "Field", name: { kind: "Name", value: "receiver_id" } }
+                { kind: "Field", name: { kind: "Name", value: "receiver_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "receiver" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "sender" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                }
               ]
             }
           }
@@ -81298,7 +81577,9 @@ export const GetEventsWithAggregates = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 },
@@ -81308,7 +81589,9 @@ export const GetEventsWithAggregates = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -81812,7 +82095,31 @@ export const GetEventsWithAggregates = {
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "term_id" } },
                 { kind: "Field", name: { kind: "Name", value: "curve_id" } },
-                { kind: "Field", name: { kind: "Name", value: "receiver_id" } }
+                { kind: "Field", name: { kind: "Name", value: "receiver_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "receiver" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "sender" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                }
               ]
             }
           }
@@ -101648,61 +101955,6 @@ export const Events = {
             arguments: [
               {
                 kind: "Argument",
-                name: { kind: "Name", value: "where" },
-                value: {
-                  kind: "ObjectValue",
-                  fields: [
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "_or" },
-                      value: {
-                        kind: "ListValue",
-                        values: [
-                          {
-                            kind: "ObjectValue",
-                            fields: [
-                              {
-                                kind: "ObjectField",
-                                name: { kind: "Name", value: "deposit" },
-                                value: {
-                                  kind: "ObjectValue",
-                                  fields: [
-                                    {
-                                      kind: "ObjectField",
-                                      name: {
-                                        kind: "Name",
-                                        value: "created_at"
-                                      },
-                                      value: {
-                                        kind: "ObjectValue",
-                                        fields: [
-                                          {
-                                            kind: "ObjectField",
-                                            name: {
-                                              kind: "Name",
-                                              value: "_eq"
-                                            },
-                                            value: {
-                                              kind: "BooleanValue",
-                                              value: false
-                                            }
-                                          }
-                                        ]
-                                      }
-                                    }
-                                  ]
-                                }
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                kind: "Argument",
                 name: { kind: "Name", value: "order_by" },
                 value: {
                   kind: "ListValue",
@@ -101869,7 +102121,9 @@ export const Events = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 },
@@ -101879,7 +102133,9 @@ export const Events = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } }
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
                     ]
                   }
                 }
@@ -102228,7 +102484,31 @@ export const Events = {
               selections: [
                 { kind: "Field", name: { kind: "Name", value: "term_id" } },
                 { kind: "Field", name: { kind: "Name", value: "curve_id" } },
-                { kind: "Field", name: { kind: "Name", value: "receiver_id" } }
+                { kind: "Field", name: { kind: "Name", value: "receiver_id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "receiver" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "sender" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "label" } },
+                      { kind: "Field", name: { kind: "Name", value: "image" } }
+                    ]
+                  }
+                }
               ]
             }
           }

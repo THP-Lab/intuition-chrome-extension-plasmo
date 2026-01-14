@@ -20,6 +20,24 @@ const RecentActivity: React.FC = () => {
     }
   })
 
+  console.log("RecentActivity - Raw subscription data:", data)
+  console.log("RecentActivity - Loading:", loading)
+  console.log("RecentActivity - Error:", error)
+  
+  if (error) {
+    console.error("RecentActivity - Detailed error:", {
+      message: error.message,
+      graphQLErrors: error.graphQLErrors,
+      networkError: error.networkError,
+      extraInfo: error.extraInfo
+    })
+  }
+  
+  if (data?.events) {
+    console.log("RecentActivity - Events count:", data.events.length)
+    console.log("RecentActivity - First event:", JSON.stringify(data.events[0], null, 2))
+  }
+
   const shortAddress = (addr?: string) =>
     addr ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : ""
 
@@ -55,9 +73,13 @@ const RecentActivity: React.FC = () => {
 
         // ------ DEPOSIT ATOM ------
         if (isDeposit && e.deposit && e.atom) {
-          const senderImg = e.deposit.sender_assets_after_total_fees.image
-          const senderLabel = e.deposit?.sender?.id
-          console.log("TRIPLE LIVE FEED ", e.atom)
+          const senderImg = e.deposit?.sender?.image
+          const senderLabel = e.deposit?.sender?.label || e.deposit?.sender?.id
+          const senderId = e.deposit?.sender?.id
+          console.log("ATOM DEPOSIT EVENT:", {
+            sender: e.deposit?.sender,
+            atom: e.atom
+          })
 
           return (
             <div key={idx} className="pt-2 pb-3 border-b">
@@ -67,8 +89,7 @@ const RecentActivity: React.FC = () => {
                   alt={senderLabel}
                   className="w-6 h-6 rounded-full"
                 />
-                <span className="text-sm font-medium">{renderSenderLink(senderLabel)}<strong> deposit</strong> :</span>
-                
+                <span className="text-sm font-medium">{renderSenderLink(senderId || senderLabel || "")}<strong> deposit</strong> :</span>
               </p>
               <AtomCard atom={e.atom} />
             </div>
@@ -77,9 +98,13 @@ const RecentActivity: React.FC = () => {
 
         // ------ DEPOSIT TRIPLE ------
         if (isDeposit && e.deposit && e.triple) {
-          const senderImg = e.deposit.sender_assets_after_total_fees.image
-          const senderLabel = e.deposit?.sender?.id
-          console.log("TRIPLE LIVE FEED ", e.triple)
+          const senderImg = e.deposit?.sender?.image
+          const senderLabel = e.deposit?.sender?.label || e.deposit?.sender?.id
+          const senderId = e.deposit?.sender?.id
+          console.log("TRIPLE DEPOSIT EVENT:", {
+            sender: e.deposit?.sender,
+            triple: e.triple
+          })
 
           return (
             <div key={idx} className="pt-2 pb-2 border-b">
@@ -89,7 +114,7 @@ const RecentActivity: React.FC = () => {
                   alt={senderLabel}
                   className="w-6 h-6 rounded-full"
                 />
-                <span className="text-sm font-medium">{renderSenderLink(senderLabel)}<strong> deposit</strong> :</span>
+                <span className="text-sm font-medium">{renderSenderLink(senderId || senderLabel || "")}<strong> deposit</strong> :</span>
               </p>
                 <ClaimRowLite claim={e.triple} />
               
@@ -97,6 +122,7 @@ const RecentActivity: React.FC = () => {
           )
         }
 
+        console.log("Unhandled event:", e)
         return null
       })}
     </div>
