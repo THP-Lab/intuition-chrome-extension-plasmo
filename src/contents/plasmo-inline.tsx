@@ -180,9 +180,9 @@ const walletAddress = useWalletAddress();
     loading
   });
   
-  const IS_ID = "0x2af261bce70c2fc3a1abf882e3e89b23066fcd150bfda27fab69f9f55ed2d9d0"
-  const SCAM_ID = "0x1e0264e4bcb4a3d9a853dd509fc3165f08b2fe324ca6208596ae077922936793"
-  const TRUSTWORTHY_ID = "0xdec680ce2024ff9e4d6fdf2064fc2856af9efe8dc11178a1a0a0a304b1bb6e38"
+  const IS_ID = "0xdd4320a03fcd85ed6ac29f3171208f05418324d6943f1fac5d3c23cc1ce10eb3"
+  const SCAM_ID = "0xb1b69b106ec87313af64debf2a0f48718f40cb08a9ed73eb1e5dcbebb2d63d2e"
+  const TRUSTWORTHY_ID = "0xc8328e91eecabf6bdfc9416b544a7aa2de98e74fa62a84863085ce6d893609b3"
   const hasScam = allClaims.some(
     c => c.predicate?.term_id == IS_ID && c.object?.term_id == SCAM_ID
   )
