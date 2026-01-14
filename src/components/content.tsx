@@ -39,7 +39,7 @@ import ProfileLayout from "./profile/ProfileLayout"
 import "../styles/global.css"
 import umamiScriptUrl from "url:../../assets/umami.js"
 
-const API_URL = "https://prod.base.intuition-api.com/v1/graphql"
+const API_URL = "https://testnet.intuition.sh/v1/graphql"
 configureClient({ apiUrl: API_URL })
 
 const queryClient = new QueryClient()

@@ -1,49 +1,60 @@
+// src/lib/metamask.ts
 import createMetaMaskProvider from "metamask-extension-provider"
 
+let providerSingleton: any | null = null
+let listenersInstalled = false
+
 export const getMetaProvider = async () => {
-  const provider = createMetaMaskProvider()
-  // provider
-  //   .on("accountsChanged", handleAccountsChanged)
-  return provider
+  if (!providerSingleton) providerSingleton = createMetaMaskProvider()
+  return providerSingleton
+}
+
+function setStoredAccount(addr: string) {
+  const normalized = addr ? addr.toLowerCase() : ""
+  chrome.storage.sync.set({ "metamask-account": normalized })
+  // optionnel: message refresh
+  chrome.runtime.sendMessage({ action: "REFRESH_CLAIMS" })
+}
+
+export const setupMetaMaskListeners = async () => {
+  const provider = await getMetaProvider()
+  if (listenersInstalled || !provider?.on) return
+  listenersInstalled = true
+
+  provider.on("accountsChanged", (accounts: string[]) => {
+    const next = (accounts?.[0] ?? "").toLowerCase()
+    chrome.storage.sync.set({ "metamask-account": next })
+    chrome.runtime.sendMessage({ action: "REFRESH_CLAIMS" })
+  })
 }
 
 export const connectWallet = async () => {
-  try {
-    const provider = await getMetaProvider()
-    console.log(provider)
-    const accounts = await provider.request({
-      method: "eth_requestAccounts"
-    })
-    console.log("accounts", accounts)
-    return accounts[0]
-  } catch (error) {
-    console.error("Error connecting to wallet", error)
-    throw error
-  }
+  const provider = await getMetaProvider()
+  const accounts = (await provider.request({ method: "eth_requestAccounts" })) as string[]
+  const account = (accounts?.[0] ?? "").toLowerCase()
+
+  chrome.storage.sync.set({ "metamask-account": account })
+  await setupMetaMaskListeners()
+  return account
 }
 
+
+
 export const disconnectWallet = async () => {
+  // ✅ reset état app
+  setStoredAccount("")
+
+  // (optionnel) tenter revokePermissions, mais ne pas en dépendre
   try {
     const provider = await getMetaProvider()
-    console.log(provider)
-    const accounts = await provider.request({
+    await provider.request({
       method: "wallet_revokePermissions",
       params: [{ eth_accounts: {} }]
     })
-    return accounts[0]
-  } catch (error) {
-    console.error("Error connecting to wallet", error)
-    throw error
+  } catch (e) {
+    // ignore: pas supporté / pas autorisé dans ce contexte
   }
 }
 
-// let currentAccount: any = null
-// // eth_accounts always returns an array.
-// function handleAccountsChanged(accounts: any) {
-//   if (accounts.length === 0) {
-//     // MetaMask is locked or the user has not connected any accounts.
-//     console.log("Please connect to MetaMask.")
-//   } else if (accounts[0] !== currentAccount) {
-//     currentAccount = accounts[0]
-//   }
-// }
+
+

@@ -1,12 +1,14 @@
 import React, { useState, useMemo, useEffect } from "react";
 import ClaimRowLite from "~src/components/ui/ClaimRowLite";
-import { useStorage } from "@plasmohq/storage/dist/hook";
-import { useGetFollowingsFromAddressQuery, useGetEventsFeedQuery } from "@warzieram/graphql";
-import { getAddress } from "ethers"
+import { useGetTriplesWithPositionsQuery, useGetEventsFeedQuery } from "@warzieram/graphql";
+import { getAddress } from "viem"
 import { useInfiniteScroll } from "~src/hooks/useInfiniteScroll";
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
+import defaultImg from "~src/assets/User.jpg"
 
-const default_img =
-  "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000";
+// IDs du protocole Intuition pour les triples "follows"
+const I_SUBJECT_ID = "0x7ab197b346d386cd5926dbfeeb85dade42f113c7ed99ff2046a5123bb5cd016b"
+const FOLLOWS_PREDICATE_ID = "0xffd07650dc7ab341184362461ebf52144bf8bcac5a19ef714571de15f1319260"
 
 function shortAddress(addr?: string) {
   if (!addr) return "";
@@ -15,7 +17,7 @@ function shortAddress(addr?: string) {
 }
 
 function Feed() {
-  const [walletAddress] = useStorage<string>("metamask-account", "");
+  const walletAddress = useWalletAddress();
   const [checksumAddress, setChecksumAddress] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -35,25 +37,70 @@ function Feed() {
     }
   }, [walletAddress]);
 
-  const { data, loading, error } = useGetFollowingsFromAddressQuery({
-    variables: { address: checksumAddress! },
-    skip: !checksumAddress,
+  // Récupérer les triples ("I" follows <object>) pour obtenir les followings
+  const { data, loading, error } = useGetTriplesWithPositionsQuery({
+    variables: {
+      where: {
+        _and: [
+          { subject_id: { _eq: I_SUBJECT_ID } },
+          { predicate_id: { _eq: FOLLOWS_PREDICATE_ID } }
+        ]
+      },
+      address: walletAddress || ""
+    },
+    skip: !walletAddress
   });
 
-  const followings = data?.following ?? [];
+  console.log("Feed - Raw triples data:", data);
+  console.log("Feed - Loading:", loading);
+  console.log("Feed - Error:", error);
+  
+  // Log détaillé de la structure complète d'un triple
+  if (data?.triples?.[0]) {
+    console.log("Feed - Full triple structure:", JSON.stringify(data.triples[0], null, 2));
+  }
+
+  // Extraire les addresses/ENS des objets (personnes suivies)
+  const followings = data?.triples?.map(triple => triple.object).filter(Boolean) ?? [];
+  console.log("Feed - Followings extracted:", followings);
+  console.log("Feed - First following structure:", followings[0]);
+  
   const addresses = useMemo(
     () =>
       followings
         .map((u) => {
+          if (!u) return null;
+          
+          console.log("Feed - Processing user:", {
+            term_id: u.term_id,
+            label: u.label,
+            accounts: (u as any).accounts,
+          });
+          
+          // Extraire l'ID du wallet depuis accounts[0].id
+          const accounts = (u as any).accounts;
+          const walletId = accounts?.[0]?.id;
+          
+          if (!walletId) {
+            console.log("Feed - No wallet ID found for:", u.label);
+            return null;
+          }
+          
+          // Normaliser l'adresse avec getAddress
           try {
-            return getAddress(u.id);
-          } catch {
+            const addr = getAddress(walletId);
+            console.log("Feed - Using wallet address:", walletId, "->", addr);
+            return addr;
+          } catch (err) {
+            console.log("Feed - Invalid wallet address:", walletId, err);
             return null;
           }
         })
-        .filter((addr): addr is string => !!addr),
+        .filter((addr): addr is string => addr !== null && addr !== undefined),
     [followings]
   );
+
+  console.log("Feed - Final addresses array:", addresses);
 
   const {
     data: eventsData,
@@ -69,15 +116,23 @@ function Feed() {
     },
   });
 
+  console.log("Feed - Events data:", eventsData);
+  console.log("Feed - Events loading:", eventsLoading);
+  console.log("Feed - Events error:", eventsError);
+  console.log("Feed - Events skip:", addresses.length === 0);
+
   // Ajout/concaténation des events 
   useEffect(() => {
     if (eventsData?.events) {
+      console.log("Feed - Events received:", eventsData.events.length, "events");
       setItems((prev) =>
         offset === 0 ? eventsData.events : [...prev, ...eventsData.events]
       );
       setHasMore(eventsData.events.length === PAGE_SIZE);
     }
   }, [eventsData, offset]);
+
+  console.log("Feed - Final items count:", items.length);
 
   useInfiniteScroll({
     loading: eventsLoading,
@@ -102,7 +157,7 @@ function Feed() {
             if (!e.triple) return null;
             const isDeposit = e.type === "Deposited";
             const sender = isDeposit ? e.deposit?.sender : e.redemption?.sender;
-            const senderImg = sender?.image ?? default_img;
+            const senderImg = sender?.image ?? defaultImg;
             const senderLabel = sender?.label;
             return (
               <div key={e.id} className="pt-2 pb-3 border-b">

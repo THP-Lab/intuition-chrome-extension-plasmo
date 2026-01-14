@@ -1,10 +1,10 @@
 import React from "react";
-import { useStorage } from "@plasmohq/storage/hook";
 import ClaimRowLite from "../ui/ClaimRowLite"
 import { useGetTriplesByCreatorQuery } from "@warzieram/graphql";
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
 const CreatedClaimsTab = () => {
-  const [walletAddress] = useStorage<string>("metamask-account", "")
+  const walletAddress = useWalletAddress();
 
   const { data,loading, error } = useGetTriplesByCreatorQuery(
     {variables: { address: walletAddress }},

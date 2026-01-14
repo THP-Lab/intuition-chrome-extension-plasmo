@@ -4,13 +4,13 @@ import { apolloClient } from "../lib/apolo-client"
 import type { PlasmoGetStyle, PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React, { useEffect, useRef, useState } from "react"
 import IntuitionButtonIcon  from "~src/components/icons/IntuitionButtonIcon"
-import { useStorage } from "@plasmohq/storage/dist/hook"
 import { useGetTriplesByUriQuery } from "@warzieram/graphql"
 import { normalizeUrl, buildUriRegex } from "../lib/url"
 import WarningPopup from "~/src/components/WarningPopup"
 import ReportDropdown from "~src/components/ReportDropdown"
 import styleText from "data-text:../styles/global.css"
 import IntuitionIconPlus from "~src/components/icons/intuition_icon_plus"
+import { useWalletAddress } from "~src/hooks/useWalletAddress"
 
 const queryClient = new QueryClient()
 
@@ -44,27 +44,64 @@ function PlasmoInline() {
   const [showDropdown, setShowDropdown] = useState(false)
   const hoverTimeout = useRef<NodeJS.Timeout | null>(null)
 
-  const [walletAddress] = useStorage<string>("metamask-account", "")
+const walletAddress = useWalletAddress();
+
+  
   const uri = normalizeUrl(window.location.href)
   const uriRegex = buildUriRegex(uri)
 
-  const { data, loading, refetch } = useGetTriplesByUriQuery({ variables: {
+
+  const { data, loading, refetch } = useGetTriplesByUriQuery({
+    variables: {
+      uriRegex,
+      address: walletAddress ?? "" 
+    },
+    skip: !walletAddress
+  })
+
+  console.log("🟡 [PlasmoInline] Render state:", {
+    loading,
+    hasData: !!data,
+    atomsCount: data?.atoms?.length ?? 0,
+    uri,
     uriRegex,
-    address: walletAddress 
-  }})
+    walletAddress
+  });
 
   const inject = () => {
+    console.log("📦 [PlasmoInline] inject() called - State:", {
+      loading,
+      hasData: !!data,
+      atomsCount: data?.atoms?.length ?? 0,
+      atoms: data?.atoms,
+      uri
+    });
+    
     if (!loading && data) {
+      const payload = { uri, data };
+      console.log("💾 [PlasmoInline] Mise à jour du storage avec:", payload);
+      
       chrome.storage.local.set(
-        {
-          claimByUriResult: { uri, data }
-        },
+        { claimByUriResult: payload },
         () => {
-          console.log("✅ Data injected from GraphQL", data);
+          console.log("✅ [PlasmoInline] Storage mis à jour avec succès");
+          // Vérifier que c'est bien enregistré
+          chrome.storage.local.get("claimByUriResult", (items) => {
+            console.log("🔍 [PlasmoInline] Vérification storage:", items);
+          });
         }
       );
+    } else {
+      console.log("⏳ [PlasmoInline] inject() skipped:", {
+        loading,
+        hasData: !!data
+      });
     }
   };
+
+  useEffect(() => {
+  if (walletAddress) refetch()
+}, [walletAddress, refetch])
 
   useEffect(() => {
     setAutoVisible(true)
@@ -87,14 +124,31 @@ function PlasmoInline() {
   useEffect(() => {
     const listener = (msg: any) => {
       if (msg.action === "REFRESH_CLAIMS") {
-        console.log("[PlasmoInline] → REFRESH_CLAIMS reçu");
-        refetch()
-          .then(() => {
-            inject();
-          })
-          .catch((e) =>
-            console.error("[PlasmoInline] refetch() error:", e)
-          );
+        console.log("🔄 [PlasmoInline] REFRESH_CLAIMS reçu");
+        console.log("📊 [PlasmoInline] État avant refetch:", {
+          loading,
+          hasData: !!data,
+          atomsCount: data?.atoms?.length ?? 0,
+          uri,
+          walletAddress
+        });
+        
+        // Attendre 2 secondes pour l'indexation GraphQL
+        setTimeout(() => {
+          console.log("🚀 [PlasmoInline] Lancement du refetch...");
+          refetch()
+            .then((result) => {
+              console.log("✅ [PlasmoInline] Refetch terminé:", {
+                hasData: !!result.data,
+                atomsCount: result.data?.atoms?.length ?? 0,
+                atoms: result.data?.atoms
+              });
+              inject();
+            })
+            .catch((e) => {
+              console.error("❌ [PlasmoInline] Erreur refetch:", e);
+            });
+        }, 2000);
       }
     };
 
@@ -104,16 +158,31 @@ function PlasmoInline() {
     };
   }, [refetch, loading, data, uri]);
 
-  useEffect(inject, [loading, data, uri]);
+  useEffect(() => {
+    console.log("🔄 [PlasmoInline] useEffect[inject] triggered:", {
+      loading,
+      hasData: !!data,
+      atomsCount: data?.atoms?.length ?? 0,
+      uri
+    });
+    inject();
+  }, [loading, data, uri]);
 
   const atoms = data?.atoms ?? []
   const allClaims = atoms.flatMap(atom => [
     ...(atom.as_object_triples_aggregate?.nodes ?? []),
     ...(atom.as_subject_triples_aggregate?.nodes ?? [])
   ])
-  const IS_ID = 877
-  const SCAM_ID = 1775
-  const TRUSTWORTHY_ID = 14
+
+  console.log("📊 [PlasmoInline] Computed data:", {
+    atomsCount: atoms.length,
+    allClaimsCount: allClaims.length,
+    loading
+  });
+  
+  const IS_ID = "0xdd4320a03fcd85ed6ac29f3171208f05418324d6943f1fac5d3c23cc1ce10eb3"
+  const SCAM_ID = "0xb1b69b106ec87313af64debf2a0f48718f40cb08a9ed73eb1e5dcbebb2d63d2e"
+  const TRUSTWORTHY_ID = "0xc8328e91eecabf6bdfc9416b544a7aa2de98e74fa62a84863085ce6d893609b3"
   const hasScam = allClaims.some(
     c => c.predicate?.term_id == IS_ID && c.object?.term_id == SCAM_ID
   )
@@ -233,7 +302,6 @@ function PlasmoInline() {
               </div>
             )}
             <IntuitionButtonIcon
-              onSearch={() => {}}
               size={iconSize}
               loading={loading}
               highlightColor={highlightColor}

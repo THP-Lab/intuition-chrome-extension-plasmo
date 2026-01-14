@@ -2,19 +2,21 @@ import React, {
   useState,
   useImperativeHandle,
   forwardRef,
-  ForwardRefRenderFunction,
+  type ForwardRefRenderFunction,
 } from "react"
 import AtomAutocompleteInput from './AtomAutocompleteInput'
 import { useCreateTriples } from '~src/hooks/useCreateTriples'
-import { useCreatePosition } from '~src/hooks/useCreatePosition'
+import { useDepositWithRefresh } from '~src/hooks/useDepositWithRefresh'
 import { getClients } from "~src/lib/viemClient"
-import { Multivault } from "@0xintuition/protocol"
+import { MultiVaultAbi } from "@0xintuition/protocol"
+import { getContract } from "viem"
+import { MULTIVAULT_ADDRESS } from "~src/lib/config"
 import { umami } from "~src/lib/umami"
 
 interface Atom {
-  id: string
-  label: string
-  term_id: string
+  id?: string
+  label?: string
+  term_id?: string
 }
 
 type TripleWithVote = {
@@ -35,7 +37,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [progressMessage, setProgressMessage] = useState<string | null>(null)
   const [labeledTriples, setLabeledTriples] = useState<TripleWithVote[]>([])
-  const { createPosition } = useCreatePosition()
+  const { depositTerm } = useDepositWithRefresh()
 
   const updateVote = (index: number, newVote: "for" | "against") => {
     setLabeledTriples(prev =>
@@ -82,11 +84,16 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
       return
     }
 
+    if (!subject.term_id || !predicate.term_id || !object.term_id) {
+      setErrorMessage("All atoms must have valid term IDs.")
+      return
+    }
+
     try {
       addTriple([
-        BigInt(subject.term_id),
-        BigInt(predicate.term_id),
-        BigInt(object.term_id)
+        subject.term_id as `0x${string}`,
+        predicate.term_id as `0x${string}`,
+        object.term_id as `0x${string}`
       ])
       setLabeledTriples((prev) => [
         ...prev,
@@ -116,24 +123,28 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
       const totalTxCount = 1 + labeledTriples.length
 
       setProgressMessage(`Transaction 1/${totalTxCount}: Creating triples...`)
-      const { termIds: createdVaultIds } = await createTriples()
+      const { termIds: createdTermIds } = await createTriples()
 
       umami("triples_created", {
-        termIds: createdVaultIds.join(",")
+        termIds: createdTermIds.join(",")
       }).catch(console.error)
 
-      if (!createdVaultIds || createdVaultIds.length !== labeledTriples.length) {
+      if (!createdTermIds || createdTermIds.length !== labeledTriples.length) {
         throw new Error("Mismatch between created triples and local list")
       }
 
       setProgressMessage("Triples created. Preparing to vote...")
 
       const { walletClient, publicClient } = await getClients()
-      const multivault = new Multivault({ walletClient, publicClient })
+      const multivault = getContract({
+        address: MULTIVAULT_ADDRESS,
+        abi: MultiVaultAbi,
+        client: { public: publicClient, wallet: walletClient }
+      })
 
-      for (let i = 0; i < createdVaultIds.length; i++) {
+      for (let i = 0; i < createdTermIds.length; i++) {
         const { triple: [s, p, o], vote } = labeledTriples[i]
-        const termId = createdVaultIds[i]
+        const termId = createdTermIds[i]
 
         setProgressMessage(
           `Transaction ${i + 2}/${totalTxCount}: Voting ${vote?.toUpperCase()} for "${s.label} → ${p.label} → ${o.label}"`
@@ -143,12 +154,12 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
         let targetVaultId = termId
 
         if (vote === "against") {
-          const counterId = await multivault.getCounterIdFromTriple(termId)
+          const counterId = await multivault.read.getCounterIdFromTripleId([termId])
           if (!counterId) throw new Error("No counter vault for triple")
           targetVaultId = counterId
         }
 
-        await createPosition({ vaultId: targetVaultId })
+        await depositTerm(targetVaultId)
       }
 
       setProgressMessage("✅ All votes submitted!")
@@ -162,7 +173,7 @@ const TripleForm: ForwardRefRenderFunction<TripleFormRef, {}> = (_, ref) => {
     }
   }
 
-          console.log(error)
+  if (error) console.log(error)
 
   return (
     <div className="space-y-6">

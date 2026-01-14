@@ -33,7 +33,7 @@ export function usePageMetadata(): PageMetadata {
               title: document.title,
               description: getMeta("description") || "",
               favicon: [...document.querySelectorAll("link[rel~='icon']")]
-                .map((el) => el.href)[0] || ""
+                .map((el) => (el as HTMLLinkElement).href)[0] || ""
             }
           }
         },

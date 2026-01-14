@@ -2,24 +2,24 @@ import React, {useMemo} from 'react'
 import { Link } from "react-router-dom"
 import { useParams } from 'react-router-dom'
 import { useGetTaggedObjectsQuery } from '@warzieram/graphql'
-import { useStorage } from '@plasmohq/storage/hook'
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 import { ImageWithFallback } from '../components/ui/ImageWithFallback'
 import { Fingerprint } from 'lucide-react'
 import VoteButtons from '~src/components/VoteButtons'
 import type { VoteChoice } from '~src/components/VoteButtons'
 
-const HASHTAG_PREDICATE_ID = 4
+const HASHTAG_PREDICATE_ID = "0x7ec36d201c842dc787b45cb5bb753bea4cf849be3908fb1b0a7d067c3c3cc1f5"
 
 const SubjectTag: React.FC = () => {
   const { tagId } = useParams<{ tagId: string }>()
-  const [walletAddress] = useStorage<string>('metamask-account', "")
+  const address = useWalletAddress();
 
 
   const { data, loading, error } = useGetTaggedObjectsQuery({
     variables: {
       objectId: tagId!,
       predicateId: HASHTAG_PREDICATE_ID,
-      address: walletAddress!
+      address: address!
     }
   })
 
@@ -44,8 +44,10 @@ const SubjectTag: React.FC = () => {
   }, [triples])
 
   if (loading) return <p>Loading…</p>
-  if (error) return <p className="text-red-600">Error loading</p> 
-  if (error) return console.log("VOICI L'ERREUR :", error)
+  if (error) {
+    console.log("VOICI L'ERREUR :", error)
+    return <p className="text-red-600">Error loading</p>
+  }
 
 
   return (

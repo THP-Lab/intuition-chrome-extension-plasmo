@@ -82,11 +82,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
     const userCounterStake = Number(triple?.counter_positions?.[0]?.shares ?? triple?.counter_term?.positions?.[0]?.shares ?? 0)
 
     const initialVote: VoteChoice | undefined =
-      userStake > 0
-        ? "for"
-        : userCounterStake > 0
-          ? "against"
-          : undefined
+      userStake > 0 ? "for" : userCounterStake > 0 ? "against" : undefined
 
     return (
       <div
@@ -105,7 +101,7 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
             <p className="mt-2 text-xs text-gray-500">
             Created by{' '}
             <a
-              href={`https://portal.intuition.systems/app/atom/${creator.id}?tab=portfolio`}
+              href={`https://beta.portal.intuition.systems/explore/atom/${creator.id}`}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline"
@@ -119,8 +115,8 @@ export const ClaimRowLite = ({ claim }: ClaimRowLiteProps) => {
           {vaultId && counterVaultId ? (
             <div className="flex">
               <VoteButtons
-                vaultId={BigInt(vaultId)}
-                counterVaultId={BigInt(counterVaultId)}
+                vaultId={vaultId as `0x${string}`}
+                counterVaultId={counterVaultId as `0x${string}`}
                 numPositionsFor={numPositionsFor || 0}
                 numPositionsAgainst={numPositionsAgainst || 0}
                 initialVote={initialVote}

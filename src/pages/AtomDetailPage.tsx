@@ -2,28 +2,27 @@ import { useGetAtomQuery, useGetTriplesByAtomQuery } from "@warzieram/graphql"
 import React from "react"
 import { useParams } from "react-router-dom"
 
-import { useStorage } from "@plasmohq/storage/hook"
-
 import BackButton from "~/src/components/BackButton"
 import TagCreator from "~src/components/TagCreator"
 import AtomDisplay from "~src/components/ui/AtomDisplay"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import Tags from "~src/components/ui/Tags"
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
-const HAS_TAG_PREDICATE_ID = 4
+const HAS_TAG_PREDICATE_ID = "0x7ec36d201c842dc787b45cb5bb753bea4cf849be3908fb1b0a7d067c3c3cc1f5"
 
 const AtomDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const parsedId = Number(id)
-  const shouldFetch = !isNaN(parsedId)
-  const [walletAddress] = useStorage<string>("metamask-account")
+  const termId = id ?? "" 
+  const shouldFetch = Boolean(termId) 
+  const walletAddress = useWalletAddress();
 
   const {
     data: atomData,
     loading: loadingAtom,
     error: errorAtom
   } = useGetAtomQuery({
-    variables: { term_id: parsedId },
+    variables: { term_id: termId },
     skip: !shouldFetch
   })
 
@@ -34,7 +33,7 @@ const AtomDetailPage: React.FC = () => {
     refetch: refetchTriples
   } = useGetTriplesByAtomQuery({
     variables: {
-      term_id: parsedId,
+      term_id: termId,
       address: walletAddress ?? ""
     }
   })
@@ -82,7 +81,7 @@ const AtomDetailPage: React.FC = () => {
     )
   }
   if (!atomData?.atom) {
-    return <div className="p-4">No atoms found</div>
+    return <div className="p-4">No atom found</div>
   }
 
   return (

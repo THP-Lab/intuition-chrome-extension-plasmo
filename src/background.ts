@@ -40,3 +40,45 @@ chrome.tabs.onUpdated.addListener((tabId, info) => {
 chrome.tabs.onActivated.addListener(({ tabId }) => {
   chrome.tabs.sendMessage(tabId, { action: "REFRESH_CLAIMS" });
 });
+
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  // Gestion du rafraîchissement manuel depuis l'extension
+  if (message?.type === "REFRESH_CONTENT_SCRIPT") {
+    console.log("[BG] 📡 REFRESH_CONTENT_SCRIPT reçu");
+    
+    // Envoyer le message à TOUS les tabs ouverts
+    chrome.tabs.query({}, (tabs) => {
+      console.log("[BG] 📤 Envoi REFRESH_CLAIMS à", tabs.length, "tabs");
+      tabs.forEach((tab) => {
+        if (tab.id) {
+          chrome.tabs.sendMessage(tab.id, { action: "REFRESH_CLAIMS" })
+            .then(() => {
+              console.log("[BG] ✅ Message envoyé au tab", tab.id);
+            })
+            .catch(() => {
+              // Silencieux - normal si le content script n'est pas injecté sur cette page
+            });
+        }
+      });
+    });
+    
+    return true;
+  }
+
+  if (message?.type === "GET_WALLET_ADDRESS") {
+    chrome.storage.local.get(["metamask-account"], (localRes) => {
+      const localAddr = localRes["metamask-account"]
+      console.log("[BG] local metamask-account =", localAddr)
+
+      chrome.storage.sync.get(["metamask-account"], (syncRes) => {
+        const syncAddr = syncRes["metamask-account"]
+        console.log("[BG] sync metamask-account =", syncAddr)
+
+        sendResponse({ address: localAddr || syncAddr || "" })
+      })
+    })
+    return true
+  }
+})
+

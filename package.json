@@ -1,20 +1,20 @@
 {
   "name": "intuition-chrome-extension",
   "displayName": "Intuition Chrome Extension",
-  "version": "0.1.48",
+  "version": "0.1.49",
   "description": "",
   "author": "THP-Lab.org",
   "scripts": {
-    "dev": "plasmo dev --hmr-host=0.0.0.0 --hmr-port=1815 --serve-host=0.0.0.0 --serve-port=1012",
-    "build": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3 ",
-    "build:firefox": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2 ",
-    "package": "plasmo package",
-    "graphql:build": " cd src/graphql && NODE_ENV=production graphql-codegen --config codegen.ts"
+    "prebuild": "pnpm --filter @warzieram/graphql build",
+    "build": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=chrome-mv3",
+    "prebuild:firefox": "pnpm --filter @warzieram/graphql build",
+    "build:firefox": "cross-env NODE_ENV=production PARCEL_WORKER_BACKEND=process plasmo build --target=firefox-mv2"
   },
   "dependencies": {
     "@0xintuition/1ui": "^0.3.6",
-    "@0xintuition/graphql": "^0.6.0",
-    "@0xintuition/protocol": "^0.1.4",
+    "@0xintuition/graphql": "2.0.0-alpha.4",
+    "@0xintuition/protocol": "2.0.0-alpha.4",
+    "@0xintuition/sdk": "2.0.0-alpha.4",
     "@apollo/client": "^3.13.8",
     "@floating-ui/react-dom": "^2.1.2",
     "@graphql-codegen/typescript-document-nodes": "^4.0.11",
@@ -26,7 +26,7 @@
     "@radix-ui/react-slot": "^1.1.2",
     "@tanstack/react-query": "^5.69.0",
     "@types/three": "^0.175.0",
-    "@warzieram/graphql": "^0.5.31",
+    "@warzieram/graphql": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "ethers": "^6.15.0",
@@ -79,11 +79,12 @@
     "host_permissions": [
       "https://*/*",
       "https://analytics.thp.box/*",
-      "https://prod.base-sepolia.intuition-api.com/v1/graphql",
-      "https://prod.base-mainnet-v-1-0.intuition.sh/*",
+      "https://testnet.rpc.intuition.systems",
+      "https://rpc.intuition.systems",
+      "https://testnet.intuition.sh/v1/graphql",
       "chrome-extension://*/*",
-      "ws://localhost:*",
-      "wws://localhost:*"
+      "ws://localhost:*/*",
+      "wss://localhost:*/*"
     ],
     "web_accessible_resources": [
       {
@@ -106,7 +107,7 @@
       "sidePanel"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://prod.base.intuition-api.com https://prod.base-mainnet-v-1-0.intuition.sh https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org https://prod.base-sepolia.intuition-api.com/v1/graphql wss://prod.base-mainnet-v-1-0.intuition.sh/v1/graphql ws://localhost:* wss://localhost:* https://dl.polyhaven.org https://www.gstatic.com;"
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://rpc.intuition.systems https://testnet.rpc.intuition.systems/http https://testnet.intuition.sh/v1/graphql https://mainnet.intuition.sh/v1/graphql wss://testnet.intuition.sh/v1/graphql wss://mainnet.intuition.sh/v1/graphql wss://testnet.rpc.intuition.systems wss://rpc.intuition.systems https://cloud.umami.is/ https://analytics.thp.box/ https://api.ipify.org http://localhost:* ws://localhost:* wss://localhost:* https://dl.polyhaven.org https://www.gstatic.com;"
     }
   },
   "pnpm": {

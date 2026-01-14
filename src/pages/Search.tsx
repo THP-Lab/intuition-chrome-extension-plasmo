@@ -5,7 +5,7 @@ import {
 } from "@warzieram/graphql"
 import React, { useEffect, useState } from "react"
 
-import { useStorage } from "@plasmohq/storage/dist/hook"
+import { useWalletAddress } from "~src/hooks/useWalletAddress"
 
 import IntuitionSearchIcon from "~src/components/icons/IntuitionSearchBar"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
@@ -20,7 +20,7 @@ const Search: React.FC = () => {
   const [items, setItems] = useState<GetTriplesWithPositionsQuery['triples']>(
     []
   )
-  const [walletAddress] = useStorage<string>("metamask-account", "")
+  const walletAddress = useWalletAddress();
 
   const PAGE_SIZE = 20
 

@@ -10,13 +10,13 @@ const TagDetailPage: React.FC = () => {
 
   const {
     data,
-    isLoading,
+    loading,
     error,
   } = useGetAtomQuery({ 
     variables: { term_id: tagId! } 
   })
 
-  if (isLoading) return <p>Loading the atom…</p>
+  if (loading) return <p>Loading the atom…</p>
   if (error)      return <p className="text-red-600">Loading error</p>
   if (!data?.atom) return <p>No atoms found for this ID</p>
   

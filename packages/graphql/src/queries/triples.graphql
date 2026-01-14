@@ -1,0 +1,433 @@
+# Main pagination query
+query GetTriplesByCreator($address: String) {
+  triples(where: { creator_id: { _ilike: $address } }) {
+    term_id
+    counter_term_id
+    creator_id
+    subject {
+      term_id
+      label
+      image
+      type
+    }
+    predicate {
+      term_id
+      label
+      image
+      type
+    }
+    object {
+      term_id
+      label
+      image
+      type
+    }
+    term {
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+    counter_term {
+      positions_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+    positions(where: { account_id: { _ilike: $address } }) {
+      shares
+    }
+    counter_positions(where: { account_id: { _ilike: $address } }) {
+      shares
+    }
+  }
+}
+query GetTriples(
+  $limit: Int
+  $offset: Int
+  $orderBy: [triples_order_by!]
+  $where: triples_bool_exp
+) {
+  total: triples_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...TripleMetadata
+    ...TripleTxn
+    ...TripleVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+
+# Combined query with aggregates and nodes
+query GetTriplesWithAggregates(
+  $limit: Int
+  $offset: Int
+  $orderBy: [triples_order_by!]
+  $where: triples_bool_exp
+) {
+  triples_aggregate(
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+    where: $where
+  ) {
+    aggregate {
+      count
+    }
+    nodes {
+      ...TripleMetadata
+      ...TripleTxn
+      ...TripleVaultDetails
+      creator {
+        ...AccountMetadata
+      }
+    }
+  }
+}
+
+query GetTriplesCount($where: triples_bool_exp) {
+  triples_aggregate(where: $where) {
+    total: aggregate {
+      count
+    }
+  }
+}
+
+query GetTriple($tripleId: String!) {
+  triple(term_id: $tripleId) {
+    ...TripleMetadata
+    ...TripleTxn
+    ...TripleVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+
+query GetAtomTriplesWithPositions($where: triples_bool_exp) {
+  triples_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+
+query GetTriplesWithPositions(
+  $limit: Int
+  $offset: Int
+  $orderBy: [triples_order_by!]
+  $where: triples_bool_exp!
+  $address: String!
+) {
+  total: triples_aggregate(where: $where) {
+    aggregate { count }
+  }
+
+  triples(
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+    where: {
+      _and: [
+        $where,
+        {
+          _or: [
+            { term:         { vaults: { positions: { account_id: { _ilike: $address } } } } },
+            { counter_term: { vaults: { positions: { account_id: { _ilike: $address } } } } }
+          ]
+        }
+      ]
+    }
+  ) {
+    term_id
+    counter_term_id
+    subject {
+      term_id
+      label
+      image
+    }
+    predicate {
+      term_id
+      label
+      image
+    }
+    object {
+      term_id
+      label
+      image
+      accounts {
+        id
+      }
+    }
+    term {
+      positions_aggregate {
+        aggregate { count }
+      }
+      vaults {
+        total_shares
+        position_count
+        positions(where: { account_id: { _ilike: $address } }) {
+          account {
+            id
+            label
+            image
+          }
+          shares
+        }
+      }
+    }
+    counter_term {
+      positions_aggregate {
+        aggregate { count }
+      }
+      vaults {
+        total_shares
+        position_count
+        positions(where: { account_id: { _ilike: $address } }) {
+          account {
+            id
+            label
+            image
+          }
+          shares
+        }
+      }
+    }
+  }
+}
+
+
+
+query GetTriplesByAtom($term_id: String, $address: String) {
+  triples_aggregate(
+    where: {
+      _or: [
+        { object_id: { _eq: $term_id } }
+        { subject_id: { _eq: $term_id } }
+        { predicate_id: { _eq: $term_id } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+    nodes {
+      term_id
+      counter_term_id
+      subject {
+        term_id
+        label
+        image
+        type
+      }
+      predicate {
+        term_id
+        label
+        image
+        type
+      }
+      object {
+        term_id
+        label
+        image
+        type
+      }
+      term {
+        id
+        positions(where: { account_id: { _ilike: $address } }) {
+          shares
+          account_id 
+        }
+        positions_aggregate {
+          aggregate {
+            count
+          }
+        }
+      }
+      counter_term {
+        id
+        positions(where: { account_id: { _ilike: $address } }) {
+          shares
+          account_id
+        }
+        positions_aggregate {
+          aggregate {
+            count
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetTriplesByUri($address: String, $uriRegex: String) {
+  atoms(
+    where: {
+      _or: [
+        { data: { _iregex: $uriRegex } }
+        { value: { thing: { url: { _iregex: $uriRegex } } } }
+        { value: { person: { url: { _iregex: $uriRegex } } } }
+        { value: { organization: { url: { _iregex: $uriRegex } } } }
+        { value: { book: { url: { _iregex: $uriRegex } } } }
+      ]
+    }
+  ) {
+    as_subject_triples_aggregate {
+      aggregate {
+        count
+      }
+      nodes {
+        term_id
+        counter_term_id
+        term {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+          vaults {
+            curve_id
+          }
+        }
+        counter_term {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+          vaults {
+            curve_id
+          }
+        }
+        subject {
+          label
+          image
+          type
+          term_id
+        }
+        predicate {
+          label
+          image
+          type
+          term_id
+        }
+        object {
+          label
+          image
+          type
+          term_id
+        }
+        positions(where: { account_id: { _ilike: $address } }) {
+          shares
+        }
+        positions_aggregate {
+          aggregate {
+            count
+          }
+        }
+        counter_positions(where: { account_id: { _ilike: $address } }) {
+          shares
+        }
+        counter_positions_aggregate {
+          aggregate {
+            count
+          }
+        }
+        creator {
+          label
+          id
+          type
+        }
+      }
+    }
+    as_object_triples_aggregate {
+      aggregate {
+        count
+      }
+      nodes {
+        term_id
+        counter_term_id
+        term {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+          vaults {
+            curve_id
+          }
+        }
+        counter_term {
+          positions_aggregate {
+            aggregate {
+              count
+            }
+          }
+          vaults {
+            curve_id
+          }
+        }
+        predicate {
+          label
+          image
+          type
+          term_id
+        }
+        subject {
+          label
+          image
+          type
+          term_id
+        }
+        object {
+          label
+          image
+          type
+          term_id
+        }
+        positions_aggregate {
+          aggregate {
+            count
+          }
+        }
+        positions(where: { account_id: { _ilike: $address } }) {
+          shares
+        }
+        counter_positions_aggregate {
+          aggregate {
+            count
+          }
+        }
+        counter_positions(where: { account_id: { _ilike: $address } }) {
+          shares
+        }
+        creator {
+          label
+          id
+          type
+        }
+      }
+    }
+    term_id
+    label
+    image
+    positions_aggregate {
+      aggregate {
+        count
+      }
+    }
+    value {
+      thing {
+        description
+        url
+      }
+    }
+  }
+}

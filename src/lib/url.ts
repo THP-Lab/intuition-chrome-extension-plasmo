@@ -15,8 +15,11 @@ export function normalizeUrl(input: string): string {
 
 export function buildUriRegex(rawUrl: string): string {
   const canonical = normalizeUrl(rawUrl)
-  let withoutProto = canonical.replace(/^https?:\/\//, "")
-  if (withoutProto.endsWith("/")) withoutProto = withoutProto.slice(0, -1)
-  const escaped = withoutProto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-  return `^https?:\\/\\/(?:www\\.)?${escaped}\\/?$`
+  const u = new URL(canonical)
+
+  let hostname = u.hostname.toLowerCase()
+  if (hostname.startsWith("www.")) hostname = hostname.slice(4)
+
+  const escapedHost = hostname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  return `^https?:\\/\\/(?:www\\.)?${escapedHost}(?:\\/.*)?$`
 }

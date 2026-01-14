@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react"
 import { usePinPersonMutation } from "@warzieram/graphql"
 import { Button } from "~src/components/ui/button"
-import { useStorage } from "@plasmohq/storage/hook";
 import { parseEther } from 'viem';
-import { Multivault } from '@0xintuition/protocol'
+import { EthMultiVault } from '@0xintuition/protocol'
 import { getClients } from '../lib/viemClient';
-import { MULTIVAULT_CONTRACT_ADDRESS } from "../lib/config"
+import { MULTIVAULT_ADDRESS } from "../lib/config"
 import { useQueryClient } from "@tanstack/react-query"
+import { useWalletAddress } from "~src/hooks/useWalletAddress";
 
 
 type Props = {
@@ -24,7 +24,7 @@ type Props = {
 
 const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
 
-  const [address] = useStorage<string>("metamask-account")
+  const address = useWalletAddress();
   const [progressMessage, setProgressMessage] = useState<string | null>(null) 
   const [errorMessage, setErrorMessage] = useState<string | null>(null) 
 
@@ -84,7 +84,7 @@ const SignUpForm = ({ defaultValues, onSuccess, onCancel }: Props) => {
       const { walletClient, publicClient } = await getClients()      
 
       
-      const multivault = new Multivault({ walletClient, publicClient }) 
+      const multivault = new MultiVaultAbi({ walletClient, publicClient }) 
 
       
       const result = await pinPerson({
