@@ -103,9 +103,6 @@ const Search: React.FC = () => {
       All: () => true,
       Tag: (triple) =>
         triple.predicate?.label?.toLowerCase().includes("tag") || false,
-      Organization: (triple) =>
-        triple.predicate?.label?.toLowerCase().includes("organization") ||
-        false,
       User: (triple) =>
         triple.predicate?.label?.toLowerCase().includes("follow") || false
     }
@@ -127,7 +124,7 @@ const Search: React.FC = () => {
     )
   }
 
-  const tabs = ["All", "Tag", "Organization", "User"].map((label) => ({
+  const tabs = ["All", "Tag", "User"].map((label) => ({
     label,
     content: <div>{renderResults()}</div>
   }))

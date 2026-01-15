@@ -8,14 +8,14 @@ import AtomDisplay from "~src/components/ui/AtomDisplay"
 import ClaimRowLite from "~src/components/ui/ClaimRowLite"
 import Tags from "~src/components/ui/Tags"
 import { useWalletAddress } from "~src/hooks/useWalletAddress";
-
-const HAS_TAG_PREDICATE_ID = "0x7ec36d201c842dc787b45cb5bb753bea4cf849be3908fb1b0a7d067c3c3cc1f5"
+import { useAtomIds } from "~src/hooks/useAtomIds";
 
 const AtomDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const termId = id ?? "" 
   const shouldFetch = Boolean(termId) 
   const walletAddress = useWalletAddress();
+  const atomIds = useAtomIds();
 
   const {
     data: atomData,
@@ -45,10 +45,10 @@ const AtomDetailPage: React.FC = () => {
 
   const tags = React.useMemo(() => {
     const raw = allTriples
-      .filter((t) => t.predicate?.term_id === HAS_TAG_PREDICATE_ID)
+      .filter((t) => t.predicate?.term_id === atomIds.HASHTAG_PREDICATE)
       .map((t) => t.object)
     return Array.from(new Map(raw.map((tag) => [tag.term_id, tag])).values())
-  }, [allTriples])
+  }, [allTriples, atomIds])
 
   const claims = React.useMemo(
     () =>

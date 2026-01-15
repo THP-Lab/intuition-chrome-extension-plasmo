@@ -99,11 +99,16 @@ async function getMinAcceptedDepositWei(
   const balance = await publicClient.getBalance({ address: account })
   const cap = (balance * 95n) / 100n
 
-  let value = 1_000_000_000_000_000n // 0.001
+  let value = 10_000_000_000_000_000n // 0.01 ETH starting point
   let attempts = 0
+
+  console.log(`[getMinAcceptedDepositWei] Starting with ${value} wei (${Number(value) / 1e18} ETH)`)
+  console.log(`[getMinAcceptedDepositWei] Balance: ${balance} wei, Cap: ${cap} wei`)
 
   while (attempts++ < 20) {
     try {
+      console.log(`[getMinAcceptedDepositWei] Attempt ${attempts}: Trying with ${value} wei (${Number(value) / 1e18} ETH)`)
+      
       await publicClient.simulateContract({
         address: mvAddress,
         abi: [
@@ -125,14 +130,18 @@ async function getMinAcceptedDepositWei(
         args: [receiver, termId32, curveId, 0n],
         value,
       })
+      
       const buffer = value / 100n + 1n // +1%
       const res = value + buffer
+      console.log(`[getMinAcceptedDepositWei] ✅ Success! Minimum deposit: ${res} wei (${Number(res) / 1e18} ETH)`)
       return res <= cap ? res : cap
     } catch (e: any) {
       if (isBelowMinDeposit(e)) {
+        console.log(`[getMinAcceptedDepositWei] ⚠️ Below minimum, doubling value...`)
         value *= 2n
         if (value > cap) {
-          const err: any = new Error("Minimum deposit exceeds available balance.")
+          console.error(`[getMinAcceptedDepositWei] ❌ Minimum exceeds balance!`)
+          const err: any = new Error(`Minimum deposit exceeds available balance. Required: ${value} wei (${Number(value) / 1e18} ETH), Available: ${balance} wei`)
           err.code = "INSUFFICIENT_BALANCE_FOR_MIN"
           err.requiredWei = value
           err.balanceWei = balance
@@ -141,9 +150,13 @@ async function getMinAcceptedDepositWei(
         continue
       }
 
+      console.error(`[getMinAcceptedDepositWei] ❌ Unexpected error:`, e)
       const data = e?.data || e?.cause?.data
       if (data) {
-        try { console.warn("decoded", decodeErrorResult({ abi: MultiVaultAbi, data })) } catch {}
+        try { 
+          const decoded = decodeErrorResult({ abi: MultiVaultAbi, data })
+          console.warn("Decoded error:", decoded) 
+        } catch {}
       }
       throw e
     }
@@ -180,6 +193,14 @@ export function useDepositTerm() {
 
         const mvAddress = MULTIVAULT_ADDRESS as Address
 
+        console.log(`[depositTerm] Starting deposit:`, {
+          termId: termId32,
+          caller,
+          chainId,
+          mvAddress,
+          network: SELECTED_CHAIN.name
+        })
+
         // sanity-check
         await publicClient.readContract({
           address: mvAddress,
@@ -193,11 +214,14 @@ export function useDepositTerm() {
         // curve
         const defaultCurveId = await getDefaultCurveId(publicClient, mvAddress)
         const usedCurveId = await resolveCurveId(publicClient, mvAddress, caller, termId32, defaultCurveId)
+        console.log(`[depositTerm] Curve ID: ${usedCurveId}`)
 
         // amount
         const valueWei =
           opts?.amountWei ??
           (await getMinAcceptedDepositWei(publicClient, mvAddress, caller, receiver, termId32, usedCurveId))
+
+        console.log(`[depositTerm] Final deposit amount: ${valueWei} wei (${Number(valueWei) / 1e18} ETH)`)
 
         // minShares (slippage)
         let minShares = 0n
@@ -215,6 +239,7 @@ export function useDepositTerm() {
 
         // simulate
         try {
+          console.log(`[depositTerm] Simulating deposit...`)
           await publicClient.simulateContract({
             address: mvAddress,
             abi: MultiVaultAbi,
@@ -223,23 +248,31 @@ export function useDepositTerm() {
             args: [receiver, termId32, usedCurveId, minShares],
             value: valueWei,
           })
+          console.log(`[depositTerm] ✅ Simulation successful`)
         } catch (e: any) {
+          console.error(`[depositTerm] ❌ Simulation failed:`, e)
           const data = e?.data || e?.cause?.data
           if (data) {
-            try { console.warn("decoded", decodeErrorResult({ abi: MultiVaultAbi, data })) } catch {}
+            try { 
+              const decoded = decodeErrorResult({ abi: MultiVaultAbi, data })
+              console.warn("Decoded simulation error:", decoded)
+            } catch {}
           }
           throw e
         }
 
         // send
+        console.log(`[depositTerm] Sending transaction...`)
         const hash = await deposit(
           { address: mvAddress, walletClient, publicClient },
           { args: [receiver, termId32, usedCurveId, minShares], value: valueWei }
         )
 
+        console.log(`[depositTerm] ✅ Transaction sent: ${hash}`)
         setTxHash(hash)
         return hash
       } catch (err: any) {
+        console.error(`[depositTerm] ❌ Error:`, err)
         const msg = err?.shortMessage || err?.message || "Transaction failed"
         setError(msg)
         throw err

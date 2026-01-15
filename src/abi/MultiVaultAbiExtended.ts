@@ -10,4 +10,5 @@ export const MultiVaultAbiExtended = [
   { type: "error", name: "StandardNotOpen", inputs: [{ name: "termId", type: "bytes32" }] },
   { type: "error", name: "VaultClosed", inputs: [{ name: "termId", type: "bytes32" }] },
   { type: "error", name: "TermNotFound", inputs: [{ name: "termId", type: "bytes32" }] },
+  { type: "error", name: "MultiVault_DepositBelowMinimumDeposit", inputs: [] },
 ] as const;

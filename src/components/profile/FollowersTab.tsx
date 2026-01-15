@@ -1,6 +1,7 @@
 import React from "react"
 import { useWalletAddress } from "~src/hooks/useWalletAddress";
 import { useGetFollowersFromAddressQuery } from "@warzieram/graphql"
+import defaultImg from "~src/assets/User.jpg
 
 const FollowersTab = () => {
   const walletAddress = useWalletAddress();
@@ -19,8 +20,6 @@ const FollowersTab = () => {
     ?.filter((p) => p.account?.id !== walletAddress)
     ?.map((p) => p.account) ?? []
 
-  const default_img =
-    "https://thecosmeticdentalgallery.co.uk/wp-content/uploads/2021/11/gold_fingerprint.png"
 
   if (!walletAddress) return <p>Connect your wallet</p>
   if (loading) return <p>Loading your followers...</p>
@@ -41,7 +40,7 @@ const FollowersTab = () => {
               className="border p-3 rounded flex items-center gap-3"
             >
               <img
-                src={follower?.image || default_img}
+                src={follower?.image || defaultImg}
                 alt={follower?.label}
                 className="w-8 h-8 rounded-full"
               />

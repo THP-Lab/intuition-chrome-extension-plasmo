@@ -11,6 +11,7 @@ import ReportDropdown from "~src/components/ReportDropdown"
 import styleText from "data-text:../styles/global.css"
 import IntuitionIconPlus from "~src/components/icons/intuition_icon_plus"
 import { useWalletAddress } from "~src/hooks/useWalletAddress"
+import { useAtomIds } from "~src/hooks/useAtomIds"
 
 const queryClient = new QueryClient()
 
@@ -180,9 +181,10 @@ const walletAddress = useWalletAddress();
     loading
   });
   
-  const IS_ID = "0xdd4320a03fcd85ed6ac29f3171208f05418324d6943f1fac5d3c23cc1ce10eb3"
-  const SCAM_ID = "0xb1b69b106ec87313af64debf2a0f48718f40cb08a9ed73eb1e5dcbebb2d63d2e"
-  const TRUSTWORTHY_ID = "0xc8328e91eecabf6bdfc9416b544a7aa2de98e74fa62a84863085ce6d893609b3"
+  const atomIds = useAtomIds();
+  const IS_ID = atomIds.IS;
+  const SCAM_ID = atomIds.SCAM;
+  const TRUSTWORTHY_ID = atomIds.TRUSTWORTHY;
   const hasScam = allClaims.some(
     c => c.predicate?.term_id == IS_ID && c.object?.term_id == SCAM_ID
   )
