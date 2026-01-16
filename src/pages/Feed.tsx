@@ -167,7 +167,7 @@ function Feed() {
                   />
                   <span className="text-sm font-medium">
                     <a
-                      href={`https://portal.intuition.systems/app/atom/${senderLabel}?tab=portfolio`}
+                      href={`https://portal.intuition.systems/app/atom/${senderLabel}?tab=overview`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-semibold hover:underline"
