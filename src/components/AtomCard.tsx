@@ -91,7 +91,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
           <div className="flex items-center gap-4 ml-2">
             <p className="flex items-center text-sm text-white text-muted-foreground">
               <UserRound className="w-4 h-4 mr-1" />
-              {Math.max(positionCount - 1, 0)}
+              {Math.max(positionCount, 0)}
             </p>
 
             <button
@@ -100,7 +100,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({ atom, tags }) => {
                 depositTerm(atom.term_id) // ✅ hook unique
               }}
               disabled={isDepositing}
-              className="border border-gray-400 text-white rounded-md px-2 py-1 text-sm
+              className="border border-gray-700 text-white rounded-md px-2 py-1 text-sm
               hover:bg-gray-400 hover:text-black hover:scale-110
               transition-all duration-200 ease-in-out"
               title="Vote for this atom"

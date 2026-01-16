@@ -158,21 +158,21 @@ html body nav .animate-fade-bg:hover {
 
 @layer utilities {
   .claims-hover-effect {
-    @apply opacity-70 transition-all duration-100 ease-in-out relative z-[1];
+    @apply opacity-90 transition-all duration-100 ease-in-out  relative z-[1];
   }
 
   .claims-hover-effect:hover {
-    @apply opacity-100 transform-gpu scale-[1.1] z-[3];
+    @apply opacity-100 transform-gpu border-gray-700 z-[3];
   }
 }
 
 @layer utilities {
   .btn-atom-form-hover-effect {
-    @apply opacity-70 transition-all duration-100 ease-in-out relative z-[1];
+    @apply opacity-90 transition-all duration-100 ease-in-out relative z-[1];
   }
 
   .btn-atom-form-hover-effect:hover {
-    @apply opacity-100 transform-gpu z-[3];
+    @apply opacity-100 transform-gpu border-gray-700 z-[3];
   }
 }
 
