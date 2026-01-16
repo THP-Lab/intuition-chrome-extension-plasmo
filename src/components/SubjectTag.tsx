@@ -3,22 +3,22 @@ import { Link } from "react-router-dom"
 import { useParams } from 'react-router-dom'
 import { useGetTaggedObjectsQuery } from '@warzieram/graphql'
 import { useWalletAddress } from "~src/hooks/useWalletAddress";
+import { useAtomIds } from "~src/hooks/useAtomIds";
 import { ImageWithFallback } from '../components/ui/ImageWithFallback'
 import { Fingerprint } from 'lucide-react'
 import VoteButtons from '~src/components/VoteButtons'
 import type { VoteChoice } from '~src/components/VoteButtons'
 
-const HASHTAG_PREDICATE_ID = "0x7ec36d201c842dc787b45cb5bb753bea4cf849be3908fb1b0a7d067c3c3cc1f5"
-
 const SubjectTag: React.FC = () => {
   const { tagId } = useParams<{ tagId: string }>()
   const address = useWalletAddress();
+  const atomIds = useAtomIds();
 
 
   const { data, loading, error } = useGetTaggedObjectsQuery({
     variables: {
       objectId: tagId!,
-      predicateId: HASHTAG_PREDICATE_ID,
+      predicateId: atomIds.HASHTAG_PREDICATE,
       address: address!
     }
   })
@@ -27,6 +27,7 @@ const SubjectTag: React.FC = () => {
 
   const sorted = useMemo(() => {
     return triples
+      .filter(triple => triple.subject != null)
       .map(triple => {
         const vault = triple.term!
         const counter = triple.counter_term!
@@ -59,6 +60,8 @@ const SubjectTag: React.FC = () => {
         <div className="space-y-4 mt-2">
           {sorted.map(({ triple }) => {
             const subject = triple.subject
+            if (!subject) return null
+            
             const vault = triple.term!
             const counterVault = triple.counter_term!
 

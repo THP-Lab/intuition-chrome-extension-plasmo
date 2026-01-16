@@ -2,16 +2,23 @@ import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client"
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions"
 import { getMainDefinition } from "@apollo/client/utilities"
 import { createClient } from "graphql-ws"
+import { getGraphQLEndpoints, CURRENT_NETWORK } from "./config"
+
+// Get endpoints based on environment
+const endpoints = getGraphQLEndpoints(CURRENT_NETWORK)
 
 const httpLink = new HttpLink({
-  uri: "https://testnet.intuition.sh/v1/graphql" // replace with your API URL
+  uri: endpoints.http
 })
 
 const wsLink =
   typeof window !== "undefined"
     ? new GraphQLWsLink(
-        createClient({ url: "wss://testnet.intuition.sh/v1/graphql" })
-      ) // replace with your WS endpoint
+        createClient({ 
+          url: endpoints.ws,
+          shouldRetry: () => true,
+        })
+      )
     : null
 
 const splitLink =

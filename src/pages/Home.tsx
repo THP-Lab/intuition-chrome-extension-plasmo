@@ -1,8 +1,5 @@
-import { useQueryClient } from "@tanstack/react-query"
-import { useGetTriplesByUriQuery } from "@warzieram/graphql"
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { useTheme } from "~/src/components/ThemeProvider"  
 import TabSystem from "~/src/components/TabSystem"
 import EyeComponent from "~/src/components/3D/EyeComponent"
 import AtomCard from "~src/components/AtomCard"
@@ -12,7 +9,7 @@ import { normalizeUrl } from "../lib/url"
 
 function Home() {
   const [currentUrl, setCurrentUrl] = useState<string>("")
-  const [activeTab, setActiveTab] = useState("Triples")
+  const [activeTab, setActiveTab] = useState("Claims")
   const [claims, setClaims] = useState<any[]>([])
   const [atomsWithTags, setAtomsWithTags] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -182,7 +179,7 @@ useEffect(() => {
 
   const tabs = [
     {
-      label: "Triples",
+      label: "Claims",
       content: (
         <div>
           {isLoading ? (
@@ -217,7 +214,7 @@ useEffect(() => {
       )
     },
     {
-      label: "Atoms",
+      label: "Identities",
       content: (
         <div>
           {isLoading ? (
@@ -264,11 +261,6 @@ useEffect(() => {
             pointerEvents: "none"
           }}
         />
-
-        <p className="text-muted-foreground text-center relative z-10 mt-[220px]">
-          "Intuition lets you explore, vote, and debate verifiable facts — all
-          directly from your browser."
-        </p>
       </div>
 
       <div className="mt-1">

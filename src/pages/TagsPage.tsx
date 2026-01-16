@@ -4,23 +4,24 @@ import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { ImageWithFallback } from "../components/ui/ImageWithFallback"
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll"
+import { useAtomIds } from "../hooks/useAtomIds"
 
-const HASHTAG_PREDICATE_ID = "0x7ec36d201c842dc787b45cb5bb753bea4cf849be3908fb1b0a7d067c3c3cc1f5"
 const PAGE_SIZE = 18
 
 const HashtagObjectsPage: React.FC = () => {
   const [offset, setOffset] = useState(0)
   const [items, setItems] = useState<any[]>([])
   const [hasMore, setHasMore] = useState(true)
+  const atomIds = useAtomIds();
 
   const { data, loading, error } = useGetListsTagsQuery({
     variables: {
       where: {
         _and: [
-          { as_object_triples: { predicate_id: { _eq: HASHTAG_PREDICATE_ID } } }
+          { as_object_triples: { predicate_id: { _eq: atomIds.HASHTAG_PREDICATE } } }
         ]
       },
-      triplesWhere: { predicate_id: { _eq: HASHTAG_PREDICATE_ID } },
+      triplesWhere: { predicate_id: { _eq: atomIds.HASHTAG_PREDICATE } },
       limit: PAGE_SIZE,
       offset,
       orderBy: [{ as_object_triples_aggregate: { count: "desc" } }]
@@ -46,7 +47,7 @@ const HashtagObjectsPage: React.FC = () => {
 
   return (
     <div className="p-4 space-y-4">
-      <h1 className="text-xl font-bold">Tags list</h1>
+      <h1 className="text-xl font-bold">Lists</h1>
       {items.map((atom) => {
         const count = atom.as_object_triples_aggregate.aggregate.count
         return (

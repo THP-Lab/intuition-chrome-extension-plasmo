@@ -1,24 +1,20 @@
 import React from "react"
 import { useGetTriplesWithPositionsQuery } from "@warzieram/graphql"
 import { useWalletAddress } from "~src/hooks/useWalletAddress";
-
-// IDs du protocole Intuition pour les triples "follows"
-// subject = atom "I" (constante)
-// predicate = "follows"
-// object = la personne suivie
-const I_SUBJECT_ID = "0x7ab197b346d386cd5926dbfeeb85dade42f113c7ed99ff2046a5123bb5cd016b"
-const FOLLOWS_PREDICATE_ID = "0xffd07650dc7ab341184362461ebf52144bf8bcac5a19ef714571de15f1319260"
+import { useAtomIds } from "~src/hooks/useAtomIds";
+import defaultImg from "~src/assets/User.jpg
 
 const FollowingTab: React.FC = () => {
   const walletAddress = useWalletAddress();
+  const atomIds = useAtomIds();
 
   // Récupérer les triples ("I" follows <object>) où l'utilisateur a une position
   const { data, loading, error } = useGetTriplesWithPositionsQuery({
     variables: {
       where: {
         _and: [
-          { subject_id: { _eq: I_SUBJECT_ID } },
-          { predicate_id: { _eq: FOLLOWS_PREDICATE_ID } }
+          { subject_id: { _eq: atomIds.I_SUBJECT } },
+          { predicate_id: { _eq: atomIds.FOLLOWS_PREDICATE } }
         ]
       },
       address: walletAddress || ""
@@ -70,8 +66,6 @@ const FollowingTab: React.FC = () => {
     return <p>You're not following anyone yet.</p>
   }
 
-  const defaultImg =
-    "https://i.seadn.io/gae/PWDq8erM2dMscd99OntjFRJFfvtvki7uxeYiBUT8e59Kdbn8s34dM59kCkVZ66b687B6i8KXMDspRfnU-JbLcB9Kc23EoSydJNkmgA?auto=format&dpr=1&w=1000"
 
   return (
     <ul className="space-y-2">

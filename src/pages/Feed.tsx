@@ -4,11 +4,8 @@ import { useGetTriplesWithPositionsQuery, useGetEventsFeedQuery } from "@warzier
 import { getAddress } from "viem"
 import { useInfiniteScroll } from "~src/hooks/useInfiniteScroll";
 import { useWalletAddress } from "~src/hooks/useWalletAddress";
+import { useAtomIds } from "~src/hooks/useAtomIds";
 import defaultImg from "~src/assets/User.jpg"
-
-// IDs du protocole Intuition pour les triples "follows"
-const I_SUBJECT_ID = "0x7ab197b346d386cd5926dbfeeb85dade42f113c7ed99ff2046a5123bb5cd016b"
-const FOLLOWS_PREDICATE_ID = "0xffd07650dc7ab341184362461ebf52144bf8bcac5a19ef714571de15f1319260"
 
 function shortAddress(addr?: string) {
   if (!addr) return "";
@@ -18,6 +15,7 @@ function shortAddress(addr?: string) {
 
 function Feed() {
   const walletAddress = useWalletAddress();
+  const atomIds = useAtomIds();
   const [checksumAddress, setChecksumAddress] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -42,8 +40,8 @@ function Feed() {
     variables: {
       where: {
         _and: [
-          { subject_id: { _eq: I_SUBJECT_ID } },
-          { predicate_id: { _eq: FOLLOWS_PREDICATE_ID } }
+          { subject_id: { _eq: atomIds.I_SUBJECT } },
+          { predicate_id: { _eq: atomIds.FOLLOWS_PREDICATE } }
         ]
       },
       address: walletAddress || ""
@@ -146,7 +144,7 @@ function Feed() {
 
   return (
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Feed followings</h1>
+      <h1 className="text-xl font-bold mb-4">Followings feed</h1>
       {items.length === 0 && !eventsLoading ? (
         <p>No activity found.</p>
       ) : (
@@ -169,7 +167,7 @@ function Feed() {
                   />
                   <span className="text-sm font-medium">
                     <a
-                      href={`https://portal.intuition.systems/app/atom/${senderLabel}?tab=portfolio`}
+                      href={`https://portal.intuition.systems/app/atom/${senderLabel}?tab=overview`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-semibold hover:underline"

@@ -28,7 +28,7 @@ function Preference() {
     "shadow-sm hover:shadow-md transition-shadow"
   )}>
     <h2 className="text-xl font-semibold mb-4">Preference</h2>
-    <div>
+    <div className="flex items-center gap-2">
       <Button
         variant="ghost"
         size="sm"

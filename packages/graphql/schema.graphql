@@ -18,6 +18,53 @@ directive @cached(
   ttl: Int! = 60
 ) on QUERY
 
+type AccountPnlChartOutput {
+  account_id: String!
+  count: Int!
+  data: [AccountPnlChartPoint!]!
+  interval: String!
+}
+
+type AccountPnlChartPoint {
+  equity_value: String!
+  net_invested: String!
+  pnl_pct: String!
+  timestamp: String!
+  total_assets_in: String!
+  total_assets_out: String!
+  total_pnl: String!
+  unrealized_pnl: String!
+}
+
+type AccountPnlRealizedEntry {
+  assets_out: String!
+  cost_basis: String!
+  curve_id: String!
+  realized_pnl: String!
+  realized_pnl_pct: String!
+  shares_redeemed: String!
+  term_id: String!
+  timestamp: String!
+}
+
+type AccountPnlRealizedOutput {
+  account_id: String!
+  count: Int!
+  data: [AccountPnlRealizedEntry!]!
+}
+
+type AccountPnlSnapshotOutput {
+  account_id: String!
+  equity_value: String!
+  net_invested: String!
+  pnl_pct: String!
+  timestamp: String!
+  total_assets_in: String!
+  total_assets_out: String!
+  total_pnl: String!
+  unrealized_pnl: String!
+}
+
 """
 Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
 """
@@ -60,6 +107,23 @@ type ChartSvgOutput {
   svg: String!
 }
 
+input GetAccountPnlChartInput {
+  account_id: String!
+  end_time: String!
+  interval: String!
+  start_time: String!
+}
+
+input GetAccountPnlCurrentInput {
+  account_id: String!
+}
+
+input GetAccountPnlRealizedInput {
+  account_id: String!
+  end_time: String!
+  start_time: String!
+}
+
 input GetChartJsonInput {
   curve_id: String!
   end_time: String!
@@ -80,6 +144,15 @@ input GetChartSvgInput {
   start_time: String!
   term_id: String!
   width: Int
+}
+
+input GetPositionPnlChartInput {
+  account_id: String!
+  curve_id: String!
+  end_time: String!
+  interval: String!
+  start_time: String!
+  term_id: String!
 }
 
 """
@@ -123,6 +196,28 @@ input PinThingInput {
   image: String
   name: String
   url: String
+}
+
+type PositionPnlChartOutput {
+  account_id: String!
+  count: Int!
+  curve_id: String!
+  data: [PositionPnlChartPoint!]!
+  interval: String!
+  term_id: String!
+}
+
+type PositionPnlChartPoint {
+  equity_value: String!
+  net_invested: String!
+  pnl_pct: String!
+  share_price: String!
+  shares_total: String!
+  timestamp: String!
+  total_assets_in: String!
+  total_assets_out: String!
+  total_pnl: String!
+  unrealized_pnl: String!
 }
 
 """
@@ -4335,6 +4430,600 @@ input persons_stream_cursor_value_input {
 }
 
 """
+columns and relationships of "position_change_daily"
+"""
+type position_change_daily {
+  """
+  An object relationship
+  """
+  account: accounts
+  account_id: String
+  assets_in_period: numeric
+  assets_out_period: numeric
+  bucket: timestamptz
+  curve_id: numeric
+  shares_delta_period: numeric
+  """
+  An object relationship
+  """
+  term: terms
+  term_id: String
+  transaction_count: numeric
+  """
+  An object relationship
+  """
+  vault: vaults
+}
+
+"""
+Boolean expression to filter rows from the table "position_change_daily". All fields are combined with a logical 'AND'.
+"""
+input position_change_daily_bool_exp {
+  _and: [position_change_daily_bool_exp!]
+  _not: position_change_daily_bool_exp
+  _or: [position_change_daily_bool_exp!]
+  account: accounts_bool_exp
+  account_id: String_comparison_exp
+  assets_in_period: numeric_comparison_exp
+  assets_out_period: numeric_comparison_exp
+  bucket: timestamptz_comparison_exp
+  curve_id: numeric_comparison_exp
+  shares_delta_period: numeric_comparison_exp
+  term: terms_bool_exp
+  term_id: String_comparison_exp
+  transaction_count: numeric_comparison_exp
+  vault: vaults_bool_exp
+}
+
+"""
+Ordering options when selecting data from "position_change_daily".
+"""
+input position_change_daily_order_by {
+  account: accounts_order_by
+  account_id: order_by
+  assets_in_period: order_by
+  assets_out_period: order_by
+  bucket: order_by
+  curve_id: order_by
+  shares_delta_period: order_by
+  term: terms_order_by
+  term_id: order_by
+  transaction_count: order_by
+  vault: vaults_order_by
+}
+
+"""
+select columns of table "position_change_daily"
+"""
+enum position_change_daily_select_column {
+  """
+  column name
+  """
+  account_id
+  """
+  column name
+  """
+  assets_in_period
+  """
+  column name
+  """
+  assets_out_period
+  """
+  column name
+  """
+  bucket
+  """
+  column name
+  """
+  curve_id
+  """
+  column name
+  """
+  shares_delta_period
+  """
+  column name
+  """
+  term_id
+  """
+  column name
+  """
+  transaction_count
+}
+
+"""
+Streaming cursor of the table "position_change_daily"
+"""
+input position_change_daily_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: position_change_daily_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input position_change_daily_stream_cursor_value_input {
+  account_id: String
+  assets_in_period: numeric
+  assets_out_period: numeric
+  bucket: timestamptz
+  curve_id: numeric
+  shares_delta_period: numeric
+  term_id: String
+  transaction_count: numeric
+}
+
+"""
+columns and relationships of "position_change_hourly"
+"""
+type position_change_hourly {
+  """
+  An object relationship
+  """
+  account: accounts
+  account_id: String
+  assets_in_period: numeric
+  assets_out_period: numeric
+  bucket: timestamptz
+  curve_id: numeric
+  shares_delta_period: numeric
+  """
+  An object relationship
+  """
+  term: terms
+  term_id: String
+  transaction_count: bigint
+  """
+  An object relationship
+  """
+  vault: vaults
+}
+
+"""
+Boolean expression to filter rows from the table "position_change_hourly". All fields are combined with a logical 'AND'.
+"""
+input position_change_hourly_bool_exp {
+  _and: [position_change_hourly_bool_exp!]
+  _not: position_change_hourly_bool_exp
+  _or: [position_change_hourly_bool_exp!]
+  account: accounts_bool_exp
+  account_id: String_comparison_exp
+  assets_in_period: numeric_comparison_exp
+  assets_out_period: numeric_comparison_exp
+  bucket: timestamptz_comparison_exp
+  curve_id: numeric_comparison_exp
+  shares_delta_period: numeric_comparison_exp
+  term: terms_bool_exp
+  term_id: String_comparison_exp
+  transaction_count: bigint_comparison_exp
+  vault: vaults_bool_exp
+}
+
+"""
+Ordering options when selecting data from "position_change_hourly".
+"""
+input position_change_hourly_order_by {
+  account: accounts_order_by
+  account_id: order_by
+  assets_in_period: order_by
+  assets_out_period: order_by
+  bucket: order_by
+  curve_id: order_by
+  shares_delta_period: order_by
+  term: terms_order_by
+  term_id: order_by
+  transaction_count: order_by
+  vault: vaults_order_by
+}
+
+"""
+select columns of table "position_change_hourly"
+"""
+enum position_change_hourly_select_column {
+  """
+  column name
+  """
+  account_id
+  """
+  column name
+  """
+  assets_in_period
+  """
+  column name
+  """
+  assets_out_period
+  """
+  column name
+  """
+  bucket
+  """
+  column name
+  """
+  curve_id
+  """
+  column name
+  """
+  shares_delta_period
+  """
+  column name
+  """
+  term_id
+  """
+  column name
+  """
+  transaction_count
+}
+
+"""
+Streaming cursor of the table "position_change_hourly"
+"""
+input position_change_hourly_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: position_change_hourly_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input position_change_hourly_stream_cursor_value_input {
+  account_id: String
+  assets_in_period: numeric
+  assets_out_period: numeric
+  bucket: timestamptz
+  curve_id: numeric
+  shares_delta_period: numeric
+  term_id: String
+  transaction_count: bigint
+}
+
+"""
+columns and relationships of "position_change"
+"""
+type position_changes {
+  """
+  An object relationship
+  """
+  account: accounts
+  account_id: String!
+  assets_in: numeric!
+  assets_out: numeric!
+  block_number: numeric!
+  created_at: timestamptz!
+  curve_id: numeric!
+  event_id: String!
+  event_type: String!
+  id: bigint!
+  log_index: bigint!
+  shares_delta: numeric!
+  """
+  An object relationship
+  """
+  term: terms
+  term_id: String!
+  transaction_hash: String!
+  """
+  An object relationship
+  """
+  vault: vaults
+}
+
+"""
+aggregated selection of "position_change"
+"""
+type position_changes_aggregate {
+  aggregate: position_changes_aggregate_fields
+  nodes: [position_changes!]!
+}
+
+"""
+aggregate fields of "position_change"
+"""
+type position_changes_aggregate_fields {
+  avg: position_changes_avg_fields
+  count(columns: [position_changes_select_column!], distinct: Boolean): Int!
+  max: position_changes_max_fields
+  min: position_changes_min_fields
+  stddev: position_changes_stddev_fields
+  stddev_pop: position_changes_stddev_pop_fields
+  stddev_samp: position_changes_stddev_samp_fields
+  sum: position_changes_sum_fields
+  var_pop: position_changes_var_pop_fields
+  var_samp: position_changes_var_samp_fields
+  variance: position_changes_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type position_changes_avg_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+Boolean expression to filter rows from the table "position_change". All fields are combined with a logical 'AND'.
+"""
+input position_changes_bool_exp {
+  _and: [position_changes_bool_exp!]
+  _not: position_changes_bool_exp
+  _or: [position_changes_bool_exp!]
+  account: accounts_bool_exp
+  account_id: String_comparison_exp
+  assets_in: numeric_comparison_exp
+  assets_out: numeric_comparison_exp
+  block_number: numeric_comparison_exp
+  created_at: timestamptz_comparison_exp
+  curve_id: numeric_comparison_exp
+  event_id: String_comparison_exp
+  event_type: String_comparison_exp
+  id: bigint_comparison_exp
+  log_index: bigint_comparison_exp
+  shares_delta: numeric_comparison_exp
+  term: terms_bool_exp
+  term_id: String_comparison_exp
+  transaction_hash: String_comparison_exp
+  vault: vaults_bool_exp
+}
+
+"""
+aggregate max on columns
+"""
+type position_changes_max_fields {
+  account_id: String
+  assets_in: numeric
+  assets_out: numeric
+  block_number: numeric
+  created_at: timestamptz
+  curve_id: numeric
+  event_id: String
+  event_type: String
+  id: bigint
+  log_index: bigint
+  shares_delta: numeric
+  term_id: String
+  transaction_hash: String
+}
+
+"""
+aggregate min on columns
+"""
+type position_changes_min_fields {
+  account_id: String
+  assets_in: numeric
+  assets_out: numeric
+  block_number: numeric
+  created_at: timestamptz
+  curve_id: numeric
+  event_id: String
+  event_type: String
+  id: bigint
+  log_index: bigint
+  shares_delta: numeric
+  term_id: String
+  transaction_hash: String
+}
+
+"""
+Ordering options when selecting data from "position_change".
+"""
+input position_changes_order_by {
+  account: accounts_order_by
+  account_id: order_by
+  assets_in: order_by
+  assets_out: order_by
+  block_number: order_by
+  created_at: order_by
+  curve_id: order_by
+  event_id: order_by
+  event_type: order_by
+  id: order_by
+  log_index: order_by
+  shares_delta: order_by
+  term: terms_order_by
+  term_id: order_by
+  transaction_hash: order_by
+  vault: vaults_order_by
+}
+
+"""
+select columns of table "position_change"
+"""
+enum position_changes_select_column {
+  """
+  column name
+  """
+  account_id
+  """
+  column name
+  """
+  assets_in
+  """
+  column name
+  """
+  assets_out
+  """
+  column name
+  """
+  block_number
+  """
+  column name
+  """
+  created_at
+  """
+  column name
+  """
+  curve_id
+  """
+  column name
+  """
+  event_id
+  """
+  column name
+  """
+  event_type
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  log_index
+  """
+  column name
+  """
+  shares_delta
+  """
+  column name
+  """
+  term_id
+  """
+  column name
+  """
+  transaction_hash
+}
+
+"""
+aggregate stddev on columns
+"""
+type position_changes_stddev_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type position_changes_stddev_pop_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type position_changes_stddev_samp_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+Streaming cursor of the table "position_changes"
+"""
+input position_changes_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: position_changes_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input position_changes_stream_cursor_value_input {
+  account_id: String
+  assets_in: numeric
+  assets_out: numeric
+  block_number: numeric
+  created_at: timestamptz
+  curve_id: numeric
+  event_id: String
+  event_type: String
+  id: bigint
+  log_index: bigint
+  shares_delta: numeric
+  term_id: String
+  transaction_hash: String
+}
+
+"""
+aggregate sum on columns
+"""
+type position_changes_sum_fields {
+  assets_in: numeric
+  assets_out: numeric
+  block_number: numeric
+  curve_id: numeric
+  id: bigint
+  log_index: bigint
+  shares_delta: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type position_changes_var_pop_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type position_changes_var_samp_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type position_changes_variance_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
 columns and relationships of "position"
 """
 type positions {
@@ -4842,6 +5531,360 @@ input positions_variance_order_by {
   total_deposit_assets_after_total_fees: order_by
   total_redeem_assets_for_receiver: order_by
   transaction_index: order_by
+}
+
+"""
+columns and relationships of "position_with_value"
+"""
+type positions_with_value {
+  """
+  An object relationship
+  """
+  account: accounts
+  account_id: String
+  block_number: bigint
+  created_at: timestamptz
+  curve_id: numeric
+  id: String
+  log_index: bigint
+  shares: numeric
+  """
+  An object relationship
+  """
+  term: terms
+  term_id: String
+  theoretical_value: numeric
+  total_deposit_assets_after_total_fees: numeric
+  total_redeem_assets_for_receiver: numeric
+  transaction_hash: String
+  transaction_index: bigint
+  updated_at: timestamptz
+  """
+  An object relationship
+  """
+  vault: vaults
+}
+
+"""
+aggregated selection of "position_with_value"
+"""
+type positions_with_value_aggregate {
+  aggregate: positions_with_value_aggregate_fields
+  nodes: [positions_with_value!]!
+}
+
+"""
+aggregate fields of "position_with_value"
+"""
+type positions_with_value_aggregate_fields {
+  avg: positions_with_value_avg_fields
+  count(columns: [positions_with_value_select_column!], distinct: Boolean): Int!
+  max: positions_with_value_max_fields
+  min: positions_with_value_min_fields
+  stddev: positions_with_value_stddev_fields
+  stddev_pop: positions_with_value_stddev_pop_fields
+  stddev_samp: positions_with_value_stddev_samp_fields
+  sum: positions_with_value_sum_fields
+  var_pop: positions_with_value_var_pop_fields
+  var_samp: positions_with_value_var_samp_fields
+  variance: positions_with_value_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type positions_with_value_avg_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+Boolean expression to filter rows from the table "position_with_value". All fields are combined with a logical 'AND'.
+"""
+input positions_with_value_bool_exp {
+  _and: [positions_with_value_bool_exp!]
+  _not: positions_with_value_bool_exp
+  _or: [positions_with_value_bool_exp!]
+  account: accounts_bool_exp
+  account_id: String_comparison_exp
+  block_number: bigint_comparison_exp
+  created_at: timestamptz_comparison_exp
+  curve_id: numeric_comparison_exp
+  id: String_comparison_exp
+  log_index: bigint_comparison_exp
+  shares: numeric_comparison_exp
+  term: terms_bool_exp
+  term_id: String_comparison_exp
+  theoretical_value: numeric_comparison_exp
+  total_deposit_assets_after_total_fees: numeric_comparison_exp
+  total_redeem_assets_for_receiver: numeric_comparison_exp
+  transaction_hash: String_comparison_exp
+  transaction_index: bigint_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  vault: vaults_bool_exp
+}
+
+"""
+aggregate max on columns
+"""
+type positions_with_value_max_fields {
+  account_id: String
+  block_number: bigint
+  created_at: timestamptz
+  curve_id: numeric
+  id: String
+  log_index: bigint
+  shares: numeric
+  term_id: String
+  theoretical_value: numeric
+  total_deposit_assets_after_total_fees: numeric
+  total_redeem_assets_for_receiver: numeric
+  transaction_hash: String
+  transaction_index: bigint
+  updated_at: timestamptz
+}
+
+"""
+aggregate min on columns
+"""
+type positions_with_value_min_fields {
+  account_id: String
+  block_number: bigint
+  created_at: timestamptz
+  curve_id: numeric
+  id: String
+  log_index: bigint
+  shares: numeric
+  term_id: String
+  theoretical_value: numeric
+  total_deposit_assets_after_total_fees: numeric
+  total_redeem_assets_for_receiver: numeric
+  transaction_hash: String
+  transaction_index: bigint
+  updated_at: timestamptz
+}
+
+"""
+Ordering options when selecting data from "position_with_value".
+"""
+input positions_with_value_order_by {
+  account: accounts_order_by
+  account_id: order_by
+  block_number: order_by
+  created_at: order_by
+  curve_id: order_by
+  id: order_by
+  log_index: order_by
+  shares: order_by
+  term: terms_order_by
+  term_id: order_by
+  theoretical_value: order_by
+  total_deposit_assets_after_total_fees: order_by
+  total_redeem_assets_for_receiver: order_by
+  transaction_hash: order_by
+  transaction_index: order_by
+  updated_at: order_by
+  vault: vaults_order_by
+}
+
+"""
+select columns of table "position_with_value"
+"""
+enum positions_with_value_select_column {
+  """
+  column name
+  """
+  account_id
+  """
+  column name
+  """
+  block_number
+  """
+  column name
+  """
+  created_at
+  """
+  column name
+  """
+  curve_id
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  log_index
+  """
+  column name
+  """
+  shares
+  """
+  column name
+  """
+  term_id
+  """
+  column name
+  """
+  theoretical_value
+  """
+  column name
+  """
+  total_deposit_assets_after_total_fees
+  """
+  column name
+  """
+  total_redeem_assets_for_receiver
+  """
+  column name
+  """
+  transaction_hash
+  """
+  column name
+  """
+  transaction_index
+  """
+  column name
+  """
+  updated_at
+}
+
+"""
+aggregate stddev on columns
+"""
+type positions_with_value_stddev_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type positions_with_value_stddev_pop_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type positions_with_value_stddev_samp_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+Streaming cursor of the table "positions_with_value"
+"""
+input positions_with_value_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: positions_with_value_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input positions_with_value_stream_cursor_value_input {
+  account_id: String
+  block_number: bigint
+  created_at: timestamptz
+  curve_id: numeric
+  id: String
+  log_index: bigint
+  shares: numeric
+  term_id: String
+  theoretical_value: numeric
+  total_deposit_assets_after_total_fees: numeric
+  total_redeem_assets_for_receiver: numeric
+  transaction_hash: String
+  transaction_index: bigint
+  updated_at: timestamptz
+}
+
+"""
+aggregate sum on columns
+"""
+type positions_with_value_sum_fields {
+  block_number: bigint
+  curve_id: numeric
+  log_index: bigint
+  shares: numeric
+  theoretical_value: numeric
+  total_deposit_assets_after_total_fees: numeric
+  total_redeem_assets_for_receiver: numeric
+  transaction_index: bigint
+}
+
+"""
+aggregate var_pop on columns
+"""
+type positions_with_value_var_pop_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type positions_with_value_var_samp_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type positions_with_value_variance_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
 }
 
 """
@@ -5841,13 +6884,41 @@ type query_root {
     where: accounts_bool_exp
   ): accounts_aggregate!
   """
+  Fetches account-level PnL chart data
+  """
+  getAccountPnlChart(input: GetAccountPnlChartInput!): AccountPnlChartOutput
+  """
+  Fetches current account PnL snapshot
+  """
+  getAccountPnlCurrent(
+    input: GetAccountPnlCurrentInput!
+  ): AccountPnlSnapshotOutput
+  """
+  Fetches realized PnL breakdown for an account
+  """
+  getAccountPnlRealized(
+    input: GetAccountPnlRealizedInput!
+  ): AccountPnlRealizedOutput
+  """
   Fetches chart data (JSON) for a term/curve combination
   """
   getChartJson(input: GetChartJsonInput!): ChartDataOutput
   """
+  Fetches raw share price chart data (JSON) from share_price_change
+  """
+  getChartRawJson(input: GetChartJsonInput!): ChartDataOutput
+  """
+  Fetches raw share price chart SVG from share_price_change
+  """
+  getChartRawSvg(input: GetChartSvgInput!): ChartSvgOutput
+  """
   Fetches chart SVG for a term/curve combination
   """
   getChartSvg(input: GetChartSvgInput!): ChartSvgOutput
+  """
+  Fetches position PnL chart data
+  """
+  getPositionPnlChart(input: GetPositionPnlChartInput!): PositionPnlChartOutput
   """
   fetch data from the table: "json_object" using primary key columns
   """
@@ -6015,6 +7086,106 @@ type query_root {
   """
   position(id: String!): positions
   """
+  fetch data from the table: "position_change_daily"
+  """
+  position_change_daily(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_change_daily_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_change_daily_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_change_daily_bool_exp
+  ): [position_change_daily!]!
+  """
+  fetch data from the table: "position_change_hourly"
+  """
+  position_change_hourly(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_change_hourly_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_change_hourly_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_change_hourly_bool_exp
+  ): [position_change_hourly!]!
+  """
+  fetch data from the table: "position_change"
+  """
+  position_changes(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_changes_bool_exp
+  ): [position_changes!]!
+  """
+  fetch aggregated fields from the table: "position_change"
+  """
+  position_changes_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_changes_bool_exp
+  ): position_changes_aggregate!
+  """
   An array relationship
   """
   positions(
@@ -6122,6 +7293,56 @@ type query_root {
     """
     where: positions_bool_exp
   ): positions_aggregate!
+  """
+  fetch data from the table: "position_with_value"
+  """
+  positions_with_value(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_with_value_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_with_value_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_with_value_bool_exp
+  ): [positions_with_value!]!
+  """
+  fetch aggregated fields from the table: "position_with_value"
+  """
+  positions_with_value_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_with_value_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_with_value_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_with_value_bool_exp
+  ): positions_with_value_aggregate!
   """
   fetch data from the table: "predicate_object"
   """
@@ -11892,6 +13113,157 @@ type subscription_root {
   """
   position(id: String!): positions
   """
+  fetch data from the table: "position_change_daily"
+  """
+  position_change_daily(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_change_daily_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_change_daily_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_change_daily_bool_exp
+  ): [position_change_daily!]!
+  """
+  fetch data from the table in a streaming manner: "position_change_daily"
+  """
+  position_change_daily_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [position_change_daily_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: position_change_daily_bool_exp
+  ): [position_change_daily!]!
+  """
+  fetch data from the table: "position_change_hourly"
+  """
+  position_change_hourly(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_change_hourly_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_change_hourly_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_change_hourly_bool_exp
+  ): [position_change_hourly!]!
+  """
+  fetch data from the table in a streaming manner: "position_change_hourly"
+  """
+  position_change_hourly_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [position_change_hourly_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: position_change_hourly_bool_exp
+  ): [position_change_hourly!]!
+  """
+  fetch data from the table: "position_change"
+  """
+  position_changes(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_changes_bool_exp
+  ): [position_changes!]!
+  """
+  fetch aggregated fields from the table: "position_change"
+  """
+  position_changes_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_changes_bool_exp
+  ): position_changes_aggregate!
+  """
+  fetch data from the table in a streaming manner: "position_change"
+  """
+  position_changes_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [position_changes_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: position_changes_bool_exp
+  ): [position_changes!]!
+  """
   An array relationship
   """
   positions(
@@ -12016,6 +13388,73 @@ type subscription_root {
     """
     where: positions_bool_exp
   ): [positions!]!
+  """
+  fetch data from the table: "position_with_value"
+  """
+  positions_with_value(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_with_value_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_with_value_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_with_value_bool_exp
+  ): [positions_with_value!]!
+  """
+  fetch aggregated fields from the table: "position_with_value"
+  """
+  positions_with_value_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_with_value_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_with_value_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_with_value_bool_exp
+  ): positions_with_value_aggregate!
+  """
+  fetch data from the table in a streaming manner: "position_with_value"
+  """
+  positions_with_value_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [positions_with_value_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: positions_with_value_bool_exp
+  ): [positions_with_value!]!
   """
   fetch data from the table: "predicate_object"
   """

@@ -44,6 +44,58 @@ export type Scalars = {
   vault_type: { input: any; output: any }
 }
 
+export type AccountPnlChartOutput = {
+  __typename?: "AccountPnlChartOutput"
+  account_id: Scalars["String"]["output"]
+  count: Scalars["Int"]["output"]
+  data: Array<AccountPnlChartPoint>
+  interval: Scalars["String"]["output"]
+}
+
+export type AccountPnlChartPoint = {
+  __typename?: "AccountPnlChartPoint"
+  equity_value: Scalars["String"]["output"]
+  net_invested: Scalars["String"]["output"]
+  pnl_pct: Scalars["String"]["output"]
+  timestamp: Scalars["String"]["output"]
+  total_assets_in: Scalars["String"]["output"]
+  total_assets_out: Scalars["String"]["output"]
+  total_pnl: Scalars["String"]["output"]
+  unrealized_pnl: Scalars["String"]["output"]
+}
+
+export type AccountPnlRealizedEntry = {
+  __typename?: "AccountPnlRealizedEntry"
+  assets_out: Scalars["String"]["output"]
+  cost_basis: Scalars["String"]["output"]
+  curve_id: Scalars["String"]["output"]
+  realized_pnl: Scalars["String"]["output"]
+  realized_pnl_pct: Scalars["String"]["output"]
+  shares_redeemed: Scalars["String"]["output"]
+  term_id: Scalars["String"]["output"]
+  timestamp: Scalars["String"]["output"]
+}
+
+export type AccountPnlRealizedOutput = {
+  __typename?: "AccountPnlRealizedOutput"
+  account_id: Scalars["String"]["output"]
+  count: Scalars["Int"]["output"]
+  data: Array<AccountPnlRealizedEntry>
+}
+
+export type AccountPnlSnapshotOutput = {
+  __typename?: "AccountPnlSnapshotOutput"
+  account_id: Scalars["String"]["output"]
+  equity_value: Scalars["String"]["output"]
+  net_invested: Scalars["String"]["output"]
+  pnl_pct: Scalars["String"]["output"]
+  timestamp: Scalars["String"]["output"]
+  total_assets_in: Scalars["String"]["output"]
+  total_assets_out: Scalars["String"]["output"]
+  total_pnl: Scalars["String"]["output"]
+  unrealized_pnl: Scalars["String"]["output"]
+}
+
 /** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
 export type Boolean_Comparison_Exp = {
   _eq?: InputMaybe<Scalars["Boolean"]["input"]>
@@ -88,6 +140,23 @@ export type ChartSvgOutput = {
   svg: Scalars["String"]["output"]
 }
 
+export type GetAccountPnlChartInput = {
+  account_id: Scalars["String"]["input"]
+  end_time: Scalars["String"]["input"]
+  interval: Scalars["String"]["input"]
+  start_time: Scalars["String"]["input"]
+}
+
+export type GetAccountPnlCurrentInput = {
+  account_id: Scalars["String"]["input"]
+}
+
+export type GetAccountPnlRealizedInput = {
+  account_id: Scalars["String"]["input"]
+  end_time: Scalars["String"]["input"]
+  start_time: Scalars["String"]["input"]
+}
+
 export type GetChartJsonInput = {
   curve_id: Scalars["String"]["input"]
   end_time: Scalars["String"]["input"]
@@ -108,6 +177,15 @@ export type GetChartSvgInput = {
   start_time: Scalars["String"]["input"]
   term_id: Scalars["String"]["input"]
   width?: InputMaybe<Scalars["Int"]["input"]>
+}
+
+export type GetPositionPnlChartInput = {
+  account_id: Scalars["String"]["input"]
+  curve_id: Scalars["String"]["input"]
+  end_time: Scalars["String"]["input"]
+  interval: Scalars["String"]["input"]
+  start_time: Scalars["String"]["input"]
+  term_id: Scalars["String"]["input"]
 }
 
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
@@ -150,6 +228,30 @@ export type PinThingInput = {
   image?: InputMaybe<Scalars["String"]["input"]>
   name?: InputMaybe<Scalars["String"]["input"]>
   url?: InputMaybe<Scalars["String"]["input"]>
+}
+
+export type PositionPnlChartOutput = {
+  __typename?: "PositionPnlChartOutput"
+  account_id: Scalars["String"]["output"]
+  count: Scalars["Int"]["output"]
+  curve_id: Scalars["String"]["output"]
+  data: Array<PositionPnlChartPoint>
+  interval: Scalars["String"]["output"]
+  term_id: Scalars["String"]["output"]
+}
+
+export type PositionPnlChartPoint = {
+  __typename?: "PositionPnlChartPoint"
+  equity_value: Scalars["String"]["output"]
+  net_invested: Scalars["String"]["output"]
+  pnl_pct: Scalars["String"]["output"]
+  share_price: Scalars["String"]["output"]
+  shares_total: Scalars["String"]["output"]
+  timestamp: Scalars["String"]["output"]
+  total_assets_in: Scalars["String"]["output"]
+  total_assets_out: Scalars["String"]["output"]
+  total_pnl: Scalars["String"]["output"]
+  unrealized_pnl: Scalars["String"]["output"]
 }
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -3246,6 +3348,470 @@ export type Persons_Stream_Cursor_Value_Input = {
   url?: InputMaybe<Scalars["String"]["input"]>
 }
 
+/** columns and relationships of "position_change_daily" */
+export type Position_Change_Daily = {
+  __typename?: "position_change_daily"
+  /** An object relationship */
+  account?: Maybe<Accounts>
+  account_id?: Maybe<Scalars["String"]["output"]>
+  assets_in_period?: Maybe<Scalars["numeric"]["output"]>
+  assets_out_period?: Maybe<Scalars["numeric"]["output"]>
+  bucket?: Maybe<Scalars["timestamptz"]["output"]>
+  curve_id?: Maybe<Scalars["numeric"]["output"]>
+  shares_delta_period?: Maybe<Scalars["numeric"]["output"]>
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id?: Maybe<Scalars["String"]["output"]>
+  transaction_count?: Maybe<Scalars["numeric"]["output"]>
+  /** An object relationship */
+  vault?: Maybe<Vaults>
+}
+
+/** Boolean expression to filter rows from the table "position_change_daily". All fields are combined with a logical 'AND'. */
+export type Position_Change_Daily_Bool_Exp = {
+  _and?: InputMaybe<Array<Position_Change_Daily_Bool_Exp>>
+  _not?: InputMaybe<Position_Change_Daily_Bool_Exp>
+  _or?: InputMaybe<Array<Position_Change_Daily_Bool_Exp>>
+  account?: InputMaybe<Accounts_Bool_Exp>
+  account_id?: InputMaybe<String_Comparison_Exp>
+  assets_in_period?: InputMaybe<Numeric_Comparison_Exp>
+  assets_out_period?: InputMaybe<Numeric_Comparison_Exp>
+  bucket?: InputMaybe<Timestamptz_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  shares_delta_period?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<String_Comparison_Exp>
+  transaction_count?: InputMaybe<Numeric_Comparison_Exp>
+  vault?: InputMaybe<Vaults_Bool_Exp>
+}
+
+/** Ordering options when selecting data from "position_change_daily". */
+export type Position_Change_Daily_Order_By = {
+  account?: InputMaybe<Accounts_Order_By>
+  account_id?: InputMaybe<Order_By>
+  assets_in_period?: InputMaybe<Order_By>
+  assets_out_period?: InputMaybe<Order_By>
+  bucket?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  shares_delta_period?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
+  term_id?: InputMaybe<Order_By>
+  transaction_count?: InputMaybe<Order_By>
+  vault?: InputMaybe<Vaults_Order_By>
+}
+
+/** select columns of table "position_change_daily" */
+export type Position_Change_Daily_Select_Column =
+  /** column name */
+  | "account_id"
+  /** column name */
+  | "assets_in_period"
+  /** column name */
+  | "assets_out_period"
+  /** column name */
+  | "bucket"
+  /** column name */
+  | "curve_id"
+  /** column name */
+  | "shares_delta_period"
+  /** column name */
+  | "term_id"
+  /** column name */
+  | "transaction_count"
+
+/** Streaming cursor of the table "position_change_daily" */
+export type Position_Change_Daily_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Position_Change_Daily_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Position_Change_Daily_Stream_Cursor_Value_Input = {
+  account_id?: InputMaybe<Scalars["String"]["input"]>
+  assets_in_period?: InputMaybe<Scalars["numeric"]["input"]>
+  assets_out_period?: InputMaybe<Scalars["numeric"]["input"]>
+  bucket?: InputMaybe<Scalars["timestamptz"]["input"]>
+  curve_id?: InputMaybe<Scalars["numeric"]["input"]>
+  shares_delta_period?: InputMaybe<Scalars["numeric"]["input"]>
+  term_id?: InputMaybe<Scalars["String"]["input"]>
+  transaction_count?: InputMaybe<Scalars["numeric"]["input"]>
+}
+
+/** columns and relationships of "position_change_hourly" */
+export type Position_Change_Hourly = {
+  __typename?: "position_change_hourly"
+  /** An object relationship */
+  account?: Maybe<Accounts>
+  account_id?: Maybe<Scalars["String"]["output"]>
+  assets_in_period?: Maybe<Scalars["numeric"]["output"]>
+  assets_out_period?: Maybe<Scalars["numeric"]["output"]>
+  bucket?: Maybe<Scalars["timestamptz"]["output"]>
+  curve_id?: Maybe<Scalars["numeric"]["output"]>
+  shares_delta_period?: Maybe<Scalars["numeric"]["output"]>
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id?: Maybe<Scalars["String"]["output"]>
+  transaction_count?: Maybe<Scalars["bigint"]["output"]>
+  /** An object relationship */
+  vault?: Maybe<Vaults>
+}
+
+/** Boolean expression to filter rows from the table "position_change_hourly". All fields are combined with a logical 'AND'. */
+export type Position_Change_Hourly_Bool_Exp = {
+  _and?: InputMaybe<Array<Position_Change_Hourly_Bool_Exp>>
+  _not?: InputMaybe<Position_Change_Hourly_Bool_Exp>
+  _or?: InputMaybe<Array<Position_Change_Hourly_Bool_Exp>>
+  account?: InputMaybe<Accounts_Bool_Exp>
+  account_id?: InputMaybe<String_Comparison_Exp>
+  assets_in_period?: InputMaybe<Numeric_Comparison_Exp>
+  assets_out_period?: InputMaybe<Numeric_Comparison_Exp>
+  bucket?: InputMaybe<Timestamptz_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  shares_delta_period?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<String_Comparison_Exp>
+  transaction_count?: InputMaybe<Bigint_Comparison_Exp>
+  vault?: InputMaybe<Vaults_Bool_Exp>
+}
+
+/** Ordering options when selecting data from "position_change_hourly". */
+export type Position_Change_Hourly_Order_By = {
+  account?: InputMaybe<Accounts_Order_By>
+  account_id?: InputMaybe<Order_By>
+  assets_in_period?: InputMaybe<Order_By>
+  assets_out_period?: InputMaybe<Order_By>
+  bucket?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  shares_delta_period?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
+  term_id?: InputMaybe<Order_By>
+  transaction_count?: InputMaybe<Order_By>
+  vault?: InputMaybe<Vaults_Order_By>
+}
+
+/** select columns of table "position_change_hourly" */
+export type Position_Change_Hourly_Select_Column =
+  /** column name */
+  | "account_id"
+  /** column name */
+  | "assets_in_period"
+  /** column name */
+  | "assets_out_period"
+  /** column name */
+  | "bucket"
+  /** column name */
+  | "curve_id"
+  /** column name */
+  | "shares_delta_period"
+  /** column name */
+  | "term_id"
+  /** column name */
+  | "transaction_count"
+
+/** Streaming cursor of the table "position_change_hourly" */
+export type Position_Change_Hourly_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Position_Change_Hourly_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Position_Change_Hourly_Stream_Cursor_Value_Input = {
+  account_id?: InputMaybe<Scalars["String"]["input"]>
+  assets_in_period?: InputMaybe<Scalars["numeric"]["input"]>
+  assets_out_period?: InputMaybe<Scalars["numeric"]["input"]>
+  bucket?: InputMaybe<Scalars["timestamptz"]["input"]>
+  curve_id?: InputMaybe<Scalars["numeric"]["input"]>
+  shares_delta_period?: InputMaybe<Scalars["numeric"]["input"]>
+  term_id?: InputMaybe<Scalars["String"]["input"]>
+  transaction_count?: InputMaybe<Scalars["bigint"]["input"]>
+}
+
+/** columns and relationships of "position_change" */
+export type Position_Changes = {
+  __typename?: "position_changes"
+  /** An object relationship */
+  account?: Maybe<Accounts>
+  account_id: Scalars["String"]["output"]
+  assets_in: Scalars["numeric"]["output"]
+  assets_out: Scalars["numeric"]["output"]
+  block_number: Scalars["numeric"]["output"]
+  created_at: Scalars["timestamptz"]["output"]
+  curve_id: Scalars["numeric"]["output"]
+  event_id: Scalars["String"]["output"]
+  event_type: Scalars["String"]["output"]
+  id: Scalars["bigint"]["output"]
+  log_index: Scalars["bigint"]["output"]
+  shares_delta: Scalars["numeric"]["output"]
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id: Scalars["String"]["output"]
+  transaction_hash: Scalars["String"]["output"]
+  /** An object relationship */
+  vault?: Maybe<Vaults>
+}
+
+/** aggregated selection of "position_change" */
+export type Position_Changes_Aggregate = {
+  __typename?: "position_changes_aggregate"
+  aggregate?: Maybe<Position_Changes_Aggregate_Fields>
+  nodes: Array<Position_Changes>
+}
+
+/** aggregate fields of "position_change" */
+export type Position_Changes_Aggregate_Fields = {
+  __typename?: "position_changes_aggregate_fields"
+  avg?: Maybe<Position_Changes_Avg_Fields>
+  count: Scalars["Int"]["output"]
+  max?: Maybe<Position_Changes_Max_Fields>
+  min?: Maybe<Position_Changes_Min_Fields>
+  stddev?: Maybe<Position_Changes_Stddev_Fields>
+  stddev_pop?: Maybe<Position_Changes_Stddev_Pop_Fields>
+  stddev_samp?: Maybe<Position_Changes_Stddev_Samp_Fields>
+  sum?: Maybe<Position_Changes_Sum_Fields>
+  var_pop?: Maybe<Position_Changes_Var_Pop_Fields>
+  var_samp?: Maybe<Position_Changes_Var_Samp_Fields>
+  variance?: Maybe<Position_Changes_Variance_Fields>
+}
+
+/** aggregate fields of "position_change" */
+export type Position_Changes_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Position_Changes_Select_Column>>
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>
+}
+
+/** aggregate avg on columns */
+export type Position_Changes_Avg_Fields = {
+  __typename?: "position_changes_avg_fields"
+  assets_in?: Maybe<Scalars["Float"]["output"]>
+  assets_out?: Maybe<Scalars["Float"]["output"]>
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares_delta?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** Boolean expression to filter rows from the table "position_change". All fields are combined with a logical 'AND'. */
+export type Position_Changes_Bool_Exp = {
+  _and?: InputMaybe<Array<Position_Changes_Bool_Exp>>
+  _not?: InputMaybe<Position_Changes_Bool_Exp>
+  _or?: InputMaybe<Array<Position_Changes_Bool_Exp>>
+  account?: InputMaybe<Accounts_Bool_Exp>
+  account_id?: InputMaybe<String_Comparison_Exp>
+  assets_in?: InputMaybe<Numeric_Comparison_Exp>
+  assets_out?: InputMaybe<Numeric_Comparison_Exp>
+  block_number?: InputMaybe<Numeric_Comparison_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  event_id?: InputMaybe<String_Comparison_Exp>
+  event_type?: InputMaybe<String_Comparison_Exp>
+  id?: InputMaybe<Bigint_Comparison_Exp>
+  log_index?: InputMaybe<Bigint_Comparison_Exp>
+  shares_delta?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<String_Comparison_Exp>
+  transaction_hash?: InputMaybe<String_Comparison_Exp>
+  vault?: InputMaybe<Vaults_Bool_Exp>
+}
+
+/** aggregate max on columns */
+export type Position_Changes_Max_Fields = {
+  __typename?: "position_changes_max_fields"
+  account_id?: Maybe<Scalars["String"]["output"]>
+  assets_in?: Maybe<Scalars["numeric"]["output"]>
+  assets_out?: Maybe<Scalars["numeric"]["output"]>
+  block_number?: Maybe<Scalars["numeric"]["output"]>
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>
+  curve_id?: Maybe<Scalars["numeric"]["output"]>
+  event_id?: Maybe<Scalars["String"]["output"]>
+  event_type?: Maybe<Scalars["String"]["output"]>
+  id?: Maybe<Scalars["bigint"]["output"]>
+  log_index?: Maybe<Scalars["bigint"]["output"]>
+  shares_delta?: Maybe<Scalars["numeric"]["output"]>
+  term_id?: Maybe<Scalars["String"]["output"]>
+  transaction_hash?: Maybe<Scalars["String"]["output"]>
+}
+
+/** aggregate min on columns */
+export type Position_Changes_Min_Fields = {
+  __typename?: "position_changes_min_fields"
+  account_id?: Maybe<Scalars["String"]["output"]>
+  assets_in?: Maybe<Scalars["numeric"]["output"]>
+  assets_out?: Maybe<Scalars["numeric"]["output"]>
+  block_number?: Maybe<Scalars["numeric"]["output"]>
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>
+  curve_id?: Maybe<Scalars["numeric"]["output"]>
+  event_id?: Maybe<Scalars["String"]["output"]>
+  event_type?: Maybe<Scalars["String"]["output"]>
+  id?: Maybe<Scalars["bigint"]["output"]>
+  log_index?: Maybe<Scalars["bigint"]["output"]>
+  shares_delta?: Maybe<Scalars["numeric"]["output"]>
+  term_id?: Maybe<Scalars["String"]["output"]>
+  transaction_hash?: Maybe<Scalars["String"]["output"]>
+}
+
+/** Ordering options when selecting data from "position_change". */
+export type Position_Changes_Order_By = {
+  account?: InputMaybe<Accounts_Order_By>
+  account_id?: InputMaybe<Order_By>
+  assets_in?: InputMaybe<Order_By>
+  assets_out?: InputMaybe<Order_By>
+  block_number?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  event_id?: InputMaybe<Order_By>
+  event_type?: InputMaybe<Order_By>
+  id?: InputMaybe<Order_By>
+  log_index?: InputMaybe<Order_By>
+  shares_delta?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
+  term_id?: InputMaybe<Order_By>
+  transaction_hash?: InputMaybe<Order_By>
+  vault?: InputMaybe<Vaults_Order_By>
+}
+
+/** select columns of table "position_change" */
+export type Position_Changes_Select_Column =
+  /** column name */
+  | "account_id"
+  /** column name */
+  | "assets_in"
+  /** column name */
+  | "assets_out"
+  /** column name */
+  | "block_number"
+  /** column name */
+  | "created_at"
+  /** column name */
+  | "curve_id"
+  /** column name */
+  | "event_id"
+  /** column name */
+  | "event_type"
+  /** column name */
+  | "id"
+  /** column name */
+  | "log_index"
+  /** column name */
+  | "shares_delta"
+  /** column name */
+  | "term_id"
+  /** column name */
+  | "transaction_hash"
+
+/** aggregate stddev on columns */
+export type Position_Changes_Stddev_Fields = {
+  __typename?: "position_changes_stddev_fields"
+  assets_in?: Maybe<Scalars["Float"]["output"]>
+  assets_out?: Maybe<Scalars["Float"]["output"]>
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares_delta?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** aggregate stddev_pop on columns */
+export type Position_Changes_Stddev_Pop_Fields = {
+  __typename?: "position_changes_stddev_pop_fields"
+  assets_in?: Maybe<Scalars["Float"]["output"]>
+  assets_out?: Maybe<Scalars["Float"]["output"]>
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares_delta?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** aggregate stddev_samp on columns */
+export type Position_Changes_Stddev_Samp_Fields = {
+  __typename?: "position_changes_stddev_samp_fields"
+  assets_in?: Maybe<Scalars["Float"]["output"]>
+  assets_out?: Maybe<Scalars["Float"]["output"]>
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares_delta?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** Streaming cursor of the table "position_changes" */
+export type Position_Changes_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Position_Changes_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Position_Changes_Stream_Cursor_Value_Input = {
+  account_id?: InputMaybe<Scalars["String"]["input"]>
+  assets_in?: InputMaybe<Scalars["numeric"]["input"]>
+  assets_out?: InputMaybe<Scalars["numeric"]["input"]>
+  block_number?: InputMaybe<Scalars["numeric"]["input"]>
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>
+  curve_id?: InputMaybe<Scalars["numeric"]["input"]>
+  event_id?: InputMaybe<Scalars["String"]["input"]>
+  event_type?: InputMaybe<Scalars["String"]["input"]>
+  id?: InputMaybe<Scalars["bigint"]["input"]>
+  log_index?: InputMaybe<Scalars["bigint"]["input"]>
+  shares_delta?: InputMaybe<Scalars["numeric"]["input"]>
+  term_id?: InputMaybe<Scalars["String"]["input"]>
+  transaction_hash?: InputMaybe<Scalars["String"]["input"]>
+}
+
+/** aggregate sum on columns */
+export type Position_Changes_Sum_Fields = {
+  __typename?: "position_changes_sum_fields"
+  assets_in?: Maybe<Scalars["numeric"]["output"]>
+  assets_out?: Maybe<Scalars["numeric"]["output"]>
+  block_number?: Maybe<Scalars["numeric"]["output"]>
+  curve_id?: Maybe<Scalars["numeric"]["output"]>
+  id?: Maybe<Scalars["bigint"]["output"]>
+  log_index?: Maybe<Scalars["bigint"]["output"]>
+  shares_delta?: Maybe<Scalars["numeric"]["output"]>
+}
+
+/** aggregate var_pop on columns */
+export type Position_Changes_Var_Pop_Fields = {
+  __typename?: "position_changes_var_pop_fields"
+  assets_in?: Maybe<Scalars["Float"]["output"]>
+  assets_out?: Maybe<Scalars["Float"]["output"]>
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares_delta?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** aggregate var_samp on columns */
+export type Position_Changes_Var_Samp_Fields = {
+  __typename?: "position_changes_var_samp_fields"
+  assets_in?: Maybe<Scalars["Float"]["output"]>
+  assets_out?: Maybe<Scalars["Float"]["output"]>
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares_delta?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** aggregate variance on columns */
+export type Position_Changes_Variance_Fields = {
+  __typename?: "position_changes_variance_fields"
+  assets_in?: Maybe<Scalars["Float"]["output"]>
+  assets_out?: Maybe<Scalars["Float"]["output"]>
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares_delta?: Maybe<Scalars["Float"]["output"]>
+}
+
 /** columns and relationships of "position" */
 export type Positions = {
   __typename?: "positions"
@@ -3682,6 +4248,306 @@ export type Positions_Variance_Order_By = {
   transaction_index?: InputMaybe<Order_By>
 }
 
+/** columns and relationships of "position_with_value" */
+export type Positions_With_Value = {
+  __typename?: "positions_with_value"
+  /** An object relationship */
+  account?: Maybe<Accounts>
+  account_id?: Maybe<Scalars["String"]["output"]>
+  block_number?: Maybe<Scalars["bigint"]["output"]>
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>
+  curve_id?: Maybe<Scalars["numeric"]["output"]>
+  id?: Maybe<Scalars["String"]["output"]>
+  log_index?: Maybe<Scalars["bigint"]["output"]>
+  shares?: Maybe<Scalars["numeric"]["output"]>
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id?: Maybe<Scalars["String"]["output"]>
+  theoretical_value?: Maybe<Scalars["numeric"]["output"]>
+  total_deposit_assets_after_total_fees?: Maybe<Scalars["numeric"]["output"]>
+  total_redeem_assets_for_receiver?: Maybe<Scalars["numeric"]["output"]>
+  transaction_hash?: Maybe<Scalars["String"]["output"]>
+  transaction_index?: Maybe<Scalars["bigint"]["output"]>
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>
+  /** An object relationship */
+  vault?: Maybe<Vaults>
+}
+
+/** aggregated selection of "position_with_value" */
+export type Positions_With_Value_Aggregate = {
+  __typename?: "positions_with_value_aggregate"
+  aggregate?: Maybe<Positions_With_Value_Aggregate_Fields>
+  nodes: Array<Positions_With_Value>
+}
+
+/** aggregate fields of "position_with_value" */
+export type Positions_With_Value_Aggregate_Fields = {
+  __typename?: "positions_with_value_aggregate_fields"
+  avg?: Maybe<Positions_With_Value_Avg_Fields>
+  count: Scalars["Int"]["output"]
+  max?: Maybe<Positions_With_Value_Max_Fields>
+  min?: Maybe<Positions_With_Value_Min_Fields>
+  stddev?: Maybe<Positions_With_Value_Stddev_Fields>
+  stddev_pop?: Maybe<Positions_With_Value_Stddev_Pop_Fields>
+  stddev_samp?: Maybe<Positions_With_Value_Stddev_Samp_Fields>
+  sum?: Maybe<Positions_With_Value_Sum_Fields>
+  var_pop?: Maybe<Positions_With_Value_Var_Pop_Fields>
+  var_samp?: Maybe<Positions_With_Value_Var_Samp_Fields>
+  variance?: Maybe<Positions_With_Value_Variance_Fields>
+}
+
+/** aggregate fields of "position_with_value" */
+export type Positions_With_Value_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Positions_With_Value_Select_Column>>
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>
+}
+
+/** aggregate avg on columns */
+export type Positions_With_Value_Avg_Fields = {
+  __typename?: "positions_with_value_avg_fields"
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares?: Maybe<Scalars["Float"]["output"]>
+  theoretical_value?: Maybe<Scalars["Float"]["output"]>
+  total_deposit_assets_after_total_fees?: Maybe<Scalars["Float"]["output"]>
+  total_redeem_assets_for_receiver?: Maybe<Scalars["Float"]["output"]>
+  transaction_index?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** Boolean expression to filter rows from the table "position_with_value". All fields are combined with a logical 'AND'. */
+export type Positions_With_Value_Bool_Exp = {
+  _and?: InputMaybe<Array<Positions_With_Value_Bool_Exp>>
+  _not?: InputMaybe<Positions_With_Value_Bool_Exp>
+  _or?: InputMaybe<Array<Positions_With_Value_Bool_Exp>>
+  account?: InputMaybe<Accounts_Bool_Exp>
+  account_id?: InputMaybe<String_Comparison_Exp>
+  block_number?: InputMaybe<Bigint_Comparison_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  id?: InputMaybe<String_Comparison_Exp>
+  log_index?: InputMaybe<Bigint_Comparison_Exp>
+  shares?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<String_Comparison_Exp>
+  theoretical_value?: InputMaybe<Numeric_Comparison_Exp>
+  total_deposit_assets_after_total_fees?: InputMaybe<Numeric_Comparison_Exp>
+  total_redeem_assets_for_receiver?: InputMaybe<Numeric_Comparison_Exp>
+  transaction_hash?: InputMaybe<String_Comparison_Exp>
+  transaction_index?: InputMaybe<Bigint_Comparison_Exp>
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>
+  vault?: InputMaybe<Vaults_Bool_Exp>
+}
+
+/** aggregate max on columns */
+export type Positions_With_Value_Max_Fields = {
+  __typename?: "positions_with_value_max_fields"
+  account_id?: Maybe<Scalars["String"]["output"]>
+  block_number?: Maybe<Scalars["bigint"]["output"]>
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>
+  curve_id?: Maybe<Scalars["numeric"]["output"]>
+  id?: Maybe<Scalars["String"]["output"]>
+  log_index?: Maybe<Scalars["bigint"]["output"]>
+  shares?: Maybe<Scalars["numeric"]["output"]>
+  term_id?: Maybe<Scalars["String"]["output"]>
+  theoretical_value?: Maybe<Scalars["numeric"]["output"]>
+  total_deposit_assets_after_total_fees?: Maybe<Scalars["numeric"]["output"]>
+  total_redeem_assets_for_receiver?: Maybe<Scalars["numeric"]["output"]>
+  transaction_hash?: Maybe<Scalars["String"]["output"]>
+  transaction_index?: Maybe<Scalars["bigint"]["output"]>
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>
+}
+
+/** aggregate min on columns */
+export type Positions_With_Value_Min_Fields = {
+  __typename?: "positions_with_value_min_fields"
+  account_id?: Maybe<Scalars["String"]["output"]>
+  block_number?: Maybe<Scalars["bigint"]["output"]>
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>
+  curve_id?: Maybe<Scalars["numeric"]["output"]>
+  id?: Maybe<Scalars["String"]["output"]>
+  log_index?: Maybe<Scalars["bigint"]["output"]>
+  shares?: Maybe<Scalars["numeric"]["output"]>
+  term_id?: Maybe<Scalars["String"]["output"]>
+  theoretical_value?: Maybe<Scalars["numeric"]["output"]>
+  total_deposit_assets_after_total_fees?: Maybe<Scalars["numeric"]["output"]>
+  total_redeem_assets_for_receiver?: Maybe<Scalars["numeric"]["output"]>
+  transaction_hash?: Maybe<Scalars["String"]["output"]>
+  transaction_index?: Maybe<Scalars["bigint"]["output"]>
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>
+}
+
+/** Ordering options when selecting data from "position_with_value". */
+export type Positions_With_Value_Order_By = {
+  account?: InputMaybe<Accounts_Order_By>
+  account_id?: InputMaybe<Order_By>
+  block_number?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  id?: InputMaybe<Order_By>
+  log_index?: InputMaybe<Order_By>
+  shares?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
+  term_id?: InputMaybe<Order_By>
+  theoretical_value?: InputMaybe<Order_By>
+  total_deposit_assets_after_total_fees?: InputMaybe<Order_By>
+  total_redeem_assets_for_receiver?: InputMaybe<Order_By>
+  transaction_hash?: InputMaybe<Order_By>
+  transaction_index?: InputMaybe<Order_By>
+  updated_at?: InputMaybe<Order_By>
+  vault?: InputMaybe<Vaults_Order_By>
+}
+
+/** select columns of table "position_with_value" */
+export type Positions_With_Value_Select_Column =
+  /** column name */
+  | "account_id"
+  /** column name */
+  | "block_number"
+  /** column name */
+  | "created_at"
+  /** column name */
+  | "curve_id"
+  /** column name */
+  | "id"
+  /** column name */
+  | "log_index"
+  /** column name */
+  | "shares"
+  /** column name */
+  | "term_id"
+  /** column name */
+  | "theoretical_value"
+  /** column name */
+  | "total_deposit_assets_after_total_fees"
+  /** column name */
+  | "total_redeem_assets_for_receiver"
+  /** column name */
+  | "transaction_hash"
+  /** column name */
+  | "transaction_index"
+  /** column name */
+  | "updated_at"
+
+/** aggregate stddev on columns */
+export type Positions_With_Value_Stddev_Fields = {
+  __typename?: "positions_with_value_stddev_fields"
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares?: Maybe<Scalars["Float"]["output"]>
+  theoretical_value?: Maybe<Scalars["Float"]["output"]>
+  total_deposit_assets_after_total_fees?: Maybe<Scalars["Float"]["output"]>
+  total_redeem_assets_for_receiver?: Maybe<Scalars["Float"]["output"]>
+  transaction_index?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** aggregate stddev_pop on columns */
+export type Positions_With_Value_Stddev_Pop_Fields = {
+  __typename?: "positions_with_value_stddev_pop_fields"
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares?: Maybe<Scalars["Float"]["output"]>
+  theoretical_value?: Maybe<Scalars["Float"]["output"]>
+  total_deposit_assets_after_total_fees?: Maybe<Scalars["Float"]["output"]>
+  total_redeem_assets_for_receiver?: Maybe<Scalars["Float"]["output"]>
+  transaction_index?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** aggregate stddev_samp on columns */
+export type Positions_With_Value_Stddev_Samp_Fields = {
+  __typename?: "positions_with_value_stddev_samp_fields"
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares?: Maybe<Scalars["Float"]["output"]>
+  theoretical_value?: Maybe<Scalars["Float"]["output"]>
+  total_deposit_assets_after_total_fees?: Maybe<Scalars["Float"]["output"]>
+  total_redeem_assets_for_receiver?: Maybe<Scalars["Float"]["output"]>
+  transaction_index?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** Streaming cursor of the table "positions_with_value" */
+export type Positions_With_Value_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Positions_With_Value_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Positions_With_Value_Stream_Cursor_Value_Input = {
+  account_id?: InputMaybe<Scalars["String"]["input"]>
+  block_number?: InputMaybe<Scalars["bigint"]["input"]>
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>
+  curve_id?: InputMaybe<Scalars["numeric"]["input"]>
+  id?: InputMaybe<Scalars["String"]["input"]>
+  log_index?: InputMaybe<Scalars["bigint"]["input"]>
+  shares?: InputMaybe<Scalars["numeric"]["input"]>
+  term_id?: InputMaybe<Scalars["String"]["input"]>
+  theoretical_value?: InputMaybe<Scalars["numeric"]["input"]>
+  total_deposit_assets_after_total_fees?: InputMaybe<
+    Scalars["numeric"]["input"]
+  >
+  total_redeem_assets_for_receiver?: InputMaybe<Scalars["numeric"]["input"]>
+  transaction_hash?: InputMaybe<Scalars["String"]["input"]>
+  transaction_index?: InputMaybe<Scalars["bigint"]["input"]>
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>
+}
+
+/** aggregate sum on columns */
+export type Positions_With_Value_Sum_Fields = {
+  __typename?: "positions_with_value_sum_fields"
+  block_number?: Maybe<Scalars["bigint"]["output"]>
+  curve_id?: Maybe<Scalars["numeric"]["output"]>
+  log_index?: Maybe<Scalars["bigint"]["output"]>
+  shares?: Maybe<Scalars["numeric"]["output"]>
+  theoretical_value?: Maybe<Scalars["numeric"]["output"]>
+  total_deposit_assets_after_total_fees?: Maybe<Scalars["numeric"]["output"]>
+  total_redeem_assets_for_receiver?: Maybe<Scalars["numeric"]["output"]>
+  transaction_index?: Maybe<Scalars["bigint"]["output"]>
+}
+
+/** aggregate var_pop on columns */
+export type Positions_With_Value_Var_Pop_Fields = {
+  __typename?: "positions_with_value_var_pop_fields"
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares?: Maybe<Scalars["Float"]["output"]>
+  theoretical_value?: Maybe<Scalars["Float"]["output"]>
+  total_deposit_assets_after_total_fees?: Maybe<Scalars["Float"]["output"]>
+  total_redeem_assets_for_receiver?: Maybe<Scalars["Float"]["output"]>
+  transaction_index?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** aggregate var_samp on columns */
+export type Positions_With_Value_Var_Samp_Fields = {
+  __typename?: "positions_with_value_var_samp_fields"
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares?: Maybe<Scalars["Float"]["output"]>
+  theoretical_value?: Maybe<Scalars["Float"]["output"]>
+  total_deposit_assets_after_total_fees?: Maybe<Scalars["Float"]["output"]>
+  total_redeem_assets_for_receiver?: Maybe<Scalars["Float"]["output"]>
+  transaction_index?: Maybe<Scalars["Float"]["output"]>
+}
+
+/** aggregate variance on columns */
+export type Positions_With_Value_Variance_Fields = {
+  __typename?: "positions_with_value_variance_fields"
+  block_number?: Maybe<Scalars["Float"]["output"]>
+  curve_id?: Maybe<Scalars["Float"]["output"]>
+  log_index?: Maybe<Scalars["Float"]["output"]>
+  shares?: Maybe<Scalars["Float"]["output"]>
+  theoretical_value?: Maybe<Scalars["Float"]["output"]>
+  total_deposit_assets_after_total_fees?: Maybe<Scalars["Float"]["output"]>
+  total_redeem_assets_for_receiver?: Maybe<Scalars["Float"]["output"]>
+  transaction_index?: Maybe<Scalars["Float"]["output"]>
+}
+
 /** columns and relationships of "predicate_object" */
 export type Predicate_Objects = {
   __typename?: "predicate_objects"
@@ -4057,10 +4923,22 @@ export type Query_Root = {
   following: Array<Accounts>
   /** execute function "following" and query aggregates on result of table type "account" */
   following_aggregate: Accounts_Aggregate
+  /** Fetches account-level PnL chart data */
+  getAccountPnlChart?: Maybe<AccountPnlChartOutput>
+  /** Fetches current account PnL snapshot */
+  getAccountPnlCurrent?: Maybe<AccountPnlSnapshotOutput>
+  /** Fetches realized PnL breakdown for an account */
+  getAccountPnlRealized?: Maybe<AccountPnlRealizedOutput>
   /** Fetches chart data (JSON) for a term/curve combination */
   getChartJson?: Maybe<ChartDataOutput>
+  /** Fetches raw share price chart data (JSON) from share_price_change */
+  getChartRawJson?: Maybe<ChartDataOutput>
+  /** Fetches raw share price chart SVG from share_price_change */
+  getChartRawSvg?: Maybe<ChartSvgOutput>
   /** Fetches chart SVG for a term/curve combination */
   getChartSvg?: Maybe<ChartSvgOutput>
+  /** Fetches position PnL chart data */
+  getPositionPnlChart?: Maybe<PositionPnlChartOutput>
   /** fetch data from the table: "json_object" using primary key columns */
   json_object?: Maybe<Json_Objects>
   /** fetch data from the table: "json_object" */
@@ -4081,6 +4959,14 @@ export type Query_Root = {
   persons_aggregate: Persons_Aggregate
   /** fetch data from the table: "position" using primary key columns */
   position?: Maybe<Positions>
+  /** fetch data from the table: "position_change_daily" */
+  position_change_daily: Array<Position_Change_Daily>
+  /** fetch data from the table: "position_change_hourly" */
+  position_change_hourly: Array<Position_Change_Hourly>
+  /** fetch data from the table: "position_change" */
+  position_changes: Array<Position_Changes>
+  /** fetch aggregated fields from the table: "position_change" */
+  position_changes_aggregate: Position_Changes_Aggregate
   /** An array relationship */
   positions: Array<Positions>
   /** An aggregate relationship */
@@ -4089,6 +4975,10 @@ export type Query_Root = {
   positions_from_following: Array<Positions>
   /** execute function "positions_from_following" and query aggregates on result of table type "position" */
   positions_from_following_aggregate: Positions_Aggregate
+  /** fetch data from the table: "position_with_value" */
+  positions_with_value: Array<Positions_With_Value>
+  /** fetch aggregated fields from the table: "position_with_value" */
+  positions_with_value_aggregate: Positions_With_Value_Aggregate
   /** fetch data from the table: "predicate_object" */
   predicate_objects: Array<Predicate_Objects>
   /** fetch aggregated fields from the table: "predicate_object" */
@@ -4429,12 +5319,36 @@ export type Query_RootFollowing_AggregateArgs = {
   where?: InputMaybe<Accounts_Bool_Exp>
 }
 
+export type Query_RootGetAccountPnlChartArgs = {
+  input: GetAccountPnlChartInput
+}
+
+export type Query_RootGetAccountPnlCurrentArgs = {
+  input: GetAccountPnlCurrentInput
+}
+
+export type Query_RootGetAccountPnlRealizedArgs = {
+  input: GetAccountPnlRealizedInput
+}
+
 export type Query_RootGetChartJsonArgs = {
   input: GetChartJsonInput
 }
 
+export type Query_RootGetChartRawJsonArgs = {
+  input: GetChartJsonInput
+}
+
+export type Query_RootGetChartRawSvgArgs = {
+  input: GetChartSvgInput
+}
+
 export type Query_RootGetChartSvgArgs = {
   input: GetChartSvgInput
+}
+
+export type Query_RootGetPositionPnlChartArgs = {
+  input: GetPositionPnlChartInput
 }
 
 export type Query_RootJson_ObjectArgs = {
@@ -4501,6 +5415,38 @@ export type Query_RootPositionArgs = {
   id: Scalars["String"]["input"]
 }
 
+export type Query_RootPosition_Change_DailyArgs = {
+  distinct_on?: InputMaybe<Array<Position_Change_Daily_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Position_Change_Daily_Order_By>>
+  where?: InputMaybe<Position_Change_Daily_Bool_Exp>
+}
+
+export type Query_RootPosition_Change_HourlyArgs = {
+  distinct_on?: InputMaybe<Array<Position_Change_Hourly_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Position_Change_Hourly_Order_By>>
+  where?: InputMaybe<Position_Change_Hourly_Bool_Exp>
+}
+
+export type Query_RootPosition_ChangesArgs = {
+  distinct_on?: InputMaybe<Array<Position_Changes_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Position_Changes_Order_By>>
+  where?: InputMaybe<Position_Changes_Bool_Exp>
+}
+
+export type Query_RootPosition_Changes_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Position_Changes_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Position_Changes_Order_By>>
+  where?: InputMaybe<Position_Changes_Bool_Exp>
+}
+
 export type Query_RootPositionsArgs = {
   distinct_on?: InputMaybe<Array<Positions_Select_Column>>
   limit?: InputMaybe<Scalars["Int"]["input"]>
@@ -4533,6 +5479,22 @@ export type Query_RootPositions_From_Following_AggregateArgs = {
   offset?: InputMaybe<Scalars["Int"]["input"]>
   order_by?: InputMaybe<Array<Positions_Order_By>>
   where?: InputMaybe<Positions_Bool_Exp>
+}
+
+export type Query_RootPositions_With_ValueArgs = {
+  distinct_on?: InputMaybe<Array<Positions_With_Value_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Positions_With_Value_Order_By>>
+  where?: InputMaybe<Positions_With_Value_Bool_Exp>
+}
+
+export type Query_RootPositions_With_Value_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Positions_With_Value_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Positions_With_Value_Order_By>>
+  where?: InputMaybe<Positions_With_Value_Bool_Exp>
 }
 
 export type Query_RootPredicate_ObjectsArgs = {
@@ -7913,6 +8875,20 @@ export type Subscription_Root = {
   persons_stream: Array<Persons>
   /** fetch data from the table: "position" using primary key columns */
   position?: Maybe<Positions>
+  /** fetch data from the table: "position_change_daily" */
+  position_change_daily: Array<Position_Change_Daily>
+  /** fetch data from the table in a streaming manner: "position_change_daily" */
+  position_change_daily_stream: Array<Position_Change_Daily>
+  /** fetch data from the table: "position_change_hourly" */
+  position_change_hourly: Array<Position_Change_Hourly>
+  /** fetch data from the table in a streaming manner: "position_change_hourly" */
+  position_change_hourly_stream: Array<Position_Change_Hourly>
+  /** fetch data from the table: "position_change" */
+  position_changes: Array<Position_Changes>
+  /** fetch aggregated fields from the table: "position_change" */
+  position_changes_aggregate: Position_Changes_Aggregate
+  /** fetch data from the table in a streaming manner: "position_change" */
+  position_changes_stream: Array<Position_Changes>
   /** An array relationship */
   positions: Array<Positions>
   /** An aggregate relationship */
@@ -7923,6 +8899,12 @@ export type Subscription_Root = {
   positions_from_following_aggregate: Positions_Aggregate
   /** fetch data from the table in a streaming manner: "position" */
   positions_stream: Array<Positions>
+  /** fetch data from the table: "position_with_value" */
+  positions_with_value: Array<Positions_With_Value>
+  /** fetch aggregated fields from the table: "position_with_value" */
+  positions_with_value_aggregate: Positions_With_Value_Aggregate
+  /** fetch data from the table in a streaming manner: "position_with_value" */
+  positions_with_value_stream: Array<Positions_With_Value>
   /** fetch data from the table: "predicate_object" */
   predicate_objects: Array<Predicate_Objects>
   /** fetch aggregated fields from the table: "predicate_object" */
@@ -8465,6 +9447,56 @@ export type Subscription_RootPositionArgs = {
   id: Scalars["String"]["input"]
 }
 
+export type Subscription_RootPosition_Change_DailyArgs = {
+  distinct_on?: InputMaybe<Array<Position_Change_Daily_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Position_Change_Daily_Order_By>>
+  where?: InputMaybe<Position_Change_Daily_Bool_Exp>
+}
+
+export type Subscription_RootPosition_Change_Daily_StreamArgs = {
+  batch_size: Scalars["Int"]["input"]
+  cursor: Array<InputMaybe<Position_Change_Daily_Stream_Cursor_Input>>
+  where?: InputMaybe<Position_Change_Daily_Bool_Exp>
+}
+
+export type Subscription_RootPosition_Change_HourlyArgs = {
+  distinct_on?: InputMaybe<Array<Position_Change_Hourly_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Position_Change_Hourly_Order_By>>
+  where?: InputMaybe<Position_Change_Hourly_Bool_Exp>
+}
+
+export type Subscription_RootPosition_Change_Hourly_StreamArgs = {
+  batch_size: Scalars["Int"]["input"]
+  cursor: Array<InputMaybe<Position_Change_Hourly_Stream_Cursor_Input>>
+  where?: InputMaybe<Position_Change_Hourly_Bool_Exp>
+}
+
+export type Subscription_RootPosition_ChangesArgs = {
+  distinct_on?: InputMaybe<Array<Position_Changes_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Position_Changes_Order_By>>
+  where?: InputMaybe<Position_Changes_Bool_Exp>
+}
+
+export type Subscription_RootPosition_Changes_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Position_Changes_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Position_Changes_Order_By>>
+  where?: InputMaybe<Position_Changes_Bool_Exp>
+}
+
+export type Subscription_RootPosition_Changes_StreamArgs = {
+  batch_size: Scalars["Int"]["input"]
+  cursor: Array<InputMaybe<Position_Changes_Stream_Cursor_Input>>
+  where?: InputMaybe<Position_Changes_Bool_Exp>
+}
+
 export type Subscription_RootPositionsArgs = {
   distinct_on?: InputMaybe<Array<Positions_Select_Column>>
   limit?: InputMaybe<Scalars["Int"]["input"]>
@@ -8503,6 +9535,28 @@ export type Subscription_RootPositions_StreamArgs = {
   batch_size: Scalars["Int"]["input"]
   cursor: Array<InputMaybe<Positions_Stream_Cursor_Input>>
   where?: InputMaybe<Positions_Bool_Exp>
+}
+
+export type Subscription_RootPositions_With_ValueArgs = {
+  distinct_on?: InputMaybe<Array<Positions_With_Value_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Positions_With_Value_Order_By>>
+  where?: InputMaybe<Positions_With_Value_Bool_Exp>
+}
+
+export type Subscription_RootPositions_With_Value_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Positions_With_Value_Select_Column>>
+  limit?: InputMaybe<Scalars["Int"]["input"]>
+  offset?: InputMaybe<Scalars["Int"]["input"]>
+  order_by?: InputMaybe<Array<Positions_With_Value_Order_By>>
+  where?: InputMaybe<Positions_With_Value_Bool_Exp>
+}
+
+export type Subscription_RootPositions_With_Value_StreamArgs = {
+  batch_size: Scalars["Int"]["input"]
+  cursor: Array<InputMaybe<Positions_With_Value_Stream_Cursor_Input>>
+  where?: InputMaybe<Positions_With_Value_Bool_Exp>
 }
 
 export type Subscription_RootPredicate_ObjectsArgs = {

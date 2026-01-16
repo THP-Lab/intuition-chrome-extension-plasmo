@@ -39,7 +39,7 @@ const ProfileTabs = () => {
           to="/profile/following"
           className={`text-sm font-semibold ${location.pathname === "/profile/following" ? "border-b-2" : ""}`}
         >
-          Following
+          Followings
         </Link>
       </div>
 

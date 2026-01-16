@@ -99,7 +99,7 @@ async function getMinAcceptedDepositWei(
   const balance = await publicClient.getBalance({ address: account })
   const cap = (balance * 95n) / 100n
 
-  let value = 1_000_000_000_000_000n // 0.001
+  let value = 10_000_000_000_000_000n // 0.01
   let attempts = 0
 
   while (attempts++ < 20) {

@@ -43,7 +43,7 @@ const RecentActivity: React.FC = () => {
     const addr = shortAddress(rawAddress)
     return (
       <a
-        href={`https://portal.intuition.systems/app/atom/${rawAddress}?tab=portfolio`}
+        href={`https://portal.intuition.systems/app/atom/${rawAddress}?tab=overview`}
         target="_blank"
         rel="noopener noreferrer"
         className="font-semibold hover:underline"

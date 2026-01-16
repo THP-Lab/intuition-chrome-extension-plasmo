@@ -10,6 +10,7 @@ import {
 } from "react-router-dom"
 
 import { configureClient } from "@warzieram/graphql"
+import { getGraphQLEndpoints, CURRENT_NETWORK } from "~src/lib/config"
 import PageForm from "~src/pages/PageForm"
 import Feed from "~src/pages/Feed"
 import Home from "~src/pages/Home"
@@ -39,8 +40,9 @@ import ProfileLayout from "./profile/ProfileLayout"
 import "../styles/global.css"
 import umamiScriptUrl from "url:../../assets/umami.js"
 
-const API_URL = "https://testnet.intuition.sh/v1/graphql"
-configureClient({ apiUrl: API_URL })
+// Configure GraphQL client based on current network
+const endpoints = getGraphQLEndpoints(CURRENT_NETWORK)
+configureClient({ apiUrl: endpoints.http })
 
 const queryClient = new QueryClient()
 
