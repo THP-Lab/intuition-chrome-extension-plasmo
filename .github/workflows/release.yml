@@ -10,6 +10,9 @@ jobs:
     environment:
       name: umami
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
 
     steps:
       - name: Checkout code
